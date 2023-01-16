@@ -21,7 +21,10 @@
   "plugins": ["react", "prettier"],
   "rules": {
     // 여러줄일 경우, 소괄호를 적어야한다. <- 이 기능을 끔 / prettier는 기본적으로 삭제하게 되어 있다.
-    "react/jsx-wrap-multilines": ["error", {"declaration": false, "assignment": false}],
+    "react/jsx-wrap-multilines": [
+      "error",
+      { "declaration": false, "assignment": false }
+    ],
     // export default 강제 옵션을 끈다.
     "import/prefer-default-export": "off",
     // 아래 두개는 eslint와 함께 사용될 때 내부적 이슈가 있어 꺼야하는 설정이다. 공식문서 참조.
