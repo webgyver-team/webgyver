@@ -14,7 +14,7 @@ import Menu from '@mui/material/Menu';
 import { useRecoilState } from 'recoil';
 import { authState } from '../../../atom';
 
-export default function MenuAppBar() {
+export default function NavBar() {
   const [auth, setAuth] = useRecoilState(authState);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
@@ -56,7 +56,7 @@ export default function MenuAppBar() {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            Photos
+            WebGyver
           </Typography>
           {auth && (
             <div>
