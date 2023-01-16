@@ -376,3 +376,40 @@ Caused by: org.hibernate.MappingException: Repeated column in mapping for entity
 2023-01-16 16:50:33.507  INFO 13524 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
 2023-01-16 16:50:33.510  INFO 13524 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
 2023-01-16 16:50:33.515  INFO 13524 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-01-16 17:24:33.312  INFO 8712 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : Starting WebgyverApplication using Java 1.8.0_192 on DESKTOP-DOGVPUB with PID 8712 (C:\Users\SSAFY\Desktop\S08P12B101\webgyver\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\S08P12B101)
+2023-01-16 17:24:33.313  INFO 8712 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : No active profile set, falling back to 1 default profile: "default"
+2023-01-16 17:24:33.353  INFO 8712 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-01-16 17:24:33.353  INFO 8712 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-01-16 17:24:34.030  INFO 8712 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 17:24:34.031  INFO 8712 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2023-01-16 17:24:34.069  INFO 8712 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.ssafy.webgyver.db.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2023-01-16 17:24:34.070  INFO 8712 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 35 ms. Found 0 JDBC repository interfaces.
+2023-01-16 17:24:34.079  INFO 8712 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 17:24:34.079  INFO 8712 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-01-16 17:24:34.115  INFO 8712 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 32 ms. Found 1 JPA repository interfaces.
+2023-01-16 17:24:34.681  INFO 8712 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9000 (http)
+2023-01-16 17:24:34.687  INFO 8712 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-01-16 17:24:34.687  INFO 8712 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-16 17:24:34.788  INFO 8712 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-01-16 17:24:34.788  INFO 8712 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1434 ms
+2023-01-16 17:24:34.840 DEBUG 8712 --- [restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'commonsRequestLoggingFilter' configured for use
+2023-01-16 17:24:34.962  INFO 8712 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-01-16 17:24:35.007  INFO 8712 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.14.Final
+2023-01-16 17:24:35.219  INFO 8712 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-01-16 17:24:35.309  INFO 8712 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-01-16 17:24:35.658  INFO 8712 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-01-16 17:24:35.678  INFO 8712 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
+2023-01-16 17:24:36.728  INFO 8712 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-01-16 17:24:36.741  INFO 8712 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 17:24:37.264  WARN 8712 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-01-16 17:24:37.575  INFO 8712 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@6c09a9c1, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@390439f5, org.springframework.security.web.context.SecurityContextPersistenceFilter@663c7819, org.springframework.security.web.header.HeaderWriterFilter@7732a46e, org.springframework.web.filter.CorsFilter@2231f965, org.springframework.security.web.authentication.logout.LogoutFilter@47583113, com.ssafy.webgyver.common.auth.JwtAuthenticationFilter@127627df, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@3e6a657a, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@7f07a0b9, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@3310d3f1, org.springframework.security.web.session.SessionManagementFilter@3946b01c, org.springframework.security.web.access.ExceptionTranslationFilter@24866bc9, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@7068043d]
+2023-01-16 17:24:37.720 DEBUG 8712 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2023-01-16 17:24:37.796 DEBUG 8712 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 5 mappings in 'requestMappingHandlerMapping'
+2023-01-16 17:24:37.823 DEBUG 8712 --- [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /resources/**, /swagger-ui.html, /css/**, /fonts/**, /icons/**, /img/**, /js/**] in 'resourceHandlerMapping'
+2023-01-16 17:24:37.835 DEBUG 8712 --- [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2023-01-16 17:24:38.051  INFO 8712 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-01-16 17:24:38.089  INFO 8712 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9000 (http) with context path ''
+2023-01-16 17:24:38.099  INFO 8712 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : Started WebgyverApplication in 5.229 seconds (JVM running for 6.433)
+2023-01-16 17:25:38.241  INFO 8712 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 17:25:38.243  INFO 8712 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-01-16 17:25:38.249  INFO 8712 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
