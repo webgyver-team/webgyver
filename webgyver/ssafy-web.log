@@ -1,0 +1,301 @@
+2023-01-16 13:56:58.381  INFO 8796 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : Starting WebgyverApplication using Java 15.0.9 on DESKTOP-DOGVPUB with PID 8796 (C:\Users\SSAFY\Desktop\webgyver\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\webgyver)
+2023-01-16 13:56:58.383  INFO 8796 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : No active profile set, falling back to 1 default profile: "default"
+2023-01-16 13:56:58.420  INFO 8796 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-01-16 13:56:58.430  INFO 8796 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-01-16 13:56:59.073  INFO 8796 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 13:56:59.074  INFO 8796 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2023-01-16 13:56:59.112  INFO 8796 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.ssafy.webgyver.db.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2023-01-16 13:56:59.112  INFO 8796 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 0 JDBC repository interfaces.
+2023-01-16 13:56:59.119  INFO 8796 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 13:56:59.120  INFO 8796 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-01-16 13:56:59.161  INFO 8796 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 38 ms. Found 1 JPA repository interfaces.
+2023-01-16 13:56:59.735  INFO 8796 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9000 (http)
+2023-01-16 13:56:59.743  INFO 8796 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-01-16 13:56:59.744  INFO 8796 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-16 13:56:59.833  INFO 8796 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-01-16 13:56:59.833  INFO 8796 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1403 ms
+2023-01-16 13:56:59.887 DEBUG 8796 --- [restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'commonsRequestLoggingFilter' configured for use
+2023-01-16 13:57:00.015  INFO 8796 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-01-16 13:57:00.070  INFO 8796 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.14.Final
+2023-01-16 13:57:00.227  INFO 8796 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-01-16 13:57:00.329  INFO 8796 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-01-16 13:57:00.806  INFO 8796 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-01-16 13:57:00.831  INFO 8796 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
+2023-01-16 13:57:01.404  INFO 8796 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-01-16 13:57:01.414  INFO 8796 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 13:57:01.765  WARN 8796 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-01-16 13:57:01.780  WARN 8796 --- [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'authController': Unsatisfied dependency expressed through field 'userService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'userService': Unsatisfied dependency expressed through field 'passwordEncoder'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'securityConfig': Unsatisfied dependency expressed through field 'ssafyUserDetailService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'ssafyUserDetailService': Unsatisfied dependency expressed through field 'userService'; nested exception is org.springframework.beans.factory.BeanCurrentlyInCreationException: Error creating bean with name 'userService': Requested bean is currently in creation: Is there an unresolvable circular reference?
+2023-01-16 13:57:01.780  INFO 8796 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 13:57:01.782  INFO 8796 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-01-16 13:57:02.012  INFO 8796 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-01-16 13:57:02.015  INFO 8796 --- [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2023-01-16 13:57:02.032  INFO 8796 --- [restartedMain] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-01-16 13:57:02.058 ERROR 8796 --- [restartedMain] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+The dependencies of some of the beans in the application context form a cycle:
+
+   authController (field com.ssafy.webgyver.api.service.UserService com.ssafy.webgyver.api.controller.AuthController.userService)
+┌─────┐
+|  userService (field org.springframework.security.crypto.password.PasswordEncoder com.ssafy.webgyver.api.service.UserServiceImpl.passwordEncoder)
+↑     ↓
+|  securityConfig (field private com.ssafy.webgyver.common.auth.SsafyUserDetailService com.ssafy.webgyver.config.SecurityConfig.ssafyUserDetailService)
+↑     ↓
+|  ssafyUserDetailService (field com.ssafy.webgyver.api.service.UserService com.ssafy.webgyver.common.auth.SsafyUserDetailService.userService)
+└─────┘
+
+
+Action:
+
+Relying upon circular references is discouraged and they are prohibited by default. Update your application to remove the dependency cycle between beans. As a last resort, it may be possible to break the cycle automatically by setting spring.main.allow-circular-references to true.
+
+2023-01-16 14:48:10.456  INFO 17780 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : Starting WebgyverApplication using Java 15.0.9 on DESKTOP-DOGVPUB with PID 17780 (C:\Users\SSAFY\Desktop\webgyver\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\webgyver)
+2023-01-16 14:48:10.457  INFO 17780 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : No active profile set, falling back to 1 default profile: "default"
+2023-01-16 14:48:10.510  INFO 17780 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-01-16 14:48:10.510  INFO 17780 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-01-16 14:48:11.272  INFO 17780 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 14:48:11.274  INFO 17780 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2023-01-16 14:48:11.315  INFO 17780 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.ssafy.webgyver.db.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2023-01-16 14:48:11.316  INFO 17780 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 38 ms. Found 0 JDBC repository interfaces.
+2023-01-16 14:48:11.328  INFO 17780 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 14:48:11.329  INFO 17780 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-01-16 14:48:11.370  INFO 17780 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 36 ms. Found 1 JPA repository interfaces.
+2023-01-16 14:48:12.033  INFO 17780 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9000 (http)
+2023-01-16 14:48:12.045  INFO 17780 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-01-16 14:48:12.045  INFO 17780 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-16 14:48:12.152  INFO 17780 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-01-16 14:48:12.153  INFO 17780 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1643 ms
+2023-01-16 14:48:12.216 DEBUG 17780 --- [restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'commonsRequestLoggingFilter' configured for use
+2023-01-16 14:48:12.359  INFO 17780 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-01-16 14:48:12.417  INFO 17780 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.14.Final
+2023-01-16 14:48:12.596  INFO 17780 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-01-16 14:48:12.712  INFO 17780 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-01-16 14:48:13.086  INFO 17780 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-01-16 14:48:13.107  INFO 17780 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
+2023-01-16 14:48:13.742  INFO 17780 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-01-16 14:48:13.751  INFO 17780 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 14:48:14.155  WARN 17780 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-01-16 14:48:14.181  WARN 17780 --- [restartedMain] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'notFoundHandler': Injection of autowired dependencies failed; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'spa.default-file' in value "${spa.default-file}"
+2023-01-16 14:48:14.181  INFO 17780 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 14:48:14.184  INFO 17780 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-01-16 14:48:14.265  INFO 17780 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-01-16 14:48:14.266  INFO 17780 --- [restartedMain] o.apache.catalina.core.StandardService   : Stopping service [Tomcat]
+2023-01-16 14:48:14.277  INFO 17780 --- [restartedMain] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-01-16 14:48:14.310 ERROR 17780 --- [restartedMain] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'notFoundHandler': Injection of autowired dependencies failed; nested exception is java.lang.IllegalArgumentException: Could not resolve placeholder 'spa.default-file' in value "${spa.default-file}"
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:405) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1431) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:619) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:542) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:335) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:234) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:333) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:208) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:955) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:918) ~[spring-context-5.3.24.jar:5.3.24]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:583) ~[spring-context-5.3.24.jar:5.3.24]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:147) ~[spring-boot-2.7.7.jar:2.7.7]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:731) ~[spring-boot-2.7.7.jar:2.7.7]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:408) ~[spring-boot-2.7.7.jar:2.7.7]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:307) ~[spring-boot-2.7.7.jar:2.7.7]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1303) ~[spring-boot-2.7.7.jar:2.7.7]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1292) ~[spring-boot-2.7.7.jar:2.7.7]
+	at com.ssafy.webgyver.WebgyverApplication.main(WebgyverApplication.java:10) ~[main/:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke0(Native Method) ~[na:na]
+	at java.base/jdk.internal.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64) ~[na:na]
+	at java.base/jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43) ~[na:na]
+	at java.base/java.lang.reflect.Method.invoke(Method.java:564) ~[na:na]
+	at org.springframework.boot.devtools.restart.RestartLauncher.run(RestartLauncher.java:49) ~[spring-boot-devtools-2.7.7.jar:2.7.7]
+Caused by: java.lang.IllegalArgumentException: Could not resolve placeholder 'spa.default-file' in value "${spa.default-file}"
+	at org.springframework.util.PropertyPlaceholderHelper.parseStringValue(PropertyPlaceholderHelper.java:180) ~[spring-core-5.3.24.jar:5.3.24]
+	at org.springframework.util.PropertyPlaceholderHelper.replacePlaceholders(PropertyPlaceholderHelper.java:126) ~[spring-core-5.3.24.jar:5.3.24]
+	at org.springframework.core.env.AbstractPropertyResolver.doResolvePlaceholders(AbstractPropertyResolver.java:239) ~[spring-core-5.3.24.jar:5.3.24]
+	at org.springframework.core.env.AbstractPropertyResolver.resolveRequiredPlaceholders(AbstractPropertyResolver.java:210) ~[spring-core-5.3.24.jar:5.3.24]
+	at org.springframework.context.support.PropertySourcesPlaceholderConfigurer.lambda$processProperties$0(PropertySourcesPlaceholderConfigurer.java:191) ~[spring-context-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.AbstractBeanFactory.resolveEmbeddedValue(AbstractBeanFactory.java:936) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1332) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1311) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.resolveFieldValue(AutowiredAnnotationBeanPostProcessor.java:657) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:640) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:119) ~[spring-beans-5.3.24.jar:5.3.24]
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:399) ~[spring-beans-5.3.24.jar:5.3.24]
+	... 22 common frames omitted
+
+2023-01-16 14:48:59.778  INFO 13464 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : Starting WebgyverApplication using Java 15.0.9 on DESKTOP-DOGVPUB with PID 13464 (C:\Users\SSAFY\Desktop\webgyver\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\webgyver)
+2023-01-16 14:48:59.780  INFO 13464 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : No active profile set, falling back to 1 default profile: "default"
+2023-01-16 14:48:59.830  INFO 13464 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-01-16 14:48:59.830  INFO 13464 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-01-16 14:49:00.632  INFO 13464 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 14:49:00.634  INFO 13464 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2023-01-16 14:49:00.677  INFO 13464 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.ssafy.webgyver.db.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2023-01-16 14:49:00.677  INFO 13464 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 39 ms. Found 0 JDBC repository interfaces.
+2023-01-16 14:49:00.686  INFO 13464 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 14:49:00.687  INFO 13464 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-01-16 14:49:00.726  INFO 13464 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 35 ms. Found 1 JPA repository interfaces.
+2023-01-16 14:49:01.360  INFO 13464 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9000 (http)
+2023-01-16 14:49:01.371  INFO 13464 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-01-16 14:49:01.371  INFO 13464 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-16 14:49:01.474  INFO 13464 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-01-16 14:49:01.474  INFO 13464 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1643 ms
+2023-01-16 14:49:01.539 DEBUG 13464 --- [restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'commonsRequestLoggingFilter' configured for use
+2023-01-16 14:49:01.689  INFO 13464 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-01-16 14:49:01.749  INFO 13464 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.14.Final
+2023-01-16 14:49:01.924  INFO 13464 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-01-16 14:49:02.041  INFO 13464 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-01-16 14:49:02.439  INFO 13464 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-01-16 14:49:02.457  INFO 13464 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
+2023-01-16 14:49:03.114  INFO 13464 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-01-16 14:49:03.124  INFO 13464 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 14:49:03.536  WARN 13464 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-01-16 14:49:03.746  INFO 13464 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@18aad72b, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@25f14ee0, org.springframework.security.web.context.SecurityContextPersistenceFilter@366a2b38, org.springframework.security.web.header.HeaderWriterFilter@1a54c4da, org.springframework.web.filter.CorsFilter@4ae28051, org.springframework.security.web.authentication.logout.LogoutFilter@1cc2ece3, com.ssafy.webgyver.common.auth.JwtAuthenticationFilter@21c7f86f, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@59579615, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@34411393, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@6f9a70f3, org.springframework.security.web.session.SessionManagementFilter@2cf098dc, org.springframework.security.web.access.ExceptionTranslationFilter@4705979c, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@18c65b9f]
+2023-01-16 14:49:03.838 DEBUG 13464 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2023-01-16 14:49:03.905 DEBUG 13464 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 5 mappings in 'requestMappingHandlerMapping'
+2023-01-16 14:49:03.929 DEBUG 13464 --- [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /resources/**, /swagger-ui.html, /css/**, /fonts/**, /icons/**, /img/**, /js/**] in 'resourceHandlerMapping'
+2023-01-16 14:49:03.940 DEBUG 13464 --- [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2023-01-16 14:49:04.146  INFO 13464 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-01-16 14:49:04.196  INFO 13464 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9000 (http) with context path ''
+2023-01-16 14:49:04.211  INFO 13464 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : Started WebgyverApplication in 4.899 seconds (JVM running for 5.673)
+2023-01-16 14:49:17.822  INFO 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-01-16 14:49:17.822  INFO 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2023-01-16 14:49:17.822 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected StandardServletMultipartResolver
+2023-01-16 14:49:17.822 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected AcceptHeaderLocaleResolver
+2023-01-16 14:49:17.823 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected FixedThemeResolver
+2023-01-16 14:49:17.824 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.view.DefaultRequestToViewNameTranslator@7f69903a
+2023-01-16 14:49:17.824 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Detected org.springframework.web.servlet.support.SessionFlashMapManager@30869252
+2023-01-16 14:49:17.824 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : enableLoggingRequestDetails='false': request parameters and headers will be masked to prevent unsafe logging of potentially sensitive data
+2023-01-16 14:49:17.824  INFO 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2023-01-16 14:49:17.851 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-01-16 14:49:17.857 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:17.860 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:17.861 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:17.863 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:17.866 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:17.898 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:17.901 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:18.418 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-2] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-01-16 14:49:18.418 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-2] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:18.419 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-2] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:18.419 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-2] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:18.419 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-2] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:18.420 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-2] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:18.442 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-2] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:18.443 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-2] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:18.858 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-4] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-01-16 14:49:18.859 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-4] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:18.860 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-4] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:18.860 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-4] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:18.861 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-4] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:18.863 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-4] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:18.896 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-4] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:18.896 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-4] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:19.028 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-5] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-01-16 14:49:19.031 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-5] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:19.032 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-5] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:19.034 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-5] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:19.036 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-5] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:19.039 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-5] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:19.086 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-5] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:19.086 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-5] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:19.163 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-6] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-01-16 14:49:19.163 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-6] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:19.164 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-6] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:19.164 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-6] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:19.165 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-6] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:19.165 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-6] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:19.188 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-6] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:19.188 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-6] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:19.322 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-3] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-01-16 14:49:19.323 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-3] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:19.324 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-3] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:19.326 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-3] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:19.326 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-3] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:19.328 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-3] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:19.362 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-3] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:19.362 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-3] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:19.492 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-7] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-01-16 14:49:19.494 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-7] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:19.494 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-7] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:19.496 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-7] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:19.497 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-7] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:19.500 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-7] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:19.534 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-7] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:19.534 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-7] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:19.642 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-8] o.s.web.servlet.DispatcherServlet        : GET "/", parameters={}
+2023-01-16 14:49:19.643 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-8] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:19.643 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-8] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:19.643 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-8] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:19.644 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-8] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:19.645 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-8] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:19.668 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-8] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:19.668 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-8] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:24.831 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-9] o.s.web.servlet.DispatcherServlet        : GET "/user", parameters={}
+2023-01-16 14:49:24.834 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-9] o.s.w.s.handler.SimpleUrlHandlerMapping  : Mapped to ResourceHttpRequestHandler [classpath [META-INF/resources/], classpath [resources/], classpath [static/], classpath [public/], ServletContext [/]]
+2023-01-16 14:49:24.836 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-9] o.s.w.s.r.ResourceHttpRequestHandler     : Resource not found
+2023-01-16 14:49:24.837 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-9] o.s.web.servlet.DispatcherServlet        : Completed 404 NOT_FOUND
+2023-01-16 14:49:24.837 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-9] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:24.838 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-9] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:24.860 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-9] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:24.860 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-9] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 404
+2023-01-16 14:49:43.763 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-10] o.s.w.f.CommonsRequestLoggingFilter      : Before request [GET /api/v1/users, client=127.0.0.1, headers=[host:"localhost:9000", connection:"keep-alive", sec-ch-ua:""Not_A Brand";v="99", "Google Chrome";v="109", "Chromium";v="109"", sec-ch-ua-mobile:"?0", sec-ch-ua-platform:""Windows"", upgrade-insecure-requests:"1", user-agent:"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36", accept:"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", sec-fetch-site:"none", sec-fetch-mode:"navigate", sec-fetch-user:"?1", sec-fetch-dest:"document", accept-encoding:"gzip, deflate, br", accept-language:"ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"]]
+2023-01-16 14:49:43.764 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-10] o.s.web.servlet.DispatcherServlet        : GET "/api/v1/users", parameters={}
+2023-01-16 14:49:43.765  WARN 13464 --- [http-nio-127.0.0.1-9000-exec-10] .w.s.m.s.DefaultHandlerExceptionResolver : Resolved [org.springframework.web.HttpRequestMethodNotSupportedException: Request method 'GET' not supported]
+2023-01-16 14:49:43.765 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-10] o.s.web.servlet.DispatcherServlet        : Completed 405 METHOD_NOT_ALLOWED
+2023-01-16 14:49:43.766 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-10] o.s.w.f.CommonsRequestLoggingFilter      : After request [GET /api/v1/users, client=127.0.0.1, headers=[host:"localhost:9000", connection:"keep-alive", sec-ch-ua:""Not_A Brand";v="99", "Google Chrome";v="109", "Chromium";v="109"", sec-ch-ua-mobile:"?0", sec-ch-ua-platform:""Windows"", upgrade-insecure-requests:"1", user-agent:"Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36", accept:"text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9", sec-fetch-site:"none", sec-fetch-mode:"navigate", sec-fetch-user:"?1", sec-fetch-dest:"document", accept-encoding:"gzip, deflate, br", accept-language:"ko-KR,ko;q=0.9,en-US;q=0.8,en;q=0.7"]]
+2023-01-16 14:49:43.766 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-10] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:43.766 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-10] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:43.787 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-10] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:43.790 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-10] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 405
+2023-01-16 14:49:53.769 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : "ERROR" dispatch for GET "/error", parameters={}
+2023-01-16 14:49:53.770 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] s.w.s.m.m.a.RequestMappingHandlerMapping : Mapped to org.springframework.boot.autoconfigure.web.servlet.error.BasicErrorController#errorHtml(HttpServletRequest, HttpServletResponse)
+2023-01-16 14:49:53.795 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.w.s.v.ContentNegotiatingViewResolver : Selected 'text/html' given [text/html, text/html;q=0.8]
+2023-01-16 14:49:53.795 DEBUG 13464 --- [http-nio-127.0.0.1-9000-exec-1] o.s.web.servlet.DispatcherServlet        : Exiting from "ERROR" dispatch, status 403
+2023-01-16 14:58:32.655  INFO 13464 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 14:58:32.657  INFO 13464 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-01-16 14:58:32.741  INFO 13464 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2023-01-16 14:58:36.288  INFO 1720 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : Starting WebgyverApplication using Java 15.0.9 on DESKTOP-DOGVPUB with PID 1720 (C:\Users\SSAFY\Desktop\webgyver\build\classes\java\main started by SSAFY in C:\Users\SSAFY\Desktop\webgyver)
+2023-01-16 14:58:36.289  INFO 1720 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : No active profile set, falling back to 1 default profile: "default"
+2023-01-16 14:58:36.324  INFO 1720 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : Devtools property defaults active! Set 'spring.devtools.add-properties' to 'false' to disable
+2023-01-16 14:58:36.324  INFO 1720 --- [restartedMain] .e.DevToolsPropertyDefaultsPostProcessor : For additional web related logging consider setting the 'logging.level.web' property to 'DEBUG'
+2023-01-16 14:58:36.982  INFO 1720 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 14:58:36.983  INFO 1720 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JDBC repositories in DEFAULT mode.
+2023-01-16 14:58:37.020  INFO 1720 --- [restartedMain] .RepositoryConfigurationExtensionSupport : Spring Data JDBC - Could not safely identify store assignment for repository candidate interface com.ssafy.webgyver.db.repository.UserRepository; If you want this repository to be a JDBC repository, consider annotating your entities with one of these annotations: org.springframework.data.relational.core.mapping.Table.
+2023-01-16 14:58:37.020  INFO 1720 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 33 ms. Found 0 JDBC repository interfaces.
+2023-01-16 14:58:37.027  INFO 1720 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Multiple Spring Data modules found, entering strict repository configuration mode
+2023-01-16 14:58:37.028  INFO 1720 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2023-01-16 14:58:37.062  INFO 1720 --- [restartedMain] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 30 ms. Found 1 JPA repository interfaces.
+2023-01-16 14:58:37.620  INFO 1720 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port(s): 9000 (http)
+2023-01-16 14:58:37.627  INFO 1720 --- [restartedMain] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2023-01-16 14:58:37.628  INFO 1720 --- [restartedMain] org.apache.catalina.core.StandardEngine  : Starting Servlet engine: [Apache Tomcat/9.0.70]
+2023-01-16 14:58:37.722  INFO 1720 --- [restartedMain] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2023-01-16 14:58:37.722  INFO 1720 --- [restartedMain] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1397 ms
+2023-01-16 14:58:37.781 DEBUG 1720 --- [restartedMain] o.s.w.f.CommonsRequestLoggingFilter      : Filter 'commonsRequestLoggingFilter' configured for use
+2023-01-16 14:58:37.912  INFO 1720 --- [restartedMain] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2023-01-16 14:58:37.967  INFO 1720 --- [restartedMain] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 5.6.14.Final
+2023-01-16 14:58:38.126  INFO 1720 --- [restartedMain] o.hibernate.annotations.common.Version   : HCANN000001: Hibernate Commons Annotations {5.1.2.Final}
+2023-01-16 14:58:38.234  INFO 1720 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2023-01-16 14:58:38.694  INFO 1720 --- [restartedMain] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2023-01-16 14:58:38.721  INFO 1720 --- [restartedMain] org.hibernate.dialect.Dialect            : HHH000400: Using dialect: org.hibernate.dialect.MySQL57Dialect
+2023-01-16 14:58:39.544  INFO 1720 --- [restartedMain] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+2023-01-16 14:58:39.580  INFO 1720 --- [restartedMain] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 14:58:40.000  WARN 1720 --- [restartedMain] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2023-01-16 14:58:40.229  INFO 1720 --- [restartedMain] o.s.s.web.DefaultSecurityFilterChain     : Will secure any request with [org.springframework.security.web.session.DisableEncodeUrlFilter@46a89156, org.springframework.security.web.context.request.async.WebAsyncManagerIntegrationFilter@d9da4ff, org.springframework.security.web.context.SecurityContextPersistenceFilter@7db66db2, org.springframework.security.web.header.HeaderWriterFilter@6a581a57, org.springframework.web.filter.CorsFilter@408a149e, org.springframework.security.web.authentication.logout.LogoutFilter@17e54f5, com.ssafy.webgyver.common.auth.JwtAuthenticationFilter@56256705, org.springframework.security.web.savedrequest.RequestCacheAwareFilter@5cd98dbb, org.springframework.security.web.servletapi.SecurityContextHolderAwareRequestFilter@3395818c, org.springframework.security.web.authentication.AnonymousAuthenticationFilter@54056eb6, org.springframework.security.web.session.SessionManagementFilter@27c376e2, org.springframework.security.web.access.ExceptionTranslationFilter@193b5113, org.springframework.security.web.access.intercept.FilterSecurityInterceptor@1db57fd5]
+2023-01-16 14:58:40.333 DEBUG 1720 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerAdapter : ControllerAdvice beans: 0 @ModelAttribute, 0 @InitBinder, 1 RequestBodyAdvice, 1 ResponseBodyAdvice
+2023-01-16 14:58:40.408 DEBUG 1720 --- [restartedMain] s.w.s.m.m.a.RequestMappingHandlerMapping : 5 mappings in 'requestMappingHandlerMapping'
+2023-01-16 14:58:40.441 DEBUG 1720 --- [restartedMain] o.s.w.s.handler.SimpleUrlHandlerMapping  : Patterns [/webjars/**, /**, /resources/**, /swagger-ui.html, /css/**, /fonts/**, /icons/**, /img/**, /js/**] in 'resourceHandlerMapping'
+2023-01-16 14:58:40.456 DEBUG 1720 --- [restartedMain] .m.m.a.ExceptionHandlerExceptionResolver : ControllerAdvice beans: 1 @ExceptionHandler, 1 ResponseBodyAdvice
+2023-01-16 14:58:40.687  INFO 1720 --- [restartedMain] o.s.b.d.a.OptionalLiveReloadServer       : LiveReload server is running on port 35729
+2023-01-16 14:58:40.745  INFO 1720 --- [restartedMain] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port(s): 9000 (http) with context path ''
+2023-01-16 14:58:40.758  INFO 1720 --- [restartedMain] com.ssafy.webgyver.WebgyverApplication   : Started WebgyverApplication in 4.802 seconds (JVM running for 6.205)
+2023-01-16 15:04:45.747  INFO 1720 --- [SpringApplicationShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2023-01-16 15:04:45.749  INFO 1720 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2023-01-16 15:04:45.853  INFO 1720 --- [SpringApplicationShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
