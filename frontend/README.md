@@ -1,23 +1,23 @@
 # VideoConference
 
 frontend 사전 설정
-  버전
-  node -v v18.12.1
+버전
+node -v v18.12.1
 
-  사용
-  react 프레임워크
-  react-router-dom 라우터
-  recoil 상태관리매니저
-  react-responsive 반응형웹
-  styled-component style
-  dart-sass 스타일 scss
-  mui 다지인 라이브러리
-
+사용
+react 프레임워크
+react-router-dom 라우터
+recoil 상태관리매니저
+react-responsive 반응형웹
+styled-component style
+dart-sass 스타일 scss
+mui 다지인 라이브러리
 
 <!-- 아래 설정은 최소 구성 시에 적용하는 방법 -->
 <!-- git clone일 경우, npm i 만 진행 하면 된다. -->
 
 # 설치된 메인 라이브러리
+
 ```bash
 $ npm i react-router-dom@6
 # `import { Routes, Route, Link, useNavigate, Outlet } from 'react-router-dom’` 가져다 쓰면 됨
@@ -42,6 +42,7 @@ $ npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
 ```
 
 # eslint & prettier
+
 기본적으로 아래 룰이 적용된다.
 ; semi는 필수로 적는다.
 ' 따움표는 단수만 적는다.
@@ -58,7 +59,7 @@ $ npx eslint --init
   # @eslint/create-config@0.4.2
   # Ok to proceed? (y) y
   # √ How would you like to use ESLint? · style
-  
+
   # √ What type of modules does your project use? · esm
   # √ Which framework does your project use? · react
   # √ Does your project use TypeScript? · No
@@ -69,7 +70,7 @@ $ npx eslint --init
   # Checking peerDependencies of eslint-config-standard@latest
   # Local ESLint installation not found.
   # The config that you've selected requires the following dependencies:
-  
+
   # eslint-plugin-react@latest eslint-config-standard@latest eslint@^8.0.1 eslint-plugin-import@^2.25.2 eslint-plugin-n@^15.0.0 eslint-plugin-promise@^6.0.0
   # √ Would you like to install them now? · Yes
   # √ Which package manager do you want to use? · npm
@@ -103,6 +104,7 @@ $ npm install eslint-plugin-prettier eslint-config-prettier --save-dev
 ```
 
 # Husky & lint-staged
+
 ```bash
 
 # .git과 package.json이 같은 폴더에 존재 할 경우,
@@ -118,6 +120,7 @@ $ npm i -D husky lint-staged
 ```
 
 husky 설치 후에 `package.json`에서 prepare scripts, lint-staged 내용 추가
+
 ```json
 // package.json
   "scripts": {
@@ -141,13 +144,15 @@ husky 설치 후에 `package.json`에서 prepare scripts, lint-staged 내용 추
 
 그 후에 `npm i`하면 .husky 폴더가 생성됨
 .husky 폴더에서 pre-commit 파일 생성하고 아래와 같이 입력.
+
 ```sh
 #!/bin/sh
 . "$(dirname "$0")/_/husky.sh"
 cd ./[Folder Name] && npx lint-staged
 ```
 
-설정이 완료되면, 
+설정이 완료되면,
+
 ```bash
 $ npm run prepare
 # 그냥 npm i 해도됨
@@ -174,6 +179,7 @@ npm info "eslint-config-airbnb@latest" peerDependencies
 ```
 
 .eslintrc.json에서 airbnb를 추가한다.
+
 ```json
 "extends": [
     //...

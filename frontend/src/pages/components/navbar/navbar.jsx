@@ -11,9 +11,11 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import FormGroup from '@mui/material/FormGroup';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
+import { useRecoilState } from 'recoil';
+import { authState } from '../../../atom';
 
 export default function MenuAppBar() {
-  const [auth, setAuth] = React.useState(true);
+  const [auth, setAuth] = useRecoilState(authState);
   const [anchorEl, setAnchorEl] = React.useState(null);
 
   const handleChange = (event) => {
