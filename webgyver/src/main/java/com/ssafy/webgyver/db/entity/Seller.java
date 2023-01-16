@@ -53,7 +53,6 @@ public class Seller {
 
     @Column(name = "updated_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    @JsonProperty("birth_day")
     private LocalDateTime updatedAt;
 
 }
