@@ -24,7 +24,7 @@ const drawerWidth = 240;
 
 export default function NavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
-  const navItems = auth ? ['logout'] : ['login', 'signup'];
+  const navItems = auth ? ['logout', 'account'] : ['login', 'signup'];
 
   const handleChange = (event) => {
     setAuth(event.target.checked);
@@ -73,7 +73,7 @@ export default function NavBar(props) {
             label={auth ? 'Logout' : 'Login'}
           />
         </FormGroup>
-        <AppBar position="static">
+        <AppBar position="static" color="primary">
           <Toolbar>
             {/* 메뉴 버튼 */}
             <IconButton
@@ -92,6 +92,7 @@ export default function NavBar(props) {
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Button color="inherit">Logout</Button>
                 <IconButton
                   size="large"
                   aria-label="account of current user"
@@ -137,6 +138,7 @@ export default function NavBar(props) {
 }
 
 const Main = styled.div`
-  .MuiBox-root {
+  .css-hip9hq-MuiPaper-root-MuiAppBar-root {
+    background-color: ${(props) => props.theme.color.defaultaccentColor};
   }
 `;

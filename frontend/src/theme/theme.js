@@ -1,4 +1,4 @@
-const normal = {
+export const normal = {
   color: {
     // 배경색상
     defaultBgColor: '#ffffff',
@@ -11,5 +11,3 @@ const normal = {
     defaultcautionColor: '#FF5656',
   },
 };
-
-export default normal;
