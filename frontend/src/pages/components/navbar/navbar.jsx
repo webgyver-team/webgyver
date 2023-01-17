@@ -56,7 +56,8 @@ export default function NavBar(props) {
     </Box>
   );
   // eslint-disable-next-line
-  const container = window !== undefined ? () => window().document.body : undefined;
+  const container =
+    window !== undefined ? () => window().document.body : undefined;
 
   return (
     <Main>
@@ -139,6 +140,6 @@ export default function NavBar(props) {
 
 const Main = styled.div`
   .css-hip9hq-MuiPaper-root-MuiAppBar-root {
-    background-color: ${(props) => props.theme.color.defaultaccentColor};
+    // background-color: ${(props) => props.theme.color.defaultaccentColor};
   }
 `;

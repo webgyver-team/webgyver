@@ -13,3 +13,9 @@ export const testState = atom({
   key: 'testState',
   default: 'hi',
 });
+
+// 위치설정 모달 on/off
+export const locateModalState = atom({
+  key: 'locateModalState',
+  default: 'true',
+});

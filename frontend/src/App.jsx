@@ -6,6 +6,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import { normal } from './theme/theme';
 import Home from './pages/pages/homepage/home';
 import NavBar from './pages/components/navbar/NavBar';
+import LocateModal from './pages/components/sitepopup/LocateModal';
 
 function App() {
   return (
@@ -18,7 +19,7 @@ function App() {
           <Main>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/detail" element={<div>상세페이지임</div>} />
+              <Route path="/locate" element={<LocateModal />} />
               <Route path="*" element={<div>404</div>} />
             </Routes>
           </Main>
