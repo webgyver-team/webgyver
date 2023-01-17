@@ -11,3 +11,8 @@ export const testState = atom({
   key: 'testState',
   default: 'hi',
 });
+
+export const categoryState = atom({
+  key: 'categoryState',
+  default: '',
+});
