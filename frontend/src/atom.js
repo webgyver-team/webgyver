@@ -17,5 +17,16 @@ export const testState = atom({
 // 위치설정 모달 on/off
 export const locateModalState = atom({
   key: 'locateModalState',
-  default: 'true',
+  default: true,
+});
+
+// 주소 저장
+export const locateValueState = atom({
+  key: 'locateValueState',
+  default: {
+    address: '',
+    detail: '',
+    longitude: null,
+    latitude: null,
+  },
 });

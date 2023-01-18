@@ -12,9 +12,7 @@ const style = {
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
-  pt: 2,
-  px: 4,
-  pb: 3,
+  p: 4,
 };
 
 // eslint-disable-next-line react/prop-types
@@ -36,7 +34,7 @@ export default function ChooseModal({ child, setChild }) {
         aria-labelledby="child-modal-title"
         aria-describedby="child-modal-description"
       >
-        <Box sx={{ ...style, width: 200 }}>
+        <Box sx={{ ...style, width: 380 }}>
           <h2 id="child-modal-title">Text in a child modal</h2>
           <p id="child-modal-description">
             Lorem ipsum, dolor sit amet consectetur adipisicing elit.

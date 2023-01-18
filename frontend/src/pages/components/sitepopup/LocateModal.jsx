@@ -1,12 +1,14 @@
-import * as React from 'react';
+import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
-import ChooseModal from './elements/ChooseModal';
+import DaumPostcode from 'react-daum-postcode';
+import { useRecoilState } from 'recoil';
+import { locateValueState } from '../../../atom';
 
-const style = {
+const modalStyle = {
   position: 'absolute',
   top: '50%',
   left: '50%',
@@ -16,14 +18,71 @@ const style = {
   border: '2px solid #000',
   boxShadow: 24,
   p: 4,
+  pt: 5,
 };
 
+const postCodeStyle = {
+  width: 310,
+  height: 500,
+};
+
+// kakao 가져오기
+const { kakao } = window;
+
 export default function BasicModal() {
-  const [open, setOpen] = React.useState(true);
+  const [open, setOpen] = useState(false);
+  const [postOpen, setpostOpen] = useState(false);
+  // eslint-disable-next-line prettier/prettier
+  const [inputAddressValue, setInputAddressValue] = useState('여기를 눌러주세요.');
+  const [inputAddDetailValue, setInputAddDetailValue] = useState('');
+  const [coordinateValue, setCoordinateValue] = useState({ x: null, y: null });
+  const [locationValue, setLocationValue] = useRecoilState(locateValueState);
+
   const handleOpen = () => setOpen(true);
-  const handleClose = () => setOpen(false);
-  const [child, setChild] = React.useState(false);
-  const childOpen = () => setChild(true);
+  const handlePostOpen = () => setpostOpen(true);
+  const onCompletePost = (data) => {
+    setpostOpen(false);
+    setInputAddressValue(data.address);
+    // console.log(data.address);
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    setpostOpen(false);
+  };
+
+  const updateLocationValueState = () => {
+    setLocationValue({
+      address: inputAddressValue,
+      detail: inputAddDetailValue,
+      longitude: coordinateValue.x,
+      latitude: coordinateValue.y,
+    });
+    handleClose();
+  };
+
+  useEffect(() => {
+    setInputAddDetailValue(locationValue?.detail);
+  }, [locationValue?.detail]);
+
+  const onChnageDetail = (e) => {
+    setInputAddDetailValue(e.target.value);
+  };
+
+  // 주소 값 변동 시, 좌표 가져오기
+  useEffect(() => {
+    // 주소-좌표 변환 객체 생성
+    const geocoder = new kakao.maps.services.Geocoder();
+    // 주소로 좌표 검색
+    // eslint-disable-next-line func-names
+    geocoder.addressSearch(inputAddressValue, function (result, status) {
+      // 정삭적으로 검색 완료 시
+      if (status === kakao.maps.services.Status.OK) {
+        // console.log(result[0]);
+        setCoordinateValue({ x: result[0].x, y: result[0].y });
+      }
+    });
+  }, [inputAddressValue]);
 
   return (
     <div>
@@ -34,23 +93,40 @@ export default function BasicModal() {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
-        <Box sx={style}>
+        <Box sx={modalStyle}>
           <CloseBtn onClick={handleClose} />
-          <Header>주소설정</Header>
-          <Body>
-            <p>주소</p>
-            <LocaBoxClick onClick={childOpen}>주소가 막 적혀 있어</LocaBoxClick>
-            <p>상세주소</p>
-            <LocaInput />
-            <NullBox />
-            <p>이 주소가 맞나요?</p>
-          </Body>
-          <BtnBox>
-            <Button variant="contained">확인</Button>
-          </BtnBox>
+          {!postOpen && (
+            <>
+              <Header>주소설정</Header>
+              <Body>
+                <p>주소</p>
+                <LocaBoxClick onClick={handlePostOpen}>
+                  {locationValue?.address
+                    ? locationValue.address
+                    : inputAddressValue}
+                </LocaBoxClick>
+                <p>상세주소</p>
+                <LocaInput
+                  onChange={onChnageDetail}
+                  value={inputAddDetailValue}
+                />
+                <NullBox />
+                <p>이 주소가 맞나요?</p>
+              </Body>
+              <BtnBox>
+                <Button variant="contained" onClick={updateLocationValueState}>
+                  확인
+                </Button>
+              </BtnBox>
+            </>
+          )}
+          {postOpen && (
+            <div>
+              <DaumPostcode style={postCodeStyle} onComplete={onCompletePost} />
+            </div>
+          )}
         </Box>
       </Modal>
-      <ChooseModal child={child} setChild={setChild} />
     </div>
   );
 }
@@ -89,7 +165,7 @@ const LocaBoxClick = styled.div`
   margin-top: 8px;
   margin-bottom: 16px;
   padding: 8px;
-  border: 3px solid ${(props) => props.theme.color.defaultColor};
+  border: 1px solid ${(props) => props.theme.color.defaultColor};
   cursor: pointer;
 `;
 
@@ -98,7 +174,7 @@ const LocaInput = styled.input`
   margin-top: 8px;
   margin-bottom: 16px;
   padding: 8px;
-  border: 3px solid ${(props) => props.theme.color.defaultColor};
+  border: 1px solid ${(props) => props.theme.color.defaultColor};
 `;
 
 const NullBox = styled.div`
