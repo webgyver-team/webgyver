@@ -19,3 +19,8 @@ export const locateModalState = atom({
   key: 'locateModalState',
   default: 'true',
 });
+
+export const categoryState = atom({
+  key: 'categoryState',
+  default: '',
+});
