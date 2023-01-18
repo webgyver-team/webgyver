@@ -13,11 +13,11 @@ import WindowOutlinedIcon from '@mui/icons-material/WindowOutlined';
 import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
-// import { useSetRecoilState } from 'recoil';
-// import { categoryState } from '../../../../atom';
+import { useSetRecoilState } from 'recoil';
+import { categoryState } from '../../../../atom';
 
 export default function CategoryLine(props) {
-  // const setCategory = useSetRecoilState(categoryState);
+  const setCategory = useSetRecoilState(categoryState);
   const categories = useState([
     '욕실',
     '주방',
@@ -32,6 +32,8 @@ export default function CategoryLine(props) {
   ]);
   const leftCategory = categories[0][props.left];
   const rightCategory = categories[0][props.right];
+  const setLeftCategory = () => setCategory(leftCategory);
+  const setRightCategory = () => setCategory(rightCategory);
   const icons = useState([
     <BathtubIcon />,
     <DiningIcon />,
@@ -55,7 +57,7 @@ export default function CategoryLine(props) {
           size="large"
           endIcon={leftIcon}
           style={{ minWidth: '144px' }}
-          // onClick={setCategory(leftCategory)}
+          onClick={setLeftCategory}
         >
           {leftCategory}
         </Button>
@@ -64,7 +66,7 @@ export default function CategoryLine(props) {
           size="large"
           endIcon={rightIcon}
           style={{ minWidth: '144px' }}
-          // onClick={setCategory(rightCategory)}
+          onClick={setRightCategory}
         >
           {rightCategory}
         </Button>

@@ -3,9 +3,11 @@ import './App.scss';
 import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
-import normal from './theme/theme';
+import { normal } from './theme/theme';
 import Home from './pages/pages/homepage/home';
-import MenuAppBar from './pages/components/navbar/navbar';
+// eslint-disable-next-line import/no-unresolved
+import NavBar from './pages/components/navbar/navbar';
+import LocateModal from './pages/components/sitepopup/LocateModal';
 
 function App() {
   return (
@@ -14,11 +16,11 @@ function App() {
       <RecoilRoot>
         {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
         <ThemeProvider theme={normal}>
-          <MenuAppBar />
+          <NavBar />
           <Main>
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/detail" element={<div>상세페이지임</div>} />
+              <Route path="/locate" element={<LocateModal />} />
               <Route path="*" element={<div>404</div>} />
             </Routes>
           </Main>
