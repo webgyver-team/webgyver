@@ -6,6 +6,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import normal from './theme/theme';
 import Home from './pages/pages/homepage/home';
 import NavBar from './pages/components/navbar/NavBar';
+import SignUp from './pages/components/signup/SignUp';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/detail" element={<div>상세페이지임</div>} />
+              <Route path="/signup" element={<SignUp />} />
               <Route path="*" element={<div>404</div>} />
             </Routes>
           </Main>
