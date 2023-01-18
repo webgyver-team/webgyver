@@ -6,7 +6,7 @@ import styled, { ThemeProvider } from 'styled-components';
 import normal from './theme/theme';
 import Home from './pages/pages/homepage/home';
 import NavBar from './pages/components/navbar/NavBar';
-import SignUp from './pages/components/signup/SignUp';
+import SignUp from './pages/components/signup/CustomerSignUp';
 
 function App() {
   return (
