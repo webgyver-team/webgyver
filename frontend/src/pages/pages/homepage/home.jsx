@@ -4,7 +4,7 @@ import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { categoryState } from '../../../atom';
 
-import CategoryLine from './elements/categoryline';
+import CategoryLine from './elements/CategoryLine';
 
 export default function Home() {
   const [loadding, setLodding] = useState(true);
