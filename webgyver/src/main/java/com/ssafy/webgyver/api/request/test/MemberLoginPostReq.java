@@ -9,6 +9,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class MemberLoginPostReq {
-	String id;
+	Long id;
 	String password;
 }

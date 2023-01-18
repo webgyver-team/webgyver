@@ -11,4 +11,6 @@ import javax.persistence.PersistenceContext;
 public interface TestMemberRepository extends JpaRepository<TestMember, Long> {
 //    @PersistenceContext
 //    private EntityManager em;
+    TestMember findByIdAndPassword(Long id, String password);
+
 }

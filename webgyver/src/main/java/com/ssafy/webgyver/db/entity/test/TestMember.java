@@ -1,6 +1,8 @@
 package com.ssafy.webgyver.db.entity.test;
 
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
@@ -13,6 +15,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
 @Table(name="test_member")
 public class TestMember {
     @Id
@@ -20,6 +23,7 @@ public class TestMember {
     private Long id;
     @Column(name = "name")
     private String username;
+    private String password;
     private Integer age;
     @Enumerated(EnumType.STRING)
     private RoleType roleType;
