@@ -41,11 +41,11 @@ public class TestController {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             return ResponseEntity.ok(
                     MemberLoginPostRes.of(200, "Success", JwtTokenUtil.getToken(
-                            String.valueOf(userId))));
+                            String.valueOf(userId)),member));
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
         return ResponseEntity.status(401)
-                .body(MemberLoginPostRes.of(401, "Invalid Password", null));
+                .body(MemberLoginPostRes.of(401, "Invalid Password", null,member));
     }
 
     @PostMapping("/signup")
@@ -56,4 +56,6 @@ public class TestController {
 
         return ResponseEntity.status(200).body(MemberSignUpPostRes.of(200, "Success"));
     }
+
+
 }
