@@ -6,7 +6,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
 import DaumPostcode from 'react-daum-postcode';
 import { useRecoilState } from 'recoil';
-import { locateValueState } from '../../../atom';
+import { locateValueState } from '../../atom';
 
 const modalStyle = {
   position: 'absolute',
