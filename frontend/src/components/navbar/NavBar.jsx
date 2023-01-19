@@ -18,7 +18,7 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { authState } from '../../../atom';
+import { authState } from '../../atom';
 
 const drawerWidth = 240;
 
