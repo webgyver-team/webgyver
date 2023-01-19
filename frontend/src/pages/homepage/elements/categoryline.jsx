@@ -14,7 +14,7 @@ import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
 import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSetRecoilState } from 'recoil';
-import { categoryState } from '../../../../atom';
+import { categoryState } from '../../../atom';
 
 export default function CategoryLine(props) {
   const setCategory = useSetRecoilState(categoryState);

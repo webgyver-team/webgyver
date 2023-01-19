@@ -3,6 +3,7 @@ import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
+import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
 import DaumPostcode from 'react-daum-postcode';
 import { useRecoilState } from 'recoil';
@@ -169,12 +170,11 @@ const LocaBoxClick = styled.div`
   cursor: pointer;
 `;
 
-const LocaInput = styled.input`
+const LocaInput = styled(TextField)`
   width: 100%;
   margin-top: 8px;
   margin-bottom: 16px;
   padding: 8px;
-  border: 1px solid ${(props) => props.theme.color.defaultColor};
 `;
 
 const NullBox = styled.div`
