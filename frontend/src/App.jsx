@@ -3,12 +3,14 @@ import './App.scss';
 import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
+import SignUp from './components/signup/CustomerSignUp';
 import { normal } from './theme/theme';
 import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved
 import NavBar from './components/navbar/NavBar';
 import LocateModal from './components/sitepopup/LocateModal';
 import Reservation from './pages/reservation/Reservation';
+import LoginModal from './components/login/LoginModal';
 
 function App() {
   return (
@@ -19,8 +21,10 @@ function App() {
         <ThemeProvider theme={normal}>
           <NavBar />
           <Main>
+            <LoginModal />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<SignUp />} />
               <Route path="/locate" element={<LocateModal />} />
               <Route path="/reservation" element={<Reservation />} />
               <Route path="*" element={<div>404</div>} />

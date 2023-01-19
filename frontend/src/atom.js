@@ -36,3 +36,8 @@ export const categoryState = atom({
   key: 'categoryState',
   default: '',
 });
+
+export const loginOpenState = atom({
+  key: 'loginOpenState',
+  default: false,
+});
