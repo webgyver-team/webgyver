@@ -1,7 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-
 import Button from '@mui/material/Button';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import DiningIcon from '@mui/icons-material/Dining';
@@ -52,7 +51,7 @@ export default function CategoryLine(props) {
   return (
     <div>
       <Linediv>
-        <Button
+        <CategoryButton
           variant="outlined"
           size="large"
           endIcon={leftIcon}
@@ -60,8 +59,8 @@ export default function CategoryLine(props) {
           onClick={setLeftCategory}
         >
           {leftCategory}
-        </Button>
-        <Button
+        </CategoryButton>
+        <CategoryButton
           variant="outlined"
           size="large"
           endIcon={rightIcon}
@@ -69,7 +68,7 @@ export default function CategoryLine(props) {
           onClick={setRightCategory}
         >
           {rightCategory}
-        </Button>
+        </CategoryButton>
       </Linediv>
     </div>
   );
@@ -79,4 +78,8 @@ const Linediv = styled.div`
   margin-top: 16px;
   display: flex;
   justify-content: space-evenly;
+`;
+
+const CategoryButton = styled(Button)`
+  color: ${(props) => props.theme.color.defaultDotColor};
 `;
