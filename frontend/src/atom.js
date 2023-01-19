@@ -31,6 +31,7 @@ export const locateValueState = atom({
   },
 });
 
+// 선택된 카테고리
 export const categoryState = atom({
   key: 'categoryState',
   default: '',

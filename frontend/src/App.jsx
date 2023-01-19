@@ -4,10 +4,10 @@ import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import { normal } from './theme/theme';
-import Home from './pages/pages/homepage/home';
+import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved
-import NavBar from './pages/components/navbar/navbar';
-import LocateModal from './pages/components/sitepopup/LocateModal';
+import NavBar from './components/navbar/NavBar';
+import LocateModal from './components/sitepopup/LocateModal';
 
 function App() {
   return (
