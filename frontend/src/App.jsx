@@ -46,18 +46,6 @@ const Main = styled.div`
   align-items: center;
   // height: 100vh;
   color: ${(props) => props.theme.color.defaultColor};
-  background-image: linear-gradient(
-      to bottom,
-      transparent,
-      transparent 16.6667%,
-      ${(props) => props.theme.color.defaultBgColor} 16.6667%
-    ),
-    linear-gradient(
-      to right,
-      ${(props) => props.theme.color.defaultDotColor},
-      ${(props) => props.theme.color.defaultDotColor} 16.6667%,
-      ${(props) => props.theme.color.defaultBgColor} 16.6667%
-    );
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;

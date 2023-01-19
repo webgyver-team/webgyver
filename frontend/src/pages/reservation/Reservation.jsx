@@ -90,6 +90,6 @@ const Main = styled.div`
 
 const CustomTab = styled.span`
   color: ${(props) => props.theme.color.defaultColor};
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 `;
