@@ -76,7 +76,6 @@ export default function CategoryLine(props) {
 }
 
 const Linediv = styled.div`
-  width: 100vw;
   margin-top: 16px;
   display: flex;
   justify-content: space-evenly;
