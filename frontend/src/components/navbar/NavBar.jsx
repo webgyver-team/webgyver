@@ -17,15 +17,23 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
-import { authState } from '../../atom';
+import { useRecoilState, useSetRecoilState } from 'recoil';
+import { authState, loginOpenState } from '../../atom';
 
 const drawerWidth = 240;
 
 export default function NavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
   const navItems = auth ? ['logout', 'account'] : ['login', 'signup'];
-
+  const setLoginOpenState = useSetRecoilState(loginOpenState);
+  const openLoginModal = () => setLoginOpenState(true);
+  const chooseMenu = (item) => {
+    // 아래 사이드바 메뉴 클릭 시 실행
+    // item의 조건을 추가해 함수 로직 작성
+    if (item === 'login') {
+      openLoginModal();
+    }
+  };
   const handleChange = (event) => {
     setAuth(event.target.checked);
   };
@@ -47,7 +55,12 @@ export default function NavBar(props) {
       <List>
         {navItems.map((item) => (
           <ListItem key={item} disablePadding>
-            <ListItemButton sx={{ textAlign: 'center' }}>
+            <ListItemButton
+              sx={{ textAlign: 'center' }}
+              // 사이드바 메뉴 클릭하면 메뉴 관계없이 chooseMenu 실행하므로
+              // 메뉴 추가 시 위의 chooseMenu함수에 item 조건문을 넣어 함수 로직 작성
+              onClick={() => chooseMenu(item)}
+            >
               <ListItemText primary={item} />
             </ListItemButton>
           </ListItem>
@@ -107,7 +120,9 @@ export default function NavBar(props) {
             )}
             {!auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Button color="inherit">로그인</Button>
+                <Button color="inherit" onClick={openLoginModal}>
+                  로그인
+                </Button>
                 <Button color="inherit">회원가입</Button>
               </Box>
             )}
