@@ -9,6 +9,7 @@ import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved
 import NavBar from './components/navbar/NavBar';
 import LocateModal from './components/sitepopup/LocateModal';
+import Reservation from './pages/reservation/Reservation';
 import LoginModal from './components/login/LoginModal';
 
 function App() {
@@ -25,6 +26,7 @@ function App() {
               <Route path="/" element={<Home />} />
               <Route path="/signup" element={<SignUp />} />
               <Route path="/locate" element={<LocateModal />} />
+              <Route path="/reservation" element={<Reservation />} />
               <Route path="*" element={<div>404</div>} />
             </Routes>
           </Main>
@@ -57,6 +59,7 @@ const Main = styled.div`
       ${(props) => props.theme.color.defaultBgColor} 16.6667%
     );
   background-size: 6px 6px;
-  font-size: 36px;
+  font-family: 'Roboto';
+  font-size: 32px;
   line-height: 160%;
 `;
