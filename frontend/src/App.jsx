@@ -8,6 +8,7 @@ import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved
 import NavBar from './components/navbar/NavBar';
 import LocateModal from './components/sitepopup/LocateModal';
+import LoginModal from './components/login/LoginModal';
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
         <ThemeProvider theme={normal}>
           <NavBar />
           <Main>
+            <LoginModal />
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/locate" element={<LocateModal />} />
