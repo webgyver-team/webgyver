@@ -11,7 +11,7 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 
 export default function Reserve() {
   return (
-    <div>
+    <Main>
       <BtnBox>
         <div>
           <p>전문가를 살펴보고</p>
@@ -89,9 +89,13 @@ export default function Reserve() {
           </InfoTextBox>
         </Info>
       </InfoBox>
-    </div>
+    </Main>
   );
 }
+
+const Main = styled.div`
+  width: 100;
+`;
 
 const BtnBox = styled.div`
   height: 100;
