@@ -8,6 +8,7 @@ import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved
 import NavBar from './components/navbar/NavBar';
 import LocateModal from './components/sitepopup/LocateModal';
+import Reservation from './pages/reservation/Reservation';
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/locate" element={<LocateModal />} />
+              <Route path="/reservation" element={<Reservation />} />
               <Route path="*" element={<div>404</div>} />
             </Routes>
           </Main>
@@ -33,12 +35,12 @@ function App() {
 export default App;
 
 const Main = styled.div`
-  width: 100vw;
+  // width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  // height: 100vh;
   color: ${(props) => props.theme.color.defaultColor};
   background-image: linear-gradient(
       to bottom,
@@ -53,6 +55,7 @@ const Main = styled.div`
       ${(props) => props.theme.color.defaultBgColor} 16.6667%
     );
   background-size: 6px 6px;
-  font-size: 36px;
+  font-family: 'Roboto';
+  font-size: 32px;
   line-height: 160%;
 `;
