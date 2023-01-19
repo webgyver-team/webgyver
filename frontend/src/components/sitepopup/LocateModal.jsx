@@ -100,18 +100,27 @@ export default function BasicModal() {
             <>
               <Header>주소설정</Header>
               <Body>
-                <p>주소</p>
-                <LocaBoxClick onClick={handlePostOpen}>
-                  {locationValue?.address
-                    ? locationValue.address
-                    : inputAddressValue}
-                </LocaBoxClick>
-                <p>상세주소</p>
                 <LocaInput
+                  label="주소"
+                  variant="outlined"
+                  onClick={handlePostOpen}
+                  value={
+                    locationValue?.address
+                      ? locationValue.address
+                      : inputAddressValue
+                  }
+                  InputProps={{
+                    readOnly: true,
+                  }}
+                />
+                <NullBox2 />
+                <LocaInput
+                  label="상세주소"
+                  variant="outlined"
                   onChange={onChnageDetail}
                   value={inputAddDetailValue}
                 />
-                <NullBox />
+                <NullBox1 />
                 <p>이 주소가 맞나요?</p>
               </Body>
               <BtnBox>
@@ -162,23 +171,16 @@ const Body = styled.div`
   }
 `;
 
-const LocaBoxClick = styled.div`
-  margin-top: 8px;
-  margin-bottom: 16px;
-  padding: 8px;
-  border: 1px solid ${(props) => props.theme.color.defaultColor};
-  cursor: pointer;
-`;
-
 const LocaInput = styled(TextField)`
   width: 100%;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  padding: 8px;
 `;
 
-const NullBox = styled.div`
+const NullBox1 = styled.div`
   height: 128px;
+`;
+
+const NullBox2 = styled.div`
+  height: 16px;
 `;
 
 const BtnBox = styled.div`
