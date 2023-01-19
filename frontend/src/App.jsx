@@ -3,10 +3,13 @@ import './App.scss';
 import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
-import normal from './theme/theme';
-import Home from './pages/pages/homepage/home';
-import NavBar from './pages/components/navbar/NavBar';
-import SignUp from './pages/components/signup/CustomerSignUp';
+import SignUp from './components/signup/CustomerSignUp';
+import { normal } from './theme/theme';
+import Home from './pages/homepage/home';
+// eslint-disable-next-line import/no-unresolved
+import NavBar from './components/navbar/NavBar';
+import LocateModal from './components/sitepopup/LocateModal';
+import LoginModal from './components/login/LoginModal';
 
 function App() {
   return (
@@ -17,10 +20,11 @@ function App() {
         <ThemeProvider theme={normal}>
           <NavBar />
           <Main>
+            <LoginModal />
             <Routes>
               <Route path="/" element={<Home />} />
-              <Route path="/detail" element={<div>상세페이지임</div>} />
               <Route path="/signup" element={<SignUp />} />
+              <Route path="/locate" element={<LocateModal />} />
               <Route path="*" element={<div>404</div>} />
             </Routes>
           </Main>
@@ -33,11 +37,12 @@ function App() {
 export default App;
 
 const Main = styled.div`
-  width: 100vw;
+  // width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  // height: 100vh;
   color: ${(props) => props.theme.color.defaultColor};
   background-image: linear-gradient(
       to bottom,
