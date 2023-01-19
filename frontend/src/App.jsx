@@ -4,11 +4,11 @@ import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import { normal } from './theme/theme';
-import Home from './pages/pages/homepage/home';
+import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved
-import NavBar from './pages/components/navbar/navbar';
-import LocateModal from './pages/components/sitepopup/LocateModal';
-import LoginModal from './pages/components/login/LoginModal';
+import NavBar from './components/navbar/NavBar';
+import LocateModal from './components/sitepopup/LocateModal';
+import LoginModal from './components/login/LoginModal';
 
 function App() {
   return (

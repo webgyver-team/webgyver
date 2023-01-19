@@ -5,7 +5,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
-import { loginOpenState } from '../../../atom';
+import { loginOpenState } from '../../atom';
 
 const style = {
   position: 'absolute',

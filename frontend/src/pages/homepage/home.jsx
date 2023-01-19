@@ -2,9 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
-import { categoryState } from '../../../atom';
-
-import CategoryLine from './elements/CategoryLine';
+import { categoryState } from '../../atom';
+import CategoryLine from './elements/categoryline';
 
 export default function Home() {
   const [loadding, setLodding] = useState(true);
