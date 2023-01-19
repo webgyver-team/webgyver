@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import TextField from '@mui/material/TextField';
+import Message from './Message';
 
-export default function PasswordInput() {
+export default function PasswordInput({ getPassword }) {
   const PW_MIN_LENGTH = 6;
   const PW_MAX_LENGTH = 10;
   const [password, setPassword] = useState('');
@@ -22,7 +24,11 @@ export default function PasswordInput() {
     } else setMsg(() => '');
     if (event.target.value !== password2) {
       setMsg2(() => '비밀번호가 일치하지 않습니다.');
-    } else setMsg2(() => '');
+      getPassword(null);
+      return;
+    }
+    setMsg2(() => '');
+    getPassword(password2);
   };
 
   const changePasswordRepeat = (event) => {
@@ -30,60 +36,35 @@ export default function PasswordInput() {
     setMsg2();
     if (event.target.value !== password) {
       setMsg2(() => '비밀번호가 일치하지 않습니다.');
-    } else setMsg2(() => '');
+      getPassword(null);
+      return;
+    }
+    getPassword(password);
+    setMsg2(() => '');
   };
 
   return (
     <div>
-      <label
-        htmlFor="password"
-        style={{ fontSize: '16px', fontWeight: 'bold' }}
-      >
-        비밀번호
-        {/* label 글자 크기 16px */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <input
-            type="password"
-            id="password"
-            name="password"
-            onChange={changePassword}
-            required
-            style={{ width: '92%', border: '2px solid black' }}
-          />
-        </div>
-        {/* p 글자 크기 16px */}
-        <p style={{ color: 'red' }}>{msg}</p>
-      </label>
-
-      <label
-        htmlFor="password-repeat"
-        style={{ fontSize: '16px', fontWeight: 'bold' }}
-      >
-        비밀번호 확인
-        {/* label 글자 크기 16px */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <input
-            type="password"
-            id="password-repeat"
-            name="password-repeat"
-            onChange={changePasswordRepeat}
-            required
-            style={{ width: '92%', border: '2px solid black' }}
-          />
-        </div>
-        {/* p 글자 크기 16px */}
-        <p style={{ color: 'red' }}>{msg2}</p>
-      </label>
+      <TextField
+        type="password"
+        id="outlined-basic"
+        label="비밀번호"
+        variant="outlined"
+        required
+        inputProps={{ minLength: 6, maxLength: 10 }}
+        onChange={changePassword}
+      />
+      <Message msg={msg} />
+      <TextField
+        type="password"
+        id="outlined-basic"
+        label="비밀번호 확인"
+        variant="outlined"
+        required
+        inputProps={{ minLength: 6, maxLength: 10 }}
+        onChange={changePasswordRepeat}
+      />
+      <Message msg={msg2} />
     </div>
   );
 }

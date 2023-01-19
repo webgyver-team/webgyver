@@ -1,12 +1,31 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { TextField } from '@mui/material';
+import styled from 'styled-components';
+import Message from './Message';
 
-export default function PhoneNumberInput() {
+export default function PhoneNumberInput({ getPhoneNumber }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [phoneNumber1, setPhoneNumber1] = useState('');
   const [phoneNumber2, setPhoneNumber2] = useState('');
   const [phoneNumber3, setPhoneNumber3] = useState('');
   const [msg, setMsg] = useState('');
-
+  useEffect(() => {
+    if (phoneNumber === null) getPhoneNumber(null);
+    else getPhoneNumber(phoneNumber);
+  }, [phoneNumber, getPhoneNumber]);
+  useEffect(() => {
+    // 각각의 phoneNumber가 바뀌었을 때...
+    if (phoneNumber1 !== '010') {
+      setPhoneNumber(() => null);
+      return;
+    }
+    if (phoneNumber2.trim().length !== 4 || phoneNumber3.trim().length !== 4) {
+      setPhoneNumber(() => null);
+      return;
+    }
+    console.log(`완료! :${phoneNumber1}${phoneNumber2}${phoneNumber3}`);
+    setPhoneNumber(() => phoneNumber1 + phoneNumber2 + phoneNumber3);
+  }, [phoneNumber1, phoneNumber2, phoneNumber3]);
   const onlyNumber = (event) => {
     const input = event.target.value;
     if (Number.isNaN(Number(input))) {
@@ -23,6 +42,7 @@ export default function PhoneNumberInput() {
       case 1:
         if (value.trim().length !== 0 && value !== '010') {
           setMsg(() => '첫번째 전화번호 입력은 010만 가능합니다.');
+          return false;
         }
         // 여기서는 다른 단계에 문제가 없는지 다시 체크...?
         // checkMsg(phoneNumber2, 2);
@@ -31,6 +51,7 @@ export default function PhoneNumberInput() {
       case 2:
         if (value.trim().length > 0 && value.trim().length < 4) {
           setMsg(() => '두번째 전화번호 입력은 4자리 숫자만 가능합니다.');
+          return false;
         }
         // checkMsg(phoneNumber1, 1);
         // checkMsg(phoneNumber3, 3);
@@ -38,6 +59,7 @@ export default function PhoneNumberInput() {
       case 3:
         if (value.trim().length > 0 && value.trim().length < 4) {
           setMsg(() => '세번째 전화번호 입력은 4자리 숫자만 가능합니다.');
+          return false;
         }
         // checkMsg(phoneNumber1, 1);
         // checkMsg(phoneNumber2, 2);
@@ -45,25 +67,26 @@ export default function PhoneNumberInput() {
       default:
         break;
     }
+    return true;
   };
 
   const changePhoneNumber1 = (event) => {
     if (!onlyNumber(event)) return;
     // 가능한 숫자: 일단 앞자리는 010으로 고정
     setPhoneNumber1(() => event.target.value);
-    setPhoneNumber(`${event.target.value}-${phoneNumber2}-${phoneNumber3}`);
+    // setPhoneNumber(`${event.target.value}-${phoneNumber2}-${phoneNumber3}`);
     checkMsg(event.target.value, 1);
   };
   const changePhoneNumber2 = (event) => {
     if (!onlyNumber(event)) return;
     setPhoneNumber2(() => event.target.value);
-    setPhoneNumber(`${phoneNumber1}-${event.target.value}-${phoneNumber3}`);
+    // setPhoneNumber(`${phoneNumber1}-${event.target.value}-${phoneNumber3}`);
     checkMsg(event.target.value, 2);
   };
   const changePhoneNumber3 = (event) => {
     if (!onlyNumber(event)) return;
     setPhoneNumber3(() => event.target.value);
-    setPhoneNumber(`${phoneNumber1}-${phoneNumber2}-${event.target.value}`);
+    // setPhoneNumber(`${phoneNumber1}-${phoneNumber2}-${event.target.value}`);
     checkMsg(event.target.value, 3);
   };
 
@@ -74,50 +97,45 @@ export default function PhoneNumberInput() {
   //   3번 칸: 4자리만 가능
   return (
     <div>
-      <label htmlFor="name" style={{ fontSize: '16px', fontWeight: 'bold' }}>
-        전화번호
-        {phoneNumber}
-        {/* label 글자 크기 16px */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <input
-            type="text"
-            id="phone-number1"
-            name="phone-number1"
-            required
-            value={phoneNumber1}
-            onChange={changePhoneNumber1}
-            style={{ width: '24%', border: '2px solid black' }}
-          />
-          <p style={{ margin: '0 4%' }}>-</p>
-          <input
-            type="text"
-            id="phone-number2"
-            name="phone-number2"
-            required
-            value={phoneNumber2}
-            onChange={changePhoneNumber2}
-            style={{ width: '24%', border: '2px solid black' }}
-          />
-          <p style={{ margin: '0 4%' }}>-</p>
-          <input
-            type="text"
-            id="phone-number3"
-            name="phone-number3"
-            required
-            value={phoneNumber3}
-            onChange={changePhoneNumber3}
-            style={{ width: '24%', border: '2px solid black' }}
-          />
-        </div>
-        {/* p 글자 크기 16px */}
-        {/* <p style={{ color: 'red' }}>{msg}</p> */}
-      </label>
-      <p style={{ color: 'red' }}>{msg}</p>
+      <InputDiv>
+        <TextField
+          id="outlined-basic"
+          label="전화번호"
+          variant="outlined"
+          value={phoneNumber1}
+          required
+          inputProps={{ maxLength: 3 }}
+          onChange={changePhoneNumber1}
+        />
+
+        <p>-</p>
+        <TextField
+          id="outlined-basic"
+          label=""
+          variant="outlined"
+          value={phoneNumber2}
+          required
+          inputProps={{ maxLength: 4 }}
+          onChange={changePhoneNumber2}
+        />
+        <p>-</p>
+        <TextField
+          id="outlined-basic"
+          label=""
+          variant="outlined"
+          value={phoneNumber3}
+          required
+          inputProps={{ maxLength: 4 }}
+          onChange={changePhoneNumber3}
+        />
+      </InputDiv>
+
+      <Message msg={msg} />
     </div>
   );
 }
+
+const InputDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;

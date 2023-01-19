@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
+import { TextField } from '@mui/material';
+import Message from './Message';
 
-export default function NameInput() {
+export default function NameInput({ getName }) {
   const [name, setName] = useState('');
   const [msg, setMsg] = useState('');
   const changeName = (event) => {
@@ -8,32 +10,23 @@ export default function NameInput() {
     console.log(name);
     if (event.target.value.trim().length === 0) {
       setMsg(() => '성명을 입력하세요.');
-    } else setMsg(() => '');
+      getName(null);
+      return;
+    }
+    setMsg(() => '');
+    getName(event.target.value.trim());
   };
 
   return (
     <div>
-      <label htmlFor="name" style={{ fontSize: '16px', fontWeight: 'bold' }}>
-        이름
-        {/* label 글자 크기 16px */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <input
-            type="text"
-            id="name"
-            name="name"
-            onChange={changeName}
-            required
-            style={{ width: '92%', border: '2px solid black' }}
-          />
-        </div>
-        {/* p 글자 크기 16px */}
-        <p style={{ color: 'red' }}>{msg}</p>
-      </label>
+      <TextField
+        id="outlined-basic"
+        label="이름"
+        variant="outlined"
+        required
+        onChange={changeName}
+      />
+      <Message msg={msg} />
     </div>
   );
 }

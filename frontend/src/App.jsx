@@ -38,7 +38,6 @@ const Main = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   color: ${(props) => props.theme.color.defaultColor};
   background-image: linear-gradient(
       to bottom,

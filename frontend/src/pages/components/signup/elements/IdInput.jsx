@@ -1,7 +1,10 @@
 import React, { useState } from 'react';
 import Button from '@mui/material/Button';
+import TextField from '@mui/material/TextField';
+import styled from 'styled-components';
+import Message from './Message';
 
-export default function IdInput() {
+export default function IdInput({ getId }) {
   const ID_MIN_LENGTH = 6;
   const ID_MAX_LENGTH = 10;
   const [id, setId] = useState('');
@@ -9,10 +12,13 @@ export default function IdInput() {
   const [idDisabled, setIdDisabled] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
-  const smallFont = {
+  // props.setId(() => '자식에서 온 놈이다!!');
+  const buttonStyle = {
+    height: '56px',
+    border: '1px solid black',
     fontSize: '16px',
-    fontWeight: 'bold',
   };
+
   const changeId = (event) => {
     if (
       // eslint-disable-next-line operator-linebreak
@@ -39,57 +45,48 @@ export default function IdInput() {
       setMsg(() => '아이디에 띄어쓰기를 포함할 수 없습니다,');
       return;
     }
+    setBtnDisabled(() => true);
     // 아이디 중복 검사 axios 호출(일단은 random함수로 대체)
-    // 중복이면 alert?
     if (Math.random() > 0.5) {
+      // 중복이면 alert?
       alert('해당 아이디는 이미 존재합니다.');
+      setBtnDisabled(() => false);
       return;
     }
     // 성공 했으면 아이디 input disabled
     alert('해당 아이디는 사용 가능합니다.');
+    getId(id);
     setIdDisabled(() => true);
     setBtnDisabled(() => true);
   };
+
   return (
     <div>
-      <label htmlFor="id" style={smallFont}>
-        아이디
-        {/* label 글자 크기 16px */}
-        <div
-          style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            width: '92%',
-            margin: '0px auto',
-          }}
+      <InputDiv>
+        <TextField
+          id="outlined-basic"
+          label="아이디"
+          variant="outlined"
+          required
+          inputProps={{ minLength: 6, maxLength: 10 }}
+          disabled={idDisabled}
+          onChange={changeId}
+        />
+        <Button
+          variant="contained"
+          style={buttonStyle}
+          onClick={checkExistId}
+          disabled={btnDisabled}
         >
-          <input
-            type="text"
-            id="id"
-            name="id"
-            onChange={changeId}
-            required
-            disabled={idDisabled}
-            style={{ width: '72%', border: '2px solid black' }}
-          />
-          <Button
-            onClick={checkExistId}
-            disabled={btnDisabled}
-            style={{
-              fontSize: '24px',
-              width: '80px',
-              height: '64px',
-              border: '2px solid black',
-              marginLeft: '16px',
-            }}
-          >
-            검사
-          </Button>
-          {/* 버튼 글자 크기 24px */}
-        </div>
-        <p style={{ color: 'red', textAlign: 'center' }}>{msg}</p>
-        {/* p 글자 크기 16px */}
-      </label>
+          검사
+        </Button>
+      </InputDiv>
+      <Message msg={msg} />
     </div>
   );
 }
+
+const InputDiv = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
