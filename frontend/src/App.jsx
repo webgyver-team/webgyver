@@ -3,7 +3,7 @@ import './App.scss';
 import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
-import SignUp from './components/signup/CustomerSignUp';
+import SignUp from './pages/signup/CustomerSignUp';
 import { normal } from './theme/theme';
 import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved

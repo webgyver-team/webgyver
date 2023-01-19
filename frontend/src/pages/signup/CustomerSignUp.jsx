@@ -24,34 +24,38 @@ export default function CustomerSignUp() {
     phoneNumber,
     // cardNumber
   });
-  const updateData = (original, updateValue) => {
-    setData(() => ({
+  const updateData = (updateValue) => {
+    setData((original) => ({
       ...original,
       ...updateValue,
     }));
   };
   const getId = (value) => {
     setId(() => value);
-    updateData(data, { id: value });
+    updateData({ id: value });
   };
   const getPassword = (value) => {
     setPassword(() => value);
-    updateData(data, { password: value });
+    updateData({ password: value });
   };
   const getName = (value) => {
     setName(() => value);
-    updateData(data, { name: value });
+    updateData({ name: value });
   };
   const getResidentNumber = (value) => {
     setResidentNumber(() => value);
-    updateData(data, { residentNumber: value });
+    updateData({ residentNumber: value });
   };
   const getPhoneNumber = (value) => {
     setPhoneNumber(() => value);
-    updateData(data, { phoneNumber: value });
+    updateData({ phoneNumber: value });
   };
   const registCard = () => {
     alert('카드 등록 API 호출..');
+  };
+
+  const registCustomer = () => {
+    console.log(data);
   };
   return (
     <div>
@@ -90,10 +94,7 @@ export default function CustomerSignUp() {
         <Agreement />
       </SignUpForm>
       <div style={{ textAlign: 'center' }}>
-        <Button
-          variant="contained"
-          onClick={() => alert('고객 회원가입 axios POST 예정')}
-        >
+        <Button variant="contained" onClick={registCustomer}>
           회원가입
         </Button>
       </div>
