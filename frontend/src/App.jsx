@@ -3,6 +3,7 @@ import './App.scss';
 import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
+import SignUp from './components/signup/CustomerSignUp';
 import { normal } from './theme/theme';
 import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved
@@ -22,6 +23,7 @@ function App() {
             <LoginModal />
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/signup" element={<SignUp />} />
               <Route path="/locate" element={<LocateModal />} />
               <Route path="*" element={<div>404</div>} />
             </Routes>
