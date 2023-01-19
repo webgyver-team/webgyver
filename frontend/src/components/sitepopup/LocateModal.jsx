@@ -34,17 +34,39 @@ const { kakao } = window;
 export default function BasicModal() {
   const [open, setOpen] = useState(false);
   const [postOpen, setpostOpen] = useState(false);
-  // eslint-disable-next-line prettier/prettier
-  const [inputAddressValue, setInputAddressValue] = useState('여기를 눌러주세요.');
-  const [inputAddDetailValue, setInputAddDetailValue] = useState('');
   const [coordinateValue, setCoordinateValue] = useState({ x: null, y: null });
   const [locationValue, setLocationValue] = useRecoilState(locateValueState);
 
+  // 컴포넌트 내 주소 관리 State
+  const [addressValue, setAddressValue] = useState({
+    address: locationValue.address
+      ? locationValue.address
+      : '여기를 눌러주세요.',
+    detail: locationValue.detail ? locationValue.detail : '',
+  });
+  // 기본주소 변경 함수
+  const setAddress = (ans) => {
+    setAddressValue((prevState) => {
+      return { ...prevState, address: ans };
+    });
+  };
+  // 상세주소 변경 함수
+  const setDetail = (ans) => {
+    setAddressValue((prevState) => {
+      return { ...prevState, detail: ans };
+    });
+  };
+  // 상세주소 변경 실시간 반영
+  const onChnageDetail = (e) => {
+    setDetail(e.target.value);
+  };
+
   const handleOpen = () => setOpen(true);
   const handlePostOpen = () => setpostOpen(true);
+  // 주소 선택창 닫힐 때 작동
   const onCompletePost = (data) => {
     setpostOpen(false);
-    setInputAddressValue(data.address);
+    setAddress(data.address);
     // console.log(data.address);
   };
 
@@ -53,22 +75,15 @@ export default function BasicModal() {
     setpostOpen(false);
   };
 
+  // 확인 클릭 시, recoil Location 업데이트
   const updateLocationValueState = () => {
     setLocationValue({
-      address: inputAddressValue,
-      detail: inputAddDetailValue,
+      address: addressValue.address,
+      detail: addressValue.detail,
       longitude: coordinateValue.x,
       latitude: coordinateValue.y,
     });
     handleClose();
-  };
-
-  useEffect(() => {
-    setInputAddDetailValue(locationValue?.detail);
-  }, [locationValue?.detail]);
-
-  const onChnageDetail = (e) => {
-    setInputAddDetailValue(e.target.value);
   };
 
   // 주소 값 변동 시, 좌표 가져오기
@@ -77,14 +92,14 @@ export default function BasicModal() {
     const geocoder = new kakao.maps.services.Geocoder();
     // 주소로 좌표 검색
     // eslint-disable-next-line func-names
-    geocoder.addressSearch(inputAddressValue, function (result, status) {
+    geocoder.addressSearch(addressValue.address, function (result, status) {
       // 정삭적으로 검색 완료 시
       if (status === kakao.maps.services.Status.OK) {
         // console.log(result[0]);
         setCoordinateValue({ x: result[0].x, y: result[0].y });
       }
     });
-  }, [inputAddressValue]);
+  }, [addressValue.address]);
 
   return (
     <div>
@@ -101,18 +116,23 @@ export default function BasicModal() {
             <>
               <Header>주소설정</Header>
               <Body>
-                <p>주소</p>
-                <LocaBoxClick onClick={handlePostOpen}>
-                  {locationValue?.address
-                    ? locationValue.address
-                    : inputAddressValue}
-                </LocaBoxClick>
-                <p>상세주소</p>
                 <LocaInput
-                  onChange={onChnageDetail}
-                  value={inputAddDetailValue}
+                  label="주소"
+                  variant="outlined"
+                  onClick={handlePostOpen}
+                  value={addressValue.address}
+                  InputProps={{
+                    readOnly: true,
+                  }}
                 />
-                <NullBox />
+                <NullBox2 />
+                <LocaInput
+                  label="상세주소"
+                  variant="outlined"
+                  onChange={onChnageDetail}
+                  value={addressValue.detail}
+                />
+                <NullBox1 />
                 <p>이 주소가 맞나요?</p>
               </Body>
               <BtnBox>
@@ -163,23 +183,16 @@ const Body = styled.div`
   }
 `;
 
-const LocaBoxClick = styled.div`
-  margin-top: 8px;
-  margin-bottom: 16px;
-  padding: 8px;
-  border: 1px solid ${(props) => props.theme.color.defaultColor};
-  cursor: pointer;
-`;
-
 const LocaInput = styled(TextField)`
   width: 100%;
-  margin-top: 8px;
-  margin-bottom: 16px;
-  padding: 8px;
 `;
 
-const NullBox = styled.div`
+const NullBox1 = styled.div`
   height: 128px;
+`;
+
+const NullBox2 = styled.div`
+  height: 16px;
 `;
 
 const BtnBox = styled.div`
