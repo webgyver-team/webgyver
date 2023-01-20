@@ -110,5 +110,5 @@ const SignUpTitle = styled.h2`
 const SignUpForm = styled.div`
   font-size: 20px;
   font-weight: bold;
-  width: 90vw;
+  width: 80vw;
 `;

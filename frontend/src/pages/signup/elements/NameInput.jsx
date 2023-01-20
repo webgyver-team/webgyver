@@ -24,6 +24,7 @@ export default function NameInput({ getName }) {
         label="이름"
         variant="outlined"
         required
+        fullWidth
         onChange={changeName}
       />
       <Message msg={msg} />

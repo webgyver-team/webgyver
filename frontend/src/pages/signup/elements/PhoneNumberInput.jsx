@@ -97,13 +97,14 @@ export default function PhoneNumberInput({ getPhoneNumber }) {
   //   3번 칸: 4자리만 가능
   return (
     <div>
-      <InputDiv>
+      <InputDiv style={{ width: '100%' }}>
         <TextField
           id="outlined-basic"
           label="전화번호"
           variant="outlined"
           value={phoneNumber1}
           required
+          style={{ width: '32%' }}
           inputProps={{ maxLength: 3 }}
           onChange={changePhoneNumber1}
         />
@@ -115,6 +116,7 @@ export default function PhoneNumberInput({ getPhoneNumber }) {
           variant="outlined"
           value={phoneNumber2}
           required
+          style={{ width: '32%' }}
           inputProps={{ maxLength: 4 }}
           onChange={changePhoneNumber2}
         />
@@ -125,6 +127,7 @@ export default function PhoneNumberInput({ getPhoneNumber }) {
           variant="outlined"
           value={phoneNumber3}
           required
+          style={{ width: '32%' }}
           inputProps={{ maxLength: 4 }}
           onChange={changePhoneNumber3}
         />

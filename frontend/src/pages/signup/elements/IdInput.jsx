@@ -71,6 +71,7 @@ export default function IdInput({ getId }) {
           inputProps={{ minLength: 6, maxLength: 10 }}
           disabled={idDisabled}
           onChange={changeId}
+          style={{ width: '72%' }}
         />
         <Button
           variant="contained"

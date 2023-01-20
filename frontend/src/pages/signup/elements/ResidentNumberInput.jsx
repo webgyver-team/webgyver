@@ -63,8 +63,9 @@ export default function ResidentNumberInput({ getResidentNumber }) {
   };
   return (
     <div>
-      <InputDiv>
+      <InputDiv style={{ width: '100%' }}>
         <TextField
+          style={{ width: '48%' }}
           id="outlined-basic"
           label="주민등록번호 앞 6자리"
           variant="outlined"
@@ -75,6 +76,7 @@ export default function ResidentNumberInput({ getResidentNumber }) {
         />
         <p>-</p>
         <TextField
+          style={{ width: '48%' }}
           id="outlined-basic"
           label="주민등록번호 뒷 1자리"
           variant="outlined"

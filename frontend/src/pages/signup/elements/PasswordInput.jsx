@@ -51,6 +51,7 @@ export default function PasswordInput({ getPassword }) {
         label="비밀번호"
         variant="outlined"
         required
+        fullWidth
         inputProps={{ minLength: 6, maxLength: 10 }}
         onChange={changePassword}
       />
@@ -61,6 +62,7 @@ export default function PasswordInput({ getPassword }) {
         label="비밀번호 확인"
         variant="outlined"
         required
+        fullWidth
         inputProps={{ minLength: 6, maxLength: 10 }}
         onChange={changePasswordRepeat}
       />
