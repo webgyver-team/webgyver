@@ -1,7 +1,7 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import Button from '@mui/material/Button';
+// import Button from '@mui/material/Button';
 import BathtubIcon from '@mui/icons-material/Bathtub';
 import DiningIcon from '@mui/icons-material/Dining';
 import BoltIcon from '@mui/icons-material/Bolt';
@@ -34,16 +34,16 @@ export default function CategoryLine(props) {
   const setLeftCategory = () => setCategory(leftCategory);
   const setRightCategory = () => setCategory(rightCategory);
   const icons = useState([
-    <BathtubIcon />,
-    <DiningIcon />,
-    <BoltIcon />,
-    <KitchenIcon />,
-    <FireplaceIcon />,
-    <CribIcon />,
-    <WindowOutlinedIcon />,
-    <FormatPaintOutlinedIcon />,
-    <ImportantDevicesIcon />,
-    <HelpOutlineIcon />,
+    <BathtubIcon fontSize="small" />,
+    <DiningIcon fontSize="small" />,
+    <BoltIcon fontSize="small" />,
+    <KitchenIcon fontSize="small" />,
+    <FireplaceIcon fontSize="small" />,
+    <CribIcon fontSize="small" />,
+    <WindowOutlinedIcon fontSize="small" />,
+    <FormatPaintOutlinedIcon fontSize="small" />,
+    <ImportantDevicesIcon fontSize="small" />,
+    <HelpOutlineIcon fontSize="small" />,
   ]);
   const leftIcon = icons[0][props.left];
   const rightIcon = icons[0][props.right];
@@ -51,28 +51,38 @@ export default function CategoryLine(props) {
   return (
     <div>
       <Linediv>
-        <CategoryButton
-          variant="outlined"
-          size="large"
-          endIcon={leftIcon}
-          style={{ minWidth: '144px' }}
-          onClick={setLeftCategory}
-        >
-          {leftCategory}
-        </CategoryButton>
-        <CategoryButton
-          variant="outlined"
-          size="large"
-          endIcon={rightIcon}
-          style={{ minWidth: '144px' }}
-          onClick={setRightCategory}
-        >
-          {rightCategory}
-        </CategoryButton>
+        <CategoryBtn onClick={setLeftCategory}>
+          <span>{leftCategory}</span>
+          {leftIcon}
+        </CategoryBtn>
+        <CategoryBtn onClick={setRightCategory}>
+          <span>{rightCategory}</span>
+          {rightIcon}
+        </CategoryBtn>
       </Linediv>
     </div>
   );
 }
+
+const CategoryBtn = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  border: 1px solid black;
+  border-radius: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 0 16px 0 16px;
+  width: 140px;
+
+  :hover {
+    cursor: pointer;
+  }
+
+  span {
+    padding-right: 8px;
+  }
+`;
 
 const Linediv = styled.div`
   margin-top: 16px;
@@ -80,6 +90,6 @@ const Linediv = styled.div`
   justify-content: space-evenly;
 `;
 
-const CategoryButton = styled(Button)`
-  color: ${(props) => props.theme.color.defaultDotColor};
-`;
+// const CategoryButton = styled(Button)`
+//   color: ${(props) => props.theme.color.defaultDotColor};
+// `;

@@ -1,15 +1,15 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+// import { useRecoilState } from 'recoil';
+// import { categoryState } from '../../atom';
 import Box from '@mui/material/Box';
-import { categoryState } from '../../atom';
 import CategoryLine from './elements/categoryline';
 import MainImage from '../../assets/image/MainImage_2.png';
 
 export default function Home() {
   const [loadding, setLodding] = useState(true);
-  const category = useRecoilState(categoryState);
+  // const category = useRecoilState(categoryState);
   useEffect(() => {
     setTimeout(() => {
       setLodding(false);
@@ -25,14 +25,11 @@ export default function Home() {
         <Box textAlign="center">출장 전에 화상수리 하세요</Box>
       </Introduction>
       <IntroductionBox>
-        <img src={MainImage} alt="이런!" width="60%" />
+        <ImgBox src={MainImage} alt="이런!" width="60%" />
       </IntroductionBox>
       <NullBox2 />
       <CategoryBox>
-        <Titlediv>
-          <Box textAlign="center">분야를 선택해주세요</Box>
-          {category}
-        </Titlediv>
+        <Titlediv>분야를 선택해주세요</Titlediv>
         <CategoryLine left={4} right={5} />
         <CategoryLine left={2} right={3} />
         <CategoryLine left={0} right={1} />
@@ -63,6 +60,12 @@ const IntroductionBox = styled.div`
   display: flex;
   justify-content: center;
 `;
+
+const ImgBox = styled.img`
+  position: relative;
+  left: 5%;
+`;
+
 const Introduction = styled.div`
   width: 100vw;
   background-color: white;
@@ -72,11 +75,10 @@ const Introduction = styled.div`
 `;
 
 const Titlediv = styled.div`
-  width: 100vw;
   display: flex;
+  justify-content: center;
   font-size: 8px;
   color: gray;
-  justify-content: center;
 `;
 const NullBox = styled.div`
   height: 16px;
