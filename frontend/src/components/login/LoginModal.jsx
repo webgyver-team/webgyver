@@ -52,6 +52,7 @@ export default function LoginModal() {
         setErrors(newErrors);
       }, 2000);
     }
+    console.log(errors);
   };
 
   return (
@@ -79,7 +80,7 @@ export default function LoginModal() {
           </Body>
           <BtnBox>
             <Button variant="contained" onClick={submit}>
-              확인
+              로그인
             </Button>
           </BtnBox>
         </Box>
@@ -127,7 +128,7 @@ const LocaInput = styled.input`
 `;
 
 const NullBox = styled.div`
-  height: 128px;
+  height: 72px;
 `;
 
 const BtnBox = styled.div`

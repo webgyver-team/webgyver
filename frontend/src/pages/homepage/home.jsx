@@ -33,9 +33,9 @@ export default function Home() {
           <Box textAlign="center">분야를 선택해주세요</Box>
           {category}
         </Titlediv>
-        <CategoryLine left={4} right={5} />
-        <CategoryLine left={2} right={3} />
         <CategoryLine left={0} right={1} />
+        <CategoryLine left={2} right={3} />
+        <CategoryLine left={4} right={5} />
         <CategoryLine left={6} right={7} />
         <CategoryLine left={8} right={9} />
         <NullBox />
