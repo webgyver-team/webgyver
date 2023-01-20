@@ -81,7 +81,8 @@ export default function BasicTabs() {
   );
 }
 const Main = styled.div`
-  width: 100vw;
+  // 스크롤바를 제외한 너비만 계산
+  width: calc(100vw - (100vw - 100%));
   .MuiBox-root {
     padding: 0;
   }
@@ -89,6 +90,6 @@ const Main = styled.div`
 
 const CustomTab = styled.span`
   color: ${(props) => props.theme.color.defaultColor};
-  font-size: 24px;
+  font-size: 20px;
   font-weight: bold;
 `;
