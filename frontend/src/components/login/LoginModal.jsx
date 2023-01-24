@@ -28,7 +28,7 @@ export default function LoginModal() {
   const [payload, setPayload] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
     nullIdError: false,
-    nullPasswordError: true,
+    nullPasswordError: false,
   });
   const onChangeAccount = (e) => {
     setPayload({

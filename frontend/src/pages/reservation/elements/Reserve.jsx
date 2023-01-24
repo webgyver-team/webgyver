@@ -6,10 +6,45 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
 import CheckIcon from '@mui/icons-material/Check';
 import CoPresentIcon from '@mui/icons-material/CoPresent';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
 import PaymentIcon from '@mui/icons-material/Payment';
 import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 
 export default function Reserve() {
+  const reservationInfo = [
+    [
+      '1. 내 위치 설정',
+      '현재 위치 확인 후, 변경',
+      <LocationOnIcon fontSize="large" />,
+    ],
+    [
+      '2. 업체 / 시간 선택',
+      '주변 업체를 둘러보고 결정',
+      <CalendarMonthIcon fontSize="large" />,
+    ],
+    [
+      '3. 문의 내용 등록',
+      '고장 내용 및 사진 등록',
+      <HistoryEduIcon fontSize="large" />,
+    ],
+    ['4. 예약 수락 대기', '5분이내 예약 확정', <CheckIcon fontSize="large" />],
+    [
+      '5. 화상 상담 진행',
+      '화상 통화로 실시간 진단',
+      <CoPresentIcon fontSize="large" />,
+    ],
+    [
+      '6. 자동 결제 진행',
+      '등록된 카드로 자동으로 결제',
+      <PaymentIcon fontSize="large" />,
+    ],
+    [
+      '7. 방문 수리 진행',
+      '전문가가 직접 방문',
+      <HomeRepairServiceIcon fontSize="large" />,
+    ],
+  ];
   return (
     <Main>
       <BtnBox>
@@ -25,69 +60,19 @@ export default function Reserve() {
         </BtnPosition>
       </BtnBox>
       <InfoBox>
-        <Info>
-          <InfoImgBox>
-            <LocationOnIcon fontSize="large" />
-          </InfoImgBox>
-          <InfoTextBox>
-            <span>1. 내 위치 설정</span>
-            <p>현재 위치 확인 후, 변경</p>
-          </InfoTextBox>
-        </Info>
-        <Info>
-          <InfoImgBox>
-            <CalendarMonthIcon fontSize="large" />
-          </InfoImgBox>
-          <InfoTextBox>
-            <span>2. 업체 / 시간 선택</span>
-            <p>주변 업체를 둘러보고 결정</p>
-          </InfoTextBox>
-        </Info>
-        <Info>
-          <InfoImgBox>
-            <HistoryEduIcon fontSize="large" />
-          </InfoImgBox>
-          <InfoTextBox>
-            <span>3. 문의 내용 등록</span>
-            <p>고장 내용 및 사진 등록</p>
-          </InfoTextBox>
-        </Info>
-        <Info>
-          <InfoImgBox>
-            <CheckIcon fontSize="large" />
-          </InfoImgBox>
-          <InfoTextBox>
-            <span>4. 예약 수락 대기</span>
-            <p>5분이내 예약 확정</p>
-          </InfoTextBox>
-        </Info>
-        <Info>
-          <InfoImgBox>
-            <CoPresentIcon fontSize="large" />
-          </InfoImgBox>
-          <InfoTextBox>
-            <span>5. 화상 상담 진행</span>
-            <p>화상 통화로 실시간 진단</p>
-          </InfoTextBox>
-        </Info>
-        <Info>
-          <InfoImgBox>
-            <PaymentIcon fontSize="large" />
-          </InfoImgBox>
-          <InfoTextBox>
-            <span>6. 자동 결제 진행</span>
-            <p>등록된 카드로 자동으로 결제</p>
-          </InfoTextBox>
-        </Info>
-        <Info>
-          <InfoImgBox>
-            <HomeRepairServiceIcon fontSize="large" />
-          </InfoImgBox>
-          <InfoTextBox>
-            <span>7. 방문 수리 진행</span>
-            <p>전문가가 직접 방문</p>
-          </InfoTextBox>
-        </Info>
+        <List>
+          {reservationInfo.map((item) => (
+            <ListItem key={item}>
+              <Info>
+                <InfoImgBox>{item[2]}</InfoImgBox>
+                <InfoTextBox>
+                  <span>{item[0]}</span>
+                  <p>{item[1]}</p>
+                </InfoTextBox>
+              </Info>
+            </ListItem>
+          ))}
+        </List>
       </InfoBox>
     </Main>
   );
