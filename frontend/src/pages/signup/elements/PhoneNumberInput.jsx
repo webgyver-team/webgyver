@@ -23,7 +23,6 @@ export default function PhoneNumberInput({ updateData }) {
       setPhoneNumber(() => null);
       return;
     }
-    console.log(`완료! :${phoneNumber1}${phoneNumber2}${phoneNumber3}`);
     setPhoneNumber(() => phoneNumber1 + phoneNumber2 + phoneNumber3);
   }, [phoneNumber1, phoneNumber2, phoneNumber3]);
   const onlyNumber = (event) => {
@@ -36,7 +35,6 @@ export default function PhoneNumberInput({ updateData }) {
     return true;
   };
   const checkMsg = (value, inputOrder) => {
-    console.log(`${value}를 체크하자.`);
     // inputOrder: 전화번호 입력창 순서 => 다른 단계 다녀오면 유효성 검사 전체 대상으로 수행 못함..
     switch (inputOrder) {
       case 1:

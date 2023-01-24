@@ -43,7 +43,6 @@ export default function ResidentNumberInput({ updateData }) {
   };
   const changeResidentNumber2 = (event) => {
     const actualInput = event.target.value.replaceAll('*', '');
-    console.log(actualInput);
     if (!onlyNumber(actualInput)) {
       updateData({ residentNumber: null });
       return;

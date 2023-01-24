@@ -63,7 +63,6 @@ export default function CustomerSignUp() {
           </div>
         </div>
         <Agreement updateData={updateData} />
-        {data.useCheck ? '동의' : '미동의'}
       </SignUpForm>
       <div style={{ textAlign: 'center' }}>
         <Button variant="contained" onClick={registCustomer}>
