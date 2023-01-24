@@ -3,16 +3,16 @@ import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import Message from './Message';
 
-export default function PhoneNumberInput({ getPhoneNumber }) {
+export default function PhoneNumberInput({ updateData }) {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [phoneNumber1, setPhoneNumber1] = useState('');
   const [phoneNumber2, setPhoneNumber2] = useState('');
   const [phoneNumber3, setPhoneNumber3] = useState('');
   const [msg, setMsg] = useState('');
   useEffect(() => {
-    if (phoneNumber === null) getPhoneNumber(null);
-    else getPhoneNumber(phoneNumber);
-  }, [phoneNumber, getPhoneNumber]);
+    if (phoneNumber === null) updateData({ phoneNumber: null });
+    else updateData({ phoneNumber });
+  }, [phoneNumber, updateData]);
   useEffect(() => {
     // 각각의 phoneNumber가 바뀌었을 때...
     if (phoneNumber1 !== '010') {

@@ -5,10 +5,12 @@ import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
+import CheckBox from '@mui/material/Checkbox';
 
-export default function ScrollDialog() {
+export default function ScrollDialog({ updateData }) {
   const [open, setOpen] = React.useState(false);
   const [scroll, setScroll] = React.useState('paper');
+  const [useCheck, setUseCheck] = React.useState(false);
 
   const handleClickOpen = (scrollType) => () => {
     setOpen(true);
@@ -19,6 +21,16 @@ export default function ScrollDialog() {
     setOpen(false);
   };
 
+  const handleUseCheck = (value) => {
+    setUseCheck(() => value);
+    updateData({ useCheck: value });
+    handleClose();
+  };
+
+  const changeUseCheck = (event) => {
+    setUseCheck(() => event.target.checked);
+    updateData({ useCheck: event.target.checked });
+  };
   const descriptionElementRef = React.useRef(null);
   React.useEffect(() => {
     if (open) {
@@ -31,7 +43,11 @@ export default function ScrollDialog() {
 
   return (
     <div>
-      <Button onClick={handleClickOpen('body')}>약관 상세</Button>
+      <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>약관 동의</h2>
+      <CheckBox checked={useCheck} onClick={changeUseCheck} />
+      <Button variant="text" onClick={handleClickOpen('body')}>
+        이용약관 (필수)
+      </Button>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -52,8 +68,8 @@ export default function ScrollDialog() {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose}>동의</Button>
-          <Button onClick={handleClose}>미동의</Button>
+          <Button onClick={() => handleUseCheck(true)}>동의</Button>
+          <Button onClick={() => handleUseCheck(false)}>미동의</Button>
         </DialogActions>
       </Dialog>
     </div>

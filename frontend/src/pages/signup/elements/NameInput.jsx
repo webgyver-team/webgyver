@@ -2,19 +2,18 @@ import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import Message from './Message';
 
-export default function NameInput({ getName }) {
+export default function NameInput({ updateData }) {
   const [name, setName] = useState('');
   const [msg, setMsg] = useState('');
   const changeName = (event) => {
     setName(() => event.target.value);
-    console.log(name);
     if (event.target.value.trim().length === 0) {
       setMsg(() => '성명을 입력하세요.');
-      getName(null);
+      updateData({ name: null });
       return;
     }
     setMsg(() => '');
-    getName(event.target.value.trim());
+    updateData({ name: event.target.value.trim() });
   };
 
   return (
@@ -25,6 +24,7 @@ export default function NameInput({ getName }) {
         variant="outlined"
         required
         fullWidth
+        value={name}
         onChange={changeName}
       />
       <Message msg={msg} />
