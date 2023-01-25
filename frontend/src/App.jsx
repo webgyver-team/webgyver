@@ -9,7 +9,7 @@ import Home from './pages/homepage/home';
 // eslint-disable-next-line import/no-unresolved
 import NavBar from './components/navbar/NavBar';
 import LocateModal from './components/sitepopup/LocateModal';
-import Reservation from './pages/reservation/Reservation';
+import Select from './pages/select/Select';
 import LoginModal from './components/login/LoginModal';
 
 function App() {
@@ -19,17 +19,19 @@ function App() {
       <RecoilRoot>
         {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
         <ThemeProvider theme={normal}>
-          <NavBar />
-          <Main>
-            <LoginModal />
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/locate" element={<LocateModal />} />
-              <Route path="/reservation" element={<Reservation />} />
-              <Route path="*" element={<div>404</div>} />
-            </Routes>
-          </Main>
+          <All>
+            <NavBar />
+            <Main>
+              <LoginModal />
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/signup" element={<SignUp />} />
+                <Route path="/locate" element={<LocateModal />} />
+                <Route path="/reservation" element={<Select />} />
+                <Route path="*" element={<div>404</div>} />
+              </Routes>
+            </Main>
+          </All>
         </ThemeProvider>
       </RecoilRoot>
     </>
@@ -37,6 +39,12 @@ function App() {
 }
 
 export default App;
+
+const All = styled.div`
+  width: 380px;
+  // display: flex;
+  // justify-content: center;
+`;
 
 const Main = styled.div`
   // width: 100vw;
