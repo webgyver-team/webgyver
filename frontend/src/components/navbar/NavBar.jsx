@@ -18,12 +18,14 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import { authState, loginOpenState } from '../../atom';
 
 const drawerWidth = 240;
 
 export default function NavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
+  const navigate = useNavigate();
   const navItems = auth ? ['logout', 'account'] : ['login', 'signup'];
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const openLoginModal = () => setLoginOpenState(true);
@@ -32,6 +34,8 @@ export default function NavBar(props) {
     // item의 조건을 추가해 함수 로직 작성
     if (item === 'login') {
       openLoginModal();
+    } else if (item === 'signup') {
+      navigate('/signup');
     }
   };
   const handleChange = (event) => {
