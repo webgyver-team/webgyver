@@ -1,15 +1,14 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
-import Box from '@mui/material/Box';
-import { categoryState } from '../../atom';
+// import { useRecoilState } from 'recoil';
+// import { categoryState } from '../../atom';
 import CategoryLine from './elements/categoryline';
-import MainImage from '../../assets/image/MainImage_2.png';
+import MainImage from '../../assets/image/MainImage.png';
 
 export default function Home() {
   const [loadding, setLodding] = useState(true);
-  const category = useRecoilState(categoryState);
+  // const category = useRecoilState(categoryState);
   useEffect(() => {
     setTimeout(() => {
       setLodding(false);
@@ -21,18 +20,11 @@ export default function Home() {
   }
   return (
     <Main>
-      <Introduction>
-        <Box textAlign="center">출장 전에 화상수리 하세요</Box>
-      </Introduction>
       <IntroductionBox>
-        <img src={MainImage} alt="이런!" width="60%" />
+        <img src={MainImage} alt="이런!" width="297px" />
       </IntroductionBox>
-      <NullBox2 />
       <CategoryBox>
-        <Titlediv>
-          <Box textAlign="center">분야를 선택해주세요</Box>
-          {category}
-        </Titlediv>
+        <Titlediv>분야를 선택해주세요</Titlediv>
         <CategoryLine left={0} right={1} />
         <CategoryLine left={2} right={3} />
         <CategoryLine left={4} right={5} />
@@ -41,54 +33,40 @@ export default function Home() {
         <NullBox />
       </CategoryBox>
       <LoginLinkBox>
-        <Box textAlign="center">전문가 로그인 링크</Box>
+        <Titlediv>전문가 로그인 링크</Titlediv>
       </LoginLinkBox>
     </Main>
   );
 }
 
 const Main = styled.div`
-  width: 100vw;
+  width: 380px;
+  background-color: ${(props) => props.theme.color.defaultsubBgColor};
 `;
 
 const CategoryBox = styled.div`
-  width: 100vw;
-  border-radius: 40px 40px 0 0;
-  background-color: ${(props) => props.theme.color.defaultsubBgColor};
+  border-radius: 20px 20px 0 0;
+  background-color: ${(props) => props.theme.color.defaultBgColor};
 `;
 
 const IntroductionBox = styled.div`
-  width: 100vw;
-  background-color: white;
+  padding: 20px;
   display: flex;
   justify-content: center;
-`;
-const Introduction = styled.div`
-  width: 100vw;
-  background-color: white;
-  display = flex;
-  justify-content: center;
-  font-size: 16px;
 `;
 
 const Titlediv = styled.div`
-  width: 100vw;
   display: flex;
-  font-size: 8px;
-  color: gray;
   justify-content: center;
+  font-size: 16px;
+  font-weight: bold;
+  color: ${(props) => props.theme.color.defaultlightColor};
 `;
+
 const NullBox = styled.div`
   height: 16px;
-  background-color: ${(props) => props.theme.color.defaultsubBgColor};
 `;
-const NullBox2 = styled.div`
-  height: 24px;
-  background-color: white;
-`;
+
 const LoginLinkBox = styled.div`
-  height: 36px;
-  background-color: white;
-  font-size: 16px;
-  color: gray;
+  diplay: flex;
 `;

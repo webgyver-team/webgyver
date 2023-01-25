@@ -19,6 +19,7 @@ import Drawer from '@mui/material/Drawer';
 import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import Webgyver from '../../assets/icon/webgyver_white.png';
 import { authState, loginOpenState } from '../../atom';
 
 const drawerWidth = 240;
@@ -106,7 +107,10 @@ export default function NavBar(props) {
             </IconButton>
             {/* 홈 아이콘 */}
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              WebGyver
+              <HomeIcon>
+                <img src={Webgyver} alt="이런!" width="10%" />
+                <span>WebGyver</span>
+              </HomeIcon>
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
@@ -160,5 +164,14 @@ export default function NavBar(props) {
 const Main = styled.div`
   .css-hip9hq-MuiPaper-root-MuiAppBar-root {
     // background-color: ${(props) => props.theme.color.defaultaccentColor};
+  }
+`;
+
+const HomeIcon = styled.div`
+  display: flex;
+  align-items: center;
+
+  span {
+    margin-left: 8px;
   }
 `;
