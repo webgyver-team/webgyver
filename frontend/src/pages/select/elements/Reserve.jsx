@@ -11,7 +11,7 @@ import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
 
 export default function Reserve() {
   return (
-    <div>
+    <Main>
       <BtnBox>
         <div>
           <p>전문가를 살펴보고</p>
@@ -19,7 +19,7 @@ export default function Reserve() {
         </div>
         <BtnPosition>
           <Btn>
-            <span>예약상담 바로가기</span>
+            <span>예약상담</span>
             <ArrowForwardIcon fontSize="medium" />
           </Btn>
         </BtnPosition>
@@ -89,20 +89,25 @@ export default function Reserve() {
           </InfoTextBox>
         </Info>
       </InfoBox>
-    </div>
+    </Main>
   );
 }
 
+const Main = styled.div`
+  width: 100;
+  margin: 16px;
+`;
+
 const BtnBox = styled.div`
   height: 100;
-  padding: 32px;
+  padding: 16px;
   margin-bottom: 32px;
   p {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: bold;
   }
   p:last-child {
-    padding-bottom: 16px;
+    padding-bottom: 32px;
   }
 `;
 
@@ -113,15 +118,15 @@ const BtnPosition = styled.div`
 
 const Btn = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
-  width: 80%;
+  width: 100%;
   height: 64px;
-  padding-left: 16px;
-  padding-right: 16px;
-  border: 1px solid black;
+  padding-left: 24px;
+  padding-right: 24px;
   border-radius: 10px;
-  background-color: white;
+  color: white;
+  background-color: ${(props) => props.theme.color.defaultaccentColor};
   :hover {
     cursor: pointer;
   }
@@ -132,17 +137,20 @@ const Btn = styled.div`
 `;
 
 const InfoBox = styled.div`
-  border: 1px solid black;
-  border-radius: 20px 20px 0 0;
+  border-radius: 20px;
   padding: 48px;
+  background-color: ${(props) => props.theme.color.defaultsubBgColor};
 `;
 
 const Info = styled.div`
   width: 100%;
   display: flex;
   align-items: center;
-  justify-content: center;
   margin-bottom: 32px;
+
+  :last-child {
+    margin-bottom: 0;
+  }
 
   span {
     font-size: 24px;
