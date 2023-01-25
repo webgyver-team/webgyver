@@ -47,7 +47,7 @@ export default function CategoryInput({
 
   return (
     <div>
-      {index}
+      {/* {index} */}
       <CategoryForm>
         <FormControl sx={{ m: 1, minWidth: 160 }} size="small">
           <InputLabel id="demo-select-small">카테고리</InputLabel>

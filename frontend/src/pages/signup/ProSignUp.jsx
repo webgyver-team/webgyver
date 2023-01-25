@@ -13,7 +13,7 @@ import BusinessRegistrationNumberInput from './elements/BusinessRegistrationNumb
 import AddressInput from './elements/AddressInput';
 import CategoryInput from './elements/CategoryInput';
 
-export default function CustomerSignUp() {
+export default function ProSignUp() {
   // const [cardNumber, setCardNumber] = useState(null);
   const [data, setData] = useState({
     id: null,
@@ -24,8 +24,9 @@ export default function CustomerSignUp() {
     useCheck: false,
     businessName: null,
     representativeName: null,
-    BusinessRegistrationNumber: null,
-    AddressInput: null,
+    businessRegistrationNumber: null,
+    addressInput: null,
+    categoryList: [],
   });
 
   const updateData = (updateValue) => {
