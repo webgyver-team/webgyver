@@ -2,15 +2,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 // import Button from '@mui/material/Button';
-import BathtubIcon from '@mui/icons-material/Bathtub';
-import DiningIcon from '@mui/icons-material/Dining';
+import BathtubOutlinedIcon from '@mui/icons-material/BathtubOutlined';
+import CountertopsOutlinedIcon from '@mui/icons-material/CountertopsOutlined';
 import BoltIcon from '@mui/icons-material/Bolt';
-import KitchenIcon from '@mui/icons-material/Kitchen';
-import FireplaceIcon from '@mui/icons-material/Fireplace';
-import CribIcon from '@mui/icons-material/Crib';
+import KitchenOutlinedIcon from '@mui/icons-material/KitchenOutlined';
+import FireplaceOutlinedIcon from '@mui/icons-material/FireplaceOutlined';
 import WindowOutlinedIcon from '@mui/icons-material/WindowOutlined';
-import FormatPaintOutlinedIcon from '@mui/icons-material/FormatPaintOutlined';
-import ImportantDevicesIcon from '@mui/icons-material/ImportantDevices';
+import ImagesearchRollerOutlinedIcon from '@mui/icons-material/ImagesearchRollerOutlined';
+import DevicesOutlinedIcon from '@mui/icons-material/DevicesOutlined';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSetRecoilState } from 'recoil';
 import { categoryState } from '../../../atom';
@@ -34,15 +33,15 @@ export default function CategoryLine(props) {
   const setLeftCategory = () => setCategory(leftCategory);
   const setRightCategory = () => setCategory(rightCategory);
   const icons = useState([
-    <BathtubIcon fontSize="small" />,
-    <DiningIcon fontSize="small" />,
+    <BathtubOutlinedIcon fontSize="small" />,
+    <CountertopsOutlinedIcon fontSize="small" />,
     <BoltIcon fontSize="small" />,
-    <KitchenIcon fontSize="small" />,
-    <FireplaceIcon fontSize="small" />,
-    <CribIcon fontSize="small" />,
+    <KitchenOutlinedIcon fontSize="small" />,
+    <FireplaceOutlinedIcon fontSize="small" />,
+    <span className="material-symbols-outlined">dresser</span>,
     <WindowOutlinedIcon fontSize="small" />,
-    <FormatPaintOutlinedIcon fontSize="small" />,
-    <ImportantDevicesIcon fontSize="small" />,
+    <ImagesearchRollerOutlinedIcon fontSize="small" />,
+    <DevicesOutlinedIcon fontSize="small" />,
     <HelpOutlineIcon fontSize="small" />,
   ]);
   const leftIcon = icons[0][props.left];
@@ -68,12 +67,13 @@ const CategoryBtn = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-evenly;
-  border: 1px solid black;
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 15px;
-  font-size: 16px;
-  font-weight: bold;
+  font-size: 14px;
   padding: 0 16px 0 16px;
   width: 140px;
+  height: 42px;
+  box-shadow: 1px 1px 4px 0px ${(props) => props.theme.color.dafaultBorder};
 
   :hover {
     cursor: pointer;
