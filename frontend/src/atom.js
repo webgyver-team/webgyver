@@ -41,3 +41,8 @@ export const loginOpenState = atom({
   key: 'loginOpenState',
   default: false,
 });
+
+export const reservationDate = atom({
+  key: 'reservationDate',
+  default: new Date(),
+});
