@@ -3,7 +3,7 @@ import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import Message from './Message';
 
-export default function ResidentNumberInput({ getResidentNumber }) {
+export default function ResidentNumberInput({ updateData }) {
   const [residentNumber1, setResidentNumber1] = useState('');
   const [residentNumber2, setResidentNumber2] = useState('******');
   const [msg, setMsg] = useState('');
@@ -35,16 +35,16 @@ export default function ResidentNumberInput({ getResidentNumber }) {
       event.target.value.trim().length === 6 &&
       residentNumber2.trim().length === 7
     ) {
-      getResidentNumber(
-        event.target.value.trim() + residentNumber2.replaceAll('*', ''),
-      );
-    } else getResidentNumber(null);
+      updateData({
+        residentNumber:
+          event.target.value.trim() + residentNumber2.replaceAll('*', ''),
+      });
+    } else updateData({ residentNumber: null });
   };
   const changeResidentNumber2 = (event) => {
     const actualInput = event.target.value.replaceAll('*', '');
-    console.log(actualInput);
     if (!onlyNumber(actualInput)) {
-      getResidentNumber(null);
+      updateData({ residentNumber: null });
       return;
     }
     // 여기는 1~4까지만 가능
@@ -58,13 +58,14 @@ export default function ResidentNumberInput({ getResidentNumber }) {
       }
     }
     if (residentNumber1.trim().length === 6 && actualInput.length === 1) {
-      getResidentNumber(residentNumber1.trim() + actualInput);
-    } else getResidentNumber(null);
+      updateData({ residentNumber: residentNumber1.trim() + actualInput });
+    } else updateData(null);
   };
   return (
     <div>
-      <InputDiv>
+      <InputDiv style={{ width: '100%' }}>
         <TextField
+          style={{ width: '48%' }}
           id="outlined-basic"
           label="주민등록번호 앞 6자리"
           variant="outlined"
@@ -75,6 +76,7 @@ export default function ResidentNumberInput({ getResidentNumber }) {
         />
         <p>-</p>
         <TextField
+          style={{ width: '48%' }}
           id="outlined-basic"
           label="주민등록번호 뒷 1자리"
           variant="outlined"

@@ -4,7 +4,7 @@ import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
 import Message from './Message';
 
-export default function IdInput({ getId }) {
+export default function IdInput({ updateData }) {
   const ID_MIN_LENGTH = 6;
   const ID_MAX_LENGTH = 10;
   const [id, setId] = useState('');
@@ -55,7 +55,7 @@ export default function IdInput({ getId }) {
     }
     // 성공 했으면 아이디 input disabled
     alert('해당 아이디는 사용 가능합니다.');
-    getId(id);
+    updateData({ id });
     setIdDisabled(() => true);
     setBtnDisabled(() => true);
   };
@@ -71,6 +71,7 @@ export default function IdInput({ getId }) {
           inputProps={{ minLength: 6, maxLength: 10 }}
           disabled={idDisabled}
           onChange={changeId}
+          style={{ width: '72%' }}
         />
         <Button
           variant="contained"
