@@ -1,5 +1,6 @@
 import React from 'react';
 import DatePicker from 'react-horizontal-datepicker';
+import styled from 'styled-components';
 
 export default function Reservation() {
   //   const [dateList, setDateList] = useState([]);
@@ -15,51 +16,32 @@ export default function Reservation() {
 
   return (
     <div>
-      <div style={{ border: '2px solid black' }}>
-        <h2 style={{ fontSize: '32px', fontWeight: 'bold' }}>날짜 선택</h2>
-        <div
-          style={{
-            width: '380px',
-            overflowX: 'scroll',
-          }}
-        >
-          <DatePicker
-            getSelectedDay={selectedDay}
-            labelFormat="MMMM"
-            color="#1976D2"
-            style={{ border: '1px solid black' }}
-          />
+      <DateDiv>
+        <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>날짜 선택</h2>
+        <CustomDatePickerDiv>
           <DatePicker
             getSelectedDay={selectedDay}
             endDate={31}
             selectDate={today}
+            color="#000000"
             labelFormat="yy년 M월"
-            color="#1976D2"
-            marked={[
-              {
-                date: today,
-                marked: true,
-                style: {
-                  color: '#ff0000',
-                  padding: '2px',
-                  fontSize: 12,
-                },
-                text: '1x',
-              },
-              {
-                date: new Date(2023, 0, 26),
-                marked: true,
-                style: {
-                  color: 'black',
-                  padding: '2px',
-                  fontSize: 12,
-                },
-                text: '5x',
-              },
-            ]}
           />
-        </div>
-      </div>
+        </CustomDatePickerDiv>
+      </DateDiv>
     </div>
   );
 }
+
+const CustomDatePickerDiv = styled.div`
+  max-width: 100vw;
+  padding: 8px;
+  overflow-x: scroll;
+  font-size: 24px;
+  line-height: 70%;
+  //   border: 1px solid black;
+`;
+
+const DateDiv = styled.div`
+  border: 1px solid black;
+  padding: 4%;
+`;
