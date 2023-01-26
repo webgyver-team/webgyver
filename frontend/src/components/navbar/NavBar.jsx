@@ -39,6 +39,7 @@ export default function NavBar(props) {
       navigate('/signup');
     }
   };
+  const routeHome = () => navigate('/');
   const handleChange = (event) => {
     setAuth(event.target.checked);
   };
@@ -107,7 +108,7 @@ export default function NavBar(props) {
             </IconButton>
             {/* 홈 아이콘 */}
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <HomeIcon>
+              <HomeIcon onClick={routeHome}>
                 <img src={Webgyver} alt="이런!" width="10%" />
                 <span>WebGyver</span>
               </HomeIcon>
@@ -170,6 +171,7 @@ const Main = styled.div`
 const HomeIcon = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 
   span {
     margin-left: 8px;

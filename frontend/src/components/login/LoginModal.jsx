@@ -14,6 +14,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 380,
+  height: 380,
   bgcolor: 'background.paper',
   border: '2px solid #000',
   boxShadow: 24,
@@ -55,7 +56,7 @@ export default function LoginModal() {
     }
     console.log(errors);
   };
-  const toSignup = () => {
+  const routeSignup = () => {
     setLoginState(false);
     navigate('/signup');
   };
@@ -85,7 +86,8 @@ export default function LoginModal() {
             {errors.nullPasswordError && <ErrDiv>비밀번호를 입력하세요</ErrDiv>}
             {/* <NullBox /> */}
           </Body>
-          <Linkdiv onClick={toSignup}>회원가입</Linkdiv>
+          {!(errors.nullIdError || errors.nullPasswordError) && <NullBox />}
+          <Linkdiv onClick={routeSignup}>회원가입</Linkdiv>
           <BtnBox>
             <Button variant="contained" onClick={submit}>
               로그인
@@ -131,12 +133,13 @@ const LocaInput = styled.input`
   width: 100%;
   margin-top: 8px;
   padding: 8px;
+  margin-bottom: 8px;
   border: 1px solid ${(props) => props.theme.color.defaultColor};
 `;
 
-// const NullBox = styled.div`
-//   height: 72px;
-// `;
+const NullBox = styled.div`
+  height: 13.6px;
+`;
 
 const BtnBox = styled.div`
   display: flex;
@@ -146,7 +149,6 @@ const BtnBox = styled.div`
 const ErrDiv = styled.div`
   color: red;
   font-size: 8px;
-  margin-bottom: 16px;
 `;
 
 const Linkdiv = styled.div`
