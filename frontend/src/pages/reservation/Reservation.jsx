@@ -4,13 +4,67 @@ import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import LocateModal from '../../components/sitepopup/LocateModal';
 import { locateValueState, reservationDate } from '../../atom';
+import StoreInfo from './elements/StoreInfo';
 
 export default function Reservation() {
   const [date, setDate] = useRecoilState(reservationDate);
   const reservatedDate = useRecoilValue(reservationDate);
   const location = useRecoilValue(locateValueState);
+  const storeList = [
+    {
+      idx: 1,
+      storeName: '박복자가게',
+      personName: '박복자',
+      address: '대전 서구 청사로 253',
+      detailAddress: '111동 2222호',
+      distance: 12.4,
+      star: 4.7,
+      picture: 'asdf/asdf/asdf.png',
+      allTime: [
+        '09:00',
+        '09:15',
+        '09:30',
+        '09:45',
+        '10:00',
+        '10:15',
+        '10:30',
+        '10:45',
+        '11:00',
+        '11:15',
+        '11:30',
+        '11:45',
+        '12:00',
+        '12:15',
+        '12:30',
+        '12:45',
+      ],
+      noTime: ['09:15', '10:15'],
+    },
+    {
+      idx: 2,
+      storeName: '김순자가게',
+      personName: '김순자',
+      address: '대전 서구 청사로 253',
+      detailAddress: '111동 2222호',
+      distance: 312.4,
+      star: 1.2,
+      picture: 'asdf/asdf/sfnias.png',
+      allTime: ['09:00', '09:15', '09:30', '09:45', '10:00', '10:15'],
+      noTime: ['12:15', '10:15', '09:15'],
+    },
+  ];
   const selectedDay = (val) => {
-    setDate(val);
+    // 선택한 날짜가 오늘 이라면 현재 시간을 반영해라..
+    const now = new Date();
+    if (
+      // eslint-disable-next-line
+      val.getFullYear !== now.getFullYear ||
+      // eslint-disable-next-line
+      val.getMonth() !== now.getMonth() ||
+      val.getDate() !== now.getDate()
+    ) {
+      setDate(val);
+    } else setDate(now);
   };
   // 디폴트로 요일이 영어로 되어 있는 것을 한글로 바꿔주기 위함
   const dayToKorean = () => {
@@ -55,6 +109,7 @@ export default function Reservation() {
     }
   };
   useEffect(() => dayToKorean, []);
+
   return (
     <div>
       <DateDiv>
@@ -82,6 +137,23 @@ export default function Reservation() {
         </div>
         <LocateModal />
       </LocateDiv>
+      <div>
+        {storeList.map((store) => (
+          <StoreInfo
+            key={store.idx}
+            idx={store.idx}
+            storeName={store.storeName}
+            personName={store.personName}
+            address={store.address}
+            detailAddress={store.detailAddress}
+            distance={store.distance}
+            star={store.star}
+            picture={store.picture}
+            allTime={store.allTime}
+            noTime={store.noTime}
+          />
+        ))}
+      </div>
     </div>
   );
 }
