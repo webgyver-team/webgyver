@@ -85,7 +85,6 @@ export default function BasicModal() {
     });
     handleClose();
   };
-
   // 주소 값 변동 시, 좌표 가져오기
   useEffect(() => {
     // 주소-좌표 변환 객체 생성

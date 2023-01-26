@@ -24,10 +24,10 @@ export const locateModalState = atom({
 export const locateValueState = atom({
   key: 'locateValueState',
   default: {
-    address: '주소 잇음',
-    detail: 'B101호',
-    longitude: null,
-    latitude: null,
+    address: '대전 유성구 덕명동 124',
+    detail: 'B102호',
+    longitude: 127.298666015874,
+    latitude: 36.3551691100904,
   },
 });
 
