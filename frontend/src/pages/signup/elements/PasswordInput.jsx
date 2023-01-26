@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
 import Message from './Message';
 
-export default function PasswordInput({ getPassword }) {
+export default function PasswordInput({ updateData }) {
   const PW_MIN_LENGTH = 6;
   const PW_MAX_LENGTH = 10;
   const [password, setPassword] = useState('');
@@ -24,11 +24,11 @@ export default function PasswordInput({ getPassword }) {
     } else setMsg(() => '');
     if (event.target.value !== password2) {
       setMsg2(() => '비밀번호가 일치하지 않습니다.');
-      getPassword(null);
+      updateData({ password: null });
       return;
     }
     setMsg2(() => '');
-    getPassword(password2);
+    updateData({ password: password2 });
   };
 
   const changePasswordRepeat = (event) => {
@@ -36,10 +36,10 @@ export default function PasswordInput({ getPassword }) {
     setMsg2();
     if (event.target.value !== password) {
       setMsg2(() => '비밀번호가 일치하지 않습니다.');
-      getPassword(null);
+      updateData({ password: null });
       return;
     }
-    getPassword(password);
+    updateData({ password });
     setMsg2(() => '');
   };
 
@@ -51,6 +51,7 @@ export default function PasswordInput({ getPassword }) {
         label="비밀번호"
         variant="outlined"
         required
+        fullWidth
         inputProps={{ minLength: 6, maxLength: 10 }}
         onChange={changePassword}
       />
@@ -61,6 +62,7 @@ export default function PasswordInput({ getPassword }) {
         label="비밀번호 확인"
         variant="outlined"
         required
+        fullWidth
         inputProps={{ minLength: 6, maxLength: 10 }}
         onChange={changePasswordRepeat}
       />

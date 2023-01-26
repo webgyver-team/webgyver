@@ -115,7 +115,7 @@ export default function NavBar(props) {
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Button color="inherit">Logout</Button>
+                <Button color="inherit">로그아웃</Button>
                 <IconButton
                   size="large"
                   aria-label="account of current user"

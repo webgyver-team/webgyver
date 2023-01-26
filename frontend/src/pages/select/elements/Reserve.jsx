@@ -1,50 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import LocationOnIcon from '@mui/icons-material/LocationOn';
-import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import HistoryEduIcon from '@mui/icons-material/HistoryEdu';
-import CheckIcon from '@mui/icons-material/Check';
-import CoPresentIcon from '@mui/icons-material/CoPresent';
-import List from '@mui/material/List';
-import ListItem from '@mui/material/ListItem';
-import PaymentIcon from '@mui/icons-material/Payment';
-import HomeRepairServiceIcon from '@mui/icons-material/HomeRepairService';
+import ReserveInfo from '../../../assets/image/ReserveInfo.png';
 
-export default function Reserve() {
-  const reservationInfo = [
-    [
-      '1. 내 위치 설정',
-      '현재 위치 확인 후, 변경',
-      <LocationOnIcon fontSize="large" />,
-    ],
-    [
-      '2. 업체 / 시간 선택',
-      '주변 업체를 둘러보고 결정',
-      <CalendarMonthIcon fontSize="large" />,
-    ],
-    [
-      '3. 문의 내용 등록',
-      '고장 내용 및 사진 등록',
-      <HistoryEduIcon fontSize="large" />,
-    ],
-    ['4. 예약 수락 대기', '5분이내 예약 확정', <CheckIcon fontSize="large" />],
-    [
-      '5. 화상 상담 진행',
-      '화상 통화로 실시간 진단',
-      <CoPresentIcon fontSize="large" />,
-    ],
-    [
-      '6. 자동 결제 진행',
-      '등록된 카드로 자동으로 결제',
-      <PaymentIcon fontSize="large" />,
-    ],
-    [
-      '7. 방문 수리 진행',
-      '전문가가 직접 방문',
-      <HomeRepairServiceIcon fontSize="large" />,
-    ],
-  ];
+export default function Direct() {
   return (
     <Main>
       <BtnBox>
@@ -59,20 +18,9 @@ export default function Reserve() {
           </Btn>
         </BtnPosition>
       </BtnBox>
+      <DividerBox />
       <InfoBox>
-        <List>
-          {reservationInfo.map((item) => (
-            <ListItem key={item}>
-              <Info>
-                <InfoImgBox>{item[2]}</InfoImgBox>
-                <InfoTextBox>
-                  <span>{item[0]}</span>
-                  <p>{item[1]}</p>
-                </InfoTextBox>
-              </Info>
-            </ListItem>
-          ))}
-        </List>
+        <img src={ReserveInfo} alt="바로상담가이드" width="320px" />
       </InfoBox>
     </Main>
   );
@@ -80,13 +28,12 @@ export default function Reserve() {
 
 const Main = styled.div`
   width: 100;
-  margin: 16px;
 `;
 
 const BtnBox = styled.div`
   height: 100;
   padding: 16px;
-  margin-bottom: 32px;
+  margin: 16px 16px 32px 16px;
   p {
     font-size: 20px;
     font-weight: bold;
@@ -111,7 +58,8 @@ const Btn = styled.div`
   padding-right: 24px;
   border-radius: 10px;
   color: white;
-  background-color: ${(props) => props.theme.color.defaultaccentColor};
+  background-color: ${(props) => props.theme.color.defaultBlue};
+  box-shadow: 2px 2px 4px 0px ${(props) => props.theme.color.defaultlightColor};
   :hover {
     cursor: pointer;
   }
@@ -121,33 +69,16 @@ const Btn = styled.div`
   }
 `;
 
+const DividerBox = styled.div`
+  height: 8px;
+  background-color: ${(props) => props.theme.color.defaultsubBgColor};
+  box-shadow: inset 0px 2px 2px 0px
+    ${(props) => props.theme.color.dafaultBorder};
+`;
+
 const InfoBox = styled.div`
+  display: flex;
+  justify-content: center;
   border-radius: 20px;
   padding: 48px;
-  background-color: ${(props) => props.theme.color.defaultsubBgColor};
-`;
-
-const Info = styled.div`
-  width: 100%;
-  display: flex;
-  align-items: center;
-  margin-bottom: 32px;
-
-  :last-child {
-    margin-bottom: 0;
-  }
-
-  span {
-    font-size: 24px;
-    font-weight: bold;
-  }
-`;
-
-const InfoImgBox = styled.div`
-  display: inline-block;
-  margin-right: 16px;
-`;
-
-const InfoTextBox = styled.div`
-  display: inline-block;
 `;
