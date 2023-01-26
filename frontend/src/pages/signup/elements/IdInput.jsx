@@ -30,30 +30,29 @@ export default function IdInput({ updateData }) {
       );
       // 버튼 disabled 먹여 놓고
       setBtnDisabled(() => true);
-      //   console.log('현재 버튼 비활성화..');
       return;
     }
     setMsg(() => '');
     setBtnDisabled(() => false);
-    // console.log('현재 버튼 활성화..');
     setId(() => event.target.value);
   };
   const checkExistId = () => {
     // 유효성 검사 한번 들어가자
     if (id.length !== id.trim().length) {
-      // alert("아이디에 띄어쓰기를 포함할 수 없습니다.");
       setMsg(() => '아이디에 띄어쓰기를 포함할 수 없습니다,');
       return;
     }
     setBtnDisabled(() => true);
     // 아이디 중복 검사 axios 호출(일단은 random함수로 대체)
     if (Math.random() > 0.5) {
-      // 중복이면 alert?
+      // 중복이면 경고창 띄우기
+      // eslint-disable-next-line
       alert('해당 아이디는 이미 존재합니다.');
       setBtnDisabled(() => false);
       return;
     }
     // 성공 했으면 아이디 input disabled
+    // eslint-disable-next-line
     alert('해당 아이디는 사용 가능합니다.');
     updateData({ id });
     setIdDisabled(() => true);
