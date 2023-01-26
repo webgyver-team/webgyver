@@ -53,6 +53,10 @@ const IntroductionBox = styled.div`
   padding: 20px;
   display: flex;
   justify-content: center;
+
+  img {
+    margin-left: 16px;
+  }
 `;
 
 const Titlediv = styled.div`
@@ -61,6 +65,10 @@ const Titlediv = styled.div`
   font-size: 16px;
   font-weight: bold;
   color: ${(props) => props.theme.color.defaultlightColor};
+
+  :last-child {
+    cursor: pointer;
+  }
 `;
 
 const NullBox = styled.div`
@@ -68,5 +76,8 @@ const NullBox = styled.div`
 `;
 
 const LoginLinkBox = styled.div`
-  diplay: flex;
+  height: 64px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;

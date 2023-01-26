@@ -27,7 +27,7 @@ function App() {
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/locate" element={<LocateModal />} />
-                <Route path="/reservation" element={<Select />} />
+                <Route path="/select" element={<Select />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Main>
