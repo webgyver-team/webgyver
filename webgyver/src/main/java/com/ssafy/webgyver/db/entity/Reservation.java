@@ -11,12 +11,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "reservation")
-public class Reservation {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx")
-    private Long idx;
-
+public class Reservation extends BaseEntity{
     @ManyToOne
     @JoinColumn(name = "s_idx")
     private Seller seller;
@@ -48,11 +43,4 @@ public class Reservation {
     @Column(name = "r_price")
     private int reservationPrice;
 
-    @Column(name = "created_at")
-    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDateTime updatedAt;
 }
