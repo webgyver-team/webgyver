@@ -1,4 +1,3 @@
-/* eslint-disable react/destructuring-assignment */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 // import { useRecoilState } from 'recoil';
