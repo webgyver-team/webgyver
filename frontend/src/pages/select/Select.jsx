@@ -72,7 +72,7 @@ export default function BasicTabs() {
               label={
                 <CustomTab className="classes.tabLabel">바로상담</CustomTab>
               }
-              {...a11yProps(0)}
+              {...a11yProps(1)}
             />
           </Tabs>
         </Box>
