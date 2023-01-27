@@ -160,10 +160,10 @@ const CountBox = styled.div`
 
       :first-child {
         font-size: 24px;
-        font-weight: bold;
       }
       :last-child {
-        font-size: 14px;
+        font-size: 12px;
+        color: ${(props) => props.theme.color.defaultBlue};
       }
     }
   }
@@ -190,7 +190,7 @@ const DetailTitle = styled.span`
   margin-right: 8px;
   font-size: 12px;
   font-weight: bold;
-  color: ${(props) => props.theme.color.defaultColor};
+  color: ${(props) => props.theme.color.defaultMeddleColor};
 `;
 
 const DetailContent = styled.span`
