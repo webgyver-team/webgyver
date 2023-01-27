@@ -18,6 +18,7 @@ import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import Webgyver from '../../assets/icon/webgyver_white.png';
 import { authState, loginOpenState } from '../../atom';
 
@@ -25,6 +26,7 @@ const drawerWidth = 240;
 
 export default function NavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
+  const navigate = useNavigate();
   const navItems = auth ? ['logout', 'account'] : ['login', 'signup'];
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const openLoginModal = () => setLoginOpenState(true);
@@ -33,8 +35,11 @@ export default function NavBar(props) {
     // item의 조건을 추가해 함수 로직 작성
     if (item === 'login') {
       openLoginModal();
+    } else if (item === 'signup') {
+      navigate('/signup');
     }
   };
+  const routeHome = () => navigate('/');
   const handleChange = (event) => {
     setAuth(event.target.checked);
   };
@@ -103,7 +108,7 @@ export default function NavBar(props) {
             </IconButton>
             {/* 홈 아이콘 */}
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-              <HomeIcon>
+              <HomeIcon onClick={routeHome}>
                 <img src={Webgyver} alt="이런!" width="10%" />
                 <span>WebGyver</span>
               </HomeIcon>
@@ -166,6 +171,7 @@ const Main = styled.div`
 const HomeIcon = styled.div`
   display: flex;
   align-items: center;
+  cursor: pointer;
 
   span {
     margin-left: 8px;

@@ -5,6 +5,7 @@ import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import { loginOpenState } from '../../atom';
 
 const style = {
@@ -13,13 +14,14 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 380,
+  height: 380,
   bgcolor: 'background.paper',
-  border: '2px solid #000',
   boxShadow: 24,
   p: 4,
 };
 
 export default function LoginModal() {
+  const navigate = useNavigate();
   const modalState = useRecoilState(loginOpenState);
   const setLoginState = useSetRecoilState(loginOpenState);
   const closeLogin = () => setLoginState(false);
@@ -36,22 +38,26 @@ export default function LoginModal() {
   };
   const submit = () => {
     if (payload?.id === '') {
-      const newErrors = errors;
-      newErrors.nullIdError = true;
-      setErrors(errors);
-      setTimeout(() => {
-        newErrors.nullIdError = false;
-        setErrors(newErrors);
-      }, 2000);
+      setErrors({
+        nullIdError: true,
+        nullPasswordError: false,
+      });
     } else if (payload?.password === '') {
-      const newErrors = errors;
-      newErrors.nullPasswordError = true;
-      setErrors(newErrors);
-      setTimeout(() => {
-        newErrors.nullPasswordError = false;
-        setErrors(newErrors);
-      }, 2000);
+      setErrors({
+        nullIdError: false,
+        nullPasswordError: true,
+      });
+    } else {
+      setErrors({
+        nullIdError: false,
+        nullPasswordError: false,
+      });
     }
+    console.log(errors);
+  };
+  const routeSignup = () => {
+    setLoginState(false);
+    navigate('/signup');
   };
 
   return (
@@ -68,6 +74,7 @@ export default function LoginModal() {
           <Body>
             <p>아이디</p>
             <LocaInput id="id" name="id" onChange={onChangeAccount} />
+            {errors.nullIdError && <ErrDiv>아이디를 입력하세요</ErrDiv>}
             <p>비밀번호</p>
             <LocaInput
               id="password"
@@ -75,11 +82,14 @@ export default function LoginModal() {
               type="password"
               onChange={onChangeAccount}
             />
-            <NullBox />
+            {errors.nullPasswordError && <ErrDiv>비밀번호를 입력하세요</ErrDiv>}
+            {/* <NullBox /> */}
           </Body>
+          {!(errors.nullIdError || errors.nullPasswordError) && <NullBox />}
+          <Linkdiv onClick={routeSignup}>회원가입</Linkdiv>
           <BtnBox>
             <Button variant="contained" onClick={submit}>
-              확인
+              로그인
             </Button>
           </BtnBox>
         </Box>
@@ -121,16 +131,29 @@ const Body = styled.div`
 const LocaInput = styled.input`
   width: 100%;
   margin-top: 8px;
-  margin-bottom: 16px;
   padding: 8px;
+  margin-bottom: 8px;
   border: 1px solid ${(props) => props.theme.color.defaultColor};
 `;
 
 const NullBox = styled.div`
-  height: 128px;
+  height: 13.6px;
 `;
 
 const BtnBox = styled.div`
   display: flex;
   justify-content: center;
+`;
+
+const ErrDiv = styled.div`
+  color: red;
+  font-size: 8px;
+`;
+
+const Linkdiv = styled.div`
+  display: flex;
+  justify-content: center;
+  cursor: pointer;
+  color: gray;
+  font-size: 8px;
 `;
