@@ -26,12 +26,14 @@ export default function Info() {
       </MasterInfoBox>
       <CountBox>
         <div>
-          <p>5.0점</p>
+          <span>5.0</span>
+          <span>점</span>
           <p>평점</p>
         </div>
         <VerticalBar />
         <div>
-          <p>1,000개</p>
+          <span>1,000</span>
+          <span>개</span>
           <p>전체 후기 수</p>
         </div>
       </CountBox>
@@ -155,16 +157,20 @@ const CountBox = styled.div`
   align-items: center;
 
   div {
-    p {
-      text-align: center;
-
+    span {
       :first-child {
         font-size: 24px;
       }
-      :last-child {
-        font-size: 12px;
-        color: ${(props) => props.theme.color.defaultBlue};
+      :nth-child(2) {
+        font-size: 14px;
       }
+    }
+    p {
+      position: relative;
+      top: -4px;
+      text-align: center;
+      font-size: 12px;
+      color: ${(props) => props.theme.color.defaultBlue};
     }
   }
 `;
