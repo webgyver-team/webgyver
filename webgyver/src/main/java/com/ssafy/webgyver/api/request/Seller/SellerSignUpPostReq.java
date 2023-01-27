@@ -23,10 +23,9 @@ public class SellerSignUpPostReq {
     private String name;
 
     private String birthDay;
-    private String gender;
     private String phoneNumber;
     private String companyName;
-    private String RepresentativeName;
+    private String representativeName;
 
     private String companyNumber;
 

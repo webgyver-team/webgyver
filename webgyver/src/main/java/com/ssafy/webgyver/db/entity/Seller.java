@@ -12,6 +12,8 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Builder
 @Getter
@@ -68,5 +70,8 @@ public class Seller extends BaseEntity{
 
     @Column(name = "comapny_image")
     private String companyImage;
+
+    @OneToMany(mappedBy = "selleres")
+    private List<SellerCategory> category = new ArrayList<>();
 
 }
