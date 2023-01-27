@@ -4,7 +4,7 @@ import LimHS from '../../../assets/image/LimHS.png';
 import Background from '../../../assets/image/MasterBackground.jpg';
 
 export default function Info() {
-  const [businessHoursOpen, setBusinessHoursOpen] = useState(true);
+  const [businessHoursOpen, setBusinessHoursOpen] = useState(false);
   const onChangeBusinessHoursOpen = () => {
     setBusinessHoursOpen(!businessHoursOpen);
   };
