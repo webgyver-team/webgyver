@@ -34,7 +34,7 @@ export default function StoreInfo({
         }}
       >
         <Picture src={picture} alt="" />
-        <div>
+        <div style={{ borderLeft: '1px solid black' }}>
           <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
             {storeName}
           </span>
