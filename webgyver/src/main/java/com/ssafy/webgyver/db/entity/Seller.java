@@ -23,7 +23,7 @@ import java.util.List;
 @Table(name = "seller")
 public class Seller extends BaseEntity{
 
-    @Column(unique = true)
+    @Column(unique = true, length = 50)
     private String id;
 
     @JsonIgnore
@@ -53,7 +53,6 @@ public class Seller extends BaseEntity{
     @Column(name = "company_time")
     private String companyTime;
 
-    @Lob
     @Column(name = "company_description")
     private String companyDescription;
 
@@ -71,7 +70,7 @@ public class Seller extends BaseEntity{
     @Column(name = "comapny_image")
     private String companyImage;
 
-    @OneToMany(mappedBy = "selleres")
-    private List<SellerCategory> category = new ArrayList<>();
+    @OneToMany(mappedBy = "seller")
+    private List<SellerCategory> sellerCategories;
 
 }

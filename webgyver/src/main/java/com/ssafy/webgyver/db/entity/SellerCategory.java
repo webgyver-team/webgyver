@@ -15,12 +15,12 @@ import java.time.LocalDateTime;
 @Table(name="seller_category")
 public class SellerCategory extends BaseEntity{
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "categories")
-    private Seller selleres;
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "seller_idx", nullable = false)
+    private Seller seller;
 
-    @ManyToOne(cascade = CascadeType.PERSIST, fetch = FetchType.LAZY)
-    @JoinColumn(name = "category")
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_idx", nullable = false)
     private Category category;
 
     private Integer price;

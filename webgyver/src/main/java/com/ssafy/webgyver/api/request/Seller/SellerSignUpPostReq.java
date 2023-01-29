@@ -1,22 +1,21 @@
 package com.ssafy.webgyver.api.request.Seller;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ssafy.webgyver.db.entity.SellerCategory;
 import com.ssafy.webgyver.db.entity.test.RoleType;
+import java.util.ArrayList;
+import java.util.List;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import org.springframework.format.annotation.DateTimeFormat;
-
-import javax.persistence.Column;
-import javax.persistence.Lob;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Getter
 @Setter
 @ToString
+@NoArgsConstructor
+@AllArgsConstructor
 public class SellerSignUpPostReq {
     private String id;
     private String password;
@@ -33,5 +32,5 @@ public class SellerSignUpPostReq {
     private RoleType roleType;
     private String address;
     private String detailAddress;
-    private List<SellerCategory> categoryList;
+    private List<SellerCategory> categoryList = new ArrayList<>();
 }
