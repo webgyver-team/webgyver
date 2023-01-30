@@ -6,6 +6,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -43,4 +44,6 @@ public class Reservation extends BaseEntity{
     @Column(name = "r_price")
     private int reservationPrice;
 
+//    @OneToMany
+//    private List<Article> articleList;
 }

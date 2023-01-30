@@ -14,5 +14,4 @@ public class DataResponseBody extends BaseResponseBody {
     public DataResponseBody() {
         data = new HashMap<>();
     }
-
 }
