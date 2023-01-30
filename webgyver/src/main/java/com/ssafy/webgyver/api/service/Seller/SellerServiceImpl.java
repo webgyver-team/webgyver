@@ -4,26 +4,21 @@ import com.ssafy.webgyver.api.request.Seller.SellerCheckDuplicateReq;
 import com.ssafy.webgyver.api.request.Seller.SellerLoginReq;
 import com.ssafy.webgyver.api.request.Seller.SellerSignUpPostReq;
 import com.ssafy.webgyver.api.response.Seller.SellerLoginRes;
-import com.ssafy.webgyver.api.response.test.MemberLoginPostRes;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
-import com.ssafy.webgyver.db.entity.Category;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.entity.SellerCategory;
-import com.ssafy.webgyver.db.entity.test.TestMember;
 import com.ssafy.webgyver.db.repository.Seller.CategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
-import java.util.ArrayList;
-import java.util.List;
-import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service("SellerService")
 @RequiredArgsConstructor
