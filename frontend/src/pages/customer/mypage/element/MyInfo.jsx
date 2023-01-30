@@ -40,6 +40,7 @@ const InfoBox = styled.div`
   padding: 16px;
   border-radius: 15px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
+  box-shadow: 2px 2px 4px 0px ${(props) => props.theme.color.dafaultBorder};
 
   .first {
     font-weight: bold;
