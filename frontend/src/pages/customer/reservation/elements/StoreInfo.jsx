@@ -34,24 +34,28 @@ export default function StoreInfo({
         }}
       >
         <Picture src={picture} alt="" />
-        <div style={{ borderLeft: '1px solid black' }}>
-          <span style={{ fontSize: '24px', fontWeight: 'bold' }}>
+        <div>
+          <span style={{ fontSize: '20px', fontWeight: 'bold' }}>
             {storeName}
           </span>
-          <span style={{ fontSize: '16px', fontWeight: 'bold' }}>
+          <span
+            style={{ fontSize: '16px', fontWeight: 'bold', marginLeft: '4px' }}
+          >
             {personName}
           </span>
-          <p style={{ fontSize: '16px' }}>
-            {`${address} ${detailAddress}(${distance}km)`}
+          <p style={{ fontSize: '12px' }}>
+            {`${address} ${detailAddress} (${distance}km)`}
           </p>
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          <div
+            style={{ display: 'flex', alignItems: 'center', fontSize: '12px' }}
+          >
             <Rating
               name="half-rating-read"
               value={star}
               precision={0.1}
               readOnly
             />
-            <span style={{ fontSize: '16px' }}>{star}</span>
+            <span style={{ fontSize: '12px' }}>{star}</span>
           </div>
         </div>
       </div>
@@ -92,9 +96,6 @@ export default function StoreInfo({
           );
         })}
       </div>
-      {/* <Button variant="outlined" key={time} style={{ margin: '0px 8px' }}>
-        {time}
-      </Button> */}
     </div>
   );
 }
@@ -102,4 +103,5 @@ export default function StoreInfo({
 const Picture = styled.img`
   width: 96px;
   height: 96px;
+  padding: 4px;
 `;

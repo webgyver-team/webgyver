@@ -10,35 +10,47 @@ import {
   chosenReservation,
 } from '../../../atom';
 import StoreInfo from './elements/StoreInfo';
+import { storeList } from './dummyData';
 
 export default function Reservation() {
-  const [date, setDate] = useRecoilState(reservationDate);
+  const [date, setDate] = useRecoilState(reservationDate); // 예약할 날짜(Date 형식)
   const [reservation, setReservation] = useRecoilState(chosenReservation);
-  const [clickedTimeButton, setClickedTimeButton] = useState(null);
-  const [reservationButton, setReservationButton] = useState(false);
+  // 예약 정보 {idx, storeName, date, time}
+  const [clickedTimeButton, setClickedTimeButton] = useState(null); // 클릭한 시간 버튼(HTML Element)
+  const [reservationButton, setReservationButton] = useState(false); // 예약하기 버튼 on off(boolean)
+  const reservationNull = {
+    idx: null,
+    storeName: null,
+    date: null,
+    time: null,
+  };
+
+  // 날짜 선택했을 때 실행되는 함수
   const handleDate = (value) => {
     if (date !== value) {
-      // 이전과 다른날짜를 선택했을 때 예약 클릭 정보 초기화
+      // 이전과 다른날짜를 선택했을 때
       if (clickedTimeButton !== null) {
+        // 이전에 클릭한 시간 버튼이 있다면
+        // 이전 시간 버튼의 클릭 CSS 효과 해제
         clickedTimeButton.style.backgroundColor = '#ffffff';
         clickedTimeButton.style.color = '#1976D2';
       }
-      setClickedTimeButton(null);
+      setClickedTimeButton(null); // 클릭 시간 버튼 초기화
       if (reservation !== null) {
-        setReservation({
-          idx: null,
-          storeName: null,
-          date: null,
-          time: null,
-        });
+        // 등록한 예약 정보가 있었다면
+        // 날짜가 바뀌면 제어가 불가능하기 때문에
+        setReservation(reservationNull); // 예약 정보 null로 초기화
       }
     }
-    setDate(value);
+    setDate(value); // 선택한 날짜를 저장
   };
+
+  // 시간 선택했을 때 실행되는 함수(event: 클릭한 HTML 요소, selected: date가 null인 reservation)
   const handleClickedTimeButton = (event, selected) => {
-    // 새로운 데이터 생성
-    const data = { ...selected, date };
+    // 새로운 reservation 생성
+    const data = { ...selected, date }; // date만 갱신
     if (
+      // reservation의 property와 하나라도 다르다면(다른 버튼 클릭)
       // eslint-disable-next-line operator-linebreak
       data.idx !== reservation.idx ||
       // eslint-disable-next-line operator-linebreak
@@ -50,125 +62,54 @@ export default function Reservation() {
       // eslint-disable-next-line operator-linebreak
       data.date.getDate() !== reservation.date.getDate()
     ) {
-      //   alert('신규 등록해야 해!');
       if (clickedTimeButton !== null) {
+        // 기존 클릭 시간 버튼의 CSS 효과 제거
         clickedTimeButton.style.backgroundColor = '#ffffff';
         clickedTimeButton.style.color = '#1976D2';
       }
-      setClickedTimeButton(() => event.target);
-      setReservation(data);
-      setDate(date);
+      setClickedTimeButton(() => event.target); // 클릭한 시간 버튼을 저장
+      setReservation(data); // data를 reservation으로 저장
       return;
     }
-    // alert('일치하는거 또 눌렀네!');
+    // data와 reservation이 같으면 같은 버튼 클릭한 것이므로 클릭 해제 해야 함
+    // 클릭 시간 버튼의 클릭 CSS 효과 제거
     clickedTimeButton.style.backgroundColor = '#ffffff';
     clickedTimeButton.style.color = '#1976D2';
-    setClickedTimeButton(null);
-    setReservation({
-      idx: null,
-      storeName: null,
-      date: null,
-      time: null,
-    });
+    setClickedTimeButton(null); // 클릭 시간 버튼 null로 초기화
+    setReservation(reservationNull);
+  };
+
+  // 예약상담 등록폼으로 이동하는 함수(reservation 그대로 이용)
+  const goReservationRegistForm = () => {
+    // eslint-disable-next-line
+    alert(
+      `${reservation.idx}/${
+        reservation.storeName
+      }\n${reservation.date.getFullYear()}년 ${
+        reservation.date.getMonth() + 1
+      }월 ${reservation.date.getDate()}일\n${
+        reservation.time
+      }에 예약하시겠습니까?`,
+    );
   };
   useEffect(() => {
+    // 새로 바뀐 클릭 시간 버튼에 대해..
     if (clickedTimeButton !== null) {
+      // null이 아니면
+      // 클릭 CSS 효과 적용
       clickedTimeButton.style.backgroundColor = '#1976D2';
       clickedTimeButton.style.color = '#ffffff';
-    }
+      setReservationButton(true); // 상담 예약하기 버튼 on
+    } else setReservationButton(false); // 상담 예약하기 버튼 off
   }, [clickedTimeButton]);
+
+  const location = useRecoilValue(locateValueState); // 주소 정보
   useEffect(() => {
-    if (clickedTimeButton === null) {
-      setReservationButton(false);
-    } else {
-      setReservationButton(true);
-    }
-  }, [clickedTimeButton]);
-  const location = useRecoilValue(locateValueState);
-  const storeList = [
-    {
-      idx: 1,
-      storeName: '박복자가게',
-      personName: '박복자',
-      address: '대전 서구 청사로 253',
-      detailAddress: '111동 2222호',
-      distance: 12.4,
-      star: 4.7,
-      picture: 'asdf/asdf/asdf.png',
-      allTime: [
-        '09:00',
-        '09:15',
-        '09:30',
-        '09:45',
-        '10:00',
-        '10:15',
-        '10:30',
-        '10:45',
-        '11:00',
-        '11:15',
-        '11:30',
-        '11:45',
-        '12:00',
-        '12:15',
-        '12:30',
-        '12:45',
-      ],
-      noTime: ['09:15', '10:15', '09:30'],
-    },
-    {
-      idx: 2,
-      storeName: '김순자가게',
-      personName: '김순자',
-      address: '대전 서구 청사로 253',
-      detailAddress: '111동 2222호',
-      distance: 312.4,
-      star: 1.2,
-      picture: 'asdf/asdf/sfnias.png',
-      allTime: ['09:00', '09:15', '09:30', '09:45', '10:00', '10:15'],
-      noTime: ['12:15', '10:15', '09:15'],
-    },
-    {
-      idx: 3,
-      storeName: '박복자가게',
-      personName: '박복자',
-      address: '대전 서구 청사로 253',
-      detailAddress: '111동 2222호',
-      distance: 12.4,
-      star: 4.7,
-      picture: 'asdf/asdf/asdf.png',
-      allTime: [
-        '09:00',
-        '09:15',
-        '09:30',
-        '09:45',
-        '10:00',
-        '10:15',
-        '10:30',
-        '10:45',
-        '11:00',
-        '11:15',
-        '11:30',
-        '11:45',
-        '12:00',
-        '12:15',
-        '12:30',
-        '12:45',
-      ],
-      noTime: ['09:15', '10:15', '09:30'],
-    },
-    {
-      idx: 4,
-      storeName: '김순자가게',
-      personName: '김순자',
-      address: '대전 서구 청사로 253',
-      detailAddress: '111동 2222호',
-      distance: 312.4,
-      star: 1.2,
-      picture: 'asdf/asdf/sfnias.png',
-      allTime: ['09:00', '09:15', '09:30', '09:45', '10:00', '10:15'],
-      noTime: ['12:15', '10:15', '09:15'],
-    },
-  ];
+    // 주소 또는 선택 날짜가 바뀌었으면
+    // storeList 갱신해야 함
+    // eslint-disable-next-line
+    console.log('[가게 정보] axios 호출 필요');
+  }, [location, date]);
 
   return (
     <div>
@@ -208,17 +149,6 @@ export default function Reservation() {
           />
         ))}
       </div>
-      <div style={{ border: '1px solid red', fontSize: '8px' }}>
-        {`${reservation.idx} / ${reservation.storeName} / `}
-        {reservation.date !== null ? (
-          <div>
-            {reservation.date.getFullYear()}
-            {reservation.date.getMonth() + 1}
-            {reservation.date.getDate()}
-          </div>
-        ) : null}
-        {`/${reservation.time}`}
-      </div>
 
       <div
         style={{
@@ -230,18 +160,11 @@ export default function Reservation() {
           <Button
             variant="contained"
             style={{ position: 'fixed', bottom: '50px' }}
+            onClick={goReservationRegistForm}
           >
             상담 예약하기
           </Button>
-        ) : (
-          <Button
-            variant="contained"
-            disabled
-            style={{ position: 'fixed', bottom: '50px' }}
-          >
-            상담 예약하기
-          </Button>
-        )}
+        ) : null}
       </div>
     </div>
   );
