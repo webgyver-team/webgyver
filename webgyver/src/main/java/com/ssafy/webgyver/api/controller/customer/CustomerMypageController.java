@@ -28,4 +28,16 @@ public class CustomerMypageController {
             return ResponseEntity.ok().body(CustomerMypageProfileRes.of(500, "오류가 발생했습니다. 잠시 후 다시 시도해 주세요."));
         }
     }
+
+    @PutMapping("/profile/{idx}")
+    public ResponseEntity<?> setProfile(@RequestBody CustomerMypageProfileReq req) {
+        Customer customer = customerMypageService.setProfile(req);
+
+        if(customer != null) {
+            return ResponseEntity.ok().body(CustomerMypageProfileRes.of(200, "OK", customer));
+
+        } else {
+            return ResponseEntity.ok().body(CustomerMypageProfileRes.of(500, "오류가 발생했습니다. 잠시 후 다시 시도해 주세요."));
+        }
+    }
 }
