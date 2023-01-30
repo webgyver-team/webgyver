@@ -2,7 +2,7 @@ import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
-import { locateValueState } from '../../atom';
+import { locateValueState } from '../../../atom';
 import './Match.scss';
 
 // kakao 가져오기

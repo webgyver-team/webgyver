@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import LimHS from '../../../assets/image/LimHS.png';
-import Background from '../../../assets/image/MasterBackground.jpg';
+import LimHS from '../../../../assets/image/LimHS.png';
+import Background from '../../../../assets/image/MasterBackground.jpg';
 
 export default function Info() {
   const [businessHoursOpen, setBusinessHoursOpen] = useState(false);

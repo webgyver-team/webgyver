@@ -3,18 +3,18 @@ import './App.scss';
 import { Routes, Route } from 'react-router-dom';
 import { RecoilRoot } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
-import CustomerSignUp from './pages/signup/CustomerSignUp';
-import ProSignUp from './pages/signup/ProSignUp';
+import CustomerSignUp from './pages/customer/signup/CustomerSignUp';
+import ProSignUp from './pages/customer/signup/ProSignUp';
 import { normal } from './theme/theme';
-import Home from './pages/homepage/home';
+import Home from './pages/customer/homepage/home';
 // eslint-disable-next-line import/no-unresolved
-import NavBar from './components/navbar/NavBar';
-import LocateModal from './components/sitepopup/LocateModal';
-import Select from './pages/select/Select';
-import LoginModal from './components/login/LoginModal';
-import Reservation from './pages/reservation/Reservation';
-import Match from './pages/match/Match';
-import MasterInfo from './components/masterInfo/MasterInfo';
+import CustomerNavBar from './components/customer/navbar/NavBar';
+import LocateModal from './components/common/sitepopup/LocateModal';
+import Select from './pages/customer/select/Select';
+import LoginModal from './components/customer/login/LoginModal';
+import Reservation from './pages/customer/reservation/Reservation';
+import Match from './pages/customer/match/Match';
+import MasterInfo from './components/customer/masterInfo/MasterInfo';
 
 function App() {
   return (
@@ -24,7 +24,7 @@ function App() {
         {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
         <ThemeProvider theme={normal}>
           <All>
-            <NavBar />
+            <CustomerNavBar />
             <Main>
               <LoginModal />
               <Routes>

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 // import { useRecoilState } from 'recoil';
 // import { categoryState } from '../../atom';
 import CategoryLine from './elements/categoryline';
-import MainImage from '../../assets/image/MainImage.png';
+import MainImage from '../../../assets/image/MainImage.png';
 
 export default function Home() {
   const [loadding, setLodding] = useState(true);

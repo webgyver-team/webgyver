@@ -1,15 +1,15 @@
 import React from 'react';
 import styled from 'styled-components';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import DirectInfo from '../../../assets/image/DirectInfo.png';
+import ReserveInfo from '../../../../assets/image/ReserveInfo.png';
 
 export default function Direct() {
   return (
     <Main>
       <BtnBox>
         <div>
-          <p>지금 상담 가능한</p>
-          <p>전문가와 연결해</p>
+          <p>전문가를 살펴보고</p>
+          <p>시간을 정할 수 있어요.</p>
         </div>
         <BtnPosition>
           <Btn>
@@ -20,7 +20,7 @@ export default function Direct() {
       </BtnBox>
       <DividerBox />
       <InfoBox>
-        <img src={DirectInfo} alt="바로상담가이드" width="320px" />
+        <img src={ReserveInfo} alt="바로상담가이드" width="320px" />
       </InfoBox>
     </Main>
   );
