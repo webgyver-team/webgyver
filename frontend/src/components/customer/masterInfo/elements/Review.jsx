@@ -65,6 +65,7 @@ const Card = styled.div`
     font-size: 12px;
     font-weight: bold;
     color: ${(props) => props.theme.color.defaultBlue};
+    padding-bottom: 8px;
   }
 
   p:last-child {

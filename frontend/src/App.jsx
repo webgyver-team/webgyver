@@ -15,6 +15,7 @@ import LoginModal from './components/customer/login/LoginModal';
 import Reservation from './pages/customer/reservation/Reservation';
 import Match from './pages/customer/match/Match';
 import MasterInfo from './components/customer/masterInfo/MasterInfo';
+import UsageHistory from './pages/customer/usagehistoy/UsageHistory';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/masterinfo" element={<MasterInfo />} />
+                <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Main>
