@@ -1,6 +1,10 @@
 package com.ssafy.webgyver.api.controller.customer;
 
+import com.ssafy.webgyver.api.request.customer.CustomerCheckDuplicateReq;
+import com.ssafy.webgyver.api.request.customer.CustomerLoginReq;
 import com.ssafy.webgyver.api.request.customer.CustomerSignUpPostReq;
+import com.ssafy.webgyver.api.response.customer.CustomerCheckDuplicateRes;
+import com.ssafy.webgyver.api.response.customer.CustomerLoginRes;
 import com.ssafy.webgyver.api.response.customer.CustomerSignUpPostRes;
 import com.ssafy.webgyver.api.service.customer.CustomerMemberService;
 import lombok.RequiredArgsConstructor;
@@ -19,9 +23,20 @@ public class CustomerMemberController {
     // 회원 가입
     @PostMapping("/signup")
     public ResponseEntity<CustomerSignUpPostRes> signUp(@RequestBody CustomerSignUpPostReq signUpInfo) {
-        log.debug("hi");
         //임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
         CustomerSignUpPostRes result = customerMemberService.SignUpCustomer(signUpInfo);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@RequestBody CustomerLoginReq req) {
+        CustomerLoginRes result = customerMemberService.login(req);
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PostMapping("/check/duplicate")
+    public ResponseEntity<?> check(@RequestBody CustomerCheckDuplicateReq req){
+        CustomerCheckDuplicateRes result = customerMemberService.checkDuplicate(req);
         return ResponseEntity.ok().body(result);
     }
 
