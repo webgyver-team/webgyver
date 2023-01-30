@@ -63,12 +63,14 @@ export default function BasicTabs() {
             TabIndicatorProps={{ style: { backgroundColor: 'black' } }}
           >
             <Tab
+              disableRipple
               label={
                 <CustomTab className="classes.tabLabel">예약상담</CustomTab>
               }
               {...a11yProps(0)}
             />
             <Tab
+              disableRipple
               label={
                 <CustomTab className="classes.tabLabel">바로상담</CustomTab>
               }
