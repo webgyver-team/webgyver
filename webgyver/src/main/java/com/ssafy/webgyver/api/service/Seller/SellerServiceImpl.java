@@ -1,9 +1,15 @@
 package com.ssafy.webgyver.api.service.Seller;
 
 import com.ssafy.webgyver.api.request.Seller.SellerCheckDuplicateReq;
+import com.ssafy.webgyver.api.request.Seller.SellerLoginReq;
 import com.ssafy.webgyver.api.request.Seller.SellerSignUpPostReq;
+import com.ssafy.webgyver.api.response.Seller.SellerLoginRes;
+import com.ssafy.webgyver.api.response.test.MemberLoginPostRes;
+import com.ssafy.webgyver.common.util.JwtTokenUtil;
+import com.ssafy.webgyver.db.entity.Category;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.entity.SellerCategory;
+import com.ssafy.webgyver.db.entity.test.TestMember;
 import com.ssafy.webgyver.db.repository.Seller.CategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
@@ -11,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -18,7 +25,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-@Service("SellerSevice")
+@Service("SellerService")
 @RequiredArgsConstructor
 public class SellerServiceImpl implements SellerService{
     final PasswordEncoder passwordEncoder;
@@ -31,6 +38,7 @@ public class SellerServiceImpl implements SellerService{
         System.out.println("서비스 들어왔엉");
         String sellerBirth = sellerRegisterInfo.getBirthDay();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
         Seller seller = Seller.builder()
                 .id(sellerRegisterInfo.getId())
                 .password(passwordEncoder.encode(sellerRegisterInfo.getPassword()))
@@ -49,9 +57,12 @@ public class SellerServiceImpl implements SellerService{
         sellerRepository.save(seller);
         List<SellerCategory> sellerCategories = new ArrayList<>();
         for (SellerCategory S : sellerRegisterInfo.getCategoryList()) {
+//            Category category = new Category(S.getCategory().getIdx());
+//            System.out.println(category.getIdx());
             SellerCategory sellerCategory = SellerCategory.builder()
                     .seller(seller)
                     .category(categoryRepository.findByCategoryName(S.getCategory().getCategoryName()))
+//                    .category(category)
                     .price(S.getPrice())
                     .build();
             sellerCategories.add(sellerCategory);
@@ -62,9 +73,23 @@ public class SellerServiceImpl implements SellerService{
 
     @Override
     public boolean checkDuplicate(SellerCheckDuplicateReq req){
-        System.out.println();
         boolean check = sellerRepository.existsById(req.getId());
-        System.out.println(check);
         return check;
+    }
+
+    @Override
+    public SellerLoginRes login(SellerLoginReq req) {
+        String userId = req.getId();
+        String password = req.getPassword();
+
+        Seller seller = sellerRepository.findSellerById(userId).get();
+        // 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
+        if (passwordEncoder.matches(password, seller.getPassword())) {
+            // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
+            return SellerLoginRes.of(200, "Success", JwtTokenUtil.getToken(
+                            String.valueOf(seller.getIdx())));
+        }
+        // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
+        return SellerLoginRes.of(401, "Invalid Password", null);
     }
 }

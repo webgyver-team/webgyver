@@ -1,6 +1,7 @@
 package com.ssafy.webgyver.common.exception.handler;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.ssafy.webgyver.common.model.response.BaseResponseBody;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,6 +23,7 @@ import java.nio.charset.Charset;
  */
 
 @ControllerAdvice
+@Slf4j
 public class NotFoundHandler {
 //	@Value("${spa.default-file}")
 	String defaultFile;
@@ -42,5 +44,12 @@ public class NotFoundHandler {
 				return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("There was an error completing the action.");
 			}
 		}
+	}
+	// 500
+	@ExceptionHandler({ Exception.class })
+	public ResponseEntity<Object> handleAll(final Exception ex) {
+		log.info(ex.getClass().getName());
+		log.error("error", ex);
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponseBody.of(500, "서버 오류"));
 	}
 }
