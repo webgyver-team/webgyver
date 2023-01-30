@@ -2,29 +2,36 @@ package com.ssafy.webgyver.db.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+@Builder
 @Getter
-@Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "seller")
-public class Seller {
+public class Seller extends BaseEntity{
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx")
-    private Long idx;
-
+    @Column(unique = true, length = 50)
     private String id;
 
     @JsonIgnore
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     String password;
+    @Column(name = "representative_name")
+    String representativeName;
+
 
     @Column(name = "birth_day")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -63,12 +70,7 @@ public class Seller {
     @Column(name = "comapny_image")
     private String companyImage;
 
-    @Column(name = "created_at")
-    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDateTime updatedAt;
+    @OneToMany(mappedBy = "seller")
+    private List<SellerCategory> sellerCategories;
 
 }

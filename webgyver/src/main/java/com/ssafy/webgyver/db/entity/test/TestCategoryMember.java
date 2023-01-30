@@ -1,5 +1,6 @@
 package com.ssafy.webgyver.db.entity.test;
 
+import com.ssafy.webgyver.db.entity.BaseEntity;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -14,24 +15,14 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TestCategoryMember {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idx;
+public class TestCategoryMember extends BaseEntity {
+
 //    @ManyToOne()
     @Column(name = "member_idx")
     private String memberIdx;
     @Column(name = "category_idx")
     private String categoryIdx;
     private Integer age;
-
-    @CreatedDate
-    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDate createdDate;
-    //    @Column(default now)
-    @LastModifiedDate
-    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDate lastModifiedDate;
     @Lob
     private Integer price;
 }

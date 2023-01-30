@@ -21,6 +21,8 @@ public class TestMember {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column(name = "user_id", unique = true, length = 1000)
+    private String userId;
     @Column(name = "name")
     private String username;
     private String password;

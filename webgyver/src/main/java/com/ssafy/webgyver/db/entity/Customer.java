@@ -13,12 +13,7 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @Table(name = "customer")
-public class Customer {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idx")
-    private Long idx;
+public class Customer extends BaseEntity{
 
     private String id;
 
@@ -45,7 +40,7 @@ public class Customer {
 
     @Column(name = "card_validity")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime cardVality;
+    private LocalDateTime cardValidity;
 
     private String name;
 
@@ -54,12 +49,5 @@ public class Customer {
 
     @Column(name = "profile_image")
     private String profileImage;
-
-    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDateTime createdAt;
-
-    @Column(name = "updated_at")
-    @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDateTime updatedAt;
 
 }
