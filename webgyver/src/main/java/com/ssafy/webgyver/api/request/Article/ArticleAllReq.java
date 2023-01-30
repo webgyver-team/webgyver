@@ -1,4 +1,4 @@
-package com.ssafy.webgyver.api.request.Seller;
+package com.ssafy.webgyver.api.request.Article;
 
 import lombok.*;
 
@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SellerMypageHistoryPutReq {
+public class ArticleAllReq {
     // 글 번호
     private Long idx;
     private String title;
