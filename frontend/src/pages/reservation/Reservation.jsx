@@ -209,10 +209,14 @@ export default function Reservation() {
         ))}
       </div>
       <div style={{ border: '1px solid red', fontSize: '8px' }}>
-        {`${reservation.idx}/${reservation.storeName}/`}
-        {reservation.date !== null
-          ? `${reservation.date.getFullYear()} ${reservation.date.getMonth()}`
-          : null}
+        {`${reservation.idx} / ${reservation.storeName} / `}
+        {reservation.date !== null ? (
+          <div>
+            {reservation.date.getFullYear()}
+            {reservation.date.getMonth() + 1}
+            {reservation.date.getDate()}
+          </div>
+        ) : null}
         {`/${reservation.time}`}
       </div>
 

@@ -46,6 +46,7 @@ export default function DatePicker({ handleDate }) {
     }
     if (clickedDate !== null) {
       clickedDate.style.border = '2px solid #1976D2';
+      clickedDate.style.color = '#1976D2';
     }
   }, [clickedDate]);
   const handleClickedDate = (element) => {
@@ -59,6 +60,7 @@ export default function DatePicker({ handleDate }) {
     if (clickedDate !== null) {
       // 기존 요소 해제
       clickedDate.style.border = '0px';
+      clickedDate.style.color = '#000000';
     }
     handleClickedDate(event.currentTarget);
     // 해당 날짜를 부모의 setDate로 설정
