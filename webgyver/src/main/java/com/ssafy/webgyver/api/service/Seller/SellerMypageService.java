@@ -1,5 +1,6 @@
 package com.ssafy.webgyver.api.service.Seller;
 
+import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryDelReq;
 import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryPostReq;
 import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryPutReq;
 import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryReq;
@@ -12,4 +13,6 @@ public interface SellerMypageService {
     List<Article> getAllHistory(SellerMypageHistoryReq req);
     Article insertHistory(SellerMypageHistoryPostReq req);
     Article updateHistory(SellerMypageHistoryPutReq req);
+
+    void deleteHistory(SellerMypageHistoryDelReq req);
 }

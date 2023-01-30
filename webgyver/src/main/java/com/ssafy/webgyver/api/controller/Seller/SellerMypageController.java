@@ -1,5 +1,6 @@
 package com.ssafy.webgyver.api.controller.Seller;
 
+import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryDelReq;
 import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryPostReq;
 import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryPutReq;
 import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryReq;
@@ -50,14 +51,25 @@ public class SellerMypageController {
         }
     }
 
-    @PutMapping("/history/{sellerIdx}")
-    public ResponseEntity<BaseResponseBody> updateHistory(@PathVariable Long sellerIdx, @RequestBody SellerMypageHistoryPutReq req) {
+    @PutMapping("/history/{articleIdx}")
+    public ResponseEntity<BaseResponseBody> updateHistory(@PathVariable Long articleIdx, @RequestBody SellerMypageHistoryPutReq req) {
         log.info("updateHistory : {}", req);
         Article result = sellerMypageService.updateHistory(req);
 
         if (result != null) {
             return ResponseEntity.status(200).body(SellerMypageHistoryPostRes.of(200, "Success", result));
         } else {
+            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
+        }
+    }
+
+    @DeleteMapping("/history/{articleIdx}")
+    public ResponseEntity<BaseResponseBody> deleteHistory(@PathVariable("articleIdx") Long articleIdx, SellerMypageHistoryDelReq req) {
+        log.info("{}", req);
+        try {
+            sellerMypageService.deleteHistory(req);
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        } catch (IllegalArgumentException e) {
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
         }
     }

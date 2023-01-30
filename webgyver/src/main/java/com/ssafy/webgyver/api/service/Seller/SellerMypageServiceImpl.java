@@ -47,4 +47,9 @@ public class SellerMypageServiceImpl implements SellerMypageService {
                 .build();
         return articleRepository.save(article);
     }
+
+    @Override
+    public void deleteHistory(SellerMypageHistoryDelReq req) {
+        articleRepository.deleteById(req.getArticleIdx());
+    }
 }
