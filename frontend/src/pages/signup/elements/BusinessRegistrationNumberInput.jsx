@@ -34,12 +34,14 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
     setBtnDisabled(() => true);
     // 사업자등록번호 검사 axios 호출(일단은 random함수로 대체)
     if (Math.random() > 0.5) {
-      // 중복이면 alert?
+      // 중복이면 경고창 띄우기
+      // eslint-disable-next-line
       alert('해당 사업자 등록 번호를 조회할 수 없습니다.');
       setBtnDisabled(() => false);
       return;
     }
     // 성공 했으면 아이디 input disabled
+    // eslint-disable-next-line
     alert('해당 사업자 등록번호는 사용 가능합니다.');
     updateData({ businessRegistrationNumber });
     setInputDisabled(() => true);
@@ -59,9 +61,6 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
       setBtnDisabled(() => true);
       return;
     }
-    console.log(
-      `완료! :${businessRegistrationNumber1}${businessRegistrationNumber2}${businessRegistrationNumber3}`,
-    );
     setBusinessRegistrationNumber(
       // eslint-disable-next-line operator-linebreak
       businessRegistrationNumber1 +
@@ -85,7 +84,6 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
     return true;
   };
   const checkMsg = (value, inputOrder) => {
-    console.log(`${value}를 체크하자.`);
     // inputOrder: 전화번호 입력창 순서 => 다른 단계 다녀오면 유효성 검사 전체 대상으로 수행 못함..
     switch (inputOrder) {
       case 1:

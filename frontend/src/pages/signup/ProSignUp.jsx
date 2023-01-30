@@ -37,6 +37,7 @@ export default function ProSignUp() {
   };
 
   const registCustomer = () => {
+    // eslint-disable-next-line
     console.log(data);
   };
   return (

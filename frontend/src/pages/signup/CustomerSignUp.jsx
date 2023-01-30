@@ -29,10 +29,12 @@ export default function CustomerSignUp() {
   };
 
   const registCard = () => {
-    alert('카드 등록 API 호출..');
+    // eslint-disable-next-line
+    alert('카드 등록 API 호출 예정..');
   };
 
   const registCustomer = () => {
+    // eslint-disable-next-line
     console.log(data);
   };
   return (

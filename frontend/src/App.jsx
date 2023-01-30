@@ -65,5 +65,5 @@ const Main = styled.div`
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
-  line-height: 160%;
+  // line-height: 160%;
 `;
