@@ -96,6 +96,7 @@ export default function MasterInfo() {
                 TabIndicatorProps={{ style: { backgroundColor: 'black' } }}
               >
                 <Tab
+                  disableRipple
                   label={
                     <CustomTab className="classes.tabLabel">정보</CustomTab>
                   }
@@ -103,6 +104,7 @@ export default function MasterInfo() {
                   {...a11yProps(0)}
                 />
                 <Tab
+                  disableRipple
                   label={
                     <CustomTab className="classes.tabLabel">후기</CustomTab>
                   }
@@ -110,6 +112,7 @@ export default function MasterInfo() {
                   {...a11yProps(1)}
                 />
                 <Tab
+                  disableRipple
                   label={
                     <CustomTab className="classes.tabLabel">사례</CustomTab>
                   }
