@@ -3,12 +3,12 @@ import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Button from '@mui/material/Button';
 import DatePicker from './elements/DatePicker';
-import LocateModal from '../../components/sitepopup/LocateModal';
+import LocateModal from '../../../components/common/sitepopup/LocateModal';
 import {
   locateValueState,
   reservationDate,
   chosenReservation,
-} from '../../atom';
+} from '../../../atom';
 import StoreInfo from './elements/StoreInfo';
 
 export default function Reservation() {
