@@ -11,13 +11,13 @@ import lombok.Setter;
 public class BaseResponseBody {
 	String message = null;
 	Integer statusCode = null;
-	
+
 	public BaseResponseBody() {}
 	
 	public BaseResponseBody(Integer statusCode){
 		this.statusCode = statusCode;
 	}
-	
+
 	public BaseResponseBody(Integer statusCode, String message){
 		this.statusCode = statusCode;
 		this.message = message;
