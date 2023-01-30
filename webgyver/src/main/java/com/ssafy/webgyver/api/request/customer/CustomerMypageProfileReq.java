@@ -9,4 +9,8 @@ import lombok.*;
 @AllArgsConstructor
 public class CustomerMypageProfileReq {
     Long idx;
+    String name;
+    String phoneNumber;
+    String birth;
+    String cardNumber;
 }
