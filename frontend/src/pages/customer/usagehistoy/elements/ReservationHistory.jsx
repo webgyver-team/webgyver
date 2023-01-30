@@ -155,6 +155,10 @@ const MoreBtn = styled.button`
   border: 0;
   background-color: transparent;
   margin-left: 8px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const BtnBox = styled.div`
@@ -180,5 +184,6 @@ const StateBtn = styled.div`
 
   :hover {
     cursor: pointer;
+    background-color: ${(props) => props.theme.color.dafaultBorder};
   }
 `;

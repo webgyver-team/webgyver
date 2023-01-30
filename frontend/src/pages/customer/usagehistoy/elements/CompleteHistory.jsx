@@ -151,4 +151,8 @@ const MoreBtn = styled.button`
   border: 0;
   background-color: transparent;
   margin-left: 8px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
