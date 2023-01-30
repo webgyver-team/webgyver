@@ -7,6 +7,6 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class SellerMypageHistoryReq {
-    private String sellerIdx;
+public class SellerIdxReq {
+    private Long sellerIdx;
 }

@@ -1,22 +1,13 @@
 package com.ssafy.webgyver.api.service.Seller;
 
+import com.ssafy.webgyver.api.request.Article.ArticleAllReq;
+import com.ssafy.webgyver.api.request.Article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.Seller.*;
-import com.ssafy.webgyver.api.response.Seller.SellerMypageHistoryRes;
 import com.ssafy.webgyver.db.entity.Article;
-import com.ssafy.webgyver.db.entity.Seller;
-import com.ssafy.webgyver.db.entity.SellerCategory;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
-import com.ssafy.webgyver.db.repository.Seller.CategoryRepository;
-import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
-import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,12 +16,12 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     final ArticleRepository articleRepository;
 
     @Override
-    public List<Article> getAllHistory(SellerMypageHistoryReq req) {
-        return articleRepository.findArticlesByType(Long.parseLong(req.getSellerIdx()));
+    public List<Article> getAllHistory(SellerIdxReq req) {
+        return articleRepository.findArticlesByType(req.getSellerIdx());
     }
 
     @Override
-    public Article insertHistory(SellerMypageHistoryPostReq req) {
+    public Article insertHistory(ArticleAllReq req) {
         Article article = Article.builder().title(req.getTitle())
                 .content(req.getContent())
                 .type(req.getType())
@@ -39,7 +30,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     }
 
     @Override
-    public Article updateHistory(SellerMypageHistoryPutReq req) {
+    public Article updateHistory(ArticleAllReq req) {
         Article article = Article.builder().idx(req.getIdx())
                 .title(req.getTitle())
                 .content(req.getContent())
@@ -49,7 +40,8 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     }
 
     @Override
-    public void deleteHistory(SellerMypageHistoryDelReq req) {
+    public void deleteHistory(ArticleIdxReq req) {
+
         articleRepository.deleteById(req.getArticleIdx());
     }
 }

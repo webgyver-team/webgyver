@@ -1,18 +1,16 @@
 package com.ssafy.webgyver.api.service.Seller;
 
-import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryDelReq;
-import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryPostReq;
-import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryPutReq;
-import com.ssafy.webgyver.api.request.Seller.SellerMypageHistoryReq;
-import com.ssafy.webgyver.api.response.Seller.SellerMypageHistoryRes;
+import com.ssafy.webgyver.api.request.Article.ArticleIdxReq;
+import com.ssafy.webgyver.api.request.Article.ArticleAllReq;
+import com.ssafy.webgyver.api.request.Seller.SellerIdxReq;
 import com.ssafy.webgyver.db.entity.Article;
 
 import java.util.List;
 
 public interface SellerMypageService {
-    List<Article> getAllHistory(SellerMypageHistoryReq req);
-    Article insertHistory(SellerMypageHistoryPostReq req);
-    Article updateHistory(SellerMypageHistoryPutReq req);
+    List<Article> getAllHistory(SellerIdxReq req);
+    Article insertHistory(ArticleAllReq req);
+    Article updateHistory(ArticleAllReq req);
 
-    void deleteHistory(SellerMypageHistoryDelReq req);
+    void deleteHistory(ArticleIdxReq req);
 }
