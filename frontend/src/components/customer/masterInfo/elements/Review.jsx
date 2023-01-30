@@ -4,9 +4,9 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import ReviewImg1 from '../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../assets/image/review3.jpg';
+import ReviewImg1 from '../../../../assets/image/review1.jpg';
+import ReviewImg2 from '../../../../assets/image/review2.jpg';
+import ReviewImg3 from '../../../../assets/image/review3.jpg';
 
 export default function Review() {
   return (

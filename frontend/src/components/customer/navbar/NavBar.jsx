@@ -19,8 +19,8 @@ import Drawer from '@mui/material/Drawer';
 import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import Webgyver from '../../assets/icon/webgyver_white.png';
-import { authState, loginOpenState } from '../../atom';
+import Webgyver from '../../../assets/icon/webgyver_white.png';
+import { authState, loginOpenState } from '../../../atom';
 
 const drawerWidth = 240;
 

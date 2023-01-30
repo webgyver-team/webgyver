@@ -1,5 +1,5 @@
 import React from 'react';
-import LocateModal from '../../../components/sitepopup/LocateModal';
+import LocateModal from '../../../../components/common/sitepopup/LocateModal';
 
 export default function AddressInput() {
   return (

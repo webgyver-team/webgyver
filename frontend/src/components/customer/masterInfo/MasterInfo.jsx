@@ -10,6 +10,7 @@ import Tab from '@mui/material/Tab';
 import CloseIcon from '@mui/icons-material/Close';
 import Info from './elements/Info';
 import Review from './elements/Review';
+import Example from './elements/Example';
 
 const modalStyle = {
   position: 'absolute',
@@ -124,7 +125,7 @@ export default function MasterInfo() {
               <Review />
             </TabPanel>
             <TabPanel value={value} index={2}>
-              Item Three
+              <Example />
             </TabPanel>
           </Box>
         </CustomBox>
