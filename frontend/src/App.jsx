@@ -13,6 +13,8 @@ import LocateModal from './components/sitepopup/LocateModal';
 import Select from './pages/select/Select';
 import LoginModal from './components/login/LoginModal';
 import Reservation from './pages/reservation/Reservation';
+import Match from './pages/match/Match';
+import MasterInfo from './components/masterInfo/MasterInfo';
 
 function App() {
   return (
@@ -32,6 +34,8 @@ function App() {
                 <Route path="/locate" element={<LocateModal />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
+                <Route path="/match" element={<Match />} />
+                <Route path="/masterinfo" element={<MasterInfo />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Main>
@@ -45,7 +49,7 @@ function App() {
 export default App;
 
 const All = styled.div`
-  width: 380px;
+  width: 360px;
   // display: flex;
   // justify-content: center;
 `;

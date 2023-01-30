@@ -7,6 +7,7 @@ import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 import Reserve from './elements/Reserve';
+import Direct from './elements/Direct';
 
 function TabPanel(props) {
   // eslint-disable-next-line object-curly-newline
@@ -55,7 +56,12 @@ export default function BasicTabs() {
     <Main>
       <Box sx={{ width: '100%' }}>
         <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs value={value} onChange={handleChange} variant="fullWidth">
+          <Tabs
+            value={value}
+            onChange={handleChange}
+            variant="fullWidth"
+            TabIndicatorProps={{ style: { backgroundColor: 'black' } }}
+          >
             <Tab
               label={
                 <CustomTab className="classes.tabLabel">예약상담</CustomTab>
@@ -66,7 +72,7 @@ export default function BasicTabs() {
               label={
                 <CustomTab className="classes.tabLabel">바로상담</CustomTab>
               }
-              {...a11yProps(0)}
+              {...a11yProps(1)}
             />
           </Tabs>
         </Box>
@@ -74,7 +80,7 @@ export default function BasicTabs() {
           <Reserve />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Reserve />
+          <Direct />
         </TabPanel>
       </Box>
     </Main>

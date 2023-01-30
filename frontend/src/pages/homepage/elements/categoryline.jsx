@@ -12,10 +12,12 @@ import ImagesearchRollerOutlinedIcon from '@mui/icons-material/ImagesearchRoller
 import DevicesOutlinedIcon from '@mui/icons-material/DevicesOutlined';
 import HelpOutlineIcon from '@mui/icons-material/HelpOutline';
 import { useSetRecoilState } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import { categoryState } from '../../../atom';
 
 export default function CategoryLine(props) {
   const setCategory = useSetRecoilState(categoryState);
+  const navigate = useNavigate();
   const categories = useState([
     '욕실',
     '주방',
@@ -30,8 +32,14 @@ export default function CategoryLine(props) {
   ]);
   const leftCategory = categories[0][props.left];
   const rightCategory = categories[0][props.right];
-  const setLeftCategory = () => setCategory(leftCategory);
-  const setRightCategory = () => setCategory(rightCategory);
+  const setLeftCategory = () => {
+    setCategory(leftCategory);
+    navigate('/reservation');
+  };
+  const setRightCategory = () => {
+    setCategory(rightCategory);
+    navigate('/reservation');
+  };
   const icons = useState([
     <BathtubOutlinedIcon fontSize="small" />,
     <CountertopsOutlinedIcon fontSize="small" />,

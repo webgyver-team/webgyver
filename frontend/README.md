@@ -42,6 +42,13 @@ $ npm install @mui/icons-material @mui/material @emotion/styled @emotion/react
 
 $ npm install react-daum-postcode
 # 다음에서 제공하는 주소 검색 api
+
+$ npm i react-horizontal-datepicker --force
+# 데이트 피커 강제 설치(제거 예정)
+
+$ npm install react-slick --save
+$ npm install slick-carousel --save
+# 이미지 슬라이더
 ```
 
 # 프로젝트 세팅

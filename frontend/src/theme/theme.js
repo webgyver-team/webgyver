@@ -8,6 +8,7 @@ export const normal = {
     // 기본색상
     defaultRed: '#EB4D4D',
     defaultBlue: '#1976D2',
+    defaultWhite: '#ffffff',
     // 폰트색상
     defaultColor: '#000000',
     defaultMeddleColor: '#494953',
