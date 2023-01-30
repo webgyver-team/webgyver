@@ -19,7 +19,6 @@ export default function NameInput({ updateData }) {
   return (
     <div>
       <TextField
-        id="outlined-basic"
         label="이름"
         variant="outlined"
         required

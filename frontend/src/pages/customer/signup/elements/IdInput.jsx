@@ -63,7 +63,6 @@ export default function IdInput({ updateData }) {
     <div>
       <InputDiv>
         <TextField
-          id="outlined-basic"
           label="아이디"
           variant="outlined"
           required

@@ -19,7 +19,6 @@ export default function RepresentativeNameInput({ updateData }) {
   return (
     <div>
       <TextField
-        id="outlined-basic"
         label="대표자명"
         variant="outlined"
         required
