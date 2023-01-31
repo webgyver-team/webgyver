@@ -1,9 +1,9 @@
 package com.ssafy.webgyver.api.service.Seller;
 
-import com.ssafy.webgyver.api.request.Seller.SellerCheckDuplicateReq;
-import com.ssafy.webgyver.api.request.Seller.SellerLoginReq;
-import com.ssafy.webgyver.api.request.Seller.SellerSignUpPostReq;
-import com.ssafy.webgyver.api.response.Seller.SellerLoginRes;
+import com.ssafy.webgyver.api.request.seller.SellerCheckDuplicateReq;
+import com.ssafy.webgyver.api.request.seller.SellerLoginReq;
+import com.ssafy.webgyver.api.request.seller.SellerSignUpPostReq;
+import com.ssafy.webgyver.api.response.seller.SellerLoginRes;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.entity.SellerCategory;

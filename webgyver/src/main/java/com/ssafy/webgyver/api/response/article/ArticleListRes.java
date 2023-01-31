@@ -1,4 +1,4 @@
-package com.ssafy.webgyver.api.response.Article;
+package com.ssafy.webgyver.api.response.article;
 
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
 import com.ssafy.webgyver.db.entity.Article;

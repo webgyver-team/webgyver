@@ -1,8 +1,8 @@
 package com.ssafy.webgyver.api.service.Seller;
 
-import com.ssafy.webgyver.api.request.Article.ArticleAllReq;
-import com.ssafy.webgyver.api.request.Article.ArticleIdxReq;
-import com.ssafy.webgyver.api.request.Seller.*;
+import com.ssafy.webgyver.api.request.article.ArticleAllReq;
+import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
+import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
 import lombok.RequiredArgsConstructor;

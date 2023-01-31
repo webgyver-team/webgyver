@@ -1,10 +1,10 @@
-package com.ssafy.webgyver.api.controller.Seller;
+package com.ssafy.webgyver.api.controller.seller;
 
-import com.ssafy.webgyver.api.request.Article.ArticleIdxReq;
-import com.ssafy.webgyver.api.request.Article.ArticleAllReq;
-import com.ssafy.webgyver.api.request.Seller.SellerIdxReq;
-import com.ssafy.webgyver.api.response.Article.ArticleRes;
-import com.ssafy.webgyver.api.response.Article.ArticleListRes;
+import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
+import com.ssafy.webgyver.api.request.article.ArticleAllReq;
+import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
+import com.ssafy.webgyver.api.response.article.ArticleRes;
+import com.ssafy.webgyver.api.response.article.ArticleListRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
