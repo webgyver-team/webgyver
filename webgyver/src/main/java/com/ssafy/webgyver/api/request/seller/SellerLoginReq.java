@@ -1,4 +1,4 @@
-package com.ssafy.webgyver.api.request.Seller;
+package com.ssafy.webgyver.api.request.seller;
 
 import lombok.Getter;
 import lombok.Setter;

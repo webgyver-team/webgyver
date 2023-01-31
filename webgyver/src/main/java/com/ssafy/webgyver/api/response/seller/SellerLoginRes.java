@@ -1,8 +1,6 @@
-package com.ssafy.webgyver.api.response.Seller;
+package com.ssafy.webgyver.api.response.seller;
 
-import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
-import com.ssafy.webgyver.db.entity.Seller;
 import lombok.Getter;
 import lombok.Setter;
 

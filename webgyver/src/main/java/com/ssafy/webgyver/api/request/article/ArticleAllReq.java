@@ -1,4 +1,4 @@
-package com.ssafy.webgyver.api.request.Article;
+package com.ssafy.webgyver.api.request.article;
 
 import lombok.*;
 

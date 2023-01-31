@@ -1,6 +1,5 @@
-package com.ssafy.webgyver.api.response.Seller;
+package com.ssafy.webgyver.api.response.seller;
 
-import com.ssafy.webgyver.api.response.test.MemberSignUpPostRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 
 public class SellerSignUpPostRes extends BaseResponseBody {
