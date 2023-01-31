@@ -10,8 +10,9 @@ export default function DatePicker({ handleDate }) {
       setClickedDate(document.querySelector('.items div')); // 처음에 clickedDate를 시작일 HTML Element로 넣어주기
     }
     if (clickedDate !== null) {
-      clickedDate.style.border = '2px solid #1976D2';
-      clickedDate.style.color = '#1976D2';
+      clickedDate.style.border = '1px solid #1976D2';
+      clickedDate.style.color = '#ffffff';
+      clickedDate.style.backgroundColor = '#1976D2';
     } // clickedDate에 클릭 CSS 효과 부여
   }, [clickedDate]); // clickedDate 바뀔 때마다 실행
   const getList = () => {
@@ -38,8 +39,9 @@ export default function DatePicker({ handleDate }) {
       return; // 함수 종료
     }
     // 기존 clickedDate CSS 효과 해제
-    clickedDate.style.border = '0px';
+    clickedDate.style.border = '1px solid transparent';
     clickedDate.style.color = '#000000';
+    clickedDate.style.backgroundColor = '#ffffff';
     // 클릭 날짜의 HTML Element를 clickedDate로 설정
     handleClickedDate(event.currentTarget);
     // 클릭한 날짜를 부모의 date로 설정하게끔 props 전달
@@ -71,7 +73,7 @@ export default function DatePicker({ handleDate }) {
 
 const FlexContainer = styled.div`
   display: flex;
-  width: 92vw;
+  width: 100%;
 `;
 const Items = styled.div`
   display: flex;
@@ -89,8 +91,10 @@ const DateDiv = styled.div`
   width: 40px;
   padding: 10px;
   margin: 0px 4px;
+  color: #000000;
   font-size: 12px;
   font-weight: bold;
+  border: 1px solid transparent;
   border-radius: 50%;
   &:hover {
     cursor: pointer;

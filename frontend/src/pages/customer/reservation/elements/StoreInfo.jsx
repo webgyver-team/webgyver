@@ -26,20 +26,21 @@ export default function StoreInfo({
     handleClickedTimeButton(event, data);
   };
   return (
-    <div style={{ borderBottom: '1px solid black' }}>
+    <Main>
       <div
         style={{
           display: 'flex',
           alignItems: 'center',
+          paddingRight: '8px',
         }}
       >
         <Picture src={picture} alt="" />
         <div>
-          <span style={{ fontSize: '20px', fontWeight: 'bold' }}>
+          <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
             {storeName}
           </span>
           <span
-            style={{ fontSize: '16px', fontWeight: 'bold', marginLeft: '4px' }}
+            style={{ fontSize: '12px', fontWeight: 'bold', marginLeft: '4px' }}
           >
             {personName}
           </span>
@@ -62,7 +63,7 @@ export default function StoreInfo({
       <div
         style={{
           display: 'inline-flex',
-          width: '100vw',
+          width: '100%',
           overflowX: 'scroll',
           paddingBottom: '12px',
         }}
@@ -96,9 +97,14 @@ export default function StoreInfo({
           );
         })}
       </div>
-    </div>
+    </Main>
   );
 }
+
+const Main = styled.div`
+  border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  padding: 8px 0 8px 8px;
+`;
 
 const Picture = styled.img`
   width: 96px;

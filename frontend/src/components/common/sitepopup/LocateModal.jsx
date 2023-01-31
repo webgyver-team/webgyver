@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useState, useEffect } from 'react';
 import Box from '@mui/material/Box';
 import Button from '@mui/material/Button';
@@ -7,7 +8,7 @@ import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
 import DaumPostcode from 'react-daum-postcode';
 import { useRecoilState } from 'recoil';
-import { locateValueState } from '../../../atom';
+import { locateValueState, locateModalState } from '../../../atom';
 
 const modalStyle = {
   position: 'absolute',
@@ -31,9 +32,10 @@ const postCodeStyle = {
 const { kakao } = window;
 
 export default function BasicModal() {
-  const [open, setOpen] = useState(false);
+  // const [open, setOpen] = useState(false);
   const [postOpen, setpostOpen] = useState(false);
   const [coordinateValue, setCoordinateValue] = useState({ x: null, y: null });
+  const [locateModalOpen, setLocateModalOpen] = useRecoilState(locateModalState);
   const [locationValue, setLocationValue] = useRecoilState(locateValueState);
 
   // 컴포넌트 내 주소 관리 State
@@ -60,7 +62,7 @@ export default function BasicModal() {
     setDetail(e.target.value);
   };
 
-  const handleOpen = () => setOpen(true);
+  // const handleOpen = () => setLocateModalOpen(true);
   const handlePostOpen = () => setpostOpen(true);
   // 주소 선택창 닫힐 때 작동
   const onCompletePost = (data) => {
@@ -70,7 +72,7 @@ export default function BasicModal() {
   };
 
   const handleClose = () => {
-    setOpen(false);
+    setLocateModalOpen(false);
     setpostOpen(false);
   };
 
@@ -101,9 +103,9 @@ export default function BasicModal() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
+      {/* <Button onClick={handleOpen}>Open modal</Button> */}
       <Modal
-        open={open}
+        open={locateModalOpen}
         onClose={handleClose}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"

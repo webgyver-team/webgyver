@@ -21,7 +21,7 @@ export const testState = atom({
 // 위치설정 모달 on/off
 export const locateModalState = atom({
   key: 'locateModalState',
-  default: true,
+  default: false,
 });
 
 // 주소 저장
