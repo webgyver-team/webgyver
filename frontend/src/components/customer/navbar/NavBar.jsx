@@ -107,9 +107,32 @@ export default function NavBar(props) {
               <MenuIcon />
             </IconButton>
             {/* 홈 아이콘 */}
-            <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+            <Typography
+              href=""
+              variant="h6"
+              component="div"
+              sx={{
+                display: { xs: 'block', sm: 'none' },
+                margin: 'auto',
+                paddingRight: '65px',
+              }}
+            >
               <HomeIcon onClick={routeHome}>
-                <img src={Webgyver} alt="이런!" width="10%" />
+                <img src={Webgyver} alt="이런!" width="30px" />
+                <span>WebGyver</span>
+              </HomeIcon>
+            </Typography>
+            <Typography
+              href=""
+              variant="h6"
+              component="div"
+              sx={{
+                display: { xs: 'none', sm: 'block' },
+                flexGrow: 1,
+              }}
+            >
+              <HomeIcon onClick={routeHome}>
+                <img src={Webgyver} alt="이런!" width="30px" />
                 <span>WebGyver</span>
               </HomeIcon>
             </Typography>
