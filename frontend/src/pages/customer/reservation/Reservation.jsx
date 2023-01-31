@@ -1,7 +1,7 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
-import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
 import DatePicker from './elements/DatePicker';
 import LocateModal from '../../../components/common/sitepopup/LocateModal';
@@ -140,7 +140,7 @@ export default function Reservation() {
           />
         ))}
       </div>
-
+      <NullBox />
       <div
         style={{
           display: 'flex',
@@ -152,15 +152,27 @@ export default function Reservation() {
             to="/reservation/form"
             style={{
               position: 'fixed',
-              bottom: '50px',
+              bottom: '20px',
               textDecoration: 'none',
             }}
           >
-            <Button variant="contained" onClick={goReservationForm}>
-              상담 예약하기
-            </Button>
+            <Btn onClick={goReservationForm}>
+              <span>상담 예약하기</span>
+            </Btn>
           </Link>
-        ) : null}
+        ) : (
+          <Link
+            style={{
+              position: 'fixed',
+              bottom: '20px',
+              textDecoration: 'none',
+            }}
+          >
+            <DisabledBtn>
+              <span>상담 예약하기</span>
+            </DisabledBtn>
+          </Link>
+        )}
       </div>
     </div>
   );
@@ -184,4 +196,36 @@ const LocateDiv = styled.div`
   padding: 4%;
   display: flex;
   justify-content: space-between;
+`;
+
+const Btn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 296px;
+  height: 64px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-radius: 10px;
+  color: white;
+  background-color: ${(props) => props.theme.color.defaultBlue};
+  box-shadow: 2px 2px 4px 0px ${(props) => props.theme.color.defaultlightColor};
+  :hover {
+    cursor: pointer;
+  }
+  span {
+    font-size: 24px;
+    font-weight: bold;
+  }
+`;
+
+const DisabledBtn = styled(Btn)`
+  background-color: ${(props) => props.theme.color.dafaultBorder};
+  :hover {
+    cursor: default;
+  }
+`;
+
+const NullBox = styled.div`
+  height: 104px;
 `;
