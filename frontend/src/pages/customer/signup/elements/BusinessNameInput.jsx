@@ -19,7 +19,6 @@ export default function BusinessNameInput({ updateData }) {
   return (
     <div>
       <TextField
-        id="outlined-basic"
         label="상호명"
         variant="outlined"
         required

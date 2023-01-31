@@ -47,7 +47,6 @@ export default function PasswordInput({ updateData }) {
     <div>
       <TextField
         type="password"
-        id="outlined-basic"
         label="비밀번호"
         variant="outlined"
         required
@@ -58,7 +57,6 @@ export default function PasswordInput({ updateData }) {
       <Message msg={msg} />
       <TextField
         type="password"
-        id="outlined-basic"
         label="비밀번호 확인"
         variant="outlined"
         required

@@ -137,7 +137,6 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
     <div>
       <InputDiv>
         <TextField
-          id="outlined-basic"
           label="사업자등록번호"
           variant="outlined"
           value={businessRegistrationNumber1}
@@ -150,7 +149,6 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
 
         <p>-</p>
         <TextField
-          id="outlined-basic"
           label=""
           variant="outlined"
           value={businessRegistrationNumber2}
@@ -162,7 +160,6 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
         />
         <p>-</p>
         <TextField
-          id="outlined-basic"
           label=""
           variant="outlined"
           value={businessRegistrationNumber3}
