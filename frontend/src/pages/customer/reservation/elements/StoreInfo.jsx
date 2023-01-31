@@ -30,11 +30,12 @@ export default function StoreInfo({
       <div
         style={{
           display: 'flex',
-          alignItems: 'center',
           paddingRight: '8px',
         }}
       >
-        <Picture src={picture} alt="" />
+        <div style={{ marginRight: '4px' }}>
+          <Picture src={picture} alt="" />
+        </div>
         <div>
           <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
             {storeName}
@@ -107,7 +108,8 @@ const Main = styled.div`
 `;
 
 const Picture = styled.img`
-  width: 96px;
   height: 96px;
+  width: 96px;
+  object-fit: cover;
   padding: 4px;
 `;
