@@ -18,6 +18,7 @@ export default function ReservationForm() {
   const [formContent, setFormContent] = useState('');
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
+  const [imageData, setImageData] = useState([]);
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
     if (event.target.value.trim().length === 0) {
@@ -47,6 +48,7 @@ export default function ReservationForm() {
     };
     // eslint-disable-next-line
     console.log(data);
+    console.log(imageData);
     // data로 axios POST하고
     // 결과로 나온 idx를 가지고
     // 이미지 axios POST해야 함
@@ -124,11 +126,11 @@ export default function ReservationForm() {
         <ErrorMessage>{msgForContent}</ErrorMessage>
       </div>
       <div>
-        <ImageInput />
+        <ImageInput setImageData={setImageData} />
       </div>
       <div style={{ textAlign: 'center', marginTop: '16px' }}>
         <Button variant="contained" onClick={registReservation}>
-          예약상담 등록하기
+          등록
         </Button>
       </div>
     </div>
