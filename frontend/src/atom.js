@@ -1,8 +1,12 @@
 import { atom } from 'recoil';
-
+import { recoilPersist } from 'recoil-persist';
 // 해당 파일은 Recoil-atom을 선언하는 공간이다.
 
 // 로그인 판단용 State, null, master, customer
+const { persistAtom } = recoilPersist({
+  key: 'recoil-persist',
+  storage: localStorage,
+});
 export const authState = atom({
   key: 'authState',
   default: true,
@@ -43,9 +47,18 @@ export const loginOpenState = atom({
 });
 
 // 상담예약에서 선택한 날짜
+const today = new Date();
 export const reservationDate = atom({
   key: 'reservationDate',
-  default: new Date(),
+  default: `${today.getFullYear()}-${
+    (today.getMonth() + 1).toString().length < 2
+      ? `0${today.getMonth() + 1}`
+      : today.getMonth() + 1
+  }-${
+    today.getDate().toString().length < 2
+      ? `0${today.getDate()}`
+      : today.getDate()
+  }`,
 });
 
 // 상담예약에서 선택한 파트너 idx, 가게 이름, 시간
@@ -58,4 +71,5 @@ export const chosenReservation = atom({
     date: null,
     time: null,
   },
+  effects_UNSTABLE: [persistAtom],
 });

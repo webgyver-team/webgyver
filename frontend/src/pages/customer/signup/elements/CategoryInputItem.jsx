@@ -74,7 +74,6 @@ export default function CategoryInput({
         </FormControl>
         {/* 상담비용 number input */}
         <TextField
-          id="outlined-basic"
           label="상담 비용"
           variant="outlined"
           size="small"

@@ -36,7 +36,7 @@ export default function ResidentNumberInput({ updateData }) {
       residentNumber2.trim().length === 7
     ) {
       updateData({
-        residentNumber:
+        birthday:
           event.target.value.trim() + residentNumber2.replaceAll('*', ''),
       });
     } else updateData({ residentNumber: null });
@@ -44,7 +44,7 @@ export default function ResidentNumberInput({ updateData }) {
   const changeResidentNumber2 = (event) => {
     const actualInput = event.target.value.replaceAll('*', '');
     if (!onlyNumber(actualInput)) {
-      updateData({ residentNumber: null });
+      updateData({ birthday: null });
       return;
     }
     // 여기는 1~4까지만 가능
@@ -58,15 +58,14 @@ export default function ResidentNumberInput({ updateData }) {
       }
     }
     if (residentNumber1.trim().length === 6 && actualInput.length === 1) {
-      updateData({ residentNumber: residentNumber1.trim() + actualInput });
-    } else updateData(null);
+      updateData({ birthday: residentNumber1.trim() + actualInput });
+    } else updateData({ birthday: null });
   };
   return (
     <div>
       <InputDiv style={{ width: '100%' }}>
         <TextField
           style={{ width: '48%' }}
-          id="outlined-basic"
           label="주민등록번호 앞 6자리"
           variant="outlined"
           value={residentNumber1}
@@ -77,7 +76,6 @@ export default function ResidentNumberInput({ updateData }) {
         <p>-</p>
         <TextField
           style={{ width: '48%' }}
-          id="outlined-basic"
           label="주민등록번호 뒷 1자리"
           variant="outlined"
           value={residentNumber2.length === 7 || focus ? residentNumber2 : ''}
@@ -96,4 +94,5 @@ export default function ResidentNumberInput({ updateData }) {
 const InputDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;

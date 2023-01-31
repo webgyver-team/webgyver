@@ -14,8 +14,8 @@ export default function CustomerSignUp() {
   const [data, setData] = useState({
     id: null,
     password: null,
+    birthday: null,
     name: null,
-    residentNumber: null,
     phoneNumber: null,
     // cardNumber,
     useCheck: false,
