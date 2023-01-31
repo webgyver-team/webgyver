@@ -1,5 +1,6 @@
 /* eslint-disable jsx-a11y/media-has-caption */
-import React, { useRef, useEffect, useState } from 'react';
+// eslint-disable-next-line object-curly-newline
+import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 // import Button from '@mui/material/Button';
@@ -10,6 +11,24 @@ export default function VideoService() {
   const mySubScreen = useRef(null);
   const peerFace = useRef(null);
   const [mainScreenState, setMainScreenState] = useState('myScreen');
+
+  const MainScreenRef = useRef(null);
+  const [mainScreenWidth, setMainScreenWidth] = useState('myScreen');
+  useLayoutEffect(() => {
+    setMainScreenWidth(MainScreenRef.current.offsetWidth);
+  }, []);
+
+  const SubScreenRef = useRef(null);
+  const [subScreenWidth, setSubScreenWidth] = useState('myScreen');
+  useLayoutEffect(() => {
+    setSubScreenWidth(SubScreenRef.current.offsetWidth);
+  }, []);
+
+  const videoBoxRef = useRef(null);
+  const [videoBoxWidth, setVideoBoxWidth] = useState(0);
+  useLayoutEffect(() => {
+    setVideoBoxWidth(videoBoxRef.current.offsetWidth);
+  }, []);
 
   const routeEndService = () => {
     console.log('???');
@@ -84,53 +103,38 @@ export default function VideoService() {
     <Main>
       <BoxBox>
         {mainScreenState === 'myScreen' && (
-          <VideoBox>
-            <MainScreen>
-              <video
-                playsInline
-                autoPlay
-                width="90%"
-                height="350"
-                ref={myMainScreen}
-              />
+          <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
+            <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
+              <video playsInline autoPlay width="100%" ref={myMainScreen} />
             </MainScreen>
 
-            <SubScreen onClick={changeScreen}>
-              <video
-                playsInline
-                autoPlay
-                width="120"
-                height="120"
-                ref={peerFace}
-              />
+            <SubScreen
+              onClick={changeScreen}
+              ref={SubScreenRef}
+              width={subScreenWidth}
+            >
+              <video playsInline autoPlay width="100%" ref={peerFace} />
             </SubScreen>
           </VideoBox>
         )}
 
         {mainScreenState === 'peerScreen' && (
-          <VideoBox>
-            <MainScreen>
-              <video
-                playsInline
-                autoPlay
-                width="90%"
-                height="350"
-                ref={peerFace}
-              />
+          <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
+            <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
+              <video playsInline autoPlay width="100%" ref={peerFace} />
             </MainScreen>
 
-            <SubScreen onClick={changeScreen}>
-              <video
-                playsInline
-                autoPlay
-                width="120"
-                height="120"
-                ref={mySubScreen}
-              />
+            <SubScreen
+              onClick={changeScreen}
+              ref={SubScreenRef}
+              width={subScreenWidth}
+            >
+              <video playsInline autoPlay width="100%" ref={mySubScreen} />
             </SubScreen>
           </VideoBox>
         )}
       </BoxBox>
+      <NullBox2 width={subScreenWidth} />
       <BoxBox>
         <Btn>
           <span>출장요청</span>
@@ -156,30 +160,46 @@ const BoxBox = styled.div`
 
 const VideoBox = styled.div`
   position: relative;
-  width: 90%;
-  height: 400px;
+  width: 100%;
+  height: ${(props) => props.width}px;
 `;
 
 const MainScreen = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 92%;
+  height: ${(props) => props.width}px;
   position: absolute;
-  left: 5%;
-  top: 5%;
+  top: 8%;
+  left: 4%;
   z-index: 1;
+  background-color: ${(props) => props.theme.color.defaultColor};
+  box-shadow: 2px 2px 4px 0px ${(props) => props.theme.color.defaultlightColor};
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
 const SubScreen = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   position: absolute;
-  right: 5%;
-  bottom: 10%;
+  width: 40%;
+  height: ${(props) => props.width}px;
+  right: 0;
+  bottom: -16%;
   z-index: 2;
   background-color: ${(props) => props.theme.color.defaultColor};
+  border-radius: 10px;
+  overflow: hidden;
 `;
 
 const Btn = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 80%;
+  width: 296px;
   height: 64px;
   padding-left: 24px;
   padding-right: 24px;
@@ -202,4 +222,8 @@ const RedBtn = styled(Btn)`
 
 const NullBox = styled.div`
   height: 24px;
+`;
+
+const NullBox2 = styled(NullBox)`
+  height: calc(${(props) => props.width}px / 2);
 `;
