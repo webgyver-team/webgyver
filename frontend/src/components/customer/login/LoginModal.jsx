@@ -36,6 +36,7 @@ export default function LoginModal() {
       [e.target.name]: e.target.value,
     });
   };
+  // 제출 시 id/pw 빈 칸이 아닌지 검증
   const submit = () => {
     if (payload?.id === '') {
       setErrors({
@@ -55,6 +56,7 @@ export default function LoginModal() {
     }
     console.log(errors);
   };
+  // 회원가입 링크
   const routeSignup = () => {
     setLoginState(false);
     navigate('/signup');
