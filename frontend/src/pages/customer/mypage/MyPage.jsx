@@ -1,16 +1,16 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from 'styled-components';
+import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
-import PropTypes from 'prop-types';
-import Reserve from './elements/Reserve';
-import Direct from './elements/Direct';
+import MyInfo from './element/MyInfo';
+import ReviewHistory from './element/ReviewHistory';
 
 function TabPanel(props) {
-  // eslint-disable-next-line object-curly-newline
   const { children, value, index, ...other } = props;
 
   return (
@@ -19,11 +19,10 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box sx={{ p: 0 }}>
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -54,50 +53,67 @@ export default function BasicTabs() {
 
   return (
     <Main>
-      <Box sx={{ width: '100%' }}>
-        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-          <Tabs
-            value={value}
-            onChange={handleChange}
-            variant="fullWidth"
-            TabIndicatorProps={{ style: { backgroundColor: 'black' } }}
-          >
-            <Tab
-              disableRipple
-              label={
-                <CustomTab className="classes.tabLabel">예약상담</CustomTab>
-              }
-              {...a11yProps(0)}
-            />
-            <Tab
-              disableRipple
-              label={
-                <CustomTab className="classes.tabLabel">바로상담</CustomTab>
-              }
-              {...a11yProps(1)}
-            />
-          </Tabs>
-        </Box>
+      <Header>마이페이지</Header>
+      <Body>
+        <Tabs
+          value={value}
+          onChange={handleChange}
+          aria-label="basic tabs example"
+          TabIndicatorProps={{ style: { display: 'none' } }}
+        >
+          <Tab
+            disableRipple
+            label={<CustomTab className="classes.tabLabel">내 정보</CustomTab>}
+            {...a11yProps(0)}
+          />
+          <BarBox>
+            <VerticalBar />
+          </BarBox>
+          <Tab
+            disableRipple
+            label={<CustomTab className="classes.tabLabel">후ㅤ기</CustomTab>}
+            {...a11yProps(2)}
+          />
+        </Tabs>
         <TabPanel value={value} index={0}>
-          <Reserve />
+          <MyInfo />
         </TabPanel>
-        <TabPanel value={value} index={1}>
-          <Direct />
+        <TabPanel value={value} index={2}>
+          <ReviewHistory />
         </TabPanel>
-      </Box>
+      </Body>
     </Main>
   );
 }
+
 const Main = styled.div`
-  // 스크롤바를 제외한 너비만 계산
-  width: calc(100vw - (100vw - 100%));
-  .MuiBox-root {
-    padding: 0;
-  }
+  width: 100%;
+  margin: 16px;
+`;
+
+const Header = styled.div`
+  font-size: 24px;
+  font-weight: bold;
+  text-align: center;
+`;
+
+const Body = styled.div`
+  margin-top: 0px;
+`;
+
+const BarBox = styled.div`
+  display: flex;
+  align-items: center;
+`;
+
+const VerticalBar = styled.div`
+  width: 1px;
+  height: 32px;
+  background-color: ${(props) => props.theme.color.dafaultBorder};
 `;
 
 const CustomTab = styled.span`
   color: ${(props) => props.theme.color.defaultColor};
-  font-size: 20px;
+  font-size: 16px;
   font-weight: bold;
 `;
