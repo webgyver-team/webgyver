@@ -1,46 +1,48 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 export default function EndService() {
+  const navigate = useNavigate();
   const data = {
     storeName: 'gd',
     personName: 'gdgd',
-    title: 'gdgdgd',
-    price: '0 원',
+    content: 'gdgdgd',
+    price: '5000',
   };
+  const routeVideoService = () => navigate('/videoservice');
 
   return (
     <Main>
-      <div>
-        <p>상담이 종료되었습니다.</p>
-      </div>
+      <Header>상담이 완료되었습니다.</Header>
+      <NullBox />
       <InfoBox>
-        <div>
+        <Line>
           <span className="first">상호명 : </span>
           <span className="last">{data.storeName}</span>
-        </div>
+        </Line>
         <NullBox />
-        <div>
+        <Line>
           <span className="first">판매자 : </span>
           <span className="last">{data.personName}</span>
-        </div>
+        </Line>
         <NullBox />
-        <div>
+        <Line>
           <span className="first">문의 제목 : </span>
-          <span className="last">{data.title}</span>
-        </div>
-        <NullBox />
+          <span className="last">{data.content}</span>
+        </Line>
       </InfoBox>
       <NullBox />
       <TransparentBox>
-        <div>
+        <Line>
           <span className="first">상담이용료</span>
-          <br />
-          <span className="last">{data.price}</span>
-        </div>
+          <span className="last">{`${data.price} 원`}</span>
+        </Line>
+        <NullBox />
+        <NullBox />
       </TransparentBox>
       <BoxBox>
-        <GrayBtn>다시 연결하기</GrayBtn>
+        <GrayBtn onClick={routeVideoService}>다시 연결하기</GrayBtn>
       </BoxBox>
       <BoxBox>
         <BtnBox>
@@ -56,6 +58,11 @@ const Main = styled.div`
   font-size: 16px;
 `;
 
+const Header = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+`;
+
 const InfoBox = styled.div`
   padding: 16px;
   border-radius: 15px;
@@ -69,8 +76,13 @@ const InfoBox = styled.div`
 
   .last {
     margin-left: 16px;
-    text-align: right;
+    content-align: center;
   }
+`;
+
+const Line = styled.div`
+  display: flex;
+  justify-content: space-between;
 `;
 
 const NullBox = styled.div`
@@ -85,8 +97,8 @@ const TransparentBox = styled.div`
   }
 
   .last {
-    margin-left: 16px;
-    text-align: right;
+    margin-right: 16px;
+    font-size: 24px;
   }
 `;
 
