@@ -109,7 +109,7 @@ export default function ReservationForm() {
         />
         <ErrorMessage>{msgForTitle}</ErrorMessage>
       </div>
-      <div style={{ marginTop: '6px' }}>
+      <div style={{ marginTop: '4px' }}>
         <TextField
           label="내용"
           variant="outlined"
@@ -126,7 +126,7 @@ export default function ReservationForm() {
       <div>
         <ImageInput />
       </div>
-      <div>
+      <div style={{ textAlign: 'center', marginTop: '16px' }}>
         <Button variant="contained" onClick={registReservation}>
           예약상담 등록하기
         </Button>
