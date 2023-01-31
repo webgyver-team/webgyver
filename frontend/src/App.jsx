@@ -18,6 +18,8 @@ import Match from './pages/customer/match/Match';
 import MasterInfo from './components/customer/masterInfo/MasterInfo';
 import UsageHistory from './pages/customer/usagehistoy/UsageHistory';
 import MyPage from './pages/customer/mypage/MyPage';
+import VideoService from './pages/customer/videoservice/VideoService';
+import EndService from './pages/customer/endservice/EndService';
 
 function App() {
   return (
@@ -42,6 +44,8 @@ function App() {
                 <Route path="/masterinfo" element={<MasterInfo />} />
                 <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="/mypage" element={<MyPage />} />
+                <Route path="/videoservice" element={<VideoService />} />
+                <Route path="/endservice" element={<EndService />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Main>
