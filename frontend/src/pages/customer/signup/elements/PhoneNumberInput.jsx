@@ -97,7 +97,6 @@ export default function PhoneNumberInput({ updateData }) {
     <div>
       <InputDiv style={{ width: '100%' }}>
         <TextField
-          id="outlined-basic"
           label="전화번호"
           variant="outlined"
           value={phoneNumber1}
@@ -109,7 +108,6 @@ export default function PhoneNumberInput({ updateData }) {
 
         <p>-</p>
         <TextField
-          id="outlined-basic"
           label=""
           variant="outlined"
           value={phoneNumber2}
@@ -120,7 +118,6 @@ export default function PhoneNumberInput({ updateData }) {
         />
         <p>-</p>
         <TextField
-          id="outlined-basic"
           label=""
           variant="outlined"
           value={phoneNumber3}
@@ -139,4 +136,5 @@ export default function PhoneNumberInput({ updateData }) {
 const InputDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;

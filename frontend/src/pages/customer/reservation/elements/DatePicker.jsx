@@ -43,7 +43,17 @@ export default function DatePicker({ handleDate }) {
     // 클릭 날짜의 HTML Element를 clickedDate로 설정
     handleClickedDate(event.currentTarget);
     // 클릭한 날짜를 부모의 date로 설정하게끔 props 전달
-    handleDate(date);
+    handleDate(
+      `${date.getFullYear()}-${
+        (date.getMonth() + 1).toString().length < 2
+          ? `0${date.getMonth() + 1}`
+          : date.getMonth() + 1
+      }-${
+        date.getDate().toString().length < 2
+          ? `0${date.getDate()}`
+          : date.getDate()
+      }`,
+    );
   };
   return (
     <FlexContainer className="flex-container">
@@ -62,12 +72,12 @@ export default function DatePicker({ handleDate }) {
 const FlexContainer = styled.div`
   display: flex;
   width: 92vw;
-  overflow-x: scroll;
 `;
 const Items = styled.div`
   display: flex;
   align-items: center;
   padding-bottom: 12px;
+  overflow-x: scroll;
 `;
 
 const DateDiv = styled.div`
@@ -77,6 +87,7 @@ const DateDiv = styled.div`
   align-items: center;
   height: 40px;
   width: 40px;
+  padding: 10px;
   margin: 0px 4px;
   font-size: 12px;
   font-weight: bold;

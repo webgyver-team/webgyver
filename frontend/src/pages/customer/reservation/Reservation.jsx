@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Button from '@mui/material/Button';
+import { Link } from 'react-router-dom';
 import DatePicker from './elements/DatePicker';
 import LocateModal from '../../../components/common/sitepopup/LocateModal';
 import {
@@ -13,17 +14,18 @@ import StoreInfo from './elements/StoreInfo';
 import { storeList } from './dummyData';
 
 export default function Reservation() {
-  const [date, setDate] = useRecoilState(reservationDate); // 예약할 날짜(Date 형식)
-  const [reservation, setReservation] = useRecoilState(chosenReservation);
   // 예약 정보 {idx, storeName, date, time}
-  const [clickedTimeButton, setClickedTimeButton] = useState(null); // 클릭한 시간 버튼(HTML Element)
-  const [reservationButton, setReservationButton] = useState(false); // 예약하기 버튼 on off(boolean)
   const reservationNull = {
     idx: null,
     storeName: null,
     date: null,
     time: null,
-  };
+  }; // 빈 예약 정보
+  const [date, setDate] = useRecoilState(reservationDate); // 예약할 날짜(Date 형식)
+  const [reservation, setReservation] = useRecoilState(chosenReservation); // 전역 예약 정보(등록 시 변경)
+  const [clickedReservation, setClickedReservation] = useState(reservationNull); // 클릭한 예약 정보
+  const [clickedTimeButton, setClickedTimeButton] = useState(null); // 클릭한 시간 버튼(HTML Element)
+  const [reservationButton, setReservationButton] = useState(false); // 예약하기 버튼 on off(boolean)
 
   // 날짜 선택했을 때 실행되는 함수
   const handleDate = (value) => {
@@ -39,7 +41,7 @@ export default function Reservation() {
       if (reservation !== null) {
         // 등록한 예약 정보가 있었다면
         // 날짜가 바뀌면 제어가 불가능하기 때문에
-        setReservation(reservationNull); // 예약 정보 null로 초기화
+        setClickedReservation(reservationNull); // 예약 정보 null로 초기화
       }
     }
     setDate(value); // 선택한 날짜를 저장
@@ -52,15 +54,11 @@ export default function Reservation() {
     if (
       // reservation의 property와 하나라도 다르다면(다른 버튼 클릭)
       // eslint-disable-next-line operator-linebreak
-      data.idx !== reservation.idx ||
+      data.idx !== clickedReservation.idx ||
       // eslint-disable-next-line operator-linebreak
-      data.time !== reservation.time ||
+      data.time !== clickedReservation.time ||
       // eslint-disable-next-line operator-linebreak
-      data.date.getFullYear() !== reservation.date.getFullYear() ||
-      // eslint-disable-next-line operator-linebreak
-      data.date.getMonth() !== reservation.date.getMonth() ||
-      // eslint-disable-next-line operator-linebreak
-      data.date.getDate() !== reservation.date.getDate()
+      data.date !== clickedReservation.date
     ) {
       if (clickedTimeButton !== null) {
         // 기존 클릭 시간 버튼의 CSS 효과 제거
@@ -68,30 +66,23 @@ export default function Reservation() {
         clickedTimeButton.style.color = '#1976D2';
       }
       setClickedTimeButton(() => event.target); // 클릭한 시간 버튼을 저장
-      setReservation(data); // data를 reservation으로 저장
+      setClickedReservation(data); // data를 reservation으로 저장
       return;
     }
     // data와 reservation이 같으면 같은 버튼 클릭한 것이므로 클릭 해제 해야 함
     // 클릭 시간 버튼의 클릭 CSS 효과 제거
     clickedTimeButton.style.backgroundColor = '#ffffff';
     clickedTimeButton.style.color = '#1976D2';
+    setClickedReservation(reservationNull);
     setClickedTimeButton(null); // 클릭 시간 버튼 null로 초기화
-    setReservation(reservationNull);
   };
 
   // 예약상담 등록폼으로 이동하는 함수(reservation 그대로 이용)
-  const goReservationRegistForm = () => {
+  const goReservationForm = () => {
     // eslint-disable-next-line
-    alert(
-      `${reservation.idx}/${
-        reservation.storeName
-      }\n${reservation.date.getFullYear()}년 ${
-        reservation.date.getMonth() + 1
-      }월 ${reservation.date.getDate()}일\n${
-        reservation.time
-      }에 예약하시겠습니까?`,
-    );
+    setReservation(clickedReservation); //이때 로컬 스토리지에 저장
   };
+
   useEffect(() => {
     // 새로 바뀐 클릭 시간 버튼에 대해..
     if (clickedTimeButton !== null) {
@@ -114,11 +105,11 @@ export default function Reservation() {
   return (
     <div>
       <DateDiv>
-        <h2 style={{ fontSize: '24px', fontWeight: 'bold' }}>
+        <h2 style={{ fontSize: '18px', fontWeight: 'bold' }}>
           날짜 선택
-          {` [ ${date.getFullYear()}-${
-            date.getMonth() + 1
-          }-${date.getDate()} (${date.getDay()})] `}
+          {/* {` [ ${date.split('-')[0]}-${date.split('-')[1]}-${
+            date.split('-')[2]
+          } ] `} */}
         </h2>
         <CustomDatePickerDiv>
           <DatePicker handleDate={handleDate} />
@@ -157,13 +148,18 @@ export default function Reservation() {
         }}
       >
         {reservationButton ? (
-          <Button
-            variant="contained"
-            style={{ position: 'fixed', bottom: '50px' }}
-            onClick={goReservationRegistForm}
+          <Link
+            to="/reservation/form"
+            style={{
+              position: 'fixed',
+              bottom: '50px',
+              textDecoration: 'none',
+            }}
           >
-            상담 예약하기
-          </Button>
+            <Button variant="contained" onClick={goReservationForm}>
+              상담 예약하기
+            </Button>
+          </Link>
         ) : null}
       </div>
     </div>

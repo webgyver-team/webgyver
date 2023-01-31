@@ -13,6 +13,7 @@ import LocateModal from './components/common/sitepopup/LocateModal';
 import Select from './pages/customer/select/Select';
 import LoginModal from './components/customer/login/LoginModal';
 import Reservation from './pages/customer/reservation/Reservation';
+import ReservationForm from './pages/customer/reservation/ReservationForm';
 import Match from './pages/customer/match/Match';
 import MasterInfo from './components/customer/masterInfo/MasterInfo';
 
@@ -34,6 +35,7 @@ function App() {
                 <Route path="/locate" element={<LocateModal />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
+                <Route path="/reservation/form" element={<ReservationForm />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/masterinfo" element={<MasterInfo />} />
                 <Route path="*" element={<div>404</div>} />
