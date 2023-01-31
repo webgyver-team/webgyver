@@ -3,9 +3,10 @@ import styled from 'styled-components';
 
 export default function EndService() {
   const data = {
-    storeName: '상호명 :  gd',
-    personName: '판매자 :  gdgd',
-    title: '문의 제목 :  gdgdgd',
+    storeName: 'gd',
+    personName: 'gdgd',
+    title: 'gdgdgd',
+    price: '0 원',
   };
 
   return (
@@ -13,24 +14,80 @@ export default function EndService() {
       <div>
         <p>상담이 종료되었습니다.</p>
       </div>
+      <InfoBox>
+        <div>
+          <span className="first">상호명 : </span>
+          <span className="last">{data.storeName}</span>
+        </div>
+        <NullBox />
+        <div>
+          <span className="first">판매자 : </span>
+          <span className="last">{data.personName}</span>
+        </div>
+        <NullBox />
+        <div>
+          <span className="first">문의 제목 : </span>
+          <span className="last">{data.title}</span>
+        </div>
+        <NullBox />
+      </InfoBox>
+      <NullBox />
+      <TransparentBox>
+        <div>
+          <span className="first">상담이용료</span>
+          <br />
+          <span className="last">{data.price}</span>
+        </div>
+      </TransparentBox>
       <BoxBox>
-        <InfoBox>
-          <span>{data.storeName}</span>
-          <span>{data.personName}</span>
-          <span>{data.title}</span>
-        </InfoBox>
+        <GrayBtn>다시 연결하기</GrayBtn>
       </BoxBox>
       <BoxBox>
-        <Btn>
-          <span>리뷰 작성</span>
-        </Btn>
+        <BtnBox>
+          <Btn>리뷰 작성</Btn>
+        </BtnBox>
       </BoxBox>
     </Main>
   );
 }
 
 const Main = styled.div`
-  width: 100%;
+  margin: 16px;
+  font-size: 16px;
+`;
+
+const InfoBox = styled.div`
+  padding: 16px;
+  border-radius: 15px;
+  width: 300px;
+  background-color: ${(props) => props.theme.color.defaultsubBgColor};
+  box-shadow: 2px 2px 4px 0px ${(props) => props.theme.color.dafaultBorder};
+
+  .first {
+    font-weight: bold;
+  }
+
+  .last {
+    margin-left: 16px;
+    text-align: right;
+  }
+`;
+
+const NullBox = styled.div`
+  height: 16px;
+`;
+
+const TransparentBox = styled.div`
+  padding: 16px;
+  width: 300px;
+  .first {
+    font-weight: bold;
+  }
+
+  .last {
+    margin-left: 16px;
+    text-align: right;
+  }
 `;
 
 const BoxBox = styled.div`
@@ -38,23 +95,18 @@ const BoxBox = styled.div`
   justify-content: center;
 `;
 
-const InfoBox = styled.div`
-  font-size: 16px;
+const BtnBox = styled.div`
+  display: flex;
+  justify-content: center;
+  width: 80%;
+  padding: 16px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
 `;
 
 const Btn = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 80%;
-  height: 64px;
-  padding-left: 24px;
-  padding-right: 24px;
-  border-radius: 10px;
-  color: white;
-  background-color: ${(props) => props.theme.color.defaultsubBgColor};
-  box-shadow: 2px 2px 4px 0px ${(props) => props.theme.color.defaultlightColor};
+  font-size: 16px;
+  font-weight: bold;
+
   :hover {
     cursor: pointer;
   }
@@ -62,4 +114,8 @@ const Btn = styled.div`
     font-size: 24px;
     font-weight: bold;
   }
+`;
+
+const GrayBtn = styled(Btn)`
+  color: gray;
 `;
