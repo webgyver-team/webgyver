@@ -107,9 +107,9 @@ export default function Reservation() {
       <DateDiv>
         <h2 style={{ fontSize: '18px', fontWeight: 'bold' }}>
           날짜 선택
-          {/* {` [ ${date.split('-')[0]}-${date.split('-')[1]}-${
+          {` [ ${date.split('-')[0]}-${date.split('-')[1]}-${
             date.split('-')[2]
-          } ] `} */}
+          } ] `}
         </h2>
         <CustomDatePickerDiv>
           <DatePicker handleDate={handleDate} />
