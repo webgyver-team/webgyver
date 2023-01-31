@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -36,7 +37,6 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...other}
     >
       {value === index && (
@@ -100,7 +100,6 @@ export default function MasterInfo() {
                   label={
                     <CustomTab className="classes.tabLabel">정보</CustomTab>
                   }
-                  // eslint-disable-next-line react/jsx-props-no-spreading
                   {...a11yProps(0)}
                 />
                 <Tab
@@ -108,7 +107,6 @@ export default function MasterInfo() {
                   label={
                     <CustomTab className="classes.tabLabel">후기</CustomTab>
                   }
-                  // eslint-disable-next-line react/jsx-props-no-spreading
                   {...a11yProps(1)}
                 />
                 <Tab
@@ -116,7 +114,6 @@ export default function MasterInfo() {
                   label={
                     <CustomTab className="classes.tabLabel">사례</CustomTab>
                   }
-                  // eslint-disable-next-line react/jsx-props-no-spreading
                   {...a11yProps(2)}
                 />
               </Tabs>
