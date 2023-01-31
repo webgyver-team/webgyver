@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
@@ -9,10 +9,21 @@ import ReviewImg2 from '../../../../assets/image/review2.jpg';
 import ReviewImg3 from '../../../../assets/image/review3.jpg';
 
 export default function Review() {
+  const [reviews] = useState([
+    {
+      title: '뜨거운 물이 나오지 않는 건에 대하여',
+      content:
+        '물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다! 물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다!',
+      date: '01월 28일 09:00',
+      images: [ReviewImg1, ReviewImg2, ReviewImg3],
+      score: 3.0,
+    },
+  ]);
+
   return (
     <Main>
-      <CardView />
-      <CardView />
+      <CardView review={reviews[0]} />
+      <CardView review={reviews[0]} />
     </Main>
   );
 }
@@ -21,9 +32,10 @@ const Main = styled.div`
   width: 100%;
 `;
 
-function CardView() {
+function CardView({ review }) {
   const slickSettings = {
     dots: false,
+    arrows: false,
     infinite: false,
     speed: 500,
     slidesToShow: 2,
@@ -32,23 +44,16 @@ function CardView() {
 
   return (
     <Card>
-      <p>뜨거운 물이 나오지 않는 건에 대하여</p>
-      <p>평점 3.5</p>
+      <p className="title">{review.title}</p>
+      <p className="score">{`평점 : ${review.score}`}</p>
       <Slider {...slickSettings}>
-        <ImgBox>
-          <img src={ReviewImg1} alt="" />
-        </ImgBox>
-        <ImgBox>
-          <img src={ReviewImg2} alt="" />
-        </ImgBox>
-        <ImgBox>
-          <img src={ReviewImg3} alt="" />
-        </ImgBox>
+        {review.images.map((el) => (
+          <ImgBox>
+            <img src={el} alt="" />
+          </ImgBox>
+        ))}
       </Slider>
-      <p>
-        물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘
-        나옵니다!
-      </p>
+      <p className="content">{review.content}</p>
     </Card>
   );
 }
@@ -56,20 +61,21 @@ function CardView() {
 const Card = styled.div`
   padding: 16px 0 0 8px;
 
-  p:first-child {
+  .title {
     font-size: 14px;
     font-weight: bold;
   }
 
-  p:nth-child(2) {
+  .score {
     font-size: 12px;
     font-weight: bold;
     color: ${(props) => props.theme.color.defaultBlue};
     padding-bottom: 8px;
   }
 
-  p:last-child {
+  .content {
     font-size: 14px;
+    padding-right: 4px;
   }
 
   .slick-list {

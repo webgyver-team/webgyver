@@ -71,7 +71,7 @@ export default function BasicTabs() {
           </BarBox>
           <Tab
             disableRipple
-            label={<CustomTab className="classes.tabLabel"> 리뷰</CustomTab>}
+            label={<CustomTab className="classes.tabLabel">후ㅤ기</CustomTab>}
             {...a11yProps(2)}
           />
         </Tabs>
