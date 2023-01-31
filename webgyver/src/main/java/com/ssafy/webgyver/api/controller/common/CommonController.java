@@ -1,5 +1,7 @@
 package com.ssafy.webgyver.api.controller.common;
 
+import com.ssafy.webgyver.api.response.common.category.CategoryListRes;
+import com.ssafy.webgyver.api.service.common.CommonService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -14,10 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/common")
 public class CommonController {
-
+    final CommonService commonService;
     @GetMapping("/category/list")
-    public ResponseEntity<?> getCategoryList() {
-
-        return null;
+    public ResponseEntity<CategoryListRes> getCategoryList() {
+        log.info("카테고리/리스트 요청");
+        return ResponseEntity.ok(commonService.getCategoryList());
     }
 }

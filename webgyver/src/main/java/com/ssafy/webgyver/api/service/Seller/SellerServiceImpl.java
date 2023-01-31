@@ -7,7 +7,7 @@ import com.ssafy.webgyver.api.response.seller.SellerLoginRes;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.entity.SellerCategory;
-import com.ssafy.webgyver.db.repository.Seller.CategoryRepository;
+import com.ssafy.webgyver.db.repository.common.CategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import lombok.RequiredArgsConstructor;

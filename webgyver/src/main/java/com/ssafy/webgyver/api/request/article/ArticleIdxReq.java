@@ -1,5 +1,6 @@
 package com.ssafy.webgyver.api.request.article;
 
+
 import lombok.*;
 
 @Getter
