@@ -7,7 +7,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CustomerMypageProfileReq {
+public class CustomerMypageReq {
     Long idx;
     String name;
     String phoneNumber;

@@ -29,6 +29,4 @@ public class Picture extends BaseEntity {
 
     @Column(name = "save_name")
     private String saveName;
-
-
 }

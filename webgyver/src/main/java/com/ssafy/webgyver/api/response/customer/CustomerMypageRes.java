@@ -10,9 +10,9 @@ import java.util.Map;
 
 @Getter
 @Setter
-public class CustomerMypageProfileRes extends DataResponseBody {
-    public static CustomerMypageProfileRes of(Integer statusCode, String message, Customer profile) {
-        CustomerMypageProfileRes res = new CustomerMypageProfileRes();
+public class CustomerMypageRes extends DataResponseBody {
+    public static CustomerMypageRes of(Integer statusCode, String message, Customer profile) {
+        CustomerMypageRes res = new CustomerMypageRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
 
