@@ -106,6 +106,8 @@ export default function Reservation() {
     console.log('[가게 정보] axios 호출 필요');
   }, [location, date]);
 
+  const [type, setType] = useState(1);
+
   return (
     <Main>
       <DateDiv>
@@ -135,6 +137,13 @@ export default function Reservation() {
           <p>{`${location.address} ${location.detail}`}</p>
         </div>
       </LocateDiv>
+      <FilterBox type={type}>
+        <span onClick={() => setType(1)}>거리순</span>
+        <VerticalBar />
+        <span onClick={() => setType(3)}>평점순</span>
+        <VerticalBar />
+        <span onClick={() => setType(5)}>가격순</span>
+      </FilterBox>
       <div>
         {storeList.map((store) => (
           <StoreInfo
@@ -215,6 +224,7 @@ const LocateDiv = styled.div`
   padding: 4%;
   display: flex;
   align-items: center;
+  cursor: pointer;
 `;
 
 const SiteBox = styled.div`
@@ -224,7 +234,7 @@ const SiteBox = styled.div`
   width: 100px;
   font-size: 16px;
   font-weight: bold;
-  margin-right: 16px;
+  margin-right: 8px;
 `;
 
 const Btn = styled.div`
@@ -257,4 +267,26 @@ const DisabledBtn = styled(Btn)`
 
 const NullBox = styled.div`
   height: 104px;
+`;
+
+const FilterBox = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 16px 0 8px 16px;
+  font-size: 16px;
+
+  span {
+    cursor: pointer;
+
+    :nth-child(${(props) => props.type}) {
+      font-weight: bold;
+    }
+  }
+`;
+
+const VerticalBar = styled.div`
+  width: 1px;
+  height: 16px;
+  background-color: ${(props) => props.theme.color.dafaultBorder};
+  margin: 0 8px 0 8px;
 `;
