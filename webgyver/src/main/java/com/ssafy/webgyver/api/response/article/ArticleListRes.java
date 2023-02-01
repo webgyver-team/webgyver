@@ -4,6 +4,7 @@ import com.ssafy.webgyver.common.model.response.DataResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
@@ -16,6 +17,7 @@ import java.util.Map;
 @Setter
 @ToString
 public class ArticleListRes extends DataResponseBody {
+
     public static ArticleListRes ofHistory(Integer statusCode, String message, List<Article> articleList) {
         ArticleListRes res = new ArticleListRes();
         res.getData().put("articleList", getHistoryFromList(articleList));
