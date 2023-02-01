@@ -12,7 +12,7 @@ export default function Direct() {
   const openLocateModal = () => setLocateOpenState(true);
   const routeDirect = () => {
     openLocateModal();
-    navigate('/reservation');
+    navigate('/match/form');
   };
   return (
     <Main>

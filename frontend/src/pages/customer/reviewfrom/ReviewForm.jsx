@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageInput from './elements/ImageInput';
 
 export default function ReviewForm() {
+  const navigate = useNavigate();
   const [rating, setRating] = useState(5);
   const [formContent, setFormContent] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
@@ -28,6 +30,7 @@ export default function ReviewForm() {
     // data로 axios POST하고
     // 결과로 나온 idx를 가지고
     // 이미지 axios POST해야 함
+    navigate('/');
   };
 
   return (
