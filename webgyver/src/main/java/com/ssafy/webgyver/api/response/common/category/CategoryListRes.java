@@ -24,6 +24,8 @@ public class CategoryListRes extends DataResponseBody {
             this.categoryName = entity.getCategoryName();
         }
     }
+
+
     public static CategoryListRes of(Integer statusCode, String message, List<Category> categoryList) {
         List<Response> responses = new ArrayList<>();
         for (Category temp : categoryList){
