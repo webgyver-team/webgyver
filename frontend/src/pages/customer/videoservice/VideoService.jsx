@@ -2,9 +2,11 @@
 // eslint-disable-next-line object-curly-newline
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 // import Button from '@mui/material/Button';
 
 export default function VideoService() {
+  const navigate = useNavigate();
   const myMainScreen = useRef(null);
   const mySubScreen = useRef(null);
   const peerFace = useRef(null);
@@ -28,7 +30,13 @@ export default function VideoService() {
     setVideoBoxWidth(videoBoxRef.current.offsetWidth);
   }, []);
 
+  const routeEndService = () => {
+    console.log('???');
+    navigate('/endservice');
+  };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
+
+  // 내 미디어 가져오기
   const getUserCameraMain = async () => {
     navigator.mediaDevices
       .getUserMedia({
@@ -134,7 +142,7 @@ export default function VideoService() {
       </BoxBox>
       <NullBox />
       <BoxBox>
-        <RedBtn backgroundColor={(props) => props.theme.color.defaultRed}>
+        <RedBtn onClick={routeEndService}>
           <span>상담종료</span>
         </RedBtn>
       </BoxBox>
