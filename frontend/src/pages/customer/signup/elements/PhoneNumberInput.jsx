@@ -3,11 +3,16 @@ import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import Message from './Message';
 
-export default function PhoneNumberInput({ updateData }) {
+export default function PhoneNumberInput({
+  updateData,
+  initialValue1,
+  initialValue2,
+  initialValue3,
+}) {
   const [phoneNumber, setPhoneNumber] = useState('');
-  const [phoneNumber1, setPhoneNumber1] = useState('');
-  const [phoneNumber2, setPhoneNumber2] = useState('');
-  const [phoneNumber3, setPhoneNumber3] = useState('');
+  const [phoneNumber1, setPhoneNumber1] = useState(initialValue1);
+  const [phoneNumber2, setPhoneNumber2] = useState(initialValue2);
+  const [phoneNumber3, setPhoneNumber3] = useState(initialValue3);
   const [msg, setMsg] = useState('');
   useEffect(() => {
     if (phoneNumber === null) updateData({ phoneNumber: null });

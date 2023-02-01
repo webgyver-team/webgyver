@@ -3,9 +3,13 @@ import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import Message from './Message';
 
-export default function ResidentNumberInput({ updateData }) {
-  const [residentNumber1, setResidentNumber1] = useState('');
-  const [residentNumber2, setResidentNumber2] = useState('******');
+export default function ResidentNumberInput({
+  updateData,
+  initialValue1,
+  initialValue2,
+}) {
+  const [residentNumber1, setResidentNumber1] = useState(initialValue1);
+  const [residentNumber2, setResidentNumber2] = useState(initialValue2);
   const [msg, setMsg] = useState('');
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {
