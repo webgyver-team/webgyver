@@ -1,9 +1,9 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
-import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
@@ -12,6 +12,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import Info from './elements/Info';
 import Review from './elements/Review';
 import Example from './elements/Example';
+import { masterInfoModalState } from '../../../atom';
 
 const modalStyle = {
   position: 'absolute',
@@ -63,12 +64,8 @@ function a11yProps(index) {
 }
 
 export default function MasterInfo() {
-  const [open, setOpen] = useState(true);
-
-  const handleOpen = () => setOpen(true);
-  const handleClose = () => {
-    setOpen(false);
-  };
+  const [modalState, setmodalState] = useRecoilState(masterInfoModalState);
+  const closeMasterInfoState = () => setmodalState(false);
 
   const [value, setValue] = React.useState(0);
 
@@ -78,15 +75,14 @@ export default function MasterInfo() {
 
   return (
     <div>
-      <Button onClick={handleOpen}>Open modal</Button>
       <Modal
-        open={open}
-        onClose={handleClose}
+        open={modalState}
+        onClose={closeMasterInfoState}
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description"
       >
         <CustomBox sx={modalStyle}>
-          <CloseBtn onClick={handleClose} />
+          <CloseBtn onClick={closeMasterInfoState} />
           <Box sx={{ width: '100%' }}>
             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
               <Tabs

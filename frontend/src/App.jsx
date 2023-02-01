@@ -34,6 +34,7 @@ function App() {
             <CustomerNavBar />
             <Main>
               <LoginModal />
+              <MasterInfo />
               <LocateModal />
               <Routes>
                 <Route path="/" element={<Home />} />

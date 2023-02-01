@@ -1,9 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useNavigate } from 'react-router-dom';
 import ReserveInfo from '../../../../assets/image/ReserveInfo.png';
+import { locateModalState } from '../../../../atom';
 
 export default function Direct() {
+  const navigate = useNavigate();
+  const setLocateOpenState = useSetRecoilState(locateModalState);
+  const openLocateModal = () => setLocateOpenState(true);
+  const routeReservation = () => {
+    openLocateModal();
+    navigate('/reservation');
+  };
   return (
     <Main>
       <BtnBox>
@@ -12,7 +22,7 @@ export default function Direct() {
           <p>시간을 정할 수 있어요.</p>
         </div>
         <BtnPosition>
-          <Btn>
+          <Btn onClick={routeReservation}>
             <span>예약상담</span>
             <ArrowForwardIcon fontSize="medium" />
           </Btn>

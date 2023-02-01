@@ -34,11 +34,11 @@ export default function CategoryLine(props) {
   const rightCategory = categories[0][props.right];
   const setLeftCategory = () => {
     setCategory(leftCategory);
-    navigate('/reservation');
+    navigate('/select');
   };
   const setRightCategory = () => {
     setCategory(rightCategory);
-    navigate('/reservation');
+    navigate('/select');
   };
   const icons = useState([
     <BathtubOutlinedIcon fontSize="small" />,
