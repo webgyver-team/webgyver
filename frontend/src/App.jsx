@@ -33,11 +33,11 @@ function App() {
             <CustomerNavBar />
             <Main>
               <LoginModal />
+              <LocateModal />
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
                 <Route path="/seller/signup" element={<ProSignUp />} />
-                <Route path="/locate" element={<LocateModal />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/reservation/form" element={<ReservationForm />} />

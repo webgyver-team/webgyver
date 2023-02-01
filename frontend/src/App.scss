@@ -7,3 +7,18 @@
   color: inherit;
   // flex-shrink: 0;
 }
+
+::-webkit-scrollbar {
+  width: 8px; /* 스크롤바의 너비 */
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  height: 30%; /* 스크롤바의 길이 */
+  background: #e2e2e2; /* 스크롤바의 색상 */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(183, 183, 183, 0.1); /*스크롤바 뒷 배경 색상*/
+}
