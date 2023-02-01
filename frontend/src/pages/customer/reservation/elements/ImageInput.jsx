@@ -78,27 +78,20 @@ export default function ImageInput({ setImageData }) {
 
   return (
     <div>
-      <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>
+      <ImageInputTitle>
         사진 등록
         {imageList.length > 0 ? `(${imageList.length})` : null}
-      </h2>
-      <div
-        style={{
-          display: 'flex',
-          overflowX: 'hidden',
-          marginTop: '8px',
-          maxWidth: '400px',
-        }}
-      >
+      </ImageInputTitle>
+      <ImageInputBox>
         <div>
           <label htmlFor="image-input">
             <ImageBox
               style={{
-                border: '1px solid black',
-                borderRadius: '10%',
                 width: '80px',
                 height: '80px',
                 marginTop: '8px',
+                border: '1px solid black',
+                borderRadius: '10%',
               }}
             >
               <AddPhotoAlternateIcon style={{ fontSize: '48px' }} />
@@ -113,47 +106,61 @@ export default function ImageInput({ setImageData }) {
             style={{ display: 'none' }}
           />
         </div>
-
-        <div
-          id="img__box"
-          style={{
-            display: 'flex',
-            overflowX: 'scroll',
-            overflowY: 'unset',
-            height: '96px',
-            minWidth: '120px',
-          }}
-        >
-          {imagePreviewList.map((data) => {
-            const { image } = data;
-            const imageUrl = data.url;
-            return (
-              <ImageBox key={image.name} style={{ position: 'relative' }}>
-                <img
-                  src={imageUrl}
-                  alt={image.name}
-                  width="80px"
-                  height="80px"
-                  style={{ borderRadius: '10%' }}
-                />
-                <CancelIcon
-                  onClick={() => removeImage(image.name)}
-                  fontSize="small"
-                  style={{
-                    position: 'absolute',
-                    top: '0px',
-                    right: '-8px',
-                    color: '#EB4D4D',
-                  }}
-                />
-              </ImageBox>
-            );
-          })}
-        </div>
-      </div>
+        {imagePreviewList.length > 0 ? (
+          <div
+            id="img__box"
+            style={{
+              display: 'flex',
+              overflowX: 'scroll',
+              overflowY: 'hidden',
+              height: '96px',
+              minWidth: '120px',
+            }}
+          >
+            {imagePreviewList.map((data) => {
+              const { image } = data;
+              const imageUrl = data.url;
+              return (
+                <ImageBox key={image.name} style={{ position: 'relative' }}>
+                  <img
+                    src={imageUrl}
+                    alt={image.name}
+                    width="80px"
+                    height="80px"
+                    style={{ borderRadius: '10%' }}
+                  />
+                  <CancelIcon
+                    onClick={() => removeImage(image.name)}
+                    fontSize="small"
+                    style={{
+                      position: 'absolute',
+                      top: '0px',
+                      right: '-8px',
+                      color: '#EB4D4D',
+                    }}
+                  />
+                </ImageBox>
+              );
+            })}
+          </div>
+        ) : null}
+      </ImageInputBox>
     </div>
   );
 }
+
+const ImageInputTitle = styled.h2`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const ImageInputBox = styled.div`
+  display: flex;
+  overflow-x: hidden;
+  margin-top: 8px;
+  max-width: 400px;
+`;
+
 const ImageBox = styled.div`
   height: 96px;
   width: 96px;
