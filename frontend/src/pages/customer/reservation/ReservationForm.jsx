@@ -47,11 +47,7 @@ export default function ReservationForm() {
       content: formContent,
     };
     // eslint-disable-next-line
-    console.log(data);
-    console.log(imageData);
-    // data로 axios POST하고
-    // 결과로 나온 idx를 가지고
-    // 이미지 axios POST해야 함
+    console.log(`data: [${data}] imageData: [${imageData}]`);
   };
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
     reservation.date.split('-')[1]
