@@ -10,6 +10,7 @@ import lombok.ToString;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -37,11 +38,9 @@ public class HistoryListRes extends DataResponseBody {
 
     public static HistoryListRes of(Integer statusCode, String message, List<Article> articleList) {
         HistoryListRes res = new HistoryListRes();
-        List<History> historyList = new ArrayList<>();
-        for (Article article :
-                articleList) {
-            historyList.add(new History(article));
-        }
+
+        List<History> historyList = articleList.stream().map(History::new).collect(Collectors.toList());
+
         res.getData().put("historyList", historyList);
         res.setStatusCode(statusCode);
         res.setMessage(message);

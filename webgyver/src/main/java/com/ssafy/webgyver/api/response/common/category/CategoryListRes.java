@@ -9,6 +9,7 @@ import lombok.ToString;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -16,10 +17,11 @@ import java.util.List;
 public class CategoryListRes extends DataResponseBody {
     @Getter
     @NoArgsConstructor
-    public static class Response{
+    public static class SimpleCategory {
         private Long idx;
         private String categoryName;
-        public Response(Category entity){
+
+        public SimpleCategory(Category entity) {
             this.idx = entity.getIdx();
             this.categoryName = entity.getCategoryName();
         }
@@ -27,12 +29,9 @@ public class CategoryListRes extends DataResponseBody {
 
 
     public static CategoryListRes of(Integer statusCode, String message, List<Category> categoryList) {
-        List<Response> responses = new ArrayList<>();
-        for (Category temp : categoryList){
-            responses.add(new Response(temp));
-        }
+        List<SimpleCategory> simpleCategoryList = categoryList.stream().map(SimpleCategory::new).collect(Collectors.toList());
         CategoryListRes res = new CategoryListRes();
-        res.getData().put("categoryList", responses);
+        res.getData().put("categoryList", simpleCategoryList);
         res.setStatusCode(statusCode);
         res.setMessage(message);
         return res;
