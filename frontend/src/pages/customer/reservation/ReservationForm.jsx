@@ -18,6 +18,7 @@ export default function ReservationForm() {
   const [formContent, setFormContent] = useState('');
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
+  const [imageData, setImageData] = useState([]);
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
     if (event.target.value.trim().length === 0) {
@@ -46,7 +47,7 @@ export default function ReservationForm() {
       content: formContent,
     };
     // eslint-disable-next-line
-    console.log(data);
+    console.log("data: ["+data+"] imageData: ["+imageData+"]");
     // data로 axios POST하고
     // 결과로 나온 idx를 가지고
     // 이미지 axios POST해야 함
@@ -59,32 +60,30 @@ export default function ReservationForm() {
   )}분`;
   return (
     <div style={{ width: '100%', padding: '16px' }}>
-      <SignUpTitle>예약상담 등록</SignUpTitle>
-      <div>
+      <FormTitle>예약상담 등록</FormTitle>
+      <FormInput>
         <TextField
           label="예약업체"
           variant="outlined"
           required
           margin="normal"
           fullWidth
-          style={{ maxWidth: '400px' }}
           disabled
           value={reservation.storeName}
         />
-      </div>
-      <div>
+      </FormInput>
+      <FormInput>
         <TextField
           label="예약일시"
           variant="outlined"
           required
           margin="normal"
           fullWidth
-          style={{ maxWidth: '400px' }}
           disabled
           value={reservationTime}
         />
-      </div>
-      <div>
+      </FormInput>
+      <FormInput>
         <TextField
           label="주소"
           variant="outlined"
@@ -92,24 +91,22 @@ export default function ReservationForm() {
           multiline
           margin="normal"
           fullWidth
-          style={{ maxWidth: '400px' }}
           disabled
           value={`${location.address} ${location.detail}`}
         />
-      </div>
-      <div style={{ marginTop: '16px' }}>
+      </FormInput>
+      <FormInput style={{ marginTop: '16px' }}>
         <TextField
           label="제목"
           variant="outlined"
           required
           fullWidth
-          style={{ maxWidth: '400px' }}
           onChange={changeFormTitle}
           value={formTitle}
         />
         <ErrorMessage>{msgForTitle}</ErrorMessage>
-      </div>
-      <div style={{ marginTop: '4px' }}>
+      </FormInput>
+      <FormInput style={{ marginTop: '4px' }}>
         <TextField
           label="내용"
           variant="outlined"
@@ -117,29 +114,27 @@ export default function ReservationForm() {
           fullWidth
           multiline
           maxRows={4}
-          style={{ maxWidth: '400px' }}
           onChange={changeFormContent}
           value={formContent}
         />
         <ErrorMessage>{msgForContent}</ErrorMessage>
-      </div>
-      <div>
-        <ImageInput />
-      </div>
-      <BtnBox style={{ textAlign: 'center', marginTop: '16px' }}>
+      </FormInput>
+      <FormInput>
+        <ImageInput setImageData={setImageData} />
+      </FormInput>
+      <div style={{ textAlign: 'center', marginTop: '16px' }}>
         <Button variant="contained" onClick={registReservation}>
-          예약상담 등록하기
+          등록
         </Button>
-      </BtnBox>
+      </div>
     </div>
   );
 }
 
-const SignUpTitle = styled.h2`
+const FormTitle = styled.h2`
   font-size: 32px;
   font-weight: bold;
   text-align: center;
-  margin-bottom: 16px;
 `;
 
 const ErrorMessage = styled.div`
@@ -152,7 +147,6 @@ const ErrorMessage = styled.div`
   margin: 4px 0px;
 `;
 
-const BtnBox = styled.div`
-  display: flex;
-  justify-content: center;
+const FormInput = styled.div`
+  max-width: 400px;
 `;

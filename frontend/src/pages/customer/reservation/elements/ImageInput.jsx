@@ -3,21 +3,14 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CancelIcon from '@mui/icons-material/Cancel';
-// import ClearIcon from '@mui/icons-material/Clear';
-// import IconButton from '@mui/material/IconButton';
 
-export default function ImageInput() {
+export default function ImageInput({ setImageData }) {
   const [imageList, setImageList] = useState([]); // 매물 이미지 파일
   const [imagePreviewList, setImagePreviewList] = useState([]); // 매물 이미지 미리보기
-
   // 이미지 변경 이벤트 함수
   const changeImageList = async (data) => {
     const images = data.target.files; // 입력받은 이미지 파일
-
     const removeDupl = [...imageList, ...images]; // 이미지 파일 중복 제거용 배열
-
-    // eslint-disable-next-line
-    // data.target.value = ''; // 다음 이미지 선택을 고려해 input 값 초기화
 
     // 이미지 파일 정보는 객체 배열이므로 -> 파일 이름 속성으로 객체 중복 제거
     const nonDuplImages = removeDupl.filter((item) => {
@@ -44,6 +37,7 @@ export default function ImageInput() {
 
     // 유효성 검사를 통과 시 imageState에 중복제거된 배열 복사
     await setImageList([...nonDuplImages]);
+    await setImageData([...nonDuplImages]);
 
     // 이건 Set으로 중복제거해보려 했는데, 객체 배열은 중복제거가 안되더라..
     // await setImageState([...new Set([...imageState, ...images])]);
@@ -79,23 +73,26 @@ export default function ImageInput() {
     });
 
     setImageList([...resultSet]);
+    setImageData([...resultSet]);
   };
 
   return (
     <div>
-      <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>사진 등록</h2>
-      <div
-        style={{
-          display: 'flex',
-          overflowX: 'hidden',
-          marginTop: '8px',
-          maxWidth: '400px',
-        }}
-      >
+      <ImageInputTitle>
+        사진 등록
+        {imageList.length > 0 ? `(${imageList.length})` : null}
+      </ImageInputTitle>
+      <ImageInputBox>
         <div>
           <label htmlFor="image-input">
             <ImageBox
-              style={{ border: '1px solid black', borderRadius: '10%' }}
+              style={{
+                width: '80px',
+                height: '80px',
+                marginTop: '8px',
+                border: '1px solid black',
+                borderRadius: '10%',
+              }}
             >
               <AddPhotoAlternateIcon style={{ fontSize: '48px' }} />
             </ImageBox>
@@ -109,48 +106,61 @@ export default function ImageInput() {
             style={{ display: 'none' }}
           />
         </div>
-
-        <div
-          id="img__box"
-          style={{
-            display: 'flex',
-            overflowX: 'scroll',
-            overflowY: 'unset',
-            height: '96px',
-          }}
-        >
-          {imagePreviewList.map((data) => {
-            const { image } = data;
-            const imageUrl = data.url;
-            return (
-              <ImageBox
-                key={image.name}
-                style={{ marginTop: '0px', position: 'relative' }}
-              >
-                <img
-                  src={imageUrl}
-                  alt={image.name}
-                  width="80px"
-                  height="80px"
-                />
-                <CancelIcon
-                  onClick={() => removeImage(image.name)}
-                  fontSize="small"
-                  style={{
-                    position: 'absolute',
-                    top: '0px',
-                    right: '-8px',
-                    color: '#EB4D4D',
-                  }}
-                />
-              </ImageBox>
-            );
-          })}
-        </div>
-      </div>
+        {imagePreviewList.length > 0 ? (
+          <div
+            id="img__box"
+            style={{
+              display: 'flex',
+              overflowX: 'scroll',
+              overflowY: 'hidden',
+              height: '96px',
+              minWidth: '120px',
+            }}
+          >
+            {imagePreviewList.map((data) => {
+              const { image } = data;
+              const imageUrl = data.url;
+              return (
+                <ImageBox key={image.name} style={{ position: 'relative' }}>
+                  <img
+                    src={imageUrl}
+                    alt={image.name}
+                    width="80px"
+                    height="80px"
+                    style={{ borderRadius: '10%' }}
+                  />
+                  <CancelIcon
+                    onClick={() => removeImage(image.name)}
+                    fontSize="small"
+                    style={{
+                      position: 'absolute',
+                      top: '0px',
+                      right: '-8px',
+                      color: '#EB4D4D',
+                    }}
+                  />
+                </ImageBox>
+              );
+            })}
+          </div>
+        ) : null}
+      </ImageInputBox>
     </div>
   );
 }
+
+const ImageInputTitle = styled.h2`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const ImageInputBox = styled.div`
+  display: flex;
+  overflow-x: hidden;
+  margin-top: 8px;
+  max-width: 400px;
+`;
+
 const ImageBox = styled.div`
   height: 96px;
   width: 96px;
