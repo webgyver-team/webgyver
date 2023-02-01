@@ -2,8 +2,7 @@ package com.ssafy.webgyver.api.controller.seller;
 
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
-import com.ssafy.webgyver.api.response.article.ArticleRes;
-import com.ssafy.webgyver.api.response.article.ArticleListRes;
+import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
@@ -25,7 +24,7 @@ public class SellerMypageController {
     final SellerMypageService sellerMypageService;
 
     @GetMapping("/history/{sellerIdx}")
-    public ResponseEntity<ArticleListRes> getAllHistory(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req) {
+    public ResponseEntity<HistoryListRes> getAllHistory(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req) {
         log.info("{}", req);
         List<Article> articleList = sellerMypageService.getAllHistory(req);
         for (Article article :
@@ -33,7 +32,7 @@ public class SellerMypageController {
             System.out.println(article);
         }
         return ResponseEntity.ok(
-                ArticleListRes.ofHistory(200, "Success", articleList)
+                HistoryListRes.of(200, "Success", articleList)
         );
     }
 
@@ -41,7 +40,7 @@ public class SellerMypageController {
     public ResponseEntity<BaseResponseBody> insertHistory(@RequestBody ArticleAllReq req) {
         Article result = sellerMypageService.insertHistory(req);
         if (result != null) {
-            return ResponseEntity.status(200).body(ArticleRes.of(200, "Success", result));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         } else {
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
         }
@@ -53,7 +52,7 @@ public class SellerMypageController {
         Article result = sellerMypageService.updateHistory(req);
 
         if (result != null) {
-            return ResponseEntity.status(200).body(ArticleRes.of(200, "Success", result));
+            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
         } else {
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
         }
