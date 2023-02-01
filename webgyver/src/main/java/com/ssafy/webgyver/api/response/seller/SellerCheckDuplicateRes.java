@@ -1,4 +1,4 @@
-package com.ssafy.webgyver.api.response.Seller;
+package com.ssafy.webgyver.api.response.seller;
 
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 

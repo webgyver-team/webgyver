@@ -26,7 +26,7 @@ public class Article extends BaseEntity{
     private String content;
 
     @Column(name = "type")
-    // 0 이상 -> 판매자의 id
+    // 0 이상 -> 판매자의 idx(수리사례, idx)
     // -1 -> 문의내용
     // -2 -> 대댓글
     // -3 -> 리뷰, 별점 1개

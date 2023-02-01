@@ -26,6 +26,7 @@ public class Category {
     private Long idx;
     @Column(name = "category_name")
     private String categoryName;
+
     @OneToMany(mappedBy = "category")
     private List<SellerCategory> categoryList = new ArrayList<>();
 

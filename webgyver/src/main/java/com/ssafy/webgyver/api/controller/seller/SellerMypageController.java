@@ -1,8 +1,7 @@
-package com.ssafy.webgyver.api.controller.Seller;
+package com.ssafy.webgyver.api.controller.seller;
 
-import com.ssafy.webgyver.api.request.Article.ArticleIdxReq;
-import com.ssafy.webgyver.api.request.Article.ArticleAllReq;
-import com.ssafy.webgyver.api.request.Seller.SellerIdxReq;
+import com.ssafy.webgyver.api.request.article.ArticleAllReq;
+import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.response.article.ArticleRes;
 import com.ssafy.webgyver.api.response.article.ArticleListRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
@@ -12,6 +11,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
 
 import java.util.List;
 
@@ -33,7 +33,7 @@ public class SellerMypageController {
             System.out.println(article);
         }
         return ResponseEntity.ok(
-                ArticleListRes.of(200, "Success", articleList)
+                ArticleListRes.ofHistory(200, "Success", articleList)
         );
     }
 
