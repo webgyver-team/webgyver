@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import EditIcon from '@mui/icons-material/Edit';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -8,7 +9,7 @@ import ReviewImg1 from '../../../../assets/image/review1.jpg';
 import ReviewImg2 from '../../../../assets/image/review2.jpg';
 import ReviewImg3 from '../../../../assets/image/review3.jpg';
 
-export default function Review() {
+export default function ReviewHistory() {
   const [reviews] = useState([
     {
       title: '뜨거운 물이 나오지 않는 건에 대하여',
@@ -32,11 +33,11 @@ const Main = styled.div`
   width: 100%;
 `;
 
-function CardView({ review }) {
+export function CardView({ review }) {
   const slickSettings = {
     dots: false,
     arrows: false,
-    infinite: false,
+    infinite: true,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
@@ -44,7 +45,10 @@ function CardView({ review }) {
 
   return (
     <Card>
-      <p className="title">{review.title}</p>
+      <TitleBox>
+        <p className="title">{review.title}</p>
+        <EditIcon />
+      </TitleBox>
       <p className="score">{`평점 : ${review.score}`}</p>
       <Slider {...slickSettings}>
         {review.images.map((el) => (
@@ -59,7 +63,12 @@ function CardView({ review }) {
 }
 
 const Card = styled.div`
-  padding: 16px 0 0 8px;
+  width: 100%;
+  padding: 16px;
+
+  :last-child {
+    border: 0;
+  }
 
   .title {
     font-size: 14px;
@@ -85,6 +94,12 @@ const Card = styled.div`
   .slick-slide {
     padding-right: 8px;
   }
+`;
+
+const TitleBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const ImgBox = styled.div`

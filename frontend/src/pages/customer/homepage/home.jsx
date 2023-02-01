@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 // import { useRecoilState } from 'recoil';
 // import { categoryState } from '../../atom';
+import CircularProgress from '@mui/material/CircularProgress';
 import CategoryLine from './elements/categoryline';
 import MainImage from '../../../assets/image/MainImage.png';
 
@@ -15,7 +16,11 @@ export default function Home() {
   }, []);
 
   if (loadding) {
-    return <div>로딩중...</div>;
+    return (
+      <LoaddingBox>
+        <CircularProgress />
+      </LoaddingBox>
+    );
   }
   return (
     <Main>
@@ -39,8 +44,15 @@ export default function Home() {
 }
 
 const Main = styled.div`
-  width: 380px;
+  width: 360px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
+`;
+
+const LoaddingBox = styled.div`
+  height: 100vw;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const CategoryBox = styled.div`

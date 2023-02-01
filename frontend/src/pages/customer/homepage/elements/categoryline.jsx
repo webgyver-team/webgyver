@@ -85,6 +85,7 @@ const CategoryBtn = styled.div`
 
   :hover {
     cursor: pointer;
+    background-color: ${(props) => props.theme.color.dafaultBorder};
   }
 
   span {

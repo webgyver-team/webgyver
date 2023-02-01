@@ -16,6 +16,10 @@ import Reservation from './pages/customer/reservation/Reservation';
 import ReservationForm from './pages/customer/reservation/ReservationForm';
 import Match from './pages/customer/match/Match';
 import MasterInfo from './components/customer/masterInfo/MasterInfo';
+import UsageHistory from './pages/customer/usagehistoy/UsageHistory';
+import MyPage from './pages/customer/mypage/MyPage';
+import VideoService from './pages/customer/videoservice/VideoService';
+import EndService from './pages/customer/endservice/EndService';
 
 function App() {
   return (
@@ -28,16 +32,20 @@ function App() {
             <CustomerNavBar />
             <Main>
               <LoginModal />
+              <LocateModal />
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
                 <Route path="/seller/signup" element={<ProSignUp />} />
-                <Route path="/locate" element={<LocateModal />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/reservation/form" element={<ReservationForm />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/masterinfo" element={<MasterInfo />} />
+                <Route path="/usagehistory" element={<UsageHistory />} />
+                <Route path="/mypage" element={<MyPage />} />
+                <Route path="/videoservice" element={<VideoService />} />
+                <Route path="/endservice" element={<EndService />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Main>

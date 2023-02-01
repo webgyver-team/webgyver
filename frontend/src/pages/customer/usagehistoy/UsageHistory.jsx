@@ -6,8 +6,8 @@ import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
-import Reserve from './elements/Reserve';
-import Direct from './elements/Direct';
+import ReservationHistory from './elements/ReservationHistory';
+import CompleteHistory from './elements/CompleteHistory';
 
 function TabPanel(props) {
   // eslint-disable-next-line object-curly-newline
@@ -65,24 +65,24 @@ export default function BasicTabs() {
             <Tab
               disableRipple
               label={
-                <CustomTab className="classes.tabLabel">예약상담</CustomTab>
+                <CustomTab className="classes.tabLabel">예약내역</CustomTab>
               }
               {...a11yProps(0)}
             />
             <Tab
               disableRipple
               label={
-                <CustomTab className="classes.tabLabel">바로상담</CustomTab>
+                <CustomTab className="classes.tabLabel">완료내역</CustomTab>
               }
               {...a11yProps(1)}
             />
           </Tabs>
         </Box>
         <TabPanel value={value} index={0}>
-          <Reserve />
+          <ReservationHistory />
         </TabPanel>
         <TabPanel value={value} index={1}>
-          <Direct />
+          <CompleteHistory />
         </TabPanel>
       </Box>
     </Main>

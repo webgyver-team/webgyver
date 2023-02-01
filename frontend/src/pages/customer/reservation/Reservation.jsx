@@ -1,19 +1,23 @@
+/* eslint-disable jsx-a11y/anchor-is-valid */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useRecoilState, useRecoilValue } from 'recoil';
-import Button from '@mui/material/Button';
+import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import { Link } from 'react-router-dom';
+import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import DatePicker from './elements/DatePicker';
-import LocateModal from '../../../components/common/sitepopup/LocateModal';
 import {
   locateValueState,
   reservationDate,
   chosenReservation,
+  locateModalState,
 } from '../../../atom';
 import StoreInfo from './elements/StoreInfo';
 import { storeList } from './dummyData';
 
 export default function Reservation() {
+  // 위치설정 모달 on/off
+  const setLocateModalOpen = useSetRecoilState(locateModalState);
+  const openLocateModal = () => setLocateModalOpen(true);
   // 예약 정보 {idx, storeName, date, time}
   const reservationNull = {
     idx: null,
@@ -103,9 +107,16 @@ export default function Reservation() {
   }, [location, date]);
 
   return (
-    <div>
+    <Main>
       <DateDiv>
-        <h2 style={{ fontSize: '18px', fontWeight: 'bold' }}>
+        <h2
+          style={{
+            fontSize: '18px',
+            fontWeight: 'bold',
+            marginTop: '8px',
+            marginBottom: '8px',
+          }}
+        >
           날짜 선택
           {` [ ${date.split('-')[0]}-${date.split('-')[1]}-${
             date.split('-')[2]
@@ -115,12 +126,14 @@ export default function Reservation() {
           <DatePicker handleDate={handleDate} />
         </CustomDatePickerDiv>
       </DateDiv>
-      <LocateDiv>
-        <div style={{ fontSize: '16px', fontWeight: 'bold' }}>
-          <p>{location.address}</p>
-          <p>{location.detail}</p>
+      <LocateDiv onClick={openLocateModal}>
+        <SiteBox>
+          <span>현재 위치</span>
+          <ChevronRightIcon />
+        </SiteBox>
+        <div style={{ fontSize: '16px' }}>
+          <p>{`${location.address} ${location.detail}`}</p>
         </div>
-        <LocateModal />
       </LocateDiv>
       <div>
         {storeList.map((store) => (
@@ -140,7 +153,7 @@ export default function Reservation() {
           />
         ))}
       </div>
-
+      <NullBox />
       <div
         style={{
           display: 'flex',
@@ -152,19 +165,35 @@ export default function Reservation() {
             to="/reservation/form"
             style={{
               position: 'fixed',
-              bottom: '50px',
+              bottom: '20px',
               textDecoration: 'none',
             }}
           >
-            <Button variant="contained" onClick={goReservationForm}>
-              상담 예약하기
-            </Button>
+            <Btn onClick={goReservationForm}>
+              <span>상담 예약하기</span>
+            </Btn>
           </Link>
-        ) : null}
+        ) : (
+          <Link
+            style={{
+              position: 'fixed',
+              bottom: '20px',
+              textDecoration: 'none',
+            }}
+          >
+            <DisabledBtn>
+              <span>상담 예약하기</span>
+            </DisabledBtn>
+          </Link>
+        )}
       </div>
-    </div>
+    </Main>
   );
 }
+
+const Main = styled.div`
+  width: 100%;
+`;
 
 const CustomDatePickerDiv = styled.div`
   // padding: 8px;
@@ -172,16 +201,60 @@ const CustomDatePickerDiv = styled.div`
   overflow-x: visible;
   height: 40px;
   // border: 3px solid red;
+  margin-bottom: 8px;
 `;
 
 const DateDiv = styled.div`
-  border-bottom: 1px solid black;
-  padding: 4%;
+  padding: 8px;
+  margin-bottom: 12px;
 `;
 
 const LocateDiv = styled.div`
-  border-bottom: 1px solid black;
+  border-top: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};
   padding: 4%;
   display: flex;
-  justify-content: space-between;
+  align-items: center;
+`;
+
+const SiteBox = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  font-size: 16px;
+  font-weight: bold;
+  margin-right: 16px;
+`;
+
+const Btn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 296px;
+  height: 64px;
+  padding-left: 24px;
+  padding-right: 24px;
+  border-radius: 10px;
+  color: white;
+  background-color: ${(props) => props.theme.color.defaultBlue};
+  box-shadow: 2px 2px 4px 0px ${(props) => props.theme.color.defaultlightColor};
+  :hover {
+    cursor: pointer;
+  }
+  span {
+    font-size: 24px;
+    font-weight: bold;
+  }
+`;
+
+const DisabledBtn = styled(Btn)`
+  background-color: ${(props) => props.theme.color.dafaultBorder};
+  :hover {
+    cursor: default;
+  }
+`;
+
+const NullBox = styled.div`
+  height: 104px;
 `;
