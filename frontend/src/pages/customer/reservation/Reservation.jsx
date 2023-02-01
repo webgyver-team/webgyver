@@ -177,7 +177,7 @@ export default function Reservation() {
           <Link
             to="/reservation/form"
             style={{
-              position: 'fixed',
+              position: 'auto',
               bottom: '20px',
               textDecoration: 'none',
             }}
