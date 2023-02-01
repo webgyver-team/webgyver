@@ -167,6 +167,10 @@ export default function Reservation() {
         style={{
           display: 'flex',
           justifyContent: 'center',
+          position: 'sticky',
+          left: '0',
+          right: '0',
+          bottom: '20px',
         }}
       >
         {reservationButton ? (
@@ -185,7 +189,7 @@ export default function Reservation() {
         ) : (
           <Link
             style={{
-              position: 'fixed',
+              position: 'auto',
               bottom: '20px',
               textDecoration: 'none',
             }}
@@ -202,6 +206,9 @@ export default function Reservation() {
 
 const Main = styled.div`
   width: 100%;
+  height: calc(100vh - 120px);
+  overflow-y: scroll;
+  position: 'relative';
 `;
 
 const CustomDatePickerDiv = styled.div`
@@ -265,7 +272,7 @@ const DisabledBtn = styled(Btn)`
 `;
 
 const NullBox = styled.div`
-  height: 104px;
+  height: 40px;
 `;
 
 const FilterBox = styled.div`
