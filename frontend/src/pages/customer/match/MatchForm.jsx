@@ -94,71 +94,82 @@ export default function ReservationForm() {
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <FormTitle>바로상담 등록</FormTitle>
-      <FormInput>
-        <TextField
-          label="주소"
-          variant="outlined"
-          required
-          multiline
-          margin="normal"
-          fullWidth
-          disabled
-          value={`${location.address} ${location.detail}`}
-        />
-      </FormInput>
-      <FormInput style={{ marginTop: '16px' }}>
-        <TextField
-          label="제목"
-          variant="outlined"
-          required
-          fullWidth
-          onChange={changeFormTitle}
-          value={formTitle}
-        />
-        <ErrorMessage>{msgForTitle}</ErrorMessage>
-      </FormInput>
-      <FormInput style={{ marginTop: '4px' }}>
-        <TextField
-          label="내용"
-          variant="outlined"
-          required
-          fullWidth
-          multiline
-          rows={4}
-          onChange={changeFormContent}
-          value={formContent}
-        />
-        <ErrorMessage>{msgForContent}</ErrorMessage>
-      </FormInput>
-      <FormInput>
-        <ImageInput setImageData={setImageData} />
-      </FormInput>
-      <FormInput style={{ marginTop: '4px' }}>
-        <TextField
-          label="상담비용"
-          variant="outlined"
-          required
-          multiline
-          margin="normal"
-          fullWidth
-          value={cost}
-          onChange={handleCost}
-        />
-        <ErrorMessage>{msgForCost}</ErrorMessage>
-      </FormInput>
-      <div style={{ textAlign: 'center', marginTop: '16px' }}>
-        <Button variant="contained" onClick={registReservation}>
-          등록
-        </Button>
-      </div>
+      <FromBox>
+        <div>
+          <FormInput>
+            <TextField
+              label="주소"
+              variant="outlined"
+              required
+              multiline
+              margin="normal"
+              fullWidth
+              disabled
+              value={`${location.address} ${location.detail}`}
+            />
+          </FormInput>
+          <FormInput style={{ marginTop: '16px' }}>
+            <TextField
+              label="제목"
+              variant="outlined"
+              required
+              fullWidth
+              onChange={changeFormTitle}
+              value={formTitle}
+            />
+            <ErrorMessage>{msgForTitle}</ErrorMessage>
+          </FormInput>
+          <FormInput style={{ marginTop: '4px' }}>
+            <TextField
+              label="내용"
+              variant="outlined"
+              required
+              fullWidth
+              multiline
+              rows={4}
+              onChange={changeFormContent}
+              value={formContent}
+            />
+            <ErrorMessage>{msgForContent}</ErrorMessage>
+          </FormInput>
+          <FormInput style={{ marginBottom: '16px' }}>
+            <ImageInput setImageData={setImageData} />
+          </FormInput>
+          <FormInput style={{ marginTop: '4px' }}>
+            <TextField
+              label="상담비용"
+              variant="outlined"
+              required
+              multiline
+              margin="normal"
+              fullWidth
+              value={cost}
+              onChange={handleCost}
+            />
+            <ErrorMessage>{msgForCost}</ErrorMessage>
+          </FormInput>
+          <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <Button variant="contained" onClick={registReservation}>
+              등록
+            </Button>
+          </div>
+        </div>
+      </FromBox>
     </div>
   );
 }
+
+const FromBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
 
 const FormTitle = styled.h2`
   font-size: 32px;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 8px;
 `;
 
 const ErrorMessage = styled.div`
@@ -173,4 +184,5 @@ const ErrorMessage = styled.div`
 
 const FormInput = styled.div`
   max-width: 400px;
+  width: 100vw;
 `;

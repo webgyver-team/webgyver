@@ -41,8 +41,8 @@ export default function ReservationForm() {
 
     AWS.config.update({
       region,
-      accessKeyId: 'AKIAWXIZ3H6FYRTDMRQL',
-      secretAccessKey: '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',
+      accessKeyId: '',
+      secretAccessKey: '',
     });
     for (let i = 0; i < imageData.length; i += 1) {
       // console.log(`${imageData[i].name} 업로드 시도 중..`);
@@ -119,81 +119,91 @@ export default function ReservationForm() {
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <FormTitle>예약상담 등록</FormTitle>
-      <FormInput>
-        <TextField
-          label="예약업체"
-          variant="outlined"
-          required
-          margin="normal"
-          fullWidth
-          disabled
-          value={reservation.storeName}
-        />
-      </FormInput>
-      <FormInput>
-        <TextField
-          label="예약일시"
-          variant="outlined"
-          required
-          margin="normal"
-          fullWidth
-          disabled
-          value={reservationTime}
-        />
-      </FormInput>
-      <FormInput>
-        <TextField
-          label="주소"
-          variant="outlined"
-          required
-          multiline
-          margin="normal"
-          fullWidth
-          disabled
-          value={`${location.address} ${location.detail}`}
-        />
-      </FormInput>
-      <FormInput style={{ marginTop: '16px' }}>
-        <TextField
-          label="제목"
-          variant="outlined"
-          required
-          fullWidth
-          onChange={changeFormTitle}
-          value={formTitle}
-        />
-        <ErrorMessage>{msgForTitle}</ErrorMessage>
-      </FormInput>
-      <FormInput style={{ marginTop: '4px' }}>
-        <TextField
-          label="내용"
-          variant="outlined"
-          required
-          fullWidth
-          multiline
-          maxRows={4}
-          onChange={changeFormContent}
-          value={formContent}
-        />
-        <ErrorMessage>{msgForContent}</ErrorMessage>
-      </FormInput>
-      <FormInput>
-        <ImageInput setImageData={setImageData} />
-      </FormInput>
-      <div style={{ textAlign: 'center', marginTop: '16px' }}>
-        <Button variant="contained" onClick={registReservation}>
-          등록
-        </Button>
-      </div>
-      <img src={testUrl} alt="#" />
+      <FromBox>
+        <div>
+          <FormInput>
+            <TextField
+              label="예약업체"
+              variant="outlined"
+              required
+              margin="normal"
+              fullWidth
+              disabled
+              value={reservation.storeName}
+            />
+          </FormInput>
+          <FormInput>
+            <TextField
+              label="예약일시"
+              variant="outlined"
+              required
+              margin="normal"
+              fullWidth
+              disabled
+              value={reservationTime}
+            />
+          </FormInput>
+          <FormInput>
+            <TextField
+              label="주소"
+              variant="outlined"
+              required
+              multiline
+              margin="normal"
+              fullWidth
+              disabled
+              value={`${location.address} ${location.detail}`}
+            />
+          </FormInput>
+          <FormInput style={{ marginTop: '16px' }}>
+            <TextField
+              label="제목"
+              variant="outlined"
+              required
+              fullWidth
+              onChange={changeFormTitle}
+              value={formTitle}
+            />
+            <ErrorMessage>{msgForTitle}</ErrorMessage>
+          </FormInput>
+          <FormInput style={{ marginTop: '4px' }}>
+            <TextField
+              label="내용"
+              variant="outlined"
+              required
+              fullWidth
+              multiline
+              maxRows={4}
+              onChange={changeFormContent}
+              value={formContent}
+            />
+            <ErrorMessage>{msgForContent}</ErrorMessage>
+          </FormInput>
+          <FormInput>
+            <ImageInput setImageData={setImageData} />
+          </FormInput>
+          <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <Button variant="contained" onClick={registReservation}>
+              등록
+            </Button>
+          </div>
+        </div>
+      </FromBox>
     </div>
   );
 }
+
+const FromBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+`;
 
 const FormTitle = styled.h2`
   font-size: 32px;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 8px;
 `;
 
 const ErrorMessage = styled.div`
@@ -208,4 +218,5 @@ const ErrorMessage = styled.div`
 
 const FormInput = styled.div`
   max-width: 400px;
+  width: 100vw;
 `;

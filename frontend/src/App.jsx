@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React from 'react';
 import './App.scss';
 import { Routes, Route } from 'react-router-dom';
@@ -7,7 +8,6 @@ import CustomerSignUp from './pages/customer/signup/CustomerSignUp';
 import ProSignUp from './pages/customer/signup/ProSignUp';
 import { normal } from './theme/theme';
 import Home from './pages/customer/homepage/home';
-// eslint-disable-next-line import/no-unresolved
 import CustomerNavBar from './components/customer/navbar/NavBar';
 import LocateModal from './components/common/sitepopup/LocateModal';
 import Select from './pages/customer/select/Select';
@@ -37,24 +37,26 @@ function App() {
               <LoginModal />
               <MasterInfo />
               <LocateModal />
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/signup" element={<CustomerSignUp />} />
-                <Route path="/seller/signup" element={<ProSignUp />} />
-                <Route path="/select" element={<Select />} />
-                <Route path="/reservation" element={<Reservation />} />
-                <Route path="/reservation/form" element={<ReservationForm />} />
-                <Route path="/match" element={<Match />} />
-                <Route path="/match/form" element={<MatchForm />} />
-                <Route path="/masterinfo" element={<MasterInfo />} />
-                <Route path="/usagehistory" element={<UsageHistory />} />
-                <Route path="/mypage" element={<MyPage />} />
-                <Route path="/videoservice" element={<VideoService />} />
-                <Route path="/mypage/update" element={<MyPageUpdate />} />
-                <Route path="/endservice" element={<EndService />} />
-                <Route path="/reviewform" element={<ReviewForm />} />
-                <Route path="*" element={<div>404</div>} />
-              </Routes>
+              <Page>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/signup" element={<CustomerSignUp />} />
+                  <Route path="/seller/signup" element={<ProSignUp />} />
+                  <Route path="/select" element={<Select />} />
+                  <Route path="/reservation" element={<Reservation />} />
+                  <Route path="/reservation/form" element={<ReservationForm />} />
+                  <Route path="/match" element={<Match />} />
+                  <Route path="/match/form" element={<MatchForm />} />
+                  <Route path="/masterinfo" element={<MasterInfo />} />
+                  <Route path="/usagehistory" element={<UsageHistory />} />
+                  <Route path="/mypage" element={<MyPage />} />
+                  <Route path="/videoservice" element={<VideoService />} />
+                  <Route path="/mypage/update" element={<MyPageUpdate />} />
+                  <Route path="/endservice" element={<EndService />} />
+                  <Route path="/reviewform" element={<ReviewForm />} />
+                  <Route path="*" element={<div>404</div>} />
+                </Routes>
+              </Page>
             </Main>
           </All>
         </ThemeProvider>
@@ -72,6 +74,11 @@ const All = styled.div`
 `;
 
 const Main = styled.div`
+  // line-height: 160%;
+  box-shadow: 0 0 8px 0 ${(props) => props.theme.color.defaultlightColor};
+`;
+
+const Page = styled.div`
   min-width: 360px;
   max-width: 768px;
   width: 100vw;
@@ -83,6 +90,4 @@ const Main = styled.div`
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
-  // line-height: 160%;
-  box-shadow: 0 0 8px 0 ${(props) => props.theme.color.defaultlightColor};
 `;
