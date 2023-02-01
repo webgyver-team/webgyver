@@ -19,6 +19,7 @@ import MatchForm from './pages/customer/match/MatchForm';
 import MasterInfo from './components/customer/masterInfo/MasterInfo';
 import UsageHistory from './pages/customer/usagehistoy/UsageHistory';
 import MyPage from './pages/customer/mypage/MyPage';
+import MyPageUpdate from './pages/customer/mypage/MyPageUpdate';
 import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
 
@@ -47,6 +48,7 @@ function App() {
                 <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/videoservice" element={<VideoService />} />
+                <Route path="/mypage/update" element={<MyPageUpdate />} />
                 <Route path="/endservice" element={<EndService />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>

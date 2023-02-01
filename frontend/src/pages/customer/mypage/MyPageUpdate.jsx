@@ -2,25 +2,27 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import AddCardIcon from '@mui/icons-material/AddCard';
-import IdInput from './elements/IdInput';
-import PasswordInput from './elements/PasswordInput';
-import NameInput from './elements/NameInput';
-import ResidentNumberInput from './elements/ResidentNumberInput';
-import PhoneNumberInput from './elements/PhoneNumberInput';
-import Agreement from './elements/AgreementToTerms';
+import NameInput from '../signup/elements/NameInput';
+import ResidentNumberInput from '../signup/elements/ResidentNumberInput';
+import PhoneNumberInput from '../signup/elements/PhoneNumberInput';
 
-export default function CustomerSignUp() {
+export default function MyPageUpdate() {
   // const [cardNumber, setCardNumber] = useState(null);
+  const userInfo = {
+    // 받아온 유저 정보
+    idx: '0',
+    name: '임시이름',
+    birthday: '0000001',
+    phoneNumber: '01000000000',
+    // cardNumber: null,
+  };
   const [data, setData] = useState({
-    id: null,
-    password: null,
-    birthday: null,
-    name: null,
-    phoneNumber: null,
+    idx: userInfo.idx,
+    name: userInfo.name,
+    birthday: userInfo.birthday,
+    phoneNumber: userInfo.phoneNumber,
     // cardNumber,
-    useCheck: false,
   });
-
   const updateData = (updateValue) => {
     setData((original) => ({
       ...original,
@@ -38,24 +40,38 @@ export default function CustomerSignUp() {
     console.log(data);
   };
   return (
-    <div style={{ width: '100%', padding: '16px' }}>
-      <SignUpTitle>고객 회원가입</SignUpTitle>
+    <div
+      style={{
+        width: '100%',
+        padding: '16px',
+        margin: '0px auto',
+      }}
+    >
+      <SignUpTitle>회원정보 수정</SignUpTitle>
       {/* {data.cardNumber} */}
       {/* 글씨 크기 32로 조정 필요 */}
       <SignUpForm>
-        <IdInput updateData={updateData} />
-        <PasswordInput updateData={updateData} />
-        <NameInput updateData={updateData} initialValue="" />
+        <NameInput updateData={updateData} initialValue={data.name} />
         <ResidentNumberInput
           updateData={updateData}
-          initialValue1=""
-          initialValue2="******"
+          initialValue1={
+            data.birthday !== null ? data.birthday.slice(0, 6) : null
+          }
+          initialValue2={
+            data.birthday !== null ? `${data.birthday.slice(6, 7)}******` : null
+          }
         />
         <PhoneNumberInput
           updateData={updateData}
-          initialValue1=""
-          initialValue2=""
-          initialValue3=""
+          initialValue1={
+            data.phoneNumber !== null ? data.phoneNumber.slice(0, 3) : null
+          }
+          initialValue2={
+            data.phoneNumber !== null ? data.phoneNumber.slice(3, 7) : null
+          }
+          initialValue3={
+            data.phoneNumber !== null ? data.phoneNumber.slice(7, 11) : null
+          }
         />
         <hr />
         <div>
@@ -73,11 +89,10 @@ export default function CustomerSignUp() {
             />
           </div>
         </div>
-        <Agreement updateData={updateData} />
       </SignUpForm>
       <div style={{ textAlign: 'center' }}>
         <Button variant="contained" onClick={registCustomer}>
-          가입
+          수정
         </Button>
       </div>
     </div>
