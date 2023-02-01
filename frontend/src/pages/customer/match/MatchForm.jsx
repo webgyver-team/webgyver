@@ -120,7 +120,7 @@ export default function ReservationForm() {
           required
           fullWidth
           multiline
-          maxRows={4}
+          rows={4}
           onChange={changeFormContent}
           value={formContent}
         />
