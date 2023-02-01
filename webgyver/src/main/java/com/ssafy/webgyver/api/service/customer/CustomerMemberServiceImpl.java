@@ -6,6 +6,7 @@ import com.ssafy.webgyver.api.request.customer.CustomerSignUpPostReq;
 import com.ssafy.webgyver.api.response.customer.CustomerCheckDuplicateRes;
 import com.ssafy.webgyver.api.response.customer.CustomerLoginRes;
 import com.ssafy.webgyver.api.response.customer.CustomerSignUpPostRes;
+import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.repository.customer.CustomerMemberRepository;
@@ -25,7 +26,7 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
     final CustomerMemberRepository customerMemberRepository;
     final PasswordEncoder passwordEncoder;
     @Override
-    public CustomerSignUpPostRes SignUpCustomer(CustomerSignUpPostReq customerRegisterInfo) {
+    public BaseResponseBody SignUpCustomer(CustomerSignUpPostReq customerRegisterInfo) {
         String customerBirth = customerRegisterInfo.getBirthDay();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
@@ -42,17 +43,17 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
                 .build();
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
         customerMemberRepository.save(customer);
-        CustomerSignUpPostRes result = CustomerSignUpPostRes.of(200, "Success");
+        BaseResponseBody result = BaseResponseBody.of(200, "Success");
         return result;
     }
 
     @Override
-    public CustomerCheckDuplicateRes checkDuplicate(CustomerCheckDuplicateReq req) {
+    public BaseResponseBody checkDuplicate(CustomerCheckDuplicateReq req) {
         Optional<Customer> check = customerMemberRepository.findCustomerById(req.getId());
         if (!check.isPresent()){
-            return CustomerCheckDuplicateRes.of(200, "사용 가능한 아이디");
+            return BaseResponseBody.of(200, "사용 가능한 아이디");
         } else {
-            return CustomerCheckDuplicateRes.of(201, "중복된 아이디");
+            return BaseResponseBody.of(201, "중복된 아이디");
         }
     }
 

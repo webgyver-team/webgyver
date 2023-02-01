@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.seller.SellerCheckDuplicateReq;
 import com.ssafy.webgyver.api.request.seller.SellerLoginReq;
 import com.ssafy.webgyver.api.request.seller.SellerSignUpPostReq;
 import com.ssafy.webgyver.api.response.seller.SellerLoginRes;
+import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.entity.SellerCategory;
@@ -49,20 +50,22 @@ public class SellerServiceImpl implements SellerService{
                 .sellerCategories(sellerRegisterInfo.getCategoryList())
                 .build();
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-        sellerRepository.save(seller);
+        Seller sellerRes = sellerRepository.save(seller);
+        System.out.println(sellerRes.toString());
         List<SellerCategory> sellerCategories = new ArrayList<>();
         for (SellerCategory S : sellerRegisterInfo.getCategoryList()) {
 //            Category category = new Category(S.getCategory().getIdx());
 //            System.out.println(category.getIdx());
             SellerCategory sellerCategory = SellerCategory.builder()
                     .seller(seller)
-                    .category(categoryRepository.findByCategoryName(S.getCategory().getCategoryName()))
+                    .category(S.getCategory())
 //                    .category(category)
                     .price(S.getPrice())
                     .build();
             sellerCategories.add(sellerCategory);
         }
         sellerCategoryRepository.saveAll(sellerCategories);
+//        BaseResponseBody res =  BaseResponseBody.of()
         return seller;
     }
 

@@ -19,7 +19,7 @@ public class SellerCategory extends BaseEntity{
     @JoinColumn(name = "seller_idx", nullable = false)
     private Seller seller;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "category_idx", nullable = false)
     private Category category;
 
