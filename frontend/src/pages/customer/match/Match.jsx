@@ -52,7 +52,7 @@ export default function Matching() {
     <Main>
       <MapBox>
         <ArrowBox>
-          <ChevronLeftIcon style={{ fill: '#ffffff', fontSize: '120%' }} />
+          <BackArrow style={{ fontSize: '120%' }} />
         </ArrowBox>
         <AlertBox>{alertText}</AlertBox>
         <MarkerBox>{marker}</MarkerBox>
@@ -68,24 +68,29 @@ export default function Matching() {
         <Map id="map" style={mapStyle} />
         <UpperMap />
       </MapBox>
+      <NullBox />
     </Main>
   );
 }
 
 const Main = styled.div`
-  width: 100%;
   position: relative;
+  width: 100%;
 `;
 
 const MapBox = styled.div`
   position: relative;
-  width: 100%;
   z-index: 10;
 `;
 
 const ArrowBox = styled.div`
   position: absolute;
   z-index: 20;
+`;
+
+const BackArrow = styled(ChevronLeftIcon)`
+  color: #ffffff;
+  cursor: pointer;
 `;
 
 const AlertBox = styled.div`
@@ -132,10 +137,10 @@ const InfoBox = styled.div`
   position: absolute;
   width: 100%;
   z-index: 20;
-  padding: 0 16px 0 16px;
+  padding: 16px;
   bottom: -150px;
-  border-radius: 20px;
-  background-color: ${(props) => props.theme.color.defaultWhite};
+  border-radius: 20px 20px 0 0;
+  background-color: ${(props) => props.theme.color.defaultsubBgColor};
 `;
 
 const UpperInfo = styled.div`
@@ -165,4 +170,8 @@ const LowerInfo = styled.div`
     white-space: pre-line;
     line-height: 32px;
   }
+`;
+
+const NullBox = styled.div`
+  height: 150px;
 `;
