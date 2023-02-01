@@ -3,7 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 import Reserve from './elements/Reserve';
@@ -19,12 +18,11 @@ function TabPanel(props) {
       hidden={value !== index}
       id={`simple-tabpanel-${index}`}
       aria-labelledby={`simple-tab-${index}`}
-      // eslint-disable-next-line react/jsx-props-no-spreading
       {...other}
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>

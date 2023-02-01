@@ -11,6 +11,7 @@ export default function EndService() {
     price: '5000',
   };
   const routeVideoService = () => navigate('/videoservice');
+  const routeReviewForm = () => navigate('/reviewform');
 
   return (
     <Main>
@@ -46,7 +47,7 @@ export default function EndService() {
       </BoxBox>
       <BoxBox>
         <BtnBox>
-          <Btn>리뷰 작성</Btn>
+          <Btn onClick={routeReviewForm}>리뷰 작성</Btn>
         </BtnBox>
       </BoxBox>
     </Main>

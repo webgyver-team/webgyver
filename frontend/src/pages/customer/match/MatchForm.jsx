@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageInput from '../reservation/elements/ImageInput';
 import { locateValueState, categoryState } from '../../../atom';
 
 export default function ReservationForm() {
+  const navigate = useNavigate();
   const location = useRecoilValue(locateValueState);
   const categoryIdx = useRecoilValue(categoryState);
   const [formTitle, setFormTitle] = useState('');
@@ -31,7 +33,7 @@ export default function ReservationForm() {
 
   const registReservation = () => {
     const data = {
-      customerIdx: null,
+      customerIdx: 1,
       address: location.address,
       detailAddress: location.detail,
       categoryIdx,
@@ -64,6 +66,8 @@ export default function ReservationForm() {
     // data로 axios POST하고
     // 결과로 나온 idx를 가지고
     // 이미지 axios POST해야 함
+    console.log(123);
+    navigate('/match');
   };
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {

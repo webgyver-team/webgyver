@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import Box from '@mui/material/Box';
+import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
@@ -74,20 +75,34 @@ export default function LoginModal() {
           <CloseBtn onClick={closeLogin} />
           <Header>로그인</Header>
           <Body>
-            <p>아이디</p>
-            <LocaInput id="id" name="id" onChange={onChangeAccount} />
+            <TextField
+              id="id"
+              name="id"
+              label="아이디"
+              variant="outlined"
+              required
+              fullWidth
+              inputProps={{ minLength: 6, maxLength: 10 }}
+              onChange={onChangeAccount}
+            />
             {errors.nullIdError && <ErrDiv>아이디를 입력하세요</ErrDiv>}
-            <p>비밀번호</p>
-            <LocaInput
+            <NullBox />
+            <TextField
               id="password"
               name="password"
               type="password"
+              label="비밀번호"
+              variant="outlined"
+              required
+              fullWidth
+              inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
             />
             {errors.nullPasswordError && <ErrDiv>비밀번호를 입력하세요</ErrDiv>}
             {/* <NullBox /> */}
           </Body>
           {!(errors.nullIdError || errors.nullPasswordError) && <NullBox />}
+          <NullBox />
           <Linkdiv onClick={routeSignup}>회원가입</Linkdiv>
           <BtnBox>
             <Button variant="contained" onClick={submit}>
@@ -130,14 +145,6 @@ const Body = styled.div`
   }
 `;
 
-const LocaInput = styled.input`
-  width: 100%;
-  margin-top: 8px;
-  padding: 8px;
-  margin-bottom: 8px;
-  border: 1px solid ${(props) => props.theme.color.defaultColor};
-`;
-
 const NullBox = styled.div`
   height: 13.6px;
 `;
@@ -145,6 +152,7 @@ const NullBox = styled.div`
 const BtnBox = styled.div`
   display: flex;
   justify-content: center;
+  margin-top: 8px;
 `;
 
 const ErrDiv = styled.div`
@@ -157,5 +165,5 @@ const Linkdiv = styled.div`
   justify-content: center;
   cursor: pointer;
   color: gray;
-  font-size: 8px;
+  font-size: 16px;
 `;

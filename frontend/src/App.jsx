@@ -22,6 +22,7 @@ import MyPage from './pages/customer/mypage/MyPage';
 import MyPageUpdate from './pages/customer/mypage/MyPageUpdate';
 import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
+import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 
 function App() {
   return (
@@ -31,9 +32,10 @@ function App() {
         {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
         <ThemeProvider theme={normal}>
           <All>
-            <CustomerNavBar />
             <Main>
+              <CustomerNavBar />
               <LoginModal />
+              <MasterInfo />
               <LocateModal />
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -50,6 +52,7 @@ function App() {
                 <Route path="/videoservice" element={<VideoService />} />
                 <Route path="/mypage/update" element={<MyPageUpdate />} />
                 <Route path="/endservice" element={<EndService />} />
+                <Route path="/reviewform" element={<ReviewForm />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Main>
@@ -63,21 +66,23 @@ function App() {
 export default App;
 
 const All = styled.div`
-  width: 360px;
-  // display: flex;
-  // justify-content: center;
+  width: 100vw;
+  display: flex;
+  justify-content: center;
 `;
 
 const Main = styled.div`
-  // width: 100vw;
+  min-width: 360px;
+  max-width: 768px;
+  width: 100vw;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  // height: 100vh;
   color: ${(props) => props.theme.color.defaultColor};
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
   // line-height: 160%;
+  box-shadow: 0 0 8px 0 ${(props) => props.theme.color.defaultlightColor};
 `;

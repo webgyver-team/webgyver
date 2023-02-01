@@ -27,7 +27,9 @@ const drawerWidth = 240;
 export default function NavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
   const navigate = useNavigate();
-  const navItems = auth ? ['logout', 'account'] : ['login', 'signup'];
+  const navItems = auth
+    ? ['logout', 'account', '이용내역']
+    : ['login', 'signup'];
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const openLoginModal = () => setLoginOpenState(true);
   const chooseMenu = (item) => {
@@ -37,6 +39,10 @@ export default function NavBar(props) {
       openLoginModal();
     } else if (item === 'signup') {
       navigate('/signup');
+    } else if (item === 'account') {
+      navigate('/mypage');
+    } else if (item === '이용내역') {
+      navigate('/usagehistory');
     }
   };
   const routeHome = () => navigate('/');
@@ -186,6 +192,7 @@ export default function NavBar(props) {
 }
 
 const Main = styled.div`
+  width: 100%;
   .css-hip9hq-MuiPaper-root-MuiAppBar-root {
     // background-color: ${(props) => props.theme.color.defaultaccentColor};
   }

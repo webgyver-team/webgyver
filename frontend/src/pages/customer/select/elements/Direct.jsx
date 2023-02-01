@@ -1,9 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { useNavigate } from 'react-router-dom';
 import DirectInfo from '../../../../assets/image/DirectInfo.png';
+import { locateModalState } from '../../../../atom';
 
 export default function Direct() {
+  const navigate = useNavigate();
+  const setLocateOpenState = useSetRecoilState(locateModalState);
+  const openLocateModal = () => setLocateOpenState(true);
+  const routeDirect = () => {
+    openLocateModal();
+    navigate('/match/form');
+  };
   return (
     <Main>
       <BtnBox>
@@ -12,8 +22,8 @@ export default function Direct() {
           <p>전문가와 연결해</p>
         </div>
         <BtnPosition>
-          <Btn>
-            <span>예약상담</span>
+          <Btn onClick={routeDirect}>
+            <span>바로상담</span>
             <ArrowForwardIcon fontSize="medium" />
           </Btn>
         </BtnPosition>

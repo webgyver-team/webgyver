@@ -12,7 +12,7 @@ export default function Home() {
   useEffect(() => {
     setTimeout(() => {
       setLodding(false);
-    }, 1500);
+    }, 500);
   }, []);
 
   if (loadding) {
@@ -44,7 +44,7 @@ export default function Home() {
 }
 
 const Main = styled.div`
-  width: 360px;
+  width: 100%;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
 `;
 

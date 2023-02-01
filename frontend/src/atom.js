@@ -35,6 +35,12 @@ export const locateValueState = atom({
   },
 });
 
+// 가게 정보 모달 on/off
+export const masterInfoModalState = atom({
+  key: 'masterInfoModalState',
+  default: false,
+});
+
 // 선택된 카테고리
 export const categoryState = atom({
   key: 'categoryState',

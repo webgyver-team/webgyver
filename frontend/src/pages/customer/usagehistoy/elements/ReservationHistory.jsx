@@ -1,6 +1,7 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -33,6 +34,7 @@ const Main = styled.div`
 `;
 
 function CardView({ history }) {
+  const navigate = useNavigate();
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -49,6 +51,10 @@ function CardView({ history }) {
   };
 
   const currentState = ['수락대기중', '예약취소', '예약확정', '화상상담하기'];
+
+  const routeVideoService = () => {
+    navigate('/videoservice');
+  };
 
   return (
     <Card>
@@ -76,7 +82,7 @@ function CardView({ history }) {
           </SliderBox>
           <BtnBox>
             <StateBtn>
-              <span>{currentState[3]}</span>
+              <span onClick={routeVideoService}>{currentState[3]}</span>
             </StateBtn>
           </BtnBox>
         </div>

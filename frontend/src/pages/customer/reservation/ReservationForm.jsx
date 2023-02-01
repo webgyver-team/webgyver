@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
+import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import AWS from 'aws-sdk';
@@ -12,6 +13,7 @@ import {
 } from '../../../atom';
 
 export default function ReservationForm() {
+  const navigate = useNavigate();
   const reservation = useRecoilValue(chosenReservation);
   const location = useRecoilValue(locateValueState);
   const categoryIdx = useRecoilValue(categoryState);
@@ -105,6 +107,7 @@ export default function ReservationForm() {
     // 이미지 axios POST해야 함
     // 이미지 S3 전송 테스트
     sendImageDataToS3();
+    navigate('/usagehistory');
   };
 
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
