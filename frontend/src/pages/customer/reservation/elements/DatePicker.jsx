@@ -99,4 +99,12 @@ const DateDiv = styled.div`
   &:hover {
     cursor: pointer;
   }
+
+  :first-child {
+    margin-left: 8px;
+  }
+
+  :last-child {
+    margin-right: 8px;
+  }
 `;

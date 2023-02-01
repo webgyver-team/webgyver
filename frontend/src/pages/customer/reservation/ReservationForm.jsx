@@ -58,7 +58,7 @@ export default function ReservationForm() {
     '시 ',
   )}분`;
   return (
-    <div style={{ width: '92vw' }}>
+    <div style={{ width: '100%', padding: '16px' }}>
       <SignUpTitle>예약상담 등록</SignUpTitle>
       <div>
         <TextField
@@ -126,11 +126,11 @@ export default function ReservationForm() {
       <div>
         <ImageInput />
       </div>
-      <div>
+      <BtnBox>
         <Button variant="contained" onClick={registReservation}>
           예약상담 등록하기
         </Button>
-      </div>
+      </BtnBox>
     </div>
   );
 }
@@ -139,6 +139,7 @@ const SignUpTitle = styled.h2`
   font-size: 32px;
   font-weight: bold;
   text-align: center;
+  margin-bottom: 16px;
 `;
 
 const ErrorMessage = styled.div`
@@ -149,4 +150,9 @@ const ErrorMessage = styled.div`
   display: flex;
   align-items: center;
   margin: 4px 0px;
+`;
+
+const BtnBox = styled.div`
+  display: flex;
+  justify-content: center;
 `;
