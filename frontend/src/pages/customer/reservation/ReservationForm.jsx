@@ -22,7 +22,6 @@ export default function ReservationForm() {
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
   const [imageData, setImageData] = useState([]);
-  const testUrl = 'https://webgyver.s3.ap-northeast-2.amazonaws.com/1.jpg';
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
     if (event.target.value.trim().length === 0) {
