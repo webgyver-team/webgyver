@@ -37,6 +37,8 @@ export default function NavBar(props) {
       openLoginModal();
     } else if (item === 'signup') {
       navigate('/signup');
+    } else if (item === 'account') {
+      navigate('/mypage');
     }
   };
   const routeHome = () => navigate('/');

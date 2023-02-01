@@ -33,6 +33,7 @@ function App() {
             <CustomerNavBar />
             <Main>
               <LoginModal />
+              <MasterInfo />
               <LocateModal />
               <Routes>
                 <Route path="/" element={<Home />} />
@@ -42,7 +43,6 @@ function App() {
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/reservation/form" element={<ReservationForm />} />
                 <Route path="/match" element={<Match />} />
-                <Route path="/masterinfo" element={<MasterInfo />} />
                 <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/videoservice" element={<VideoService />} />

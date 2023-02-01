@@ -1,7 +1,9 @@
 import React from 'react';
 import styled from 'styled-components';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
+import { masterInfoModalState } from '../../../../atom';
 
 export default function StoreInfo({
   idx,
@@ -16,6 +18,12 @@ export default function StoreInfo({
   noTime,
   handleClickedTimeButton,
 }) {
+  const MasterInfoModal = useRecoilState(masterInfoModalState);
+  console.log(MasterInfoModal);
+  const setMasterInfoModal = useSetRecoilState(masterInfoModalState);
+  const openMasterInfoModal = () => {
+    setMasterInfoModal(true);
+  };
   const chooseTimeButton = (event) => {
     const data = {
       idx,
@@ -32,6 +40,7 @@ export default function StoreInfo({
           display: 'flex',
           paddingRight: '8px',
         }}
+        onClick={openMasterInfoModal}
       >
         <div style={{ marginRight: '4px' }}>
           <Picture src={picture} alt="" />
