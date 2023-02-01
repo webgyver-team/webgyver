@@ -3,22 +3,19 @@ import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import ImageInput from './elements/ImageInput';
-import {
-  chosenReservation,
-  locateValueState,
-  categoryState,
-} from '../../../atom';
+import ImageInput from '../reservation/elements/ImageInput';
+import { locateValueState, categoryState } from '../../../atom';
 
 export default function ReservationForm() {
-  const reservation = useRecoilValue(chosenReservation);
   const location = useRecoilValue(locateValueState);
   const categoryIdx = useRecoilValue(categoryState);
   const [formTitle, setFormTitle] = useState('');
   const [formContent, setFormContent] = useState('');
+  const [imageData, setImageData] = useState([]);
+  const [cost, setCost] = useState(0);
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
-  const [imageData, setImageData] = useState([]);
+  const [msgForCost, setMsgForCost] = useState('');
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
     if (event.target.value.trim().length === 0) {
@@ -35,34 +32,31 @@ export default function ReservationForm() {
   const registReservation = () => {
     const data = {
       customerIdx: null,
-      partenrIdx: reservation.idx,
-      time: `${reservation.date.replaceAll('-', '')}-${reservation.time.replace(
-        ':',
-        '',
-      )}`,
       address: location.address,
       detailAddress: location.detail,
       categoryIdx,
       title: formTitle,
       content: formContent,
+      cost,
     };
     // eslint-disable-next-line
     console.log("data: ["+JSON.stringify(data)+"] imageData: ["+JSON.stringify(imageData)+"]");
     // data에 대한 유효성 검사 필요!!
     if (data.customerIdx === null) {
       // 고객 정보 알 수 없음
-    }
-    if (data.partenrIdx === null) {
-      // 예약 업체 정보 알 수 없음
+      return;
     }
     if (data.address === '' || data.detailAddress === '') {
       // 주소 정보 알 수 없음
+      return;
     }
     if (data.categoryIdx === '') {
       // 카테고리 정보 없음
+      return;
     }
     if (data.title.trim().length === 0) {
       // 제목 입력 유효하지 않음
+      return;
     }
     if (data.content.trim().length === 0) {
       // 내용 입력 유효하지 않음
@@ -71,37 +65,31 @@ export default function ReservationForm() {
     // 결과로 나온 idx를 가지고
     // 이미지 axios POST해야 함
   };
-  const reservationTime = `${reservation.date.split('-')[0]}년 ${
-    reservation.date.split('-')[1]
-  }월 ${reservation.date.split('-')[2]}일 ${reservation.time.replace(
-    ':',
-    '시 ',
-  )}분`;
+  const onlyNumber = (input) => {
+    if (Number.isNaN(Number(input))) {
+      setMsgForCost('상담비용은 숫자만 입력할 수 있습니다.');
+      return false;
+    }
+    setMsgForCost('');
+    return true;
+  };
+  const handleCost = (event) => {
+    let value = event.target.value.replaceAll(',', '');
+    if (!onlyNumber(value)) {
+      return;
+    }
+    value = Number(value);
+    if (value >= 100000) {
+      setMsgForCost('상담가격은 10만원 미만으로 설정할 수 있습니다.');
+      return;
+    }
+    value = `${value.toLocaleString('ko-KR')}`;
+    setCost(value);
+  };
+
   return (
     <div style={{ width: '100%', padding: '16px' }}>
-      <FormTitle>예약상담 등록</FormTitle>
-      <FormInput>
-        <TextField
-          label="예약업체"
-          variant="outlined"
-          required
-          margin="normal"
-          fullWidth
-          disabled
-          value={reservation.storeName}
-        />
-      </FormInput>
-      <FormInput>
-        <TextField
-          label="예약일시"
-          variant="outlined"
-          required
-          margin="normal"
-          fullWidth
-          disabled
-          value={reservationTime}
-        />
-      </FormInput>
+      <FormTitle>바로상담 등록</FormTitle>
       <FormInput>
         <TextField
           label="주소"
@@ -132,7 +120,7 @@ export default function ReservationForm() {
           required
           fullWidth
           multiline
-          maxRows={4}
+          rows={4}
           onChange={changeFormContent}
           value={formContent}
         />
@@ -140,6 +128,19 @@ export default function ReservationForm() {
       </FormInput>
       <FormInput>
         <ImageInput setImageData={setImageData} />
+      </FormInput>
+      <FormInput style={{ marginTop: '4px' }}>
+        <TextField
+          label="상담비용"
+          variant="outlined"
+          required
+          multiline
+          margin="normal"
+          fullWidth
+          value={cost}
+          onChange={handleCost}
+        />
+        <ErrorMessage>{msgForCost}</ErrorMessage>
       </FormInput>
       <div style={{ textAlign: 'center', marginTop: '16px' }}>
         <Button variant="contained" onClick={registReservation}>

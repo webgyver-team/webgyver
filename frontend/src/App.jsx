@@ -15,6 +15,7 @@ import LoginModal from './components/customer/login/LoginModal';
 import Reservation from './pages/customer/reservation/Reservation';
 import ReservationForm from './pages/customer/reservation/ReservationForm';
 import Match from './pages/customer/match/Match';
+import MatchForm from './pages/customer/match/MatchForm';
 import MasterInfo from './components/customer/masterInfo/MasterInfo';
 import UsageHistory from './pages/customer/usagehistoy/UsageHistory';
 import MyPage from './pages/customer/mypage/MyPage';
@@ -42,6 +43,7 @@ function App() {
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/reservation/form" element={<ReservationForm />} />
                 <Route path="/match" element={<Match />} />
+                <Route path="/match/form" element={<MatchForm />} />
                 <Route path="/masterinfo" element={<MasterInfo />} />
                 <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="/mypage" element={<MyPage />} />
