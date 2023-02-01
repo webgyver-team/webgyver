@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import Message from './Message';
 
-export default function NameInput({ updateData }) {
-  const [name, setName] = useState('');
+export default function NameInput({ updateData, initialValue }) {
+  const [name, setName] = useState(initialValue);
   const [msg, setMsg] = useState('');
   const changeName = (event) => {
     setName(() => event.target.value);

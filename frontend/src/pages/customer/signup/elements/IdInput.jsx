@@ -17,6 +17,8 @@ export default function IdInput({ updateData }) {
     height: '56px',
     border: '1px solid black',
     fontSize: '16px',
+    width: '28%',
+    marginLeft: '16px',
   };
 
   const changeId = (event) => {
@@ -69,7 +71,7 @@ export default function IdInput({ updateData }) {
           inputProps={{ minLength: 6, maxLength: 10 }}
           disabled={idDisabled}
           onChange={changeId}
-          style={{ width: '72%' }}
+          fullWidth
         />
         <Button
           variant="contained"

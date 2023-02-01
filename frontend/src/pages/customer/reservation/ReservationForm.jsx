@@ -4,6 +4,7 @@ import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import AWS from 'aws-sdk';
 import ImageInput from './elements/ImageInput';
 import {
   chosenReservation,
@@ -21,6 +22,7 @@ export default function ReservationForm() {
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
   const [imageData, setImageData] = useState([]);
+  const testUrl = 'https://webgyver.s3.ap-northeast-2.amazonaws.com/1.jpg';
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
     if (event.target.value.trim().length === 0) {
@@ -33,7 +35,38 @@ export default function ReservationForm() {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForContent('');
   };
+  const sendImageDataToS3 = () => {
+    const region = 'ap-northeast-2';
+    const bucket = 'webgyver';
 
+    AWS.config.update({
+      region,
+      accessKeyId: '',
+      secretAccessKey: '',
+    });
+    for (let i = 0; i < imageData.length; i += 1) {
+      // console.log(`${imageData[i].name} 업로드 시도 중..`);
+      const upload = new AWS.S3.ManagedUpload({
+        params: {
+          Bucket: bucket,
+          Key: imageData[i].name, // 고유한 파일명..
+          Body: imageData[i],
+        },
+      });
+      const promise = upload.promise();
+      promise
+        .then((res) => {
+          // console.log(`${imageData[i].name}을 업로드..`);
+          // console.log(res);
+          // eslint-disable-next-line
+          console.log(res.Location);
+        })
+        .catch((err) => {
+          // eslint-disable-next-line
+          console.log(err)
+        });
+    }
+  };
   const registReservation = () => {
     const data = {
       customerIdx: null,
@@ -72,8 +105,11 @@ export default function ReservationForm() {
     // data로 axios POST하고
     // 결과로 나온 idx를 가지고
     // 이미지 axios POST해야 함
+    // 이미지 S3 전송 테스트
+    sendImageDataToS3();
     navigate('/usagehistory');
   };
+
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
     reservation.date.split('-')[1]
   }월 ${reservation.date.split('-')[2]}일 ${reservation.time.replace(
