@@ -221,7 +221,7 @@ const DateDiv = styled.div`
 const LocateDiv = styled.div`
   border-top: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};
-  padding: 4%;
+  padding: 16px 4% 16px 4%;
   display: flex;
   align-items: center;
   cursor: pointer;
@@ -231,7 +231,6 @@ const SiteBox = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 100px;
   font-size: 16px;
   font-weight: bold;
   margin-right: 8px;
