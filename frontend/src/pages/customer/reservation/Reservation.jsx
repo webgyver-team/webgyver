@@ -110,7 +110,12 @@ export default function Reservation() {
     <Main>
       <DateDiv>
         <h2
-          style={{ fontSize: '18px', fontWeight: 'bold', marginBottom: '8px' }}
+          style={{
+            fontSize: '18px',
+            fontWeight: 'bold',
+            marginTop: '8px',
+            marginBottom: '8px',
+          }}
         >
           날짜 선택
           {` [ ${date.split('-')[0]}-${date.split('-')[1]}-${
@@ -196,10 +201,12 @@ const CustomDatePickerDiv = styled.div`
   overflow-x: visible;
   height: 40px;
   // border: 3px solid red;
+  margin-bottom: 8px;
 `;
 
 const DateDiv = styled.div`
-  padding: 4%;
+  padding: 8px;
+  margin-bottom: 12px;
 `;
 
 const LocateDiv = styled.div`
