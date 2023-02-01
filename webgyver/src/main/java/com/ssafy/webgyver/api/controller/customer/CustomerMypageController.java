@@ -1,10 +1,9 @@
 package com.ssafy.webgyver.api.controller.customer;
 
 import com.ssafy.webgyver.api.request.customer.CustomerMypageReq;
-import com.ssafy.webgyver.api.response.article.ArticleListRes;
+import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerMypageRes;
 import com.ssafy.webgyver.api.service.customer.CustomerMypageService;
-import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Customer;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -50,11 +49,12 @@ public class CustomerMypageController {
     public ResponseEntity<?> getReviewList(@PathVariable Long idx, CustomerMypageReq req) {
         List<Map<String, Object>> articles = customerMypageService.getReviewList(req);
 
-        if (articles != null && !articles.isEmpty()) {
-            return ResponseEntity.ok().body(ArticleListRes.getCustomerArticleList(200, "OK", articles));
-
-        } else {
-            return ResponseEntity.ok().body(CustomerMypageRes.of(500, "목록을 가져올 수 없습니다. 잠시 후 다시 시도해 주세요."));
-        }
+//        if (articles != null && !articles.isEmpty()) {
+//            return ResponseEntity.ok().body(HistoryListRes.getCustomerArticleList(200, "OK", articles));
+//
+//        } else {
+//            return ResponseEntity.ok().body(CustomerMypageRes.of(500, "목록을 가져올 수 없습니다. 잠시 후 다시 시도해 주세요."));
+//        }
+        return null;
     }
 }
