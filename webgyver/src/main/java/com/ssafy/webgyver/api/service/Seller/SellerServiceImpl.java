@@ -12,6 +12,7 @@ import com.ssafy.webgyver.db.repository.common.CategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -30,7 +31,7 @@ public class SellerServiceImpl implements SellerService{
     final CategoryRepository categoryRepository;
     @Transactional
     @Override
-    public Seller SignUpSeller(SellerSignUpPostReq sellerRegisterInfo) {
+    public BaseResponseBody SignUpSeller(SellerSignUpPostReq sellerRegisterInfo) {
         System.out.println("서비스 들어왔엉");
         String sellerBirth = sellerRegisterInfo.getBirthDay();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -65,14 +66,19 @@ public class SellerServiceImpl implements SellerService{
             sellerCategories.add(sellerCategory);
         }
         sellerCategoryRepository.saveAll(sellerCategories);
-//        BaseResponseBody res =  BaseResponseBody.of()
-        return seller;
+        BaseResponseBody res =  BaseResponseBody.of(200, "Success");
+
+        return res;
     }
 
     @Override
-    public boolean checkDuplicate(SellerCheckDuplicateReq req){
+    public BaseResponseBody checkDuplicate(SellerCheckDuplicateReq req){
         boolean check = sellerRepository.existsById(req.getId());
-        return check;
+        if (check) {
+            return BaseResponseBody.of(200, "중복된 아이디");
+        } else {
+            return BaseResponseBody.of(200, "사용 가능한 아이디");
+        }
     }
 
     @Override
