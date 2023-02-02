@@ -15,18 +15,33 @@ export default function VideoService() {
   const MainScreenRef = useRef(null);
   const [mainScreenWidth, setMainScreenWidth] = useState('myScreen');
   useLayoutEffect(() => {
-    setMainScreenWidth(MainScreenRef.current.offsetWidth);
-  }, []);
+    const handleResize = () => {
+      setMainScreenWidth(MainScreenRef.current.offsetWidth);
+    };
+    window.addEventListener('resize', handleResize);
+  }, [MainScreenRef]);
 
   const SubScreenRef = useRef(null);
   const [subScreenWidth, setSubScreenWidth] = useState('myScreen');
   useLayoutEffect(() => {
-    setSubScreenWidth(SubScreenRef.current.offsetWidth);
-  }, []);
+    const handleResize = () => {
+      setSubScreenWidth(SubScreenRef.current.offsetWidth);
+    };
+    window.addEventListener('resize', handleResize);
+  }, [SubScreenRef]);
 
   const videoBoxRef = useRef(null);
   const [videoBoxWidth, setVideoBoxWidth] = useState(0);
   useLayoutEffect(() => {
+    const handleResize = () => {
+      setVideoBoxWidth(videoBoxRef.current.offsetWidth);
+    };
+    window.addEventListener('resize', handleResize);
+  }, [videoBoxRef]);
+
+  useEffect(() => {
+    setMainScreenWidth(MainScreenRef.current.offsetWidth);
+    setSubScreenWidth(SubScreenRef.current.offsetWidth);
     setVideoBoxWidth(videoBoxRef.current.offsetWidth);
   }, []);
 
@@ -98,7 +113,6 @@ export default function VideoService() {
   // myConnection.addEventListener('track', (data) => {
   //   peerFace.srcObject = new MediaStream([data.track]);
   // });
-
   return (
     <Main>
       <BoxBox>
@@ -146,6 +160,7 @@ export default function VideoService() {
           <span>상담종료</span>
         </RedBtn>
       </BoxBox>
+      <NullBox />
     </Main>
   );
 }
@@ -160,7 +175,7 @@ const BoxBox = styled.div`
 
 const VideoBox = styled.div`
   position: relative;
-  width: 100%;
+  width: 100vw;
   height: ${(props) => props.width}px;
 `;
 
