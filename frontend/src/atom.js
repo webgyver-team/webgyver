@@ -9,7 +9,7 @@ const { persistAtom } = recoilPersist({
 });
 export const authState = atom({
   key: 'authState',
-  default: false,
+  default: true,
 });
 
 // 테스트용

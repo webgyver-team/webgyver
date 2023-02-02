@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
@@ -144,7 +145,6 @@ export default function ReservationForm() {
         // eslint-disable-next-line
         console.log(err);
       });
-
   };
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
     reservation.date.split('-')[1]
