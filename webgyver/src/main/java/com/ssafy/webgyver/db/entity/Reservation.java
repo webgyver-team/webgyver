@@ -46,6 +46,6 @@ public class Reservation extends BaseEntity{
     @Column(name = "r_price")
     private int reservationPrice;
 
-//    @OneToMany
-//    private List<Article> articleList;
+    @OneToMany
+    private List<Article> articleList;
 }

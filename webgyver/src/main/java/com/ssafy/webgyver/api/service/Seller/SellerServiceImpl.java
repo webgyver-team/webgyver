@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.seller.SellerCheckDuplicateReq;
 import com.ssafy.webgyver.api.request.seller.SellerLoginReq;
 import com.ssafy.webgyver.api.request.seller.SellerSignUpPostReq;
 import com.ssafy.webgyver.api.response.seller.SellerLoginRes;
+import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.entity.SellerCategory;
@@ -11,6 +12,7 @@ import com.ssafy.webgyver.db.repository.common.CategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -29,7 +31,7 @@ public class SellerServiceImpl implements SellerService{
     final CategoryRepository categoryRepository;
     @Transactional
     @Override
-    public Seller SignUpSeller(SellerSignUpPostReq sellerRegisterInfo) {
+    public BaseResponseBody SignUpSeller(SellerSignUpPostReq sellerRegisterInfo) {
         System.out.println("서비스 들어왔엉");
         String sellerBirth = sellerRegisterInfo.getBirthDay();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
@@ -49,27 +51,34 @@ public class SellerServiceImpl implements SellerService{
                 .sellerCategories(sellerRegisterInfo.getCategoryList())
                 .build();
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
-        sellerRepository.save(seller);
+        Seller sellerRes = sellerRepository.save(seller);
+        System.out.println(sellerRes.toString());
         List<SellerCategory> sellerCategories = new ArrayList<>();
         for (SellerCategory S : sellerRegisterInfo.getCategoryList()) {
 //            Category category = new Category(S.getCategory().getIdx());
 //            System.out.println(category.getIdx());
             SellerCategory sellerCategory = SellerCategory.builder()
                     .seller(seller)
-                    .category(categoryRepository.findByCategoryName(S.getCategory().getCategoryName()))
+                    .category(S.getCategory())
 //                    .category(category)
                     .price(S.getPrice())
                     .build();
             sellerCategories.add(sellerCategory);
         }
         sellerCategoryRepository.saveAll(sellerCategories);
-        return seller;
+        BaseResponseBody res =  BaseResponseBody.of(200, "Success");
+
+        return res;
     }
 
     @Override
-    public boolean checkDuplicate(SellerCheckDuplicateReq req){
+    public BaseResponseBody checkDuplicate(SellerCheckDuplicateReq req){
         boolean check = sellerRepository.existsById(req.getId());
-        return check;
+        if (check) {
+            return BaseResponseBody.of(200, "중복된 아이디");
+        } else {
+            return BaseResponseBody.of(200, "사용 가능한 아이디");
+        }
     }
 
     @Override
