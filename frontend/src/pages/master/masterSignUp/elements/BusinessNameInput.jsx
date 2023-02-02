@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
-import Message from './Message';
+import Message from '../../../common/signup/elements/Message';
 
 export default function BusinessNameInput({ updateData }) {
   const [businessName, setBusinessName] = useState('');
