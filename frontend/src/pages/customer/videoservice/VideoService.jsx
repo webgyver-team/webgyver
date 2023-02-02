@@ -48,7 +48,6 @@ export default function VideoService() {
   }, []);
 
   const routeEndService = () => {
-    console.log('???');
     navigate('/endservice');
   };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
