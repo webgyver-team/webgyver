@@ -2,78 +2,83 @@ import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
+import axios from 'axios';
 import Message from '../../../common/signup/elements/Message';
 
-export default function BusinessRegistrationNumberInput({ updateData }) {
+export default function CompanyNumberInput({ updateData }) {
   // eslint-disable-next-line operator-linebreak
-  const [businessRegistrationNumber, setBusinessRegistrationNumber] =
-    useState(null);
+  const [companyNumber, setCompanyNumber] = useState(null);
   // eslint-disable-next-line operator-linebreak
-  const [businessRegistrationNumber1, setBusinessRegistrationNumber1] =
-    useState('');
+  const [companyNumber1, setCompanyNumber1] = useState('');
   // eslint-disable-next-line operator-linebreak
-  const [businessRegistrationNumber2, setBusinessRegistrationNumber2] =
-    useState('');
+  const [companyNumber2, setCompanyNumber2] = useState('');
   // eslint-disable-next-line operator-linebreak
-  const [businessRegistrationNumber3, setBusinessRegistrationNumber3] =
-    useState('');
+  const [companyNumber3, setCompanyNumber3] = useState('');
   const [msg, setMsg] = useState('');
   const [inputDisabled, setInputDisabled] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
   const checkExistence = () => {
     // 유효성 검사 한번 들어가자
-    if (
-      // eslint-disable-next-line operator-linebreak
-      businessRegistrationNumber.length !==
-      businessRegistrationNumber.trim().length
-    ) {
+    if (companyNumber.length !== companyNumber.trim().length) {
       setMsg(() => '사업자등록번호에 띄어쓰기를 포함할 수 없습니다,');
       return;
     }
     setBtnDisabled(() => true);
     // 사업자등록번호 검사 axios 호출(일단은 random함수로 대체)
-    if (Math.random() > 0.5) {
-      // 중복이면 경고창 띄우기
-      // eslint-disable-next-line
-      alert('해당 사업자 등록 번호를 조회할 수 없습니다.');
-      setBtnDisabled(() => false);
-      return;
-    }
+    const API_URL = `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${process.env.REACT_APP_COMPANY_NUMBER_CHECK_KEY}`;
+    console.log(process.env.REACT_APP_COMPANY_NUMBER_CHECK_KEY);
+    const data = JSON.stringify({
+      b_no: [companyNumber],
+    });
+    console.log(data);
+    axios({
+      method: 'POST',
+      url: API_URL,
+      data,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((res) => {
+        if (Object.keys(res.data).includes('match_cnt')) {
+          // 유효한 사업자 번호
+          // eslint-disable-next-line
+          alert('해당 사업자 등록번호는 사용 가능합니다.');
+          updateData({ companyNumber });
+          setInputDisabled(() => true);
+          setBtnDisabled(() => true);
+        } else {
+          // 유효하지 않은 사업자 번호
+          // eslint-disable-next-line
+          alert('해당 사업자 등록 번호를 조회할 수 없습니다.');
+          setBtnDisabled(() => false);
+        }
+      })
+      .catch((err) => {
+        // eslint-disable-next-line
+        alert(err);
+      });
     // 성공 했으면 아이디 input disabled
-    // eslint-disable-next-line
-    alert('해당 사업자 등록번호는 사용 가능합니다.');
-    updateData({ businessRegistrationNumber });
-    setInputDisabled(() => true);
-    setBtnDisabled(() => true);
   };
 
   useEffect(() => {
     // 각각의 phoneNumber가 바뀌었을 때...
     if (
       // eslint-disable-next-line operator-linebreak
-      businessRegistrationNumber1.trim().length !== 3 ||
+      companyNumber1.trim().length !== 3 ||
       // eslint-disable-next-line operator-linebreak
-      businessRegistrationNumber2.trim().length !== 2 ||
-      businessRegistrationNumber3.trim().length !== 5
+      companyNumber2.trim().length !== 2 ||
+      companyNumber3.trim().length !== 5
     ) {
-      setBusinessRegistrationNumber(() => null);
+      setCompanyNumber(() => null);
       setBtnDisabled(() => true);
       return;
     }
-    setBusinessRegistrationNumber(
-      // eslint-disable-next-line operator-linebreak
-      businessRegistrationNumber1 +
-        // eslint-disable-next-line operator-linebreak
-        businessRegistrationNumber2 +
-        businessRegistrationNumber3,
-    );
+    setCompanyNumber(companyNumber1 + companyNumber2 + companyNumber3);
     setBtnDisabled(() => false);
-  }, [
-    businessRegistrationNumber1,
-    businessRegistrationNumber2,
-    businessRegistrationNumber3,
-  ]);
+  }, [companyNumber1, companyNumber2, companyNumber3]);
+
   const onlyNumber = (event) => {
     const input = event.target.value;
     if (Number.isNaN(Number(input))) {
@@ -83,8 +88,9 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
     setMsg(() => '');
     return true;
   };
+
   const checkMsg = (value, inputOrder) => {
-    // inputOrder: 전화번호 입력창 순서 => 다른 단계 다녀오면 유효성 검사 전체 대상으로 수행 못함..
+    // inputOrder: 전화번호 입력창 순서 => 다른 단계 다녀오면 유효성 검사 전체 대상으로 수행 못함..(아직 안함)
     switch (inputOrder) {
       case 1:
         if (value.trim().length > 0 && value.trim().length < 3) {
@@ -110,20 +116,20 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
     return true;
   };
 
-  const changeBusinessRegistrationNumber1 = (event) => {
+  const changeCompanyNumber1 = (event) => {
     if (!onlyNumber(event)) return;
     // 가능한 숫자: 일단 앞자리는 010으로 고정
-    setBusinessRegistrationNumber1(() => event.target.value);
+    setCompanyNumber1(() => event.target.value);
     checkMsg(event.target.value, 1);
   };
-  const changeBusinessRegistrationNumber2 = (event) => {
+  const changeCompanyNumber2 = (event) => {
     if (!onlyNumber(event)) return;
-    setBusinessRegistrationNumber2(() => event.target.value);
+    setCompanyNumber2(() => event.target.value);
     checkMsg(event.target.value, 2);
   };
-  const changeBusinessRegistrationNumber3 = (event) => {
+  const changeCompanyNumber3 = (event) => {
     if (!onlyNumber(event)) return;
-    setBusinessRegistrationNumber3(() => event.target.value);
+    setCompanyNumber3(() => event.target.value);
     checkMsg(event.target.value, 3);
   };
 
@@ -139,35 +145,35 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
         <TextField
           label="사업자등록번호"
           variant="outlined"
-          value={businessRegistrationNumber1}
+          value={companyNumber1}
           required
           disabled={inputDisabled}
           style={{ width: '36%' }}
           inputProps={{ maxLength: 3 }}
-          onChange={changeBusinessRegistrationNumber1}
+          onChange={changeCompanyNumber1}
         />
 
         <p>-</p>
         <TextField
           label=""
           variant="outlined"
-          value={businessRegistrationNumber2}
+          value={companyNumber2}
           required
           disabled={inputDisabled}
           style={{ width: '12%' }}
           inputProps={{ maxLength: 2 }}
-          onChange={changeBusinessRegistrationNumber2}
+          onChange={changeCompanyNumber2}
         />
         <p>-</p>
         <TextField
           label=""
           variant="outlined"
-          value={businessRegistrationNumber3}
+          value={companyNumber3}
           required
           disabled={inputDisabled}
           style={{ width: '20%' }}
           inputProps={{ maxLength: 5 }}
-          onChange={changeBusinessRegistrationNumber3}
+          onChange={changeCompanyNumber3}
         />
         <Button
           variant="contained"
@@ -187,4 +193,5 @@ export default function BusinessRegistrationNumberInput({ updateData }) {
 const InputDiv = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
