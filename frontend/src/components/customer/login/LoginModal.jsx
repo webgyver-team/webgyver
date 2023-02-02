@@ -7,7 +7,13 @@ import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { loginOpenState } from '../../../atom';
+import {
+  loginOpenState,
+  // accessToken,
+  // authState,
+  //  주석 해제 예정
+} from '../../../atom';
+// import customer from '../../../api/accountsApi';
 
 const style = {
   position: 'absolute',
@@ -25,26 +31,28 @@ export default function LoginModal() {
   const navigate = useNavigate();
   const modalState = useRecoilState(loginOpenState);
   const setLoginState = useSetRecoilState(loginOpenState);
+  // const setAccessToken = useSetRecoilState(accessToken);
+  // const setAuthState = useSetRecoilState(authState);
   const closeLogin = () => setLoginState(false);
-  const [payload, setPayload] = React.useState({ id: '', password: '' });
+  const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
     nullIdError: false,
     nullPasswordError: false,
   });
   const onChangeAccount = (e) => {
-    setPayload({
-      ...payload,
+    setData({
+      ...data,
       [e.target.name]: e.target.value,
     });
   };
   // 제출 시 id/pw 빈 칸이 아닌지 검증
   const submit = () => {
-    if (payload?.id === '') {
+    if (data?.id === '') {
       setErrors({
         nullIdError: true,
         nullPasswordError: false,
       });
-    } else if (payload?.password === '') {
+    } else if (data?.password === '') {
       setErrors({
         nullIdError: false,
         nullPasswordError: true,
@@ -54,6 +62,12 @@ export default function LoginModal() {
         nullIdError: false,
         nullPasswordError: false,
       });
+      // const response = customer.login(data);
+      // if (response.statusCode === 200) {
+      //   // 리코일persist 상태 변경
+      //   setAccessToken(response.data.accessToken);
+      //   setAuthState('customer');
+      // }
     }
     console.log(errors);
   };
