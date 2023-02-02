@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import './App.scss';
@@ -34,16 +35,14 @@ function App() {
   const [auth] = useRecoilState(authState);
   // const [url, setUrl] = useState(''); // 현재 url
   const [onNav, setOnNav] = useState(true);
+  // 마스터 url에 위치하는지 판단
+  const [onMaster, setOnMaster] = useState(false);
   const location = useLocation();
   useEffect(() => {
     // setUrl(location.pathname);
-    if (notNavList.includes(location.pathname)) {
-      setOnNav(false);
-    } else {
-      setOnNav(true);
-    }
+    notNavList.includes(location.pathname) ? setOnNav(false) : setOnNav(true);
+    location.pathname.includes('/master') ? setOnMaster(true) : setOnMaster(false);
   }, [location]);
-
   return (
     <>
       {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
@@ -54,7 +53,7 @@ function App() {
             <LoginModal />
             <MasterInfo />
             <LocateModal />
-            <Page>
+            <Page isMaster={onMaster}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
@@ -64,7 +63,7 @@ function App() {
                 <Route path="/reservation/form" element={<ReservationForm />} />
                 <Route path="/match" element={<Match />} />
                 <Route path="/match/form" element={<MatchForm />} />
-                <Route path="/masterinfo" element={<MasterInfo />} />
+                <Route path="/sellerinfo" element={<MasterInfo />} />
                 <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/videoservice" element={<VideoService />} />
@@ -91,13 +90,12 @@ const All = styled.div`
 `;
 
 const Main = styled.div`
-  // line-height: 160%;
   box-shadow: 0 0 8px 0 ${(props) => props.theme.color.defaultlightColor};
 `;
 
 const Page = styled.div`
   min-width: 360px;
-  max-width: 768px;
+  max-width: ${(props) => (props.isMaster ? 'auto' : '768px')};
   width: 100vw;
   display: flex;
   flex-direction: column;

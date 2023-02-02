@@ -12,6 +12,7 @@ export default function VideoService() {
   const peerFace = useRef(null);
   const [mainScreenState, setMainScreenState] = useState('myScreen');
 
+  // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
   const [mainScreenWidth, setMainScreenWidth] = useState('myScreen');
   useLayoutEffect(() => {
@@ -39,6 +40,7 @@ export default function VideoService() {
     window.addEventListener('resize', handleResize);
   }, [videoBoxRef]);
 
+  // 화면 첫 구성시 비율을 잡기 위한 훅
   useEffect(() => {
     setMainScreenWidth(MainScreenRef.current.offsetWidth);
     setSubScreenWidth(SubScreenRef.current.offsetWidth);
