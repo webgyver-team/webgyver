@@ -3,10 +3,12 @@ import styled from 'styled-components';
 // import { useRecoilState } from 'recoil';
 // import { categoryState } from '../../atom';
 import CircularProgress from '@mui/material/CircularProgress';
+import { useNavigate } from 'react-router-dom';
 import CategoryLine from './elements/categoryline';
 import MainImage from '../../../assets/image/MainImage.png';
 
 export default function Home() {
+  const navigate = useNavigate();
   const [loadding, setLodding] = useState(true);
   // const category = useRecoilState(categoryState);
   useEffect(() => {
@@ -22,6 +24,7 @@ export default function Home() {
       </LoaddingBox>
     );
   }
+  const routeMasterLogin = () => navigate('/master/login');
   return (
     <Main>
       <IntroductionBox>
@@ -37,7 +40,7 @@ export default function Home() {
         <NullBox />
       </CategoryBox>
       <LoginLinkBox>
-        <Titlediv>전문가 로그인 링크</Titlediv>
+        <Titlediv onClick={routeMasterLogin}>전문가 로그인 링크</Titlediv>
       </LoginLinkBox>
     </Main>
   );
