@@ -6,7 +6,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import CustomerSignUp from './pages/customer/signup/CustomerSignUp';
-import ProSignUp from './pages/customer/signup/ProSignUp';
+import MasterSignUp from './pages/master/masterSignUp/MasterSignUp';
 import { normal } from './theme/theme';
 import Home from './pages/customer/homepage/home';
 import CustomerNavBar from './components/customer/navbar/NavBar';
@@ -27,10 +27,11 @@ import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
 import PrivateRoute from './components/common/privateroute/PrivateRoute';
+import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
-const notNavList = ['/videoservice', '/master'];
+const notNavList = ['/videoservice', '/master/login'];
 
 function App() {
   const [auth] = useRecoilState(authState);
@@ -53,7 +54,7 @@ function App() {
         <All>
           <Main>
             {onNav
-              && (auth === 'master' ? <MasterNavBar /> : <CustomerNavBar />)}
+              && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
@@ -61,7 +62,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
-                <Route path="/seller/signup" element={<ProSignUp />} />
+                <Route path="/master/signup" element={<MasterSignUp />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
                 <Route
@@ -82,7 +83,8 @@ function App() {
                 <Route path="/mypage/update" element={<MyPageUpdate />} />
                 <Route path="/endservice" element={<EndService />} />
                 <Route path="/reviewform" element={<ReviewForm />} />
-                <Route path="/master" element={<MasterLogin />} />
+                <Route path="/master/login" element={<MasterLogin />} />
+                <Route path="/master/schedule" element={<MasterSchedule />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>

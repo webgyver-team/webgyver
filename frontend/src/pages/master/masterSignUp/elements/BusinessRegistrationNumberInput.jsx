@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
-import Message from './Message';
+import Message from '../../../common/signup/elements/Message';
 
 export default function BusinessRegistrationNumberInput({ updateData }) {
   // eslint-disable-next-line operator-linebreak

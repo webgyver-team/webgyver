@@ -1,20 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
-import IdInput from './elements/IdInput';
-import PasswordInput from './elements/PasswordInput';
-import NameInput from './elements/NameInput';
-import ResidentNumberInput from './elements/ResidentNumberInput';
-import PhoneNumberInput from './elements/PhoneNumberInput';
-import Agreement from './elements/AgreementToTerms';
+import IdInput from '../../common/signup/elements/IdInput';
+import PasswordInput from '../../common/signup/elements/PasswordInput';
+import NameInput from '../../common/signup/elements/NameInput';
+import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
+import AddressInput from '../../common/signup/elements/AddressInput';
+import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
+import Agreement from '../../common/signup/elements/AgreementToTerms';
 import BusinessNameInput from './elements/BusinessNameInput';
 import RepresentativeNameInput from './elements/RepresentativeNameInput';
 import BusinessRegistrationNumberInput from './elements/BusinessRegistrationNumberInput';
-import AddressInput from './elements/AddressInput';
 import CategoryInput from './elements/CategoryInput';
 
-export default function ProSignUp() {
-  // const [cardNumber, setCardNumber] = useState(null);
+export default function MasterSignUp() {
   const [data, setData] = useState({
     id: null,
     password: null,
@@ -42,17 +41,24 @@ export default function ProSignUp() {
   };
   return (
     <div>
-      <SignUpTitle>전문가 회원가입</SignUpTitle>
-      {/* {data.cardNumber} */}
-      {/* 글씨 크기 32로 조정 필요 */}
+      <SignUpTitle>마스터 회원가입</SignUpTitle>
       <SignUpForm>
         <FormDiv>
           <FormTitle>회원 정보 입력</FormTitle>
           <IdInput updateData={updateData} />
           <PasswordInput updateData={updateData} />
-          <NameInput updateData={updateData} />
-          <ResidentNumberInput updateData={updateData} />
-          <PhoneNumberInput updateData={updateData} />
+          <NameInput updateData={updateData} initialValue="" />
+          <ResidentNumberInput
+            updateData={updateData}
+            initialValue1=""
+            initialValue2="******"
+          />
+          <PhoneNumberInput
+            updateData={updateData}
+            initialValue1=""
+            initialValue2=""
+            initialValue3=""
+          />
           <Agreement updateData={updateData} />
         </FormDiv>
         <FormDiv>

@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CategoryInputItem from './CategoryInputItem';
-import Message from './Message';
+import Message from '../../../common/signup/elements/Message';
 
 export default function CategoryInput({ updateData }) {
   const [categoryItemList, setCategoryItemList] = useState([
