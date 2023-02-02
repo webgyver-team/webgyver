@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { sha256 } from 'js-sha256';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import AWS from 'aws-sdk';
 import ImageInput from './elements/ImageInput';
 import {
   chosenReservation,
@@ -36,6 +35,7 @@ export default function ReservationForm() {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForContent('');
   };
+
   // 이미지 S3 전송 함수
   const sendImageListToS3 = async () => {
     AWS.config.update({
@@ -144,8 +144,8 @@ export default function ReservationForm() {
         // eslint-disable-next-line
         console.log(err);
       });
-  };
 
+  };
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
     reservation.date.split('-')[1]
   }월 ${reservation.date.split('-')[2]}일 ${reservation.time.replace(
@@ -155,7 +155,7 @@ export default function ReservationForm() {
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <FormTitle>예약상담 등록</FormTitle>
-      <Form>
+      <FormBox>
         <div>
           <FormInput>
             <TextField
@@ -224,12 +224,12 @@ export default function ReservationForm() {
             </Button>
           </div>
         </div>
-      </Form>
+      </FormBox>
     </div>
   );
 }
 
-const Form = styled.div`
+const FormBox = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;

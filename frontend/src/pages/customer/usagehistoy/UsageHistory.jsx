@@ -3,7 +3,6 @@ import React from 'react';
 import styled from 'styled-components';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import PropTypes from 'prop-types';
 import ReservationHistory from './elements/ReservationHistory';
@@ -24,7 +23,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 3 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -89,8 +88,9 @@ export default function BasicTabs() {
   );
 }
 const Main = styled.div`
-  // 스크롤바를 제외한 너비만 계산
+  // 스크롤바를 제외한 너비만 계산.
   width: calc(100vw - (100vw - 100%));
+  line-height: 18px;
   .MuiBox-root {
     padding: 0;
   }
