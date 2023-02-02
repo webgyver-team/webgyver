@@ -80,4 +80,8 @@ public class Seller extends BaseEntity {
     @Column(name = "star_total")
     private Long starTotal;
 
+
+    public void updateSellerDescription(String companyDescription){
+        this.companyDescription = companyDescription;
+    }
 }
