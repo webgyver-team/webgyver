@@ -26,6 +26,7 @@ import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
+import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
@@ -41,7 +42,9 @@ function App() {
   useEffect(() => {
     // setUrl(location.pathname);
     notNavList.includes(location.pathname) ? setOnNav(false) : setOnNav(true);
-    location.pathname.includes('/master') ? setOnMaster(true) : setOnMaster(false);
+    location.pathname.includes('/master')
+      ? setOnMaster(true)
+      : setOnMaster(false);
   }, [location]);
   return (
     <>
@@ -49,7 +52,8 @@ function App() {
       <ThemeProvider theme={normal}>
         <All>
           <Main>
-            { onNav && (auth === 'master' ? <MasterNavBar /> : <CustomerNavBar />) }
+            {onNav
+              && (auth === 'master' ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
@@ -60,7 +64,12 @@ function App() {
                 <Route path="/master/signup" element={<MasterSignUp />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
-                <Route path="/reservation/form" element={<ReservationForm />} />
+                <Route
+                  path="/reservation/form"
+                  element={
+                    <PrivateRoute authenticated={auth} component={<ReservationForm />} />
+                  }
+                />
                 <Route path="/match" element={<Match />} />
                 <Route path="/match/form" element={<MatchForm />} />
                 <Route path="/sellerinfo" element={<MasterInfo />} />
@@ -70,7 +79,7 @@ function App() {
                 <Route path="/mypage/update" element={<MyPageUpdate />} />
                 <Route path="/endservice" element={<EndService />} />
                 <Route path="/reviewform" element={<ReviewForm />} />
-                <Route path="/master" element={<MasterLogin />} />
+                <Route path="/master/login" element={<MasterLogin />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>
