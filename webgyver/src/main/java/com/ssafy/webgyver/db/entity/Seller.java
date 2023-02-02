@@ -3,6 +3,7 @@ package com.ssafy.webgyver.db.entity;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -70,9 +71,11 @@ public class Seller extends BaseEntity {
     private List<SellerCategory> sellerCategories;
 
     @Column(name = "review_count")
+    @ColumnDefault("0")
     private Long reviewCount;
 
-    @Column(name = "start_total")
+    @ColumnDefault("0")
+    @Column(name = "star_total")
     private Long starTotal;
 
 }
