@@ -28,6 +28,7 @@ import MasterLogin from './pages/master/masterLogin/MasterLogin';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
 import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
+import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
@@ -85,6 +86,7 @@ function App() {
                 <Route path="/reviewform" element={<ReviewForm />} />
                 <Route path="/master/login" element={<MasterLogin />} />
                 <Route path="/master/schedule" element={<MasterSchedule />} />
+                <Route path="/master/realtime" element={<MasterRealtime />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>

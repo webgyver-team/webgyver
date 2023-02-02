@@ -1,11 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React from 'react';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-export default function Proceeding({ history }) {
+export default function RealTime({ data }) {
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -15,13 +15,7 @@ export default function Proceeding({ history }) {
     slidesToScroll: 1,
   };
 
-  const [isShowMore, setIsShowMore] = useState(false);
-  const shortComment = history.content.slice(0, 60);
-  const onChangeShowMore = () => {
-    setIsShowMore(!isShowMore);
-  };
-
-  const currentState = ['입장하기'];
+  const currentState = ['자세히'];
 
   return (
     <Card>
@@ -29,7 +23,7 @@ export default function Proceeding({ history }) {
         <div>
           <SliderBox>
             <Slider {...slickSettings}>
-              {history.images.map((el) => (
+              {data.images.map((el) => (
                 <ImgBox key={el}>
                   <img src={el} alt="" />
                 </ImgBox>
@@ -38,14 +32,9 @@ export default function Proceeding({ history }) {
           </SliderBox>
         </div>
         <div className="contentdiv">
-          <p className="title">{history.title}</p>
-          <p className="date">{`일시: ${history.date}`}</p>
-          <span className="content">
-            {isShowMore ? history.content : shortComment}
-          </span>
-          <MoreBtn type="button" onClick={onChangeShowMore}>
-            {isShowMore ? '[닫기]' : '[더보기]'}
-          </MoreBtn>
+          <p className="title">{data.title}</p>
+          <p className="date">{`일시: ${data.date}`}</p>
+          <span className="content">{data.content}</span>
         </div>
         <BtnBox>
           <StateBtn>
@@ -120,17 +109,6 @@ const ContentBox = styled.div`
 
 const SliderBox = styled.div`
   width: 136px;
-`;
-
-const MoreBtn = styled.button`
-  font-size: 14px;
-  border: 0;
-  background-color: transparent;
-  margin-left: 8px;
-
-  :hover {
-    cursor: pointer;
-  }
 `;
 
 const BtnBox = styled.div`
