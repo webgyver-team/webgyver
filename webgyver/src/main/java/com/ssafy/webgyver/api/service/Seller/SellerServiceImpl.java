@@ -65,8 +65,9 @@ public class SellerServiceImpl implements SellerService{
                     .build();
             sellerCategories.add(sellerCategory);
         }
-        sellerCategoryRepository.saveAll(sellerCategories);
-        BaseResponseBody res =  BaseResponseBody.of(200, "Success");
+        List<SellerCategory> list = sellerCategoryRepository.saveAll(sellerCategories);
+        BaseResponseBody res;
+        res = BaseResponseBody.of(200, "Success");
 
         return res;
     }
