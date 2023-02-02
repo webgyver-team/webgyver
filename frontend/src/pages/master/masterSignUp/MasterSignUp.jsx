@@ -5,9 +5,9 @@ import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import NameInput from '../../common/signup/elements/NameInput';
 import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
-import AddressInput from '../../common/signup/elements/AddressInput';
 import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
 import Agreement from '../../common/signup/elements/AgreementToTerms';
+import AddressInput from './elements/AddressInput';
 import BusinessNameInput from './elements/BusinessNameInput';
 import RepresentativeNameInput from './elements/RepresentativeNameInput';
 import BusinessRegistrationNumberInput from './elements/BusinessRegistrationNumberInput';
@@ -40,7 +40,7 @@ export default function MasterSignUp() {
     console.log(data);
   };
   return (
-    <div>
+    <div style={{ width: '100%', padding: '16px' }}>
       <SignUpTitle>마스터 회원가입</SignUpTitle>
       <SignUpForm>
         <FormDiv>
@@ -89,8 +89,11 @@ const SignUpForm = styled.div`
   font-size: 20px;
   font-weight: bold;
   display: flex;
-  justify-content: space-around;
-  align-items: center;
+  margin: 0px auto;
+  justify-content: space-between;
+  border: 2px solid teal;
+  padding: 16px;
+  max-width: 1200px;
 `;
 const FormTitle = styled.h3`
   font-size: 24px;
@@ -99,5 +102,7 @@ const FormTitle = styled.h3`
 const FormDiv = styled.div`
   font-size: 20px;
   font-weight: bold;
-  width: 40%;
+  width: 48%;
+  max-width: 540px;
+  border: 2px solid teal;
 `;
