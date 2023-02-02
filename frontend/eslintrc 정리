@@ -1,0 +1,44 @@
+// 해당 문서는 json으로 작성되었다.
+
+{
+  // 루트에 이 파일이 있는지를 설정한다. false일 경우, 상위 디렉토리까지 참조한다.
+  "root": true,
+  // 환경 설정, 어디에서 적용할 것인가.
+  "env": {
+    "browser": true,
+    "es6": true,
+    "node": true,
+  },
+  // 플러그인의 규칙을 그대로 따를 때, 적는다.
+  "extends": [
+      // 세미 클론에 대한 옵션을 사용하기 위한 extends
+      // "standard",
+      "eslint:recommended",
+      "react-app",
+      "prettier",
+      "prettier/prettier",
+      "plugin:prettier/recommended",
+  ],
+  // ESlint가 구문 분석을 위해 사용할 parser를 설정
+  // "parser": ,
+  // "parserOptions": { "project": [] },
+  // 가져올 플러그인을 명시하는 공간
+  "plugins": [
+    // 리액트 기본
+    "react",
+    // 아래는 가장 아래에 적어야함
+    "prettier",
+  ],
+  // 규칙을 커스텀하는 공간(플러그인 규칙을 변경할 수도 있다.)
+  "rules": {
+    // 일반 따옴표만 쓴다.
+    "quotes": ["error", "single", { "avoidEscape": true }],
+    // 들여쓰기 공백은 2로 한다.
+    "indent": ["error", 2],
+    // 아래의 옵션에서 숫자의미 1 경고 2 에러 / always, never 켜고 끔
+    "semi": [2, "always"],
+    // 프리터가 제공하는 옵션 에러표시
+    "prettier/prettier": "error",
+  },
+  // "ignorePatterns": []
+}
