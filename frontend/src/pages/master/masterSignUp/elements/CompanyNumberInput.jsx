@@ -27,11 +27,9 @@ export default function CompanyNumberInput({ updateData }) {
     setBtnDisabled(() => true);
     // 사업자등록번호 검사 axios 호출(일단은 random함수로 대체)
     const API_URL = `https://api.odcloud.kr/api/nts-businessman/v1/status?serviceKey=${process.env.REACT_APP_COMPANY_NUMBER_CHECK_KEY}`;
-    console.log(process.env.REACT_APP_COMPANY_NUMBER_CHECK_KEY);
     const data = JSON.stringify({
       b_no: [companyNumber],
     });
-    console.log(data);
     axios({
       method: 'POST',
       url: API_URL,
