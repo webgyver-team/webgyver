@@ -5,16 +5,15 @@ import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import NameInput from '../../common/signup/elements/NameInput';
 import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
+import AddressInput from '../../common/signup/elements/AddressInput';
 import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
-import Agreement from './elements/AgreementToTerms';
+import Agreement from '../../common/signup/elements/AgreementToTerms';
 import BusinessNameInput from './elements/BusinessNameInput';
 import RepresentativeNameInput from './elements/RepresentativeNameInput';
 import BusinessRegistrationNumberInput from './elements/BusinessRegistrationNumberInput';
-import AddressInput from '../../common/signup/elements/AddressInput';
 import CategoryInput from './elements/CategoryInput';
 
 export default function MasterSignUp() {
-  // const [cardNumber, setCardNumber] = useState(null);
   const [data, setData] = useState({
     id: null,
     password: null,
@@ -43,16 +42,23 @@ export default function MasterSignUp() {
   return (
     <div>
       <SignUpTitle>마스터 회원가입</SignUpTitle>
-      {/* {data.cardNumber} */}
-      {/* 글씨 크기 32로 조정 필요 */}
       <SignUpForm>
         <FormDiv>
           <FormTitle>회원 정보 입력</FormTitle>
           <IdInput updateData={updateData} />
           <PasswordInput updateData={updateData} />
-          <NameInput updateData={updateData} />
-          <ResidentNumberInput updateData={updateData} />
-          <PhoneNumberInput updateData={updateData} />
+          <NameInput updateData={updateData} initialValue="" />
+          <ResidentNumberInput
+            updateData={updateData}
+            initialValue1=""
+            initialValue2="******"
+          />
+          <PhoneNumberInput
+            updateData={updateData}
+            initialValue1=""
+            initialValue2=""
+            initialValue3=""
+          />
           <Agreement updateData={updateData} />
         </FormDiv>
         <FormDiv>

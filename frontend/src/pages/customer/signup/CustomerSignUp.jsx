@@ -7,7 +7,7 @@ import PasswordInput from '../../common/signup/elements/PasswordInput';
 import NameInput from '../../common/signup/elements/NameInput';
 import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
 import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
-import Agreement from './elements/AgreementToTerms';
+import Agreement from '../../common/signup/elements/AgreementToTerms';
 
 export default function CustomerSignUp() {
   // const [cardNumber, setCardNumber] = useState(null);
@@ -40,8 +40,6 @@ export default function CustomerSignUp() {
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <SignUpTitle>고객 회원가입</SignUpTitle>
-      {/* {data.cardNumber} */}
-      {/* 글씨 크기 32로 조정 필요 */}
       <SignUpForm>
         <IdInput updateData={updateData} />
         <PasswordInput updateData={updateData} />

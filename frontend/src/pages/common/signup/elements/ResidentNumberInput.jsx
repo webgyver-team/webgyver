@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import styled from 'styled-components';
-import Message from '../../../customer/signup/elements/Message';
+import Message from './Message';
 
 export default function ResidentNumberInput({
   updateData,

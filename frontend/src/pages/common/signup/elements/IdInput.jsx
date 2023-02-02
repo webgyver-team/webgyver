@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
-import Message from '../../../customer/signup/elements/Message';
+import Message from './Message';
 
 export default function IdInput({ updateData }) {
   const ID_MIN_LENGTH = 6;

@@ -6,7 +6,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import CustomerSignUp from './pages/customer/signup/CustomerSignUp';
-import MasterSignUp from './pages/customer/signup/MasterSignUp';
+import MasterSignUp from './pages/master/masterSignUp/MasterSignUp';
 import { normal } from './theme/theme';
 import Home from './pages/customer/homepage/home';
 import CustomerNavBar from './components/customer/navbar/NavBar';
