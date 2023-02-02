@@ -17,7 +17,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "seller")
-public class Seller extends BaseEntity{
+public class Seller extends BaseEntity {
 
     @Column(unique = true, length = 50)
     private String id;
@@ -68,5 +68,11 @@ public class Seller extends BaseEntity{
 
     @OneToMany(mappedBy = "seller")
     private List<SellerCategory> sellerCategories;
+
+    @Column(name = "review_count")
+    private Long reviewCount;
+
+    @Column(name = "start_total")
+    private Long starTotal;
 
 }
