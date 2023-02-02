@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
-// import FormControl from '@mui/material/FormControl';
 import styled from 'styled-components';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-export default function ImageInput({ setImageData }) {
-  const [imageList, setImageList] = useState([]); // 매물 이미지 파일
-  const [imagePreviewList, setImagePreviewList] = useState([]); // 매물 이미지 미리보기
+export default function ImageInput({ sendImageList }) {
+  const [imageList, setImageList] = useState([]); // 이미지 파일 객체
+  const [imagePreviewList, setImagePreviewList] = useState([]); // 이미지 파일 src for 미리보기
   // 이미지 변경 이벤트 함수
   const changeImageList = async (data) => {
     const images = data.target.files; // 입력받은 이미지 파일
@@ -23,21 +22,21 @@ export default function ImageInput({ setImageData }) {
           break;
         }
       }
-
       // 찾은 인덱스(idx)와 일치하는 가장 가까운 이미지 객체들을 필터함수로 배열 형태로 반환
       return idx === removeDupl.indexOf(item);
     });
 
-    // 이미지 파일 수 유효성 검사 ( 10개 이하 ), 5개 이상은 등록, 수정 버튼 클릭 시 활성화
+    // 이미지 파일 개수 유효성 검사 (10개 이하)
     if (nonDuplImages.length > 10) {
       // eslint-disable-next-line
       alert('이미지 등록은 최대 10개까지만 가능합니다.');
       return;
     }
 
-    // 유효성 검사를 통과 시 imageState에 중복제거된 배열 복사
+    // 유효성 검사를 통과 시 imageList에 중복제거된 배열 복사
     await setImageList([...nonDuplImages]);
-    await setImageData([...nonDuplImages]);
+    // 부모로 해당 배열 전송
+    await sendImageList([...nonDuplImages]);
 
     // 이건 Set으로 중복제거해보려 했는데, 객체 배열은 중복제거가 안되더라..
     // await setImageState([...new Set([...imageState, ...images])]);
@@ -60,7 +59,6 @@ export default function ImageInput({ setImageData }) {
       // onload : 읽기 성공 시, onloadend : 읽기 성공 실패 여부 상관 없음
       reader.onload = () => {
         imagePreview = [...imagePreview, { image, url: reader.result }]; // 데이터 담아줌
-
         setImagePreviewList([...imagePreview]); // previewImageState에 넣어줌
       };
     });
@@ -73,7 +71,7 @@ export default function ImageInput({ setImageData }) {
     });
 
     setImageList([...resultSet]);
-    setImageData([...resultSet]);
+    sendImageList([...resultSet]);
   };
 
   return (
