@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import AddCardIcon from '@mui/icons-material/AddCard';
-import IdInput from './elements/IdInput';
-import PasswordInput from './elements/PasswordInput';
-import NameInput from './elements/NameInput';
-import ResidentNumberInput from './elements/ResidentNumberInput';
-import PhoneNumberInput from './elements/PhoneNumberInput';
+import IdInput from '../../common/signup/elements/IdInput';
+import PasswordInput from '../../common/signup/elements/PasswordInput';
+import NameInput from '../../common/signup/elements/NameInput';
+import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
+import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
 import Agreement from './elements/AgreementToTerms';
 
 export default function CustomerSignUp() {

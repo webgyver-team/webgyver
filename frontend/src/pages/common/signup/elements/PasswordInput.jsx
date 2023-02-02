@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import TextField from '@mui/material/TextField';
-import Message from './Message';
+import Message from '../../../customer/signup/elements/Message';
 
 export default function PasswordInput({ updateData }) {
   const PW_MIN_LENGTH = 6;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { TextField } from '@mui/material';
 import styled from 'styled-components';
-import Message from './Message';
+import Message from '../../../customer/signup/elements/Message';
 
 export default function PhoneNumberInput({
   updateData,

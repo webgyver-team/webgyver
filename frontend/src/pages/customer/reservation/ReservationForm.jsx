@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import { sha256 } from 'js-sha256';
+import AWS from 'aws-sdk';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageInput from './elements/ImageInput';
@@ -144,7 +145,6 @@ export default function ReservationForm() {
         // eslint-disable-next-line
         console.log(err);
       });
-
   };
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
     reservation.date.split('-')[1]

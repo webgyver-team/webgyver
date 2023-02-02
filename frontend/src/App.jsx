@@ -6,7 +6,7 @@ import { Routes, Route, useLocation } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import CustomerSignUp from './pages/customer/signup/CustomerSignUp';
-import ProSignUp from './pages/customer/signup/ProSignUp';
+import MasterSignUp from './pages/customer/signup/MasterSignUp';
 import { normal } from './theme/theme';
 import Home from './pages/customer/homepage/home';
 import CustomerNavBar from './components/customer/navbar/NavBar';
@@ -57,7 +57,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
-                <Route path="/seller/signup" element={<ProSignUp />} />
+                <Route path="/master/signup" element={<MasterSignUp />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/reservation/form" element={<ReservationForm />} />

@@ -86,30 +86,36 @@ export default function ReservationForm() {
     // data에 대한 유효성 검사 필요!!
     if (data.customerIdx === null) {
       // 고객 정보 알 수 없음
+      // eslint-disable-next-line
       alert('유효하지 않은 고객 정보입니다.');
       return;
     }
     if (data.address === '' || data.detailAddress === '') {
       // 주소 정보 알 수 없음
+      // eslint-disable-next-line
       alert('주소 정보를 입력해야 합니다.');
       return;
     }
     if (data.categoryIdx === '') {
       // 카테고리 정보 없음
+      // eslint-disable-next-line
       alert('수리 분야가 선택되지 않았습니다.');
       return;
     }
     if (data.title.trim().length === 0) {
       // 제목 입력 유효하지 않음
+      // eslint-disable-next-line
       alert('제목을 한 글자 이상 입력해야 합니다.');
       return;
     }
     if (data.content.trim().length === 0) {
+      // eslint-disable-next-line
       alert('내용을 한 글자 이상 입력해야 합니다.');
       return;
       // 내용 입력 유효하지 않음
     }
     if (data.content.cost === null) {
+      // eslint-disable-next-line
       alert('희망 상담 비용을 입력해야 합니다.');
       return;
     }

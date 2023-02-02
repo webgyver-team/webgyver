@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import AddCardIcon from '@mui/icons-material/AddCard';
-import NameInput from '../signup/elements/NameInput';
-import ResidentNumberInput from '../signup/elements/ResidentNumberInput';
-import PhoneNumberInput from '../signup/elements/PhoneNumberInput';
+import NameInput from '../../common/signup/elements/NameInput';
+import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
+import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
 
 export default function MyPageUpdate() {
   // const [cardNumber, setCardNumber] = useState(null);
