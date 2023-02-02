@@ -24,7 +24,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         private String backgroundImage;
         private String ratingAvg;
         private String reviewCnt;
-        public Response(Seller entity, List<CompanyTimeDTO> companyTimeDTOList, List<CategoryDTO> categoryDTOList, String ratingAvg, String reviewCnt){
+        public Response(Seller entity, List<CompanyTimeDTO> companyTimeDTOList, List<CategoryDTO> categoryDTOList){
             this.idx = entity.getIdx();
             this.storeName = entity.getCompanyName();
             this.partnerName = entity.getName();
@@ -35,8 +35,8 @@ public class SellerMyPageIntroRes extends DataResponseBody {
             this.category = categoryDTOList;
             this.profileImage = entity.getProfileImage();
             this.backgroundImage = entity.getCompanyImage();
-            this.ratingAvg = ratingAvg;
-            this.reviewCnt = reviewCnt;
+            this.ratingAvg = String.valueOf(Math.round(((double) entity.getStarTotal() / entity.getReviewCount()) * 100.0) / 100.0);
+            this.reviewCnt = String.valueOf(entity.getReviewCount());
         }
     }
     @ToString
@@ -60,9 +60,9 @@ public class SellerMyPageIntroRes extends DataResponseBody {
 
     }
 
-    public static SellerMyPageIntroRes of(Integer statusCode, String message, Seller seller, List<CompanyTimeDTO> companyTimeList, List<CategoryDTO> categoryDTOList, String ratingAvg, String reviewCnt) {
+    public static SellerMyPageIntroRes of(Integer statusCode, String message, Seller seller, List<CompanyTimeDTO> companyTimeList, List<CategoryDTO> categoryDTOList) {
         SellerMyPageIntroRes res = new SellerMyPageIntroRes();
-        Response response = new Response(seller, companyTimeList, categoryDTOList, ratingAvg, reviewCnt);
+        Response response = new Response(seller, companyTimeList, categoryDTOList);
 //        List<CategoryDTO> categoryList = seller.getSellerCategories().stream().map(CategoryDTO::new).collect(Collectors.toList());
 //        CategoryRes res = new CategoryRes();
 //        res.getData().put("category", new CategoryRes.SimpleCategory(category));

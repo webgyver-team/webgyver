@@ -3,6 +3,7 @@ package com.ssafy.webgyver.api.controller.seller;
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
+import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
@@ -71,7 +72,8 @@ public class SellerMypageController {
     @GetMapping("/intro/{sellerIdx}")
     public ResponseEntity<?> getPartnerIntro(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req){
         log.info("intro Controller 들어옴 , {}", sellerIdx);
-        sellerMypageService.getSellerMyPageIntro(req);
-        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+        SellerMyPageIntroRes result = sellerMypageService.getSellerMyPageIntro(req);
+
+        return ResponseEntity.status(200).body(result);
     }
 }

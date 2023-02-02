@@ -60,11 +60,14 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         System.out.println(seller);
         ///// 영업시간 구하기
-        List<SellerMyPageIntroRes.CompanyTimeDTO> companyTimeDTOList = new ArrayList<>();
+        List<SellerMyPageIntroRes.CompanyTimeDTO> companyTimeDTOList = null;
         String companyTime = seller.getCompanyTime();
-        String[] list = companyTime.split("%");
-        for (int i = 0; i < list.length; i++){
-            companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0,3), list[i].substring(5)));
+        if (companyTime != null){
+            String[] list = companyTime.split("%");
+            companyTimeDTOList = new ArrayList<>();
+            for (int i = 0; i < list.length; i++){
+                companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0,3), list[i].substring(5)));
+            }
         }
         ///// 끝
         ///// 카테고리 구하기
@@ -74,15 +77,9 @@ public class SellerMypageServiceImpl implements SellerMypageService {
             categoryDTOList.add(new SellerMyPageIntroRes.CategoryDTO(temp.getIdx(), temp.getCategory().getCategoryName(), temp.getPrice()));
         }
         ///// 끝
-        ///// 리뷰 가져와서 평점 구하기
-        System.out.println(seller);
-        // 예약 목록 가져오기
-        List<Reservation> reservations = reservationRepository.findReservationsBySellerIdx(req.getSellerIdx());
-        for (Reservation reservation : reservations) {
-            System.out.println(reservation.getArticleList());
+        SellerMyPageIntroRes result = SellerMyPageIntroRes.of(200, "Success", seller, companyTimeDTOList, categoryDTOList);
 
-        }
-        return null;
+        return result;
     }
 
 }
