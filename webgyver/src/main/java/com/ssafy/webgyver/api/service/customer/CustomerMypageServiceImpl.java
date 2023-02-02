@@ -58,7 +58,6 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
             review.put("review", article);
             review.put("images", pictureRepository.findPicturesByArticleIdx(article.getIdx()));
 
-            System.out.println("article: " + article.getReservation().getSeller());
             reviews.add(review);
         }
 
