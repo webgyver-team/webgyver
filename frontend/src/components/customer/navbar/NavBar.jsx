@@ -39,7 +39,7 @@ export default function NavBar(props) {
       openLoginModal();
     } else if (item === '회원가입') {
       navigate('/signup');
-    } else if (item === '계정') {
+    } else if (item === '내 계정') {
       navigate('/mypage');
     } else if (item === '이용내역') {
       navigate('/usagehistory');

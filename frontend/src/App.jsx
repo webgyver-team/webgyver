@@ -41,7 +41,9 @@ function App() {
   useEffect(() => {
     // setUrl(location.pathname);
     notNavList.includes(location.pathname) ? setOnNav(false) : setOnNav(true);
-    location.pathname.includes('/master') ? setOnMaster(true) : setOnMaster(false);
+    location.pathname.includes('/master')
+      ? setOnMaster(true)
+      : setOnMaster(false);
   }, [location]);
   return (
     <>
@@ -49,7 +51,8 @@ function App() {
       <ThemeProvider theme={normal}>
         <All>
           <Main>
-            { onNav && (auth === 'master' ? <MasterNavBar /> : <CustomerNavBar />) }
+            {onNav
+              && (auth === 'master' ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
@@ -70,7 +73,7 @@ function App() {
                 <Route path="/mypage/update" element={<MyPageUpdate />} />
                 <Route path="/endservice" element={<EndService />} />
                 <Route path="/reviewform" element={<ReviewForm />} />
-                <Route path="/master" element={<MasterLogin />} />
+                <Route path="/master/login" element={<MasterLogin />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>

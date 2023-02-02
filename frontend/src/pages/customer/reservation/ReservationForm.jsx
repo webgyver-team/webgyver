@@ -49,7 +49,11 @@ export default function ReservationForm() {
       content: formContent,
     };
     // eslint-disable-next-line
-    console.log("data: ["+JSON.stringify(data)+"] imageData: ["+JSON.stringify(imageData)+"]");
+    console.log(
+      `data: [${JSON.stringify(data)}] imageData: [${JSON.stringify(
+        imageData,
+      )}]`,
+    );
     // data에 대한 유효성 검사 필요!!
     if (data.customerIdx === null) {
       // 고객 정보 알 수 없음
