@@ -68,4 +68,10 @@ public class SellerMypageController {
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
         }
     }
+    @GetMapping("/intro/{sellerIdx}")
+    public ResponseEntity<?> getPartnerIntro(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req){
+        log.info("intro Controller 들어옴 , {}", sellerIdx);
+        sellerMypageService.getSellerMyPageIntro(req);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
 }

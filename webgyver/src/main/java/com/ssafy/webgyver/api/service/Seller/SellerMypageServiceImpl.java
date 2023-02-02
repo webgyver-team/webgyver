@@ -3,18 +3,28 @@ package com.ssafy.webgyver.api.service.Seller;
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.seller.*;
+import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.db.entity.Article;
+import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.db.entity.Seller;
+import com.ssafy.webgyver.db.entity.SellerCategory;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
+import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
+import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class SellerMypageServiceImpl implements SellerMypageService {
     final ArticleRepository articleRepository;
-
+    final SellerRepository sellerRepository;
+    final ReservationRepository reservationRepository;
     @Override
     public List<Article> getAllHistory(SellerIdxReq req) {
         return articleRepository.findArticlesByType(req.getSellerIdx());
@@ -44,4 +54,35 @@ public class SellerMypageServiceImpl implements SellerMypageService {
 
         articleRepository.deleteById(req.getArticleIdx());
     }
+
+    @Override
+    public SellerMyPageIntroRes getSellerMyPageIntro(SellerIdxReq req) {
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        System.out.println(seller);
+        ///// 영업시간 구하기
+        List<SellerMyPageIntroRes.CompanyTimeDTO> companyTimeDTOList = new ArrayList<>();
+        String companyTime = seller.getCompanyTime();
+        String[] list = companyTime.split("%");
+        for (int i = 0; i < list.length; i++){
+            companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0,3), list[i].substring(5)));
+        }
+        ///// 끝
+        ///// 카테고리 구하기
+        List<SellerCategory> categories = seller.getSellerCategories();
+        List<SellerMyPageIntroRes.CategoryDTO> categoryDTOList = new ArrayList<>();
+        for (SellerCategory temp : categories) {
+            categoryDTOList.add(new SellerMyPageIntroRes.CategoryDTO(temp.getIdx(), temp.getCategory().getCategoryName(), temp.getPrice()));
+        }
+        ///// 끝
+        ///// 리뷰 가져와서 평점 구하기
+        System.out.println(seller);
+        // 예약 목록 가져오기
+        List<Reservation> reservations = reservationRepository.findReservationsBySellerIdx(req.getSellerIdx());
+        for (Reservation reservation : reservations) {
+            System.out.println(reservation.getArticleList());
+
+        }
+        return null;
+    }
+
 }
