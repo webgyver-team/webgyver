@@ -26,6 +26,7 @@ import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
+import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
@@ -63,7 +64,12 @@ function App() {
                 <Route path="/seller/signup" element={<ProSignUp />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
-                <Route path="/reservation/form" element={<ReservationForm />} />
+                <Route
+                  path="/reservation/form"
+                  element={
+                    <PrivateRoute authenticated={auth} component={<ReservationForm />} />
+                  }
+                />
                 <Route path="/match" element={<Match />} />
                 <Route path="/match/form" element={<MatchForm />} />
                 <Route path="/sellerinfo" element={<MasterInfo />} />
