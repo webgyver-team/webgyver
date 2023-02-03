@@ -65,10 +65,10 @@ export default function VideoService() {
         video.srcObject = stream;
 
         video.play();
-      })
-      .catch((error) => {
-        console.log(error);
       });
+    // .catch((error) => {
+    //   console.log(error);
+    // });
   };
 
   const getUserCameraSub = async () => {
@@ -83,10 +83,10 @@ export default function VideoService() {
         video.srcObject = stream;
 
         video.play();
-      })
-      .catch((error) => {
-        console.log(error);
       });
+    // .catch((error) => {
+    //   console.log(error);
+    // });
   };
 
   useEffect(() => {

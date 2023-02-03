@@ -37,6 +37,7 @@ export default function MasterSignUp() {
 
   const registCustomer = () => {
     // eslint-disable-next-line
+    // api 호출 추가 예정
     console.log(data);
   };
   return (

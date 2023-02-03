@@ -115,7 +115,7 @@ export default function Reservation() {
     // 주소 또는 선택 날짜가 바뀌었으면
     // storeList 갱신해야 함
     // eslint-disable-next-line
-    console.log('[가게 정보] axios 호출 필요');
+    // console.log('[가게 정보] axios 호출 필요');
   }, [location, date]);
 
   const [type, setType] = useState(1);

@@ -24,12 +24,12 @@ export const partner = {
   // customer
   checkDuplicate: async (data) => {
     const response = await Send.post(`${partnerURL}check/duplicate/`, data);
-    return response.statusCode;
+    return response;
   },
 
   signup: async (data) => {
     const response = await Send.post(`${partnerURL}member/join/`, data);
-    return response.statusCode;
+    return response;
   },
 
   login: async (data) => {
