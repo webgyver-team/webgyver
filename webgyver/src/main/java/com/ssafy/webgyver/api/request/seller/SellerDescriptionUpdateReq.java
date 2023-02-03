@@ -8,5 +8,5 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SellerDescriptionUpdateReq {
-    private String description;
+    private String companyDescription;
 }

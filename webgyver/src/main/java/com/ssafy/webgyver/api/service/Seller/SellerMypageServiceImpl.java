@@ -15,6 +15,7 @@ import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -83,11 +84,13 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     }
 
     @Override
+    @Transactional
     public BaseResponseBody updateSellerDescription(SellerIdxReq req, SellerDescriptionUpdateReq description) {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
-        seller.updateSellerDescription(description.getDescription());
+        seller.updateSellerDescription(description.getCompanyDescription());
         sellerRepository.save(seller);
-        return null;
+        BaseResponseBody res = BaseResponseBody.of(200,"Success");
+        return res;
     }
 
 
