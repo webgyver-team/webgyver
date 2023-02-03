@@ -108,7 +108,7 @@ export default App;
 
 const All = styled.div`
   width: 100vw;
-  min-height: 800px;
+  // min-height: 800px;
   display: flex;
   justify-content: center;
 `;

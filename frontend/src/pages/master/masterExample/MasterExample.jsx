@@ -1,11 +1,19 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
+import { exampleFormState } from '../../../atom';
 import ReviewImg1 from '../../../assets/image/review1.jpg';
 import ReviewImg2 from '../../../assets/image/review2.jpg';
 import ReviewImg3 from '../../../assets/image/review3.jpg';
-import Waiting from './elements/Example';
+import Example from './elements/Example';
+import Form from './elements/Form';
 
 export default function MasterSchedule() {
+  const setModalOpen = useSetRecoilState(exampleFormState);
+  const modalOpen = () => {
+    setModalOpen(true);
+  };
+
   const [historys] = useState([
     {
       content:
@@ -18,13 +26,14 @@ export default function MasterSchedule() {
 
   return (
     <Main>
+      <Form />
       <BtnBox>
-        <StateBtn>
+        <StateBtn onClick={modalOpen}>
           <span>작성하기</span>
         </StateBtn>
       </BtnBox>
       <TableBox>
-        <Waiting history={historys[0]} />
+        <Example history={historys[0]} />
       </TableBox>
     </Main>
   );
