@@ -12,6 +12,7 @@ import {
   reservationDate,
   chosenReservation,
   locateModalState,
+  categoryState,
 } from '../../../atom';
 import StoreInfo from './elements/StoreInfo';
 import { storeList } from './dummyData';
@@ -23,6 +24,7 @@ export default function Reservation() {
   const openLoginModal = () => setLoginOpenState(true);
   // 위치설정 모달 on/off
   const setLocateModalOpen = useSetRecoilState(locateModalState);
+  const categoryIdx = useRecoilValue(categoryState);
   const openLocateModal = () => setLocateModalOpen(true);
   // 예약 정보 {idx, storeName, date, time}
   const reservationNull = {
@@ -114,6 +116,18 @@ export default function Reservation() {
   useEffect(() => {
     // 주소 또는 선택 날짜가 바뀌었으면
     // storeList 갱신해야 함
+    const data = {
+      categoryIdx,
+      lat: location.latitude,
+      lng: location.longitude,
+      date: date.replaceAll('-', ''),
+    };
+    //   {
+    //     "categoryIdx": 1,
+    //     "lat": 41.40338,
+    //     "lng": 2.17403,
+    //     "date": "20230202"
+    // }
     // eslint-disable-next-line
     // console.log('[가게 정보] axios 호출 필요');
   }, [location, date]);
