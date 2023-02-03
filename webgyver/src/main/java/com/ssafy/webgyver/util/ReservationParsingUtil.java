@@ -13,7 +13,7 @@ public class ReservationParsingUtil {
         result.setCustomerAddress(req.getAddress());
         result.setCustomerDetailAddress(req.getDetailAddress());
         result.setCustomer(customer);
-        result.setReservationTime(StringDatetimeParsingUtil.string2Time(req.getTime()));
+        result.setReservationTime(TimeUtil.string2Time(req.getTime()));
 
         return result;
     }
