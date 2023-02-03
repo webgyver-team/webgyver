@@ -1,18 +1,26 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { useNavigate } from 'react-router-dom';
 import DirectInfo from '../../../../assets/image/DirectInfo.png';
-import { locateModalState } from '../../../../atom';
+import { locateModalState, authState, loginOpenState } from '../../../../atom';
 
 export default function Direct() {
   const navigate = useNavigate();
+  const [auth] = useRecoilState(authState);
+  const setLoginOpenState = useSetRecoilState(loginOpenState);
+  const openLoginModal = () => setLoginOpenState(true);
   const setLocateOpenState = useSetRecoilState(locateModalState);
   const openLocateModal = () => setLocateOpenState(true);
   const routeDirect = () => {
-    openLocateModal();
-    navigate('/match/form');
+    if (auth === 'customer') {
+      openLocateModal();
+      navigate('/match/form');
+    } else {
+      alert('로그인 후 이용해주세요.');
+      openLoginModal();
+    }
   };
   return (
     <Main>
