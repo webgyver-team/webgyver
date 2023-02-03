@@ -1,11 +1,17 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 export default function RealTime({ data }) {
+  // 더보기 on/off
+  const [isDetail, setIsDetail] = useState(false);
+  const handleIsDetail = () => {
+    setIsDetail(!isDetail);
+  };
+
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -15,32 +21,46 @@ export default function RealTime({ data }) {
     slidesToScroll: 1,
   };
 
-  const currentState = ['자세히'];
+  const currentState = ['수락'];
 
   return (
     <Card>
       <ContentBox>
-        <div>
-          <SliderBox>
-            <Slider {...slickSettings}>
-              {data.images.map((el) => (
-                <ImgBox key={el}>
-                  <img src={el} alt="" />
-                </ImgBox>
-              ))}
-            </Slider>
-          </SliderBox>
+        <div className="header">
+          <div className="contentdiv">
+            <p className="title">{data.title}</p>
+            <p className="price">{`가격: ${data.price}`}</p>
+          </div>
+          <NullBox />
+          <BtnBox>
+            <StateBtn onClick={handleIsDetail}>
+              <span>{isDetail ? '접기' : '자세히'}</span>
+            </StateBtn>
+          </BtnBox>
         </div>
-        <div className="contentdiv">
-          <p className="title">{data.title}</p>
-          <p className="date">{`일시: ${data.date}`}</p>
-          <span className="content">{data.content}</span>
-        </div>
-        <BtnBox>
-          <StateBtn>
-            <span>{currentState[0]}</span>
-          </StateBtn>
-        </BtnBox>
+        {isDetail && (
+          <DetailBox>
+            <div>
+              <SliderBox>
+                <Slider {...slickSettings}>
+                  {data.images.map((el) => (
+                    <ImgBox key={el}>
+                      <img src={el} alt="" />
+                    </ImgBox>
+                  ))}
+                </Slider>
+              </SliderBox>
+            </div>
+            <div className="contentdiv">
+              <span className="content">{data.content}</span>
+            </div>
+            <BtnBox>
+              <AcceptBtn onClick={handleIsDetail}>
+                <span>{currentState[0]}</span>
+              </AcceptBtn>
+            </BtnBox>
+          </DetailBox>
+        )}
       </ContentBox>
     </Card>
   );
@@ -51,6 +71,12 @@ const Card = styled.div`
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 5px;
   margin: 8px;
+  width: 912px;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+  }
 
   .title {
     font-size: 14px;
@@ -58,7 +84,7 @@ const Card = styled.div`
     padding-bottom: 4px;
   }
 
-  .date {
+  .price {
     font-size: 12px;
     padding-bottom: 4px;
   }
@@ -71,6 +97,10 @@ const Card = styled.div`
     padding-right: 4px;
     padding-left: 4px;
   }
+`;
+
+const NullBox = styled.div`
+  width: 100%;
 `;
 
 const ImgBox = styled.div`
@@ -91,7 +121,6 @@ const ImgBox = styled.div`
 
 const ContentBox = styled.div`
   width: 100%;
-  display: flex;
 
   .contentdiv {
     min-width: 480px;
@@ -107,12 +136,19 @@ const ContentBox = styled.div`
   }
 `;
 
+const DetailBox = styled.div`
+  display: flex;
+  margin-top: 8px;
+`;
+
 const SliderBox = styled.div`
   width: 136px;
 `;
 
 const BtnBox = styled.div`
-  margin-top: 4px;
+  width: auto;
+  display: flex;
+  flex-direction: column-reverse;
 `;
 
 const StateBtn = styled.div`
@@ -124,13 +160,18 @@ const StateBtn = styled.div`
   font-size: 14px;
   font-weight: bold;
   padding: 0 16px 0 16px;
-  height: 120px;
+  height: 40px;
   width: 120px;
   box-shadow: 1px 1px 4px 0px ${(props) => props.theme.color.dafaultBorder};
   background-color: ${(props) => props.theme.color.defaultBgColor};
 
   :hover {
     cursor: pointer;
-    background-color: ${(props) => props.theme.color.dafaultBorder};
+    // background-color: ${(props) => props.theme.color.dafaultBorder};
   }
+`;
+
+const AcceptBtn = styled(StateBtn)`
+  color: ${(props) => props.theme.color.defaultWhite};
+  background-color: ${(props) => props.theme.color.defaultBlue};
 `;
