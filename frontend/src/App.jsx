@@ -53,8 +53,7 @@ function App() {
       <ThemeProvider theme={normal}>
         <All>
           <Main>
-            {onNav
-              && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
+            {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
