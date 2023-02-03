@@ -47,7 +47,11 @@ export default function NavBar(props) {
   };
   const routeHome = () => navigate('/');
   const handleChange = (event) => {
-    setAuth(event.target.checked);
+    if (event.target.checked) {
+      setAuth('customer');
+    } else {
+      setAuth(false);
+    }
   };
 
   // eslint-disable-next-line react/prop-types

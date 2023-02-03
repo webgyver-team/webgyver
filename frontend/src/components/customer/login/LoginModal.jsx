@@ -69,7 +69,7 @@ export default function LoginModal() {
       //   setAuthState('customer');
       // }
     }
-    console.log(errors);
+    // console.log(errors);
   };
   // 회원가입 링크
   const routeSignup = () => {

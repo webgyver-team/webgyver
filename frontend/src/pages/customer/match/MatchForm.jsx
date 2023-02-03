@@ -56,15 +56,14 @@ export default function ReservationForm() {
         },
       });
       const promise = upload.promise();
-      promise
-        .then((res) => {
-          // eslint-disable-next-line
-          console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
-        })
-        .catch((err) => {
-          // eslint-disable-next-line
-          console.log(err);
-        });
+      promise.then((res) => {
+        // eslint-disable-next-line
+        console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
+      });
+      // .catch((err) => {
+      //   // eslint-disable-next-line
+      // console.log(err)
+      // });
       const newData = {
         saveName: hashImageName + extensionName,
         originName: imageList[i].name,
@@ -128,11 +127,11 @@ export default function ReservationForm() {
       })
       .then(() => {
         navigate('/match');
-      })
-      .catch((err) => {
-        // eslint-disable-next-line
-        console.log(err);
       });
+    // .catch((err) => {
+    //   // eslint-disable-next-line
+    //   console.log(err);
+    // });
   };
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {

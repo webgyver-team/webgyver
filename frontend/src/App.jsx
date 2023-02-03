@@ -27,6 +27,8 @@ import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
 import PrivateRoute from './components/common/privateroute/PrivateRoute';
+import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';
+import MasterEndService from './pages/master/masterendservice/MasterEndService';
 import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
 import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
 import MasterReview from './pages/master/masterReview/MasterReview';
@@ -82,8 +84,10 @@ function App() {
                 <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/videoservice" element={<VideoService />} />
+                <Route path="/master/videoservice" element={<MasterVideoService />} />
                 <Route path="/mypage/update" element={<MyPageUpdate />} />
                 <Route path="/endservice" element={<EndService />} />
+                <Route path="/master/endservice" element={<MasterEndService />} />
                 <Route path="/reviewform" element={<ReviewForm />} />
                 <Route path="/master/login" element={<MasterLogin />} />
                 <Route path="/master/schedule" element={<MasterSchedule />} />

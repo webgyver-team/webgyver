@@ -1,28 +1,32 @@
+/* eslint-disable no-param-reassign */
 import axios from 'axios';
 import { accessToken } from '../atom';
 
 const instance = axios.create({
   baseURL: '/',
-  headers: { Authorization: accessToken },
+  timeout: 2000,
 });
 
 instance.interceptors.request.use(
   // 요청 전
-  function (config) {
+  (config) => {
+    if (accessToken === '') {
+      config.headers.Authorization = null;
+    } else {
+      config.headers.Authorization = accessToken;
+    }
     return config;
   },
-  function (error) {
+  (error) => {
     return Promise.reject(error);
   },
 );
 
 instance.interceptors.response.use(
-  function (config) {
-    // 정상 응답
+  (config) => {
     return config;
   },
-  function (error) {
-    // 에러 응답
+  (error) => {
     return Promise.reject(error);
   },
 );

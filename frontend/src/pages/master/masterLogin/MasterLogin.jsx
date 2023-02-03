@@ -50,7 +50,7 @@ export default function MasterLogin() {
       //   setAuthState('customer');
       // }
     }
-    console.log(errors);
+    // console.log(errors);
   };
 
   const routeSignup = () => {
