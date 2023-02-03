@@ -2,16 +2,13 @@ package com.ssafy.webgyver.api.response.customer;
 
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
-import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.util.CommonUtil;
-import com.ssafy.webgyver.util.DistanceCalcUtil;
 import com.ssafy.webgyver.util.TimeUtil;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,7 +35,7 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
             this.personName = seller.getName();
             this.address = seller.getAddress();
             this.detailAddress = seller.getDetailAddress();
-            this.distance = String.valueOf(DistanceCalcUtil.getDistanceWithKM(seller.getLat(), seller.getLng(), req.getLat(), req.getLng()));
+            this.distance = String.valueOf(CommonUtil.getDistanceWithKM(seller.getLat(), seller.getLng(), req.getLat(), req.getLng()));
             this.star = String.format("%.1f", CommonUtil.getStar(seller.getStarTotal(), seller.getReviewCount()));
             this.allTime = TimeUtil.getAllTime(seller.getBookTime(), TimeUtil.string2Time(req.getDate(), "yyyyMMdd"));
             this.noTime = existReservationTime;
