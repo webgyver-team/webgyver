@@ -53,6 +53,9 @@ dependencies {
 	//jwt
 	implementation("com.auth0:java-jwt:3.10.3")
 
+	// 음력 변환 라이브러리
+	implementation group: 'com.ibm.icu', name: 'icu4j', version: '51.1'
+
 
 }
 

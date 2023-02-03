@@ -1,0 +1,63 @@
+package com.ssafy.webgyver.api.response.customer;
+
+import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
+import com.ssafy.webgyver.common.model.response.DataResponseBody;
+import com.ssafy.webgyver.db.entity.Customer;
+import com.ssafy.webgyver.db.entity.Seller;
+import com.ssafy.webgyver.util.CommonUtil;
+import com.ssafy.webgyver.util.DistanceCalcUtil;
+import com.ssafy.webgyver.util.TimeUtil;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+
+@Getter
+@Setter
+public class CustomerReservationNormalListRes extends DataResponseBody {
+    @Getter
+    @NoArgsConstructor
+    static class Store {
+        private Long sellerIdx;
+        private String storeName;
+        private String personName;
+        private String address;
+        private String detailAddress;
+        private String distance;
+        private String star;
+        private List<String> allTime;
+        private List<String> noTime;
+        private String image;
+
+        public Store(Seller seller, List<String> existReservationTime, CustomerReservationNormalListReq req) {
+            this.sellerIdx = seller.getIdx();
+            this.storeName = seller.getCompanyName();
+            this.personName = seller.getName();
+            this.address = seller.getAddress();
+            this.detailAddress = seller.getDetailAddress();
+            this.distance = String.valueOf(DistanceCalcUtil.getDistanceWithKM(seller.getLat(), seller.getLng(), req.getLat(), req.getLng()));
+            this.star = String.format("%.1f", CommonUtil.getStar(seller.getStarTotal(), seller.getReviewCount()));
+            this.allTime = TimeUtil.getAllTime(seller.getBookTime(), TimeUtil.string2Time(req.getDate(), "yyyyMMdd"));
+            this.noTime = existReservationTime;
+            this.image = seller.getCompanyImage();
+        }
+
+    }
+
+
+    public static CustomerReservationNormalListRes of(Integer statusCode, String message, List<Seller> sellerList, CustomerReservationNormalListReq req, List<List<String>> existReservationTimeList) {
+        CustomerReservationNormalListRes res = new CustomerReservationNormalListRes();
+        List<Store> storeList = new ArrayList<>();
+        for (int i = 0; i < sellerList.size(); i++) {
+            Store store = new Store(sellerList.get(i), existReservationTimeList.get(i), req);
+            storeList.add(store);
+        }
+        res.setStatusCode(statusCode);
+        res.setMessage(message);
+        res.getData().put("storeList", storeList);
+        return res;
+    }
+}

@@ -2,7 +2,9 @@ package com.ssafy.webgyver.api.controller.seller;
 
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
+import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
+import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
@@ -29,7 +31,6 @@ public class SellerMypageController {
         List<Article> articleList = sellerMypageService.getAllHistory(req);
         for (Article article :
                 articleList) {
-            System.out.println(article);
         }
         return ResponseEntity.ok(
                 HistoryListRes.of(200, "Success", articleList)
@@ -67,5 +68,18 @@ public class SellerMypageController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
         }
+    }
+    @GetMapping("/intro/{sellerIdx}")
+    public ResponseEntity<?> getPartnerIntro(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req){
+        log.info("intro Controller 들어옴 , {}", sellerIdx);
+        SellerMyPageIntroRes result = sellerMypageService.getSellerMyPageIntro(req);
+
+        return ResponseEntity.status(200).body(result);
+    }
+    @PutMapping("intro/description/{sellerIdx}")
+    public ResponseEntity<?> updatePartnerDescription(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, SellerDescriptionUpdateReq descriptionReq){
+        sellerMypageService.updateSellerDescription(req,descriptionReq);
+        return null;
+
     }
 }

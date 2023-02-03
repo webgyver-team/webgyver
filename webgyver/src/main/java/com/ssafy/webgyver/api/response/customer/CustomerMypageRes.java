@@ -15,6 +15,7 @@ public class CustomerMypageRes extends DataResponseBody {
     @NoArgsConstructor
     static class Response {
         private Long idx;
+        private String id;
         private String name;
         private String phoneNumber;
         private LocalDateTime birth;
@@ -23,6 +24,7 @@ public class CustomerMypageRes extends DataResponseBody {
 
         public Response(Customer customer) {
             this.idx = customer.getIdx();
+            this.id = customer.getId();
             this.name = customer.getName();
             this.phoneNumber = customer.getPhoneNumber();
             this.birth = customer.getBirthDay();

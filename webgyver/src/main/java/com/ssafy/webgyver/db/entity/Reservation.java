@@ -12,9 +12,8 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@ToString
 @Table(name = "reservation")
-public class Reservation extends BaseEntity{
+public class Reservation extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "s_idx")
     private Seller seller;
@@ -44,8 +43,8 @@ public class Reservation extends BaseEntity{
     private Category category;
 
     @Column(name = "r_price")
-    private int reservationPrice;
+    private Integer reservationPrice;
 
-    @OneToMany
+    @OneToMany(mappedBy = "reservation")
     private List<Article> articleList;
 }

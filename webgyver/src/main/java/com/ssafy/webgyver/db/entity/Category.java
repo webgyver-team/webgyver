@@ -1,21 +1,15 @@
 package com.ssafy.webgyver.db.entity;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-import lombok.ToString;
-
 @Getter
 @Setter
 @Entity
-@ToString
+@Builder
 @Table(name = "category")
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
