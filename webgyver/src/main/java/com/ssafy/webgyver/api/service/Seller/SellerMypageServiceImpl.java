@@ -67,7 +67,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
             String[] list = companyTime.split("%");
             companyTimeDTOList = new ArrayList<>();
             for (int i = 0; i < list.length; i++){
-                companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0,3), list[i].substring(5)));
+                companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0,3), list[i].substring(4)));
             }
         }
         ///// 끝
@@ -90,6 +90,20 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         seller.updateSellerDescription(description.getCompanyDescription());
         sellerRepository.save(seller);
         BaseResponseBody res = BaseResponseBody.of(200,"Success");
+        return res;
+    }
+
+    @Override
+    public BaseResponseBody updateSellerTime(SellerIdxReq req, SellerTimeUpdateReq timeReq) {
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        String timeString = "";
+        for (int i = 0; i < 8; i++){
+            System.out.println(timeReq.getCompanyTime().get(i));
+            timeString += timeReq.getCompanyTime().get(i).getDay() + "$" + timeReq.getCompanyTime().get(i).getTime() + "%";
+        }
+        seller.updateSellerTime(timeString);
+        sellerRepository.save(seller);
+        BaseResponseBody res = BaseResponseBody.of(200, "Success");
         return res;
     }
 
