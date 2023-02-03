@@ -27,7 +27,6 @@ public class SellerSignUpPostReq {
 
     private String companyNumber;
 
-    private String description;
     private RoleType roleType;
     private String address;
     private String detailAddress;
