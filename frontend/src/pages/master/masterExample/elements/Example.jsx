@@ -43,21 +43,6 @@ const Card = styled.div`
   border-radius: 5px;
   margin: 8px;
 
-  .title {
-    font-size: 14px;
-    font-weight: bold;
-    padding-bottom: 4px;
-  }
-
-  .date {
-    font-size: 12px;
-  }
-
-  .price {
-    font-size: 12px;
-    padding-bottom: 4px;
-  }
-
   .slick-list {
     marign-right: -8px;
   }
