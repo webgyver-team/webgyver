@@ -75,4 +75,5 @@ public class TimeUtil {
         String stringToday = time2String(today, "yyyyMMdd");
         return holidayList.contains(stringToday);
     }
+
 }

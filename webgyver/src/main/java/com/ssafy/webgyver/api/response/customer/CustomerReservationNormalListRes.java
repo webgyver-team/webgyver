@@ -10,6 +10,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 @Getter
@@ -28,8 +30,9 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
         private List<String> allTime;
         private List<String> noTime;
         private String image;
+        private Integer price;
 
-        public Store(Seller seller, List<String> existReservationTime, CustomerReservationNormalListReq req) {
+        public Store(Seller seller, List<String> existReservationTime, CustomerReservationNormalListReq req, int price) {
             this.sellerIdx = seller.getIdx();
             this.storeName = seller.getCompanyName();
             this.personName = seller.getName();
@@ -40,18 +43,29 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
             this.allTime = TimeUtil.getAllTime(seller.getBookTime(), TimeUtil.string2Time(req.getDate(), "yyyyMMdd"));
             this.noTime = existReservationTime;
             this.image = seller.getCompanyImage();
+            this.price = price;
         }
 
     }
 
 
-    public static CustomerReservationNormalListRes of(Integer statusCode, String message, List<Seller> sellerList, CustomerReservationNormalListReq req, List<List<String>> existReservationTimeList) {
+    public static CustomerReservationNormalListRes of(Integer statusCode, String message, List<Seller> sellerList, CustomerReservationNormalListReq req, List<List<String>> existReservationTimeList, List<Integer> sellerCategoryPrice, String order) {
         CustomerReservationNormalListRes res = new CustomerReservationNormalListRes();
         List<Store> storeList = new ArrayList<>();
         for (int i = 0; i < sellerList.size(); i++) {
-            Store store = new Store(sellerList.get(i), existReservationTimeList.get(i), req);
+            Store store = new Store(sellerList.get(i), existReservationTimeList.get(i), req, sellerCategoryPrice.get(i));
             storeList.add(store);
         }
+        Comparator<Store> comparator = null;
+        // 1-> 거리순, 2 -> 평점순, 3 -> 가격순
+        if (order.equals("1")) {
+            comparator = (a, b) -> (Double.compare(Double.parseDouble(a.getDistance()), Double.parseDouble(b.getDistance())));
+        } else if (order.equals("2")) {
+            comparator = (a, b) -> (Double.compare(Double.parseDouble(b.getStar()), Double.parseDouble(a.getStar())));
+        } else {
+            comparator = Comparator.comparingInt(Store::getPrice);
+        }
+        storeList.sort(comparator);
         res.setStatusCode(statusCode);
         res.setMessage(message);
         res.getData().put("storeList", storeList);
