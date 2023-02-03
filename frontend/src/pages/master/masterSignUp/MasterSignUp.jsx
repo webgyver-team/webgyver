@@ -29,7 +29,16 @@ export default function MasterSignUp() {
     businessRegistrationNumber: null,
     address: location.address,
     detailAddress: location.detail,
-    categoryList: [],
+    categoryList: [
+      {
+        index: 0, // categoryItemList에서의 순서(key에 사용)
+        category: {
+          idx: 0, // categoryItem의 idx
+          categoryName: '', // categoryItem의 이름
+        },
+        price: 0, // 헤당 카테고리 가격
+      }, // 기본 카테고리 리스트
+    ],
   });
   const updateData = (updateValue) => {
     setData((original) => ({
@@ -41,61 +50,69 @@ export default function MasterSignUp() {
   const registCustomer = () => {
     // 각 입력정보 모아져 있는 data를 가지고 유효성 검사하자
     // 아이디 -> 글자수 제한 충족시킨 후 중복 검사 거쳐야 값 O, 그 전엔 null
-    // if (data.id === null) {
-    //   // eslint-disable-next-line
-    //   alert('아이디를 입력하세요.');
-    //   return;
-    // }
-    // // 비밀번호 -> 비밀번호 확인을 거친 비밀번호여야 인정됨, 그 전엔 null
-    // if (data.password === null) {
-    //   // eslint-disable-next-line
-    //   alert('비밀번호 및 비밀번호 확인을 입력하세요.');
-    //   return;
-    // }
-    // // 이름 -> 한 글자 이상이면 ok, 아니면 null
-    // if (data.name === null) {
-    //   // eslint-disable-next-line
-    //   alert('이름을 입력하세요.');
-    //   return;
-    // }
-    // // 주민등록번호 7자리 -> 제대로 반영되어야 반영됨, 아니면 null
-    // if (data.birthday === null) {
-    //   // eslint-disable-next-line
-    //   alert('주민등록번호 앞 7자리를 입력하세요.');
-    //   return;
-    // }
-    // // 전화번호 11자리 -> 제대로 입력되어야 반영됨, 아니면 null
-    // if (data.phoneNumber === null) {
-    //   // eslint-disable-next-line
-    //   alert('전화번호를 입력하세요.');
-    //   return;
-    // }
-    // if (data.useCheck === false) {
-    //   // eslint-disable-next-line
-    //   alert('이용약관 동의는 필수입니다.');
-    //   return;
-    //   // 다 통과되면 해당 property 빼야 함
-    // }
-    // if (data.companyName === null) {
-    //   // eslint-disable-next-line
-    //   alert('상호명을 입력하세요.');
-    //   return;
-    // }
-    // if (data.representativeName === null) {
-    //   // eslint-disable-next-line
-    //   alert('대표자명을 입력하세요.');
-    //   return;
-    // }
-    // if (data.companyNumber === null) {
-    //   // eslint-disable-next-line
-    //   alert('사업자 등록번호를 입력하고 검사하세요.');
-    //   return;
-    // }
-    // if (data.address === null || data.detail === null) {
-    //   // eslint-disable-next-line
-    //   alert('주소를 입력하세요.');
-    //   return;
-    // }
+
+    if (data.id === null) {
+      // eslint-disable-next-line
+      alert('아이디를 입력하세요.');
+      return;
+    }
+    // 비밀번호 -> 비밀번호 확인을 거친 비밀번호여야 인정됨, 그 전엔 null
+    if (data.password === null) {
+      // eslint-disable-next-line
+      alert('비밀번호 및 비밀번호 확인을 입력하세요.');
+      return;
+    }
+    // 이름 -> 한 글자 이상이면 ok, 아니면 null
+    if (data.name === null) {
+      // eslint-disable-next-line
+      alert('이름을 입력하세요.');
+      return;
+    }
+    // 주민등록번호 7자리 -> 제대로 반영되어야 반영됨, 아니면 null
+    if (data.birthday === null) {
+      // eslint-disable-next-line
+      alert('주민등록번호 앞 7자리를 입력하세요.');
+      return;
+    }
+    // 전화번호 11자리 -> 제대로 입력되어야 반영됨, 아니면 null
+    if (data.phoneNumber === null) {
+      // eslint-disable-next-line
+      alert('전화번호를 입력하세요.');
+      return;
+    }
+    if (data.useCheck === false) {
+      // eslint-disable-next-line
+      alert('이용약관 동의는 필수입니다.');
+      return;
+      // 다 통과되면 해당 property 빼야 함
+    }
+    if (data.companyName === null) {
+      // eslint-disable-next-line
+      alert('상호명을 입력하세요.');
+      return;
+    }
+    if (data.representativeName === null) {
+      // eslint-disable-next-line
+      alert('대표자명을 입력하세요.');
+      return;
+    }
+    if (data.companyNumber === null) {
+      // eslint-disable-next-line
+      alert('사업자 등록번호를 입력하고 검사하세요.');
+      return;
+    }
+    if (data.address === null || data.detail === null) {
+      // eslint-disable-next-line
+      alert('주소를 입력하세요.');
+      return;
+    }
+    // 카테고리 리스트: 카테고리 idx가 0인 경우
+    for (let i = 0; i < data.categoryList.length; i += 1) {
+      if (data.categoryList[i].category.idx === 0) {
+        alert('유효하지 않은 카테고리가 있습니다.');
+        return;
+      }
+    }
     // eslint-disable-next-line
     console.log(data);
   };

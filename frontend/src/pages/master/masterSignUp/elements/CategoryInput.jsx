@@ -10,7 +10,7 @@ export default function CategoryInput({ updateData }) {
     {
       index: 0, // categoryItemList에서의 순서(key에 사용)
       category: {
-        idx: '', // categoryItem의 idx
+        idx: 0, // categoryItem의 idx
         categoryName: '', // categoryItem의 이름
       },
       price: '', // 헤당 카테고리 가격
@@ -32,7 +32,7 @@ export default function CategoryInput({ updateData }) {
       {
         index: newIndex,
         category: {
-          idx: '',
+          idx: 0,
           categoryName: '',
         },
         price: 0,
@@ -60,11 +60,18 @@ export default function CategoryInput({ updateData }) {
       return;
     }
     const updatedSelected = [...categorySelected];
-    updatedSelected[categoryItemList[index].category.idx] = false;
+    for (let i = 0; i < categoryItemList.length; i += 1) {
+      if (categoryItemList[i].index === index) {
+        updatedSelected[categoryItemList[i].category.idx] = false;
+        break;
+      }
+    }
+    // updatedSelected[categoryItemList[index].category.idx] = false;
     setCategorySelected(updatedSelected);
     // 삭제
     const newList = categoryItemList.filter((item) => item.index !== index);
     setCategoryItemList(newList);
+    updateData({ categoryList: newList });
     setMsg('');
   };
 
