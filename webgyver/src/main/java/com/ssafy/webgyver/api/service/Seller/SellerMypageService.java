@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
+import com.ssafy.webgyver.api.request.seller.SellerTimeUpdateReq;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
@@ -18,4 +19,5 @@ public interface SellerMypageService {
     void deleteHistory(ArticleIdxReq req);
     SellerMyPageIntroRes getSellerMyPageIntro(SellerIdxReq req);
     BaseResponseBody updateSellerDescription(SellerIdxReq req, SellerDescriptionUpdateReq description);
+    BaseResponseBody updateSellerTime(SellerIdxReq req, SellerTimeUpdateReq timeReq);
 }

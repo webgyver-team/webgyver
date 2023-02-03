@@ -3,6 +3,7 @@ package com.ssafy.webgyver.api.controller.seller;
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
+import com.ssafy.webgyver.api.request.seller.SellerTimeUpdateReq;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
@@ -78,8 +79,12 @@ public class SellerMypageController {
     }
     @PutMapping("intro/description/{sellerIdx}")
     public ResponseEntity<?> updatePartnerDescription(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, @RequestBody SellerDescriptionUpdateReq descriptionReq){
-        System.out.println(descriptionReq.getCompanyDescription());
         BaseResponseBody res = sellerMypageService.updateSellerDescription(req,descriptionReq);
         return ResponseEntity.status(200).body(res);
+    }
+    @PutMapping("/intro/time/{sellerIdx}")
+    public ResponseEntity<?> updatePartnerTime(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, @RequestBody SellerTimeUpdateReq timeReq){
+        BaseResponseBody res = sellerMypageService.updateSellerTime(req, timeReq);
+        return ResponseEntity.ok().body(res);
     }
 }
