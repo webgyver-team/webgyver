@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TimeUtil {
+    // 패턴 인자로 안받고 LocalDateTime으로 바꿔줌. stringTime의 길이로 분기함.
     public static LocalDateTime string2Time(String stringTime) {
         if (stringTime.length() >= 9) {
             return LocalDateTime.parse(stringTime, DateTimeFormatter.ofPattern("yyyyMMdd-HHmm"));
@@ -18,6 +19,7 @@ public class TimeUtil {
         return LocalDate.parse(stringTime, DateTimeFormatter.ofPattern("yyyyMMdd")).atStartOfDay();
     }
 
+    // 패턴을 인자로 받음. '년월일'만 있는 경우에는 ParsingError가 발생하므로 LocalDate로 바꿔서 00시 00분으로 바꾼다.
     public static LocalDateTime string2Time(String stringTime, String format) {
         try {
             return LocalDateTime.parse(stringTime, DateTimeFormatter.ofPattern(format));
@@ -26,6 +28,7 @@ public class TimeUtil {
         }
     }
 
+    // LocalDateTime과 패턴을 인자로 받아서 String으로 바꾼다.
     public static String time2String(LocalDateTime time, String pattern) {
         return time.format(DateTimeFormatter.ofPattern(pattern));
     }
@@ -72,4 +75,5 @@ public class TimeUtil {
         String stringToday = time2String(today, "yyyyMMdd");
         return holidayList.contains(stringToday);
     }
+
 }
