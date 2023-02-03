@@ -77,9 +77,9 @@ public class SellerMypageController {
         return ResponseEntity.status(200).body(result);
     }
     @PutMapping("intro/description/{sellerIdx}")
-    public ResponseEntity<?> updatePartnerDescription(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, SellerDescriptionUpdateReq descriptionReq){
-        sellerMypageService.updateSellerDescription(req,descriptionReq);
-        return null;
-
+    public ResponseEntity<?> updatePartnerDescription(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, @RequestBody SellerDescriptionUpdateReq descriptionReq){
+        System.out.println(descriptionReq.getCompanyDescription());
+        BaseResponseBody res = sellerMypageService.updateSellerDescription(req,descriptionReq);
+        return ResponseEntity.status(200).body(res);
     }
 }
