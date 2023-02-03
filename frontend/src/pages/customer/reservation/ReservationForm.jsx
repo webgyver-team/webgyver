@@ -62,7 +62,7 @@ export default function ReservationForm() {
       const promise = upload.promise();
       promise.then((res) => {
         // eslint-disable-next-line
-          console.log(res.Location+"에 "+imageList[i]+"를 저장 완료");
+        console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
       });
       // .catch((err) => {
       //   // eslint-disable-next-line
