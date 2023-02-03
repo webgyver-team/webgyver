@@ -2,10 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
-import { Link } from 'react-router-dom';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
+import { useNavigate } from 'react-router-dom';
 import DatePicker from './elements/DatePicker';
 import {
+  authState,
+  loginOpenState,
   locateValueState,
   reservationDate,
   chosenReservation,
@@ -16,6 +18,10 @@ import StoreInfo from './elements/StoreInfo';
 import { storeList } from './dummyData';
 
 export default function Reservation() {
+  const navigate = useNavigate();
+  const [auth] = useRecoilState(authState);
+  const setLoginOpenState = useSetRecoilState(loginOpenState);
+  const openLoginModal = () => setLoginOpenState(true);
   // 위치설정 모달 on/off
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const categoryIdx = useRecoilValue(categoryState);
@@ -86,7 +92,13 @@ export default function Reservation() {
   // 예약상담 등록폼으로 이동하는 함수(reservation 그대로 이용)
   const goReservationForm = () => {
     // eslint-disable-next-line
-    setReservation(clickedReservation); //이때 로컬 스토리지에 저장
+    if (auth === 'customer') {
+      setReservation(clickedReservation); // 이때 세션 스토리지에 저장
+      navigate('/reservation/form');
+    } else {
+      alert('로그인 후 이용해주세요.');
+      openLoginModal();
+    }
   };
 
   useEffect(() => {
@@ -117,8 +129,8 @@ export default function Reservation() {
     //     "date": "20230202"
     // }
     // eslint-disable-next-line
-    console.log(`[${data}] axios 호출 필요`);
-  }, [location, date, categoryIdx]);
+    // console.log('[가게 정보] axios 호출 필요');
+  }, [location, date]);
 
   const [type, setType] = useState(1);
 
@@ -188,30 +200,13 @@ export default function Reservation() {
         }}
       >
         {reservationButton ? (
-          <Link
-            to="/reservation/form"
-            style={{
-              position: 'auto',
-              bottom: '20px',
-              textDecoration: 'none',
-            }}
-          >
-            <Btn onClick={goReservationForm}>
-              <span>상담 예약하기</span>
-            </Btn>
-          </Link>
+          <Btn onClick={goReservationForm} style={{}}>
+            <span>상담 예약하기</span>
+          </Btn>
         ) : (
-          <Link
-            style={{
-              position: 'auto',
-              bottom: '20px',
-              textDecoration: 'none',
-            }}
-          >
-            <DisabledBtn>
-              <span>상담 예약하기</span>
-            </DisabledBtn>
-          </Link>
+          <DisabledBtn>
+            <span>상담 예약하기</span>
+          </DisabledBtn>
         )}
       </div>
     </Main>
@@ -275,7 +270,9 @@ const Btn = styled.div`
   span {
     font-size: 24px;
     font-weight: bold;
-  }
+  };
+  position: 'auto',
+  bottom: '20px',
 `;
 
 const DisabledBtn = styled(Btn)`

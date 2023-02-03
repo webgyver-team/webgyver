@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import { masterInfoModalState } from '../../../../atom';
@@ -18,8 +18,6 @@ export default function StoreInfo({
   noTime,
   handleClickedTimeButton,
 }) {
-  const MasterInfoModal = useRecoilState(masterInfoModalState);
-  console.log(MasterInfoModal);
   const setMasterInfoModal = useSetRecoilState(masterInfoModalState);
   const openMasterInfoModal = () => {
     setMasterInfoModal(true);

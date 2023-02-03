@@ -28,18 +28,18 @@ export default function NavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
   const navigate = useNavigate();
   const navItems = auth
-    ? ['logout', 'account', '이용내역']
-    : ['login', 'signup'];
+    ? ['로그아웃', '내 계정', '이용내역']
+    : ['로그인', '회원가입'];
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const openLoginModal = () => setLoginOpenState(true);
   const chooseMenu = (item) => {
     // 아래 사이드바 메뉴 클릭 시 실행
     // item의 조건을 추가해 함수 로직 작성
-    if (item === 'login') {
+    if (item === '로그인') {
       openLoginModal();
-    } else if (item === 'signup') {
+    } else if (item === '회원가입') {
       navigate('/signup');
-    } else if (item === 'account') {
+    } else if (item === '내 계정') {
       navigate('/mypage');
     } else if (item === '이용내역') {
       navigate('/usagehistory');
@@ -47,7 +47,11 @@ export default function NavBar(props) {
   };
   const routeHome = () => navigate('/');
   const handleChange = (event) => {
-    setAuth(event.target.checked);
+    if (event.target.checked) {
+      setAuth('customer');
+    } else {
+      setAuth(false);
+    }
   };
 
   // eslint-disable-next-line react/prop-types
@@ -96,7 +100,7 @@ export default function NavBar(props) {
                 aria-label="login switch"
               />
             }
-            label={auth ? 'Logout' : 'Login'}
+            label={auth ? 'customer' : false}
           />
         </FormGroup>
         <AppBar position="static" color="primary">

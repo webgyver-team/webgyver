@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { sha256 } from 'js-sha256';
 import AWS from 'aws-sdk';
+import { sha256 } from 'js-sha256';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageInput from './elements/ImageInput';
@@ -60,15 +60,14 @@ export default function ReservationForm() {
         },
       });
       const promise = upload.promise();
-      promise
-        .then((res) => {
-          // eslint-disable-next-line
-          console.log(res.Location+"에 "+imageList[i]+"를 저장 완료");
-        })
-        .catch((err) => {
-          // eslint-disable-next-line
-          console.log(err)
-        });
+      promise.then((res) => {
+        // eslint-disable-next-line
+        console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
+      });
+      // .catch((err) => {
+      //   // eslint-disable-next-line
+      //   console.log(err)
+      // });
       const newData = {
         saveName: hashImageName + extensionName,
         originName: imageList[i].name,
@@ -140,11 +139,11 @@ export default function ReservationForm() {
       })
       .then(() => {
         navigate('/usagehistory');
-      })
-      .catch((err) => {
-        // eslint-disable-next-line
-        console.log(err);
       });
+    // .catch((err) => {
+    //   // eslint-disable-next-line
+    //   console.log(err);
+    // });
   };
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
     reservation.date.split('-')[1]
