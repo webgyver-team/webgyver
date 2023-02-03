@@ -50,6 +50,6 @@ public class NotFoundHandler {
 	public ResponseEntity<Object> handleAll(final Exception ex) {
 		log.info(ex.getClass().getName());
 		log.error("error", ex);
-		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponseBody.of(500, "서버 오류"));
+		return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponseBody.of(500, "Fail"));
 	}
 }
