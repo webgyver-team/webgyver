@@ -10,15 +10,19 @@ import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.entity.SellerCategory;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
+import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,7 +30,9 @@ import java.util.stream.Collectors;
 public class SellerMypageServiceImpl implements SellerMypageService {
     final ArticleRepository articleRepository;
     final SellerRepository sellerRepository;
+    final SellerCategoryRepository sellerCategoryRepository;
     final ReservationRepository reservationRepository;
+    final PasswordEncoder passwordEncoder;
     @Override
     public List<Article> getAllHistory(SellerIdxReq req) {
         return articleRepository.findArticlesByType(req.getSellerIdx());
@@ -103,6 +109,27 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         }
         seller.updateSellerTime(timeString);
         sellerRepository.save(seller);
+        BaseResponseBody res = BaseResponseBody.of(200, "Success");
+        return res;
+    }
+
+    @Override
+    @Transactional
+    public BaseResponseBody updateSellerProfile(SellerIdxReq req, SellerProfileUpdateReq profileReq) {
+        System.out.println(profileReq);
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        seller.updateSellerProfile(profileReq.getProfileImage(), profileReq.getBackgroundImage(),
+                passwordEncoder.encode(profileReq.getPassword()), profileReq.getPhoneNumber(), profileReq.getStoreName(),
+                profileReq.getAddress(), profileReq.getDetailAddress());
+        sellerCategoryRepository.deleteAllInBatch(seller.getSellerCategories());
+        for (SellerCategory SC : profileReq.getCategoryList()){
+            SellerCategory sellerCategory = SellerCategory.builder()
+                    .category(SC.getCategory())
+                    .price(SC.getPrice())
+                    .seller(seller)
+                    .build();
+            sellerCategoryRepository.save(sellerCategory);
+        }
         BaseResponseBody res = BaseResponseBody.of(200, "Success");
         return res;
     }
