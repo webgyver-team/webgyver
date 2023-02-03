@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import AWS from 'aws-sdk';
 import Button from '@mui/material/Button';
@@ -64,11 +63,11 @@ export default function ReservationForm() {
       promise
         .then((res) => {
           // eslint-disable-next-line
-          console.log(res.Location+"에 "+imageList[i]+"를 저장 완료");
+          console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
         })
         .catch((err) => {
           // eslint-disable-next-line
-          console.log(err)
+          console.log(err);
         });
       const newData = {
         saveName: hashImageName + extensionName,

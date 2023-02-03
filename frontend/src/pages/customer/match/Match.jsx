@@ -11,7 +11,7 @@ const { kakao } = window;
 // map style
 const mapStyle = {
   width: '100%',
-  height: '440px',
+  height: '500px',
 };
 
 export default function Matching() {
@@ -115,7 +115,7 @@ const MarkerBox = styled.div`
   position: absolute;
   z-index: 20;
   width: 100%;
-  height: 440px;
+  height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,7 +129,7 @@ const UpperMap = styled.div`
   position: relative;
   z-index: 10;
   width: 100%;
-  height: 440px;
+  height: 500px;
   background-color: rgba(0, 0, 0, 0.3);
 `;
 

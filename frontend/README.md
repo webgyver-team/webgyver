@@ -3,6 +3,7 @@
 frontend 사전 설정
 버전
 node -v v18.12.1
+react v18.2.0
 
 사용
 react 프레임워크

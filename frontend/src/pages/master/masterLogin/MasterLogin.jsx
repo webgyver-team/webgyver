@@ -4,13 +4,13 @@ import Box from '@mui/material/Box';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
+import WebGyver from '../../../assets/image/WebGyver.png';
 
 const style = {
   width: 360,
   height: 380,
-  // bgcolor: 'background.paper',
-  // boxShadow: 24,
-  p: 4,
+  p: 2,
+  pt: 5,
 };
 
 export default function MasterLogin() {
@@ -60,9 +60,11 @@ export default function MasterLogin() {
   return (
     <Main>
       <BoxBox>
-        <LeftBox>??</LeftBox>
+        <MainImgBox>
+          <MainImg src={WebGyver} alt="" />
+        </MainImgBox>
         <Box sx={style}>
-          <Header>로그인</Header>
+          <Header>전문가 로그인</Header>
           <Body>
             <TextField
               id="id"
@@ -108,16 +110,21 @@ const Main = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100vh;
+`;
+
+const MainImgBox = styled.div`
+  margin-bottom: 32px;
+`;
+
+const MainImg = styled.img`
+  width: 300px;
 `;
 
 const BoxBox = styled.div`
   display: flex;
   justify-content: center;
-`;
-
-const LeftBox = styled.div`
-  width: 200px;
-  height: 380px;
+  align-items: center;
 `;
 
 const Header = styled.div`
