@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';

@@ -29,10 +29,14 @@ import MasterNavBar from './components/master/navbar/MasterNavBar';
 import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';
 import MasterEndService from './pages/master/masterendservice/MasterEndService';
+import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
+import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
+import MasterReview from './pages/master/masterReview/MasterReview';
+import MasterExample from './pages/master/masterExample/MasterExample';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
-const notNavList = ['/videoservice', '/master'];
+const notNavList = ['/videoservice', '/master/login'];
 
 function App() {
   const [auth] = useRecoilState(authState);
@@ -54,8 +58,7 @@ function App() {
       <ThemeProvider theme={normal}>
         <All>
           <Main>
-            {onNav
-              && (auth === 'master' ? <MasterNavBar /> : <CustomerNavBar />)}
+            {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
@@ -87,6 +90,10 @@ function App() {
                 <Route path="/master/endservice" element={<MasterEndService />} />
                 <Route path="/reviewform" element={<ReviewForm />} />
                 <Route path="/master/login" element={<MasterLogin />} />
+                <Route path="/master/schedule" element={<MasterSchedule />} />
+                <Route path="/master/realtime" element={<MasterRealtime />} />
+                <Route path="/master/review" element={<MasterReview />} />
+                <Route path="/master/example" element={<MasterExample />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>
@@ -101,6 +108,7 @@ export default App;
 
 const All = styled.div`
   width: 100vw;
+  min-height: 800px;
   display: flex;
   justify-content: center;
 `;
