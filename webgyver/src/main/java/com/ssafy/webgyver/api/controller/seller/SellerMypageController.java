@@ -2,6 +2,7 @@ package com.ssafy.webgyver.api.controller.seller;
 
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
+import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
@@ -74,5 +75,11 @@ public class SellerMypageController {
         SellerMyPageIntroRes result = sellerMypageService.getSellerMyPageIntro(req);
 
         return ResponseEntity.status(200).body(result);
+    }
+    @PutMapping("intro/description/{sellerIdx}")
+    public ResponseEntity<?> updatePartnerDescription(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, SellerDescriptionUpdateReq descriptionReq){
+        sellerMypageService.updateSellerDescription(req,descriptionReq);
+        return null;
+
     }
 }

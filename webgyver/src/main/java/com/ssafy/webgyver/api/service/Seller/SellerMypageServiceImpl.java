@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
+import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.db.entity.Seller;
@@ -81,5 +82,16 @@ public class SellerMypageServiceImpl implements SellerMypageService {
 
         return result;
     }
+
+    @Override
+    public BaseResponseBody updateSellerDescription(SellerIdxReq req, SellerDescriptionUpdateReq description) {
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        System.out.println(seller);
+        seller.updateSellerDescription(description.getDescription());
+        System.out.println(seller);
+        sellerRepository.save(seller);
+        return null;
+    }
+
 
 }
