@@ -54,7 +54,7 @@ export default function MasterLogin() {
   };
 
   const routeSignup = () => {
-    navigate('/partner/signup');
+    navigate('/master/signup');
   };
 
   return (
