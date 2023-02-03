@@ -5,6 +5,8 @@ import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.api.service.customer.CustomerReservationService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
+import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.websocket.WebSocket;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/customer/reservation")
 public class CustomerReservationController {
     final CustomerReservationService customerReservationService;
+    final WebSocket webSocket;
 
     // 일반상담 등록
     @PostMapping("/normal/regist")
@@ -25,14 +28,13 @@ public class CustomerReservationController {
         // 1. Reservation에 먼저 등록
         // 2. 등록된 Reservation IDX 를 가지고 Article 등록
         // 3. 등록된 Article IDX 를 가지고 Picture들 등록.
-        customerReservationService.save(req);
+        Reservation reservation = customerReservationService.save(req);
+        webSocket.addRoom(reservation);
         return ResponseEntity.ok(BaseResponseBody.of(200, "success"));
     }
 
     @GetMapping("/normal/store/list/{order}")
     public ResponseEntity<CustomerReservationNormalListRes> getOrderedStoreList(@RequestBody CustomerReservationNormalListReq req, @PathVariable("order") String order) {
-
         return ResponseEntity.ok(customerReservationService.getOrderedStoreList(order, req));
-
     }
 }
