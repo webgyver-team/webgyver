@@ -23,7 +23,6 @@ public class TestMemberImpl implements TestMemberService {
 
     @Override
     public TestMember createTestMember(MemberSignUpPostReq memberSignUpInfo) {
-        System.out.println("서비스 들어왔엉");
         TestMember member = new TestMember();
         member.setUsername(memberSignUpInfo.getName());
         member.setAge(memberSignUpInfo.getAge());

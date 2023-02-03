@@ -2,6 +2,7 @@ package com.ssafy.webgyver.api.controller.customer;
 
 import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
+import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.api.service.customer.CustomerReservationService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
@@ -29,8 +30,9 @@ public class CustomerReservationController {
     }
 
     @GetMapping("/normal/store/list/{order}")
-    public ResponseEntity<?> getOrderedStoreList(@RequestBody CustomerReservationNormalListReq req, @PathVariable("order") String order) {
-        return null;
+    public ResponseEntity<CustomerReservationNormalListRes> getOrderedStoreList(@RequestBody CustomerReservationNormalListReq req, @PathVariable("order") String order) {
+
+        return ResponseEntity.ok(customerReservationService.getOrderedStoreList(order, req));
 
     }
 }

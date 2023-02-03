@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @Getter
 @Entity
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "seller")
@@ -79,9 +78,11 @@ public class Seller extends BaseEntity {
     @ColumnDefault("0")
     @Column(name = "star_total")
     private Long starTotal;
-
+    private Double lat;
+    private Double lng;
 
     public void updateSellerDescription(String companyDescription){
         this.companyDescription = companyDescription;
     }
+
 }

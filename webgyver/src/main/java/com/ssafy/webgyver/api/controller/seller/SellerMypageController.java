@@ -31,7 +31,6 @@ public class SellerMypageController {
         List<Article> articleList = sellerMypageService.getAllHistory(req);
         for (Article article :
                 articleList) {
-            System.out.println(article);
         }
         return ResponseEntity.ok(
                 HistoryListRes.of(200, "Success", articleList)
