@@ -21,7 +21,7 @@ export default function Waiting({ history }) {
     setIsShowMore(!isShowMore);
   };
 
-  const currentState = ['수락하기'];
+  const currentState = ['수락하기', '거절하기'];
 
   return (
     <Card>
@@ -51,6 +51,9 @@ export default function Waiting({ history }) {
         <BtnBox>
           <StateBtn>
             <span>{currentState[0]}</span>
+          </StateBtn>
+          <StateBtn>
+            <span>{currentState[1]}</span>
           </StateBtn>
         </BtnBox>
       </ContentBox>
@@ -110,6 +113,8 @@ const ContentBox = styled.div`
   display: flex;
 
   .contentdiv {
+    min-width: 480px;
+    max-width: 640px;
     margin-right: 8px;
     margin-left: 8px;
     line-height: 16px;
@@ -137,9 +142,7 @@ const MoreBtn = styled.button`
 `;
 
 const BtnBox = styled.div`
-  display: flex;
-  flex-direction: column-reverse;
-  margin-top: 8px;
+  margin-top: 4px;
 `;
 
 const StateBtn = styled.div`
@@ -151,13 +154,20 @@ const StateBtn = styled.div`
   font-size: 14px;
   font-weight: bold;
   padding: 0 16px 0 16px;
-  height: 40px;
-  width: 126px;
+  height: 56px;
+  width: 120px;
   box-shadow: 1px 1px 4px 0px ${(props) => props.theme.color.dafaultBorder};
-  background-color: ${(props) => props.theme.color.defaultBgColor};
+  background-color: ${(props) => props.theme.color.defaultRed};
+  color: ${(props) => props.theme.color.defaultWhite};
+
+  :first-child {
+    margin-bottom: 8px;
+    background-color: ${(props) => props.theme.color.defaultBlue};
+  }
 
   :hover {
     cursor: pointer;
-    background-color: ${(props) => props.theme.color.dafaultBorder};
+    // color: ${(props) => props.theme.color.defaultColor};
+    // background-color: ${(props) => props.theme.color.dafaultBorder};
   }
 `;
