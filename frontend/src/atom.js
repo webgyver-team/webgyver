@@ -88,3 +88,8 @@ export const chosenReservation = atom({
   },
   effects_UNSTABLE: [persistAtom],
 });
+
+export const exampleFormState = atom({
+  key: 'exampleFormState',
+  default: false,
+});
