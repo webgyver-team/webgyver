@@ -31,7 +31,6 @@ public class CustomerReservationController {
 
     @GetMapping("/normal/store/list/{order}")
     public ResponseEntity<CustomerReservationNormalListRes> getOrderedStoreList(@RequestBody CustomerReservationNormalListReq req, @PathVariable("order") String order) {
-        System.out.println(req);
 
         return ResponseEntity.ok(customerReservationService.getOrderedStoreList(order, req));
 

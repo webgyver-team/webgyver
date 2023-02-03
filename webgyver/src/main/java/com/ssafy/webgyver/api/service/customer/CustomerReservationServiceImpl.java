@@ -44,7 +44,6 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         // 3. 등록된 Article를 가지고 Picture들 등록.
 
         Reservation reservation = ReservationParsingUtil.parseReservationReq2Reservation(req);
-        System.out.println(reservation);
 
         Seller seller = Seller.builder().build();
         seller.setIdx(req.getSellerIdx());
@@ -67,10 +66,10 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     }
 
+    // 예약 가능한 모든 상점리스트를 정렬해서 리턴함.
     public CustomerReservationNormalListRes getOrderedStoreList(String order, CustomerReservationNormalListReq req) {
         List<SellerCategory> sellerCategoryList = sellerCategoryRepository.findSellerCategoriesByCategory(Category.builder().idx(req.getCategoryIdx()).build());
         List<Seller> sellerList = sellerCategoryList.stream().map(SellerCategory::getSeller).collect(Collectors.toList());
-        System.out.println(sellerList);
 
         LocalDateTime start = TimeUtil.string2Time(req.getDate());
         LocalDateTime end = start.plusDays(1).minusMinutes(1);

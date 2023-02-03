@@ -24,15 +24,15 @@ import java.util.List;
 
 @Service("SellerService")
 @RequiredArgsConstructor
-public class SellerServiceImpl implements SellerService{
+public class SellerServiceImpl implements SellerService {
     final PasswordEncoder passwordEncoder;
     final SellerRepository sellerRepository;
     final SellerCategoryRepository sellerCategoryRepository;
     final CategoryRepository categoryRepository;
+
     @Transactional
     @Override
     public BaseResponseBody SignUpSeller(SellerSignUpPostReq sellerRegisterInfo) {
-        System.out.println("서비스 들어왔엉");
         String sellerBirth = sellerRegisterInfo.getBirthDay();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
 
@@ -40,7 +40,7 @@ public class SellerServiceImpl implements SellerService{
                 .id(sellerRegisterInfo.getId())
                 .password(passwordEncoder.encode(sellerRegisterInfo.getPassword()))
                 .name(sellerRegisterInfo.getName())
-                .birthDay(LocalDate.parse(sellerBirth.substring(0,8), formatter).atStartOfDay())
+                .birthDay(LocalDate.parse(sellerBirth.substring(0, 8), formatter).atStartOfDay())
                 .gender(sellerBirth.substring(8))
                 .phoneNumber(sellerRegisterInfo.getPhoneNumber())
                 .companyName(sellerRegisterInfo.getCompanyName())
@@ -52,11 +52,9 @@ public class SellerServiceImpl implements SellerService{
                 .build();
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
         Seller sellerRes = sellerRepository.save(seller);
-        System.out.println(sellerRes.toString());
         List<SellerCategory> sellerCategories = new ArrayList<>();
         for (SellerCategory S : sellerRegisterInfo.getCategoryList()) {
 //            Category category = new Category(S.getCategory().getIdx());
-//            System.out.println(category.getIdx());
             SellerCategory sellerCategory = SellerCategory.builder()
                     .seller(seller)
                     .category(S.getCategory())
@@ -66,13 +64,13 @@ public class SellerServiceImpl implements SellerService{
             sellerCategories.add(sellerCategory);
         }
         sellerCategoryRepository.saveAll(sellerCategories);
-        BaseResponseBody res =  BaseResponseBody.of(200, "Success");
 
-        return res;
+
+        return BaseResponseBody.of(200, "Success");
     }
 
     @Override
-    public BaseResponseBody checkDuplicate(SellerCheckDuplicateReq req){
+    public BaseResponseBody checkDuplicate(SellerCheckDuplicateReq req) {
         boolean check = sellerRepository.existsById(req.getId());
         if (check) {
             return BaseResponseBody.of(200, "중복된 아이디");
@@ -91,7 +89,7 @@ public class SellerServiceImpl implements SellerService{
         if (passwordEncoder.matches(password, seller.getPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             return SellerLoginRes.of(200, "Success", JwtTokenUtil.getToken(
-                            String.valueOf(seller.getIdx())));
+                    String.valueOf(seller.getIdx())));
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
         return SellerLoginRes.of(401, "Invalid Password", null);

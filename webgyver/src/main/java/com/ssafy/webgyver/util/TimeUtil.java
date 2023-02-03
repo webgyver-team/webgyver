@@ -21,7 +21,6 @@ public class TimeUtil {
     public static LocalDateTime string2Time(String stringTime, String format) {
         try {
             return LocalDateTime.parse(stringTime, DateTimeFormatter.ofPattern(format));
-
         } catch (DateTimeParseException e) {
             return LocalDate.parse(stringTime, DateTimeFormatter.ofPattern(format)).atStartOfDay();
         }
@@ -31,18 +30,18 @@ public class TimeUtil {
         return time.format(DateTimeFormatter.ofPattern(pattern));
     }
 
+    //월요일$09:00~18:00%화요일$09:00~18:00%수요....,  오늘 날짜 받아서
+    // 예약 가능한 모든 시간 리스트로 리턴.
     public static List<String> getAllTime(String bookTime, LocalDateTime today) {
         List<String> splitedBookTime = Arrays.stream(bookTime.split("%")).collect(Collectors.toList());
         String temp1 = splitedBookTime.get(getDayName(today) - 1).substring(4);
         List<String> temp2 = Arrays.stream(temp1.split("~")).collect(Collectors.toList());
-
         List<String> result = getBetweenTime(temp2.get(0), temp2.get(1));
-        System.out.println(result);
-
 
         return result;
     }
 
+    // start와 end사이의 모든 시간을 15분 간격으로 리스트로 만들어서 리턴.
     public static List<String> getBetweenTime(String start, String end) {
         List<String> result = new ArrayList<>();
         result.add(start);
@@ -60,14 +59,13 @@ public class TimeUtil {
 
     }
 
+    // 공휴일이면 8, 아니면 월화수목금토일 => 1234567 리턴.
     public static int getDayName(LocalDateTime today) {
-        // 공휴일이면 8, 아니면 월화수목금토일 = 1234567
-        if (isHoliday(today)) {
-            return 8;
-        }
-        return today.toLocalDate().getDayOfWeek().getValue();
+        return isHoliday(today) ? 8 : today.toLocalDate().getDayOfWeek().getValue();
     }
 
+
+    // today가 공휴일인지 판단.
     public static boolean isHoliday(LocalDateTime today) {
         CheckHoliday checkHoliday = new CheckHoliday();
         Set<String> holidayList = checkHoliday.holidayArray(time2String(today, "yyyy"));
