@@ -59,7 +59,6 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     @Override
     public SellerMyPageIntroRes getSellerMyPageIntro(SellerIdxReq req) {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
-        System.out.println(seller);
         ///// 영업시간 구하기
         List<SellerMyPageIntroRes.CompanyTimeDTO> companyTimeDTOList = null;
         String companyTime = seller.getCompanyTime();
@@ -86,9 +85,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     @Override
     public BaseResponseBody updateSellerDescription(SellerIdxReq req, SellerDescriptionUpdateReq description) {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
-        System.out.println(seller);
         seller.updateSellerDescription(description.getDescription());
-        System.out.println(seller);
         sellerRepository.save(seller);
         return null;
     }
