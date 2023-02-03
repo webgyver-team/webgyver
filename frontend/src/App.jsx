@@ -25,6 +25,7 @@ import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
+import MasterMyPage from './pages/master/mypage/MyPageUpdate';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
 import { authState } from './atom';
 
@@ -57,7 +58,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
-                <Route path="/master/signup" element={<MasterSignUp />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/reservation/form" element={<ReservationForm />} />
@@ -71,6 +71,8 @@ function App() {
                 <Route path="/endservice" element={<EndService />} />
                 <Route path="/reviewform" element={<ReviewForm />} />
                 <Route path="/master" element={<MasterLogin />} />
+                <Route path="/master/signup" element={<MasterSignUp />} />
+                <Route path="/master/mypage/update" element={<MasterMyPage />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>

@@ -104,7 +104,7 @@ export default function Reservation() {
     // storeList 갱신해야 함
 
     // eslint-disable-next-line
-    console.log(`[${data}] axios 호출 필요`);
+    console.log(`axios 호출 필요`);
   }, [location, date]);
 
   const [type, setType] = useState(1);

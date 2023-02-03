@@ -109,6 +109,7 @@ export default function MasterSignUp() {
     // 카테고리 리스트: 카테고리 idx가 0인 경우
     for (let i = 0; i < data.categoryList.length; i += 1) {
       if (data.categoryList[i].category.idx === 0) {
+        // eslint-disable-next-line
         alert('유효하지 않은 카테고리가 있습니다.');
         return;
       }
