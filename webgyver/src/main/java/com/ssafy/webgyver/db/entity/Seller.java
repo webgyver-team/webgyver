@@ -87,4 +87,13 @@ public class Seller extends BaseEntity {
     public void updateSellerTime(String companyTime){
         this.companyTime = companyTime;
     }
+    public void updateSellerProfile(String profileImage, String companyImage, String password, String phoneNumber, String companyName, String address, String detailAddress){
+        this.profileImage = profileImage;
+        this.companyImage = companyImage;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this. companyName = companyName;
+        this.address = address;
+        this.detailAddress = detailAddress;
+    }
 }

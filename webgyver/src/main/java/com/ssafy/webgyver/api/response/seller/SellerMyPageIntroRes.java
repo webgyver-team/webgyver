@@ -16,6 +16,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         private String storeName;
         private String partnerName;
         private String address;
+        private String detailAddress;
         private String companyNumber;
         private String companyDescription;
         private List<CompanyTimeDTO> companyTime;
@@ -27,8 +28,9 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         public Response(Seller entity, List<CompanyTimeDTO> companyTimeDTOList, List<CategoryDTO> categoryDTOList){
             this.idx = entity.getIdx();
             this.storeName = entity.getCompanyName();
-            this.partnerName = entity.getName();
+            this.partnerName = entity.getRepresentativeName();
             this.address = entity.getAddress();
+            this.detailAddress = entity.getDetailAddress();
             this.companyNumber = entity.getCompanyNumber();
             this.companyDescription = entity.getCompanyDescription();
             this.companyTime = companyTimeDTOList;
@@ -63,9 +65,6 @@ public class SellerMyPageIntroRes extends DataResponseBody {
     public static SellerMyPageIntroRes of(Integer statusCode, String message, Seller seller, List<CompanyTimeDTO> companyTimeList, List<CategoryDTO> categoryDTOList) {
         SellerMyPageIntroRes res = new SellerMyPageIntroRes();
         Response response = new Response(seller, companyTimeList, categoryDTOList);
-//        List<CategoryDTO> categoryList = seller.getSellerCategories().stream().map(CategoryDTO::new).collect(Collectors.toList());
-//        CategoryRes res = new CategoryRes();
-//        res.getData().put("category", new CategoryRes.SimpleCategory(category));
         res.setStatusCode(statusCode);
         res.setMessage(message);
         res.getData().put("profile", response);

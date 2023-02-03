@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
+import com.ssafy.webgyver.api.request.seller.SellerProfileUpdateReq;
 import com.ssafy.webgyver.api.request.seller.SellerTimeUpdateReq;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
@@ -20,4 +21,6 @@ public interface SellerMypageService {
     SellerMyPageIntroRes getSellerMyPageIntro(SellerIdxReq req);
     BaseResponseBody updateSellerDescription(SellerIdxReq req, SellerDescriptionUpdateReq description);
     BaseResponseBody updateSellerTime(SellerIdxReq req, SellerTimeUpdateReq timeReq);
+    BaseResponseBody updateSellerProfile(SellerIdxReq req, SellerProfileUpdateReq timeReq);
+
 }
