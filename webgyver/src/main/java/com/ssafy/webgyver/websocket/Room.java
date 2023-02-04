@@ -48,6 +48,20 @@ public class Room {
     }
 
     public synchronized void join(Session session) {
+        // 이미 접속한 다른 세션이 있으면 강제 종료함.
+        for (Session other : sessions) {
+            if (other.getUserProperties().get("type").equals(session.getUserProperties().get("type"))) {
+                if (other.getUserProperties().get("idx").equals(session.getUserProperties().get("idx"))) {
+                    if (other.isOpen()) {
+                        try {
+                            other.close();
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
+                    }
+                }
+            }
+        }
         sessions.add(session);
     }
 

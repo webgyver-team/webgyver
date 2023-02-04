@@ -1,6 +1,7 @@
 package com.ssafy.webgyver.websocket;
 
 
+import com.google.gson.Gson;
 import com.ssafy.webgyver.api.service.common.ReservationService;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Reservation;
@@ -56,14 +57,18 @@ public class WebSocket {
             return;
         }
 
-        // 이제 입장!
-        room.join(session);
-//        session.getBasicRemote().sendText(room.getRoomInfo());
+        // 이제 입장!, 세션에 정보 할당한 뒤에 room에 join하면 다른 세션은 죽여줌.
         session.getUserProperties().put("room", room);
         session.getUserProperties().put("type", type);
         session.getUserProperties().put("idx", idx);
         session.getUserProperties().put("reservationIdx", reservationIdx);
-
+        room.join(session);
+        if (room.sessions.size() == 1) {
+            Message message = new Message("ALONE");
+        } else if (room.sessions.size() == 2) {
+            Message message = new Message("TOGETHER");
+            session.getBasicRemote().sendText(new Gson().toJson(message));
+        }
 //        if (type.equals("selelr")) {
 //            Seller seller = sellerRepository.findById(idx).get();
 //            session.getUserProperties().put("object", seller);

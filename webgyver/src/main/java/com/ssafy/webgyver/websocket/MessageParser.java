@@ -14,7 +14,7 @@ public class MessageParser {
             return message;
         } catch (Exception e) {
             System.out.println("파싱 중 에러 발생");
-            return new Message(MessageType.WANT_MEET);
+            return new Message("WANT_MEET");
         }
 //        System.out.println(message.method);
     }
