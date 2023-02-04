@@ -22,7 +22,7 @@ import java.util.Map;
 @ServerEndpoint(value = "/enter/{type}/{idx}/{reservationIdx}", configurator = WebSocketConfig.class)
 public class WebSocket {
     private static final Map<Long, Room> rooms = Collections.synchronizedMap(new HashMap<Long, Room>());
-
+    private static final RealTimeWaitingRoom realTimeWatingRoom = new RealTimeWaitingRoom();
     @Autowired
     ReservationService reservationService;
 //    @PostConstruct
