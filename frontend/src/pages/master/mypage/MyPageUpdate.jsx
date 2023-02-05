@@ -106,7 +106,7 @@ export default function MyPageUpdate() {
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <Title>마스터 회원정보 수정</Title>
-      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
+      <ImageForm>
         <ImageDiv>
           <label htmlFor="profile-image-input">
             <ProfileImage
@@ -147,9 +147,9 @@ export default function MyPageUpdate() {
             style={{ display: 'none' }}
           />
         </ImageDiv>
-      </div>
-      <div style={{ display: 'flex', justifyContent: 'space-around' }}>
-        <div>
+      </ImageForm>
+      <UpdateForm>
+        <FormDiv>
           <IdInput updateData={updateData} initialValue={givenData.id} />
           <PasswordInput updateData={updateData} />
           <NameInput updateDate={updateData} initialValue={givenData.name} />
@@ -171,8 +171,8 @@ export default function MyPageUpdate() {
                 : null
             }
           />
-        </div>
-        <div>
+        </FormDiv>
+        <FormDiv>
           <CompanyNameInput
             updateData={updateData}
             initialValue={givenData.companyName}
@@ -205,8 +205,8 @@ export default function MyPageUpdate() {
             updateData={updateData}
             initialList={givenData.categoryList}
           />
-        </div>
-      </div>
+        </FormDiv>
+      </UpdateForm>
       <div style={{ textAlign: 'center' }}>
         <Button variant="contained" onClick={updateMasterInfo}>
           수정
@@ -249,4 +249,27 @@ const RepresentImage = styled.img`
 const ImageLabel = styled.div`
   font-size: 24px;
   font-weight: bold;
+`;
+
+const ImageForm = styled.div`
+  display: flex;
+  margin: 0px auto;
+  justify-content: space-around;
+  padding: 16px;
+  max-width: 1200px;
+`;
+const UpdateForm = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  display: flex;
+  margin: 0px auto;
+  justify-content: space-between;
+  padding: 16px;
+  max-width: 1200px;
+`;
+const FormDiv = styled.div`
+  font-size: 20px;
+  font-weight: bold;
+  width: 48%;
+  max-width: 540px;
 `;
