@@ -151,8 +151,17 @@ export default function MyPageUpdate() {
       }
     }
     // 프로필, 대표 이미지 새로 추가된 부분 S3에 보내줌 + 데이터 경로 setData
-    console.log(data);
+    if (newProfileImage !== null) {
+      // S3 전송함수에 적용
+      // updateData({profileImage: res.location})
+    }
+    if (newBackgroundImage !== null) {
+      // S3 전송함수에 적용
+      // updateData({backgroundImage: res.location})
+    }
     // 데이터 POST
+    // eslint-disable-next-line
+    console.log(data);
   };
   return (
     <div style={{ width: '100%', padding: '16px' }}>
