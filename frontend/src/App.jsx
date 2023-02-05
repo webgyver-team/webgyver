@@ -33,6 +33,7 @@ import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
 import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
 import MasterReview from './pages/master/masterReview/MasterReview';
 import MasterExample from './pages/master/masterExample/MasterExample';
+import MasterMypage from './pages/master/Mypage/Mypage';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
@@ -94,6 +95,7 @@ function App() {
                 <Route path="/master/realtime" element={<MasterRealtime />} />
                 <Route path="/master/review" element={<MasterReview />} />
                 <Route path="/master/example" element={<MasterExample />} />
+                <Route path="/master/mypage" element={<MasterMypage />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>
@@ -129,4 +131,5 @@ const Page = styled.div`
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
+  // overflow-y: scroll;
 `;
