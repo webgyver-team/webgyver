@@ -21,8 +21,6 @@ export default function RealTime({ data }) {
     slidesToScroll: 1,
   };
 
-  const currentState = ['수락'];
-
   return (
     <Card>
       <ContentBox>
@@ -54,11 +52,6 @@ export default function RealTime({ data }) {
             <div className="contentdiv">
               <span className="content">{data.content}</span>
             </div>
-            <BtnBox>
-              <AcceptBtn onClick={handleIsDetail}>
-                <span>{currentState[0]}</span>
-              </AcceptBtn>
-            </BtnBox>
           </DetailBox>
         )}
       </ContentBox>
@@ -72,7 +65,7 @@ const Card = styled.div`
   border-radius: 5px;
   margin: 8px;
   // width: 912px;
-  width: 80vw;
+  width: 90%;
   min-width: 600px;
 
   .header {
@@ -171,9 +164,4 @@ const StateBtn = styled.div`
     cursor: pointer;
     // background-color: ${(props) => props.theme.color.dafaultBorder};
   }
-`;
-
-const AcceptBtn = styled(StateBtn)`
-  color: ${(props) => props.theme.color.defaultWhite};
-  background-color: ${(props) => props.theme.color.defaultBlue};
 `;
