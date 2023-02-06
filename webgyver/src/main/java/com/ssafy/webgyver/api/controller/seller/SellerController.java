@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RequiredArgsConstructor
 @RestController
-@RequestMapping("/api/v1/seller")
+@RequestMapping("/api/v1/seller/member")
 public class SellerController {
 
     final SellerService sellerService;
 
     // 회원 가입
-    @PostMapping("/signup")
+    @PostMapping("/join")
     public ResponseEntity<?> signUp(@RequestBody SellerSignUpPostReq signUpInfo) {
         //임의로 리턴된 User 인스턴스. 현재 코드는 회원 가입 성공 여부만 판단하기 때문에 굳이 Insert 된 유저 정보를 응답하지 않음.
         BaseResponseBody res = sellerService.SignUpSeller(signUpInfo);
@@ -29,14 +29,14 @@ public class SellerController {
     }
 
     // 중복 체크
-    @GetMapping("/check/duplicate")
+    @PostMapping("/check/duplicate")
     public ResponseEntity<?> checkDuplicate(@RequestBody SellerCheckDuplicateReq req){
         BaseResponseBody res = sellerService.checkDuplicate(req);
         return ResponseEntity.ok().body(res);
     }
 
     // 로그인
-    @PostMapping("/member/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody SellerLoginReq req) {
         SellerLoginRes result = sellerService.login(req);
         return ResponseEntity.ok().body(result);
