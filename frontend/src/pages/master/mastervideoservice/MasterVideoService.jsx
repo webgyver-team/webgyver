@@ -166,6 +166,7 @@ export default function MasterVideoService() {
 const Main = styled.div`
   width: 100vw;
   position: relative;
+  top: 5%;
 `;
 
 const Side = styled.div`
@@ -181,7 +182,7 @@ const BoxBox = styled.div`
 
 const Box1 = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 100vw;
 `;
 
