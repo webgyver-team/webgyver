@@ -37,7 +37,7 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
                 .phoneNumber(customerRegisterInfo.getPhoneNumber())
                 .cardNumber(customerRegisterInfo.getCardNumber())
                 .cardCvc(customerRegisterInfo.getCardCvc())
-                .cardValidity(LocalDate.parse(customerRegisterInfo.getCardValidity(), formatter).atStartOfDay())
+                .cardValidity(customerRegisterInfo.getCardValidity())
                 .build();
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
         customerMemberRepository.save(customer);
