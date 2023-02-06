@@ -1,24 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import IconButton from '@mui/material/IconButton';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import CategoryInputItem from './CategoryInputItem';
 import Message from '../../../common/signup/elements/Message';
 
-export default function CategoryInput({ updateData }) {
-  const [categoryItemList, setCategoryItemList] = useState([
-    {
-      index: 0, // categoryItemList에서의 순서(key에 사용)
-      category: {
-        idx: '', // categoryItem의 idx
-        categoryName: '', // categoryItem의 이름
-      },
-      price: '', // 헤당 카테고리 가격
-    }, // 기본 카테고리 리스트
-  ]);
+export default function CategoryInput({ updateData, initialList }) {
+  const [categoryItemList, setCategoryItemList] = useState(initialList);
   const [categorySelected, setCategorySelected] = useState(
     new Array(10).fill(false), // 카테고리 중복 선택 방지용
   );
+  useEffect(() => {
+    for (let i = 0; i < categoryItemList.length; i += 1) {
+      categorySelected[categoryItemList[i].category.idx] = true;
+    }
+  }, [categoryItemList, categorySelected]);
   const [msg, setMsg] = useState(''); // 카테고리 경고 메시지
   const addCatogoryInputItem = () => {
     // 카테고리 선택창 하나 추가하는 기능
@@ -30,13 +26,10 @@ export default function CategoryInput({ updateData }) {
     setCategoryItemList((original) => [
       ...original,
       {
-        index: newIndex,
-        category: {
-          idx: '',
-          categoryName: '',
-        },
-        price: 0,
-      }, // 새로운 객체 추가
+        index: newIndex, // categoryItemList에서의 순서(key에 사용)
+        category: { idx: 0, categoryName: 'None' },
+        price: '', // 헤당 카테고리 가격
+      }, // 기본 카테고리 리스트
     ]);
     setMsg('');
   };
@@ -60,11 +53,18 @@ export default function CategoryInput({ updateData }) {
       return;
     }
     const updatedSelected = [...categorySelected];
-    updatedSelected[categoryItemList[index].category.idx] = false;
+    for (let i = 0; i < categoryItemList.length; i += 1) {
+      if (categoryItemList[i].index === index) {
+        updatedSelected[categoryItemList[i].category.idx] = false;
+        break;
+      }
+    }
+    // updatedSelected[categoryItemList[index].category.idx] = false;
     setCategorySelected(updatedSelected);
     // 삭제
     const newList = categoryItemList.filter((item) => item.index !== index);
     setCategoryItemList(newList);
+    updateData({ categoryList: newList });
     setMsg('');
   };
 
@@ -78,6 +78,7 @@ export default function CategoryInput({ updateData }) {
       <CategoryItemListDiv>
         {categoryItemList.map((item) => (
           <CategoryInputItem
+            categoryItem={item}
             changeCategoryItem={changeCategoryItem}
             deleteCategoryItem={deleteCategoryItem}
             categorySelected={categorySelected}

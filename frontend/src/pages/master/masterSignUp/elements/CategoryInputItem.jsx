@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 
 export default function CategoryInput({
+  categoryItem,
   changeCategoryItem, // 카테고리 리스트 안의 item을 변경하는 함수
   deleteCategoryItem, // "를 삭제하는 함수
   categorySelected, // 카테고리 visited 배열
@@ -16,8 +17,10 @@ export default function CategoryInput({
   changeMsg, // input 변화 감지해서 category 통합 오류 메시지에 보내는 함수
   index, // 내가 지금 카테고리 리스트의 몇 번째에 있는지
 }) {
-  const [category, setCategory] = useState(''); // 카테고리
-  const [price, setPrice] = useState(0); // 가격
+  const [category, setCategory] = useState(
+    JSON.stringify(categoryItem.category),
+  ); // 카테고리
+  const [price, setPrice] = useState(categoryItem.price); // 가격
   const categoryList = [
     // 카테고리 리스트 목록(select에 map으로 뿌려주기 위함)
     // eslint-disable-next-line
@@ -51,7 +54,7 @@ export default function CategoryInput({
         idx: categoryInfo.idx,
         categoryName: categoryInfo.categoryName,
       },
-      price,
+      price: Number(price.replaceAll(',', '')),
     }); // 해당 객체를 category 리스트에 반영하라고 부모에게 보냄
   };
 
@@ -78,7 +81,11 @@ export default function CategoryInput({
     const onlyNumberValue = value;
     value = `${value.toLocaleString('ko-KR')}`; // 보기 좋게 변환
     setPrice(value); // 변환값으로 설정(input에 띄워줌)
-    changeCategoryItem({ index, category, price: onlyNumberValue }); // 부모에게 보낼때는 쉼표 제거한 value
+    changeCategoryItem({
+      index,
+      category: JSON.parse(category),
+      price: onlyNumberValue,
+    }); // 부모에게 보낼때는 쉼표 제거한 value
   };
 
   return (
@@ -94,8 +101,11 @@ export default function CategoryInput({
             label="Category"
             onChange={handleChangeCategory}
           >
-            <MenuItem value="">
-              <em>None</em>
+            <MenuItem
+              disabled
+              value={JSON.stringify({ idx: 0, categoryName: 'None' })}
+            >
+              <em>선택</em>
             </MenuItem>
             {categoryList.map((each) => (
               <MenuItem

@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import Message from '../../../common/signup/elements/Message';
 
-export default function RepresentativeNameInput({ updateData }) {
-  const [representativeName, setRepresentativeName] = useState('');
+export default function RepresentativeNameInput({ updateData, initialValue }) {
+  const [representativeName, setRepresentativeName] = useState(initialValue);
   const [msg, setMsg] = useState('');
   const changeRepresentativeName = (event) => {
     setRepresentativeName(() => event.target.value);
