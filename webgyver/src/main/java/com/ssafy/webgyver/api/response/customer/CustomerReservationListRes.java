@@ -5,6 +5,7 @@ import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.entity.Reservation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -20,6 +21,7 @@ public class CustomerReservationListRes extends DataResponseBody {
     }
     @Getter
     @NoArgsConstructor
+    @ToString
     public static class ReservationDTO{
         private Long reservationIdx;
         private String title;

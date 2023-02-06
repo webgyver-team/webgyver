@@ -47,4 +47,9 @@ public class Reservation extends BaseEntity {
 
     @OneToMany(mappedBy = "reservation")
     private List<Article> articleList;
+
+    public void updateReservationState(String state){
+        this.reservationState = state;
+    }
+
 }
