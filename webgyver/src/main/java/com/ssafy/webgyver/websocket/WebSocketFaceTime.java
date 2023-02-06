@@ -7,8 +7,8 @@ import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.websocket.dto.Message;
 import com.ssafy.webgyver.websocket.dto.MessageParser;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -22,10 +22,10 @@ import java.util.Map;
 @Log
 @Component
 @ServerEndpoint(value = "/facetime/{type}/{idx}/{reservationIdx}", configurator = WebSocketConfig.class)
+@RequiredArgsConstructor
 public class WebSocketFaceTime {
     private static final Map<Long, Room> rooms = Collections.synchronizedMap(new HashMap<Long, Room>());
-    @Autowired
-    ReservationService reservationService;
+    private final ReservationService reservationService;
 //    @PostConstruct
 //    public void init() {
 ////        Arrays.stream(new String[]{"1", "2", "3", "4"}).forEach(room -> rooms.computeIfAbsent(room, key -> new Room(key)));

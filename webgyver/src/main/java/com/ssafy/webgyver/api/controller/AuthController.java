@@ -6,7 +6,7 @@ import com.ssafy.webgyver.api.response.UserLoginPostRes;
 import com.ssafy.webgyver.api.service.UserService;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.User;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,13 +19,12 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 @RequestMapping("/api/v1/auth")
+@RequiredArgsConstructor
 public class AuthController {
-	@Autowired
-	UserService userService;
+	private final UserService userService;
 	
-	@Autowired
-	PasswordEncoder passwordEncoder;
-	
+	private final PasswordEncoder passwordEncoder;
+
 	@PostMapping("/login")
 	public ResponseEntity<UserLoginPostRes> login(@RequestBody UserLoginPostReq loginInfo) {
 		String userId = loginInfo.getId();

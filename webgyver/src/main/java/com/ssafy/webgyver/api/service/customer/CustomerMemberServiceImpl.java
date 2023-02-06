@@ -8,7 +8,6 @@ import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.repository.customer.CustomerMemberRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,10 +15,11 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CustomerMemberServiceImpl implements CustomerMemberService{
     final CustomerMemberRepository customerMemberRepository;
     final PasswordEncoder passwordEncoder;

@@ -1,15 +1,12 @@
 package com.ssafy.webgyver.config;
 
 
-import com.ssafy.webgyver.api.service.UserService;
-import com.ssafy.webgyver.common.auth.JwtAuthenticationFilter;
-import com.ssafy.webgyver.common.auth.SsafyUserDetailService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.ssafy.webgyver.api.service.UserDetailServiceImpl;
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -22,14 +19,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@RequiredArgsConstructor
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private SsafyUserDetailService ssafyUserDetailService;
-    
-    @Autowired
-    private UserService userService;
-    
+//    private SsafyUserDetailService ssafyUserDetailService;
+
+//    private UserService userService;
+
+    private final UserDetailServiceImpl userDetailServiceImpl;
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -41,8 +37,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
+//        daoAuthenticationProvider.setUserDetailsService(this.ssafyUserDetailService);
+        daoAuthenticationProvider.setUserDetailsService(this.userDetailServiceImpl);
         daoAuthenticationProvider.setPasswordEncoder(passwordEncoder());
-        daoAuthenticationProvider.setUserDetailsService(this.ssafyUserDetailService);
         return daoAuthenticationProvider;
     }
 
@@ -59,10 +56,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS) // 토큰 기반 인증이므로 세션 사용 하지않음
                 .and()
-                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
+//                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userDetailServiceImpl)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
                 .antMatchers("/api/v1/users/me").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-    	        	    .anyRequest().permitAll()
+                .anyRequest().permitAll()
 //                .antMatchers("/admin/**").hasAnyRole("Partner")
                 .and().cors();
     }
