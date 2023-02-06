@@ -89,7 +89,7 @@ export default function MasterNavBar(props) {
           <FormControlLabel
             control={
               <Switch
-                checked={auth}
+                checked={auth === 'master'}
                 onChange={handleChange}
                 aria-label="login switch"
               />

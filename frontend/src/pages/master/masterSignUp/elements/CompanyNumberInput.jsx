@@ -69,7 +69,6 @@ export default function CompanyNumberInput({
       });
     // 성공 했으면 아이디 input disabled
   };
-
   useEffect(() => {
     // 각각의 phoneNumber가 바뀌었을 때...
     if (
