@@ -14,7 +14,6 @@ export default function ResidentNumberInput({
     // eslint-disable-next-line
     const birthYearStart =
       input.slice(-1) === '1' || input.slice(-1) === '2' ? '19' : '20';
-    console.log(`${birthYearStart}${input}`);
     updateData({ birthDay: `${birthYearStart}${input}` });
   };
   const [msg, setMsg] = useState('');

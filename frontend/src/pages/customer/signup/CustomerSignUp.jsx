@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import AddCardIcon from '@mui/icons-material/AddCard';
@@ -10,10 +11,13 @@ import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInpu
 import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
 import Agreement from '../../common/signup/elements/AgreementToTerms';
 import { customer } from '../../../api/accountsApi';
+import { authState, accessToken } from '../../../atom';
 
 export default function CustomerSignUp() {
   // const [cardNumber, setCardNumber] = useState(null);
   const navigate = useNavigate();
+  const setAuth = useSetRecoilState(authState);
+  const setAccessToken = useSetRecoilState(accessToken);
   const [data, setData] = useState({
     id: null,
     password: null,
@@ -33,12 +37,12 @@ export default function CustomerSignUp() {
     }));
   };
 
-  const registCard = () => {
+  const registCard = async () => {
     // eslint-disable-next-line
     alert('카드 등록 API 호출 예정..');
   };
 
-  const registCustomer = () => {
+  const registCustomer = async () => {
     if (data.id === null) {
       // eslint-disable-next-line
       alert('아이디를 입력한 후 중복 검사를 하세요.');
@@ -82,24 +86,21 @@ export default function CustomerSignUp() {
     // eslint-disable-next-line
     delete data.useCheck;
     // 회원가입 POST
-    customer
-      .signup(data)
-      .then((res) => {
-        // eslint-disable-next-line
-        console.log(res);
-        if (res.statusCode === 200) {
-          // eslint-disable-next-line
-          alert('회원가입이 완료되었습니다.');
-          navigate('/');
-        } else {
-          // eslint-disable-next-line
-          alert('다시 시도해주세요.');
-        }
-      })
-      .catch((err) => {
-        // eslint-disable-next-line
-        console.log(err);
+    const response = await customer.signup(data);
+    if (response.statusCode === 200) {
+      // eslint-disable-next-line
+      alert('회원가입이 완료되었습니다.');
+      const loginResponse = await customer.login({
+        id: data.id,
+        password: data.password,
       });
+      setAccessToken(loginResponse.data['access-token']); // 자동로그인
+      setAuth('customer');
+      navigate('/');
+    } else {
+      // eslint-disable-next-line
+      alert('다시 시도해주세요.');
+    }
   };
   return (
     <div style={{ width: '100%', padding: '16px' }}>
