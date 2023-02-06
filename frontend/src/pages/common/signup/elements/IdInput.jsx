@@ -48,7 +48,6 @@ export default function IdInput({ updateData, initialValue, checkDuplicate }) {
     // 아이디 중복 검사 axios 호출(일단은 random함수로 대체)
     checkDuplicate(id)
       .then((res) => {
-        console.log(res);
         if (res.statusCode === 201) {
           // 중복이면 경고창 띄우기
           // eslint-disable-next-line

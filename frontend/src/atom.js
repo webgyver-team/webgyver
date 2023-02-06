@@ -10,7 +10,7 @@ const { persistAtom } = recoilPersist({
 // 로그인 판단용 State, null, master, customer
 export const authState = atom({
   key: 'authState',
-  default: false,
+  default: null,
   effects_UNSTABLE: [persistAtom],
 });
 
