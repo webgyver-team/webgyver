@@ -20,7 +20,7 @@ import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import Webgyver from '../../../assets/icon/webgyver_white.png';
-import { authState, loginOpenState } from '../../../atom';
+import { authState, accessToken, loginOpenState } from '../../../atom';
 
 const drawerWidth = 240;
 
@@ -31,6 +31,7 @@ export default function NavBar(props) {
     ? ['로그아웃', '내 계정', '이용내역']
     : ['로그인', '회원가입'];
   const setLoginOpenState = useSetRecoilState(loginOpenState);
+  const setAccessToken = useSetRecoilState(accessToken);
   const openLoginModal = () => setLoginOpenState(true);
   const chooseMenu = (item) => {
     // 아래 사이드바 메뉴 클릭 시 실행
@@ -50,7 +51,7 @@ export default function NavBar(props) {
     if (event.target.checked) {
       setAuth('customer');
     } else {
-      setAuth(false);
+      setAuth(null);
     }
   };
 
@@ -61,7 +62,10 @@ export default function NavBar(props) {
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-
+  const doLogOut = () => {
+    setAuth(null);
+    setAccessToken('');
+  };
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
@@ -95,7 +99,7 @@ export default function NavBar(props) {
           <FormControlLabel
             control={
               <Switch
-                checked={auth}
+                checked={auth === 'customer'}
                 onChange={handleChange}
                 aria-label="login switch"
               />
@@ -148,7 +152,9 @@ export default function NavBar(props) {
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Button color="inherit">로그아웃</Button>
+                <Button color="inherit" onClick={doLogOut}>
+                  로그아웃
+                </Button>
                 <IconButton
                   size="large"
                   aria-label="account of current user"

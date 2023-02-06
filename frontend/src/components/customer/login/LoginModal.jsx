@@ -7,13 +7,8 @@ import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import {
-  loginOpenState,
-  // accessToken,
-  // authState,
-  //  주석 해제 예정
-} from '../../../atom';
-// import customer from '../../../api/accountsApi';
+import { loginOpenState, authState, accessToken } from '../../../atom';
+import { customer } from '../../../api/accountsApi';
 
 const style = {
   position: 'absolute',
@@ -31,8 +26,8 @@ export default function LoginModal() {
   const navigate = useNavigate();
   const modalState = useRecoilState(loginOpenState);
   const setLoginState = useSetRecoilState(loginOpenState);
-  // const setAccessToken = useSetRecoilState(accessToken);
-  // const setAuthState = useSetRecoilState(authState);
+  const setAccessToken = useSetRecoilState(accessToken);
+  const setAuthState = useSetRecoilState(authState);
   const closeLogin = () => setLoginState(false);
   const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
@@ -46,7 +41,7 @@ export default function LoginModal() {
     });
   };
   // 제출 시 id/pw 빈 칸이 아닌지 검증
-  const submit = () => {
+  const submit = async () => {
     if (data?.id === '') {
       setErrors({
         nullIdError: true,
@@ -62,12 +57,17 @@ export default function LoginModal() {
         nullIdError: false,
         nullPasswordError: false,
       });
-      // const response = customer.login(data);
-      // if (response.statusCode === 200) {
-      //   // 리코일persist 상태 변경
-      //   setAccessToken(response.data.accessToken);
-      //   setAuthState('customer');
-      // }
+
+      const response = await customer.login(data);
+      if (response.statusCode === 200) {
+        // 리코일persist 상태 변경
+        setAuthState('customer');
+        setAccessToken(response.data['access-token']);
+        setLoginState(false);
+      } else {
+        setAuthState(null);
+        setAccessToken('');
+      }
     }
     // console.log(errors);
   };
