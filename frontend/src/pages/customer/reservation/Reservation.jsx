@@ -94,6 +94,7 @@ export default function Reservation() {
       setReservation(clickedReservation); // 이때 세션 스토리지에 저장
       navigate('/reservation/form');
     } else {
+      // eslint-disable-next-line
       alert('로그인 후 이용해주세요.');
       openLoginModal();
     }

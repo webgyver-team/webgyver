@@ -43,7 +43,7 @@ export default function ResidentNumberInput({
         birthday:
           event.target.value.trim() + residentNumber2.replaceAll('*', ''),
       });
-    } else updateData({ residentNumber: null });
+    } else updateData({ birthday: null });
   };
   const changeResidentNumber2 = (event) => {
     const actualInput = event.target.value.replaceAll('*', '');

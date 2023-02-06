@@ -5,6 +5,9 @@ import { accessToken } from '../atom';
 const instance = axios.create({
   baseURL: '/',
   timeout: 2000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 instance.interceptors.request.use(
