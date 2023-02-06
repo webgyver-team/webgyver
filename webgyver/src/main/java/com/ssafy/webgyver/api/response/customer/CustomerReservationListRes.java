@@ -25,7 +25,7 @@ public class CustomerReservationListRes extends DataResponseBody {
     public static class ReservationDTO{
         private Long reservationIdx;
         private String title;
-        private LocalDateTime time;
+        private LocalDateTime reservationTime;
         private String content;
         private String storeName;
         private List<PictureDTO> pictureList;
@@ -34,7 +34,7 @@ public class CustomerReservationListRes extends DataResponseBody {
         public ReservationDTO(Long reservationIdx, String title, LocalDateTime time, String content, String storeName, List<PictureDTO> pictureList, String state) {
             this.reservationIdx = reservationIdx;
             this.title = title;
-            this.time = time;
+            this.reservationTime = time;
             this.content = content;
             this.storeName = storeName;
             this.pictureList = pictureList;
@@ -55,14 +55,14 @@ public class CustomerReservationListRes extends DataResponseBody {
         }
     }
 
-    public static CustomerReservationListRes of(Integer statusCode, String message, List<Reservation> reservationList) {
+    public static CustomerReservationListRes of(Integer statusCode, String message, List<ReservationDTO> reservationList) {
         CustomerReservationListRes res = new CustomerReservationListRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
         // 예약 정보 넣기
 //        Response response = new Response(reservationList);
 
-//        res.getData().put("customer", response);
+        res.getData().put("reservationList", reservationList);
 
         return res;
     }

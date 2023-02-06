@@ -107,49 +107,55 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         // 4. 예약 상태 2 => 예약 확정 => 예약시간이 됨 => 상태 6으로 변경, 디비 저장 리턴 값 추가
         reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(req.getCustomerIdx(), "2");
         reservationState2ListMethod(reservationList);
-        return null;
+        System.out.println(reservationList);
+        CustomerReservationListRes res = CustomerReservationListRes.of(200, "Success", reservationDTOList);
+        return res;
     }
 
     public void reservationState4ListMethod(List<Reservation> reservationList) {
+        LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
-            String title = null;    // 예약 제목
-            String content = null; // 문의 내용
-            List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
-            // 문의 내용 찾기
-            for (Article review : reservation.getArticleList()) {
-                if (review.getType() == -1) {
-                    title = review.getTitle();
-                    content = review.getContent();
-                    List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(review.getIdx());
-                    // 문의 내용에대한 사진 가져오기
-                    for (Picture picture : pictures) {
-                        CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(picture.getIdx(), picture.getOriginName(), picture.getSaveName());
-                        pictureDTOS.add(pictureTemp);
+            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
+                reservation.updateReservationState("5");
+                reservationRepository.save(reservation);
+            } else {
+                String title = null;    // 예약 제목
+                String content = null; // 문의 내용
+                List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
+                // 문의 내용 찾기
+                for (Article review : reservation.getArticleList()) {
+                    if (review.getType() == -1) {
+                        title = review.getTitle();
+                        content = review.getContent();
+                        List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(
+                                review.getIdx());
+                        // 문의 내용에대한 사진 가져오기
+                        for (Picture picture : pictures) {
+                            CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(
+                                    picture.getIdx(), picture.getOriginName(),
+                                    picture.getSaveName());
+                            pictureDTOS.add(pictureTemp);
+                        }
                     }
                 }
+                CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
+                        reservation.getIdx(),
+                        title,
+                        reservation.getReservationTime(),
+                        content,
+                        reservation.getSeller().getCompanyName(),
+                        pictureDTOS,
+                        reservation.getReservationState()
+                );
+                reservationDTOList.add(reservationDTO);
             }
-            CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
-                    reservation.getIdx(),
-                    title,
-                    reservation.getReservationTime(),
-                    content,
-                    reservation.getSeller().getCompanyName(),
-                    pictureDTOS,
-                    reservation.getReservationState()
-            );
-            reservationDTOList.add(reservationDTO);
         }
-        System.out.println("Reservation List : " + " " + reservationDTOList);
     }
 
     public void reservationState1ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
-        System.out.println("현재시간 : " + currentTime);
-
         for (Reservation reservation : reservationList) {
-            System.out.println(reservation.getCreatedAt());
             // true면 아직 시간 안지남 false면 시간지남 => 상태 업데이트 해줘야함
-            System.out.println("지났니 ? : " + "  " + reservation.getCreatedAt().plusMinutes(5).isAfter(currentTime));
             // 시간 안지남
             if (reservation.getCreatedAt().plusMinutes(5).isAfter(currentTime)) {
                 String title = null;    // 예약 제목
@@ -185,17 +191,20 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                 reservationRepository.save(reservation);
             }
         }
-
-        System.out.println("Reservation List : " + " " + reservationDTOList);
-
     }
 
     public void reservationState2ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         System.out.println("현재시간 : " + currentTime);
         for (Reservation reservation : reservationList) {
+            // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
+            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime))
+             {
+                reservation.updateReservationState("3");
+                reservationRepository.save(reservation);
+            }
             // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
-            if (reservation.getReservationTime().isAfter(currentTime)) {
+            else if (reservation.getReservationTime().isAfter(currentTime)){
                 reservation.updateReservationState("6");
                 reservationRepository.save(reservation);
             }
@@ -225,8 +234,6 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                     reservation.getReservationState()
             );
             reservationDTOList.add(reservationDTO);
-
         }
-        System.out.println("Reservation List : " + " " + reservationDTOList);
     }
 }
