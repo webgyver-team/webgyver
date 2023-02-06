@@ -46,25 +46,26 @@ export default function IdInput({ updateData, initialValue, checkDuplicate }) {
     }
     setBtnDisabled(() => true);
     // 아이디 중복 검사 axios 호출(일단은 random함수로 대체)
-    checkDuplicate(id).then((res) => {
-      if (res !== 200) {
-        // 중복이면 경고창 띄우기
+    checkDuplicate(id)
+      .then((res) => {
+        if (res !== 200) {
+          // 중복이면 경고창 띄우기
+          // eslint-disable-next-line
+        alert('해당 아이디는 이미 존재합니다.');
+          setBtnDisabled(() => false);
+          return;
+        }
+        // 성공 했으면 아이디 input disabled
         // eslint-disable-next-line
-          alert('해당 아이디는 이미 존재합니다.');
-        setBtnDisabled(() => false);
-        return;
-      }
-      // 성공 했으면 아이디 input disabled
-      // eslint-disable-next-line
-        alert('해당 아이디는 사용 가능합니다.');
-      updateData({ id });
-      setIdDisabled(() => true);
-      setBtnDisabled(() => true);
-    });
-    // .catch((err) => {
-    //   // eslint-disable-next-line
-    //   console.log(err);
-    // });
+      alert('해당 아이디는 사용 가능합니다.');
+        updateData({ id });
+        setIdDisabled(() => true);
+        setBtnDisabled(() => true);
+      })
+      .catch((err) => {
+        // eslint-disable-next-line
+      console.log(err);
+      });
   };
 
   return (

@@ -17,7 +17,7 @@ export default function CustomerSignUp() {
   const [data, setData] = useState({
     id: null,
     password: null,
-    birthday: null,
+    birthDay: null,
     name: null,
     phoneNumber: null,
     cardNumber: '1111222233334444',
@@ -74,13 +74,13 @@ export default function CustomerSignUp() {
       // 다 통과되면 해당 property 빼야 함
     }
     // eslint-disable-next-line
-    if(data.cardNumber === null) {
+    if (data.cardNumber === null) {
       // eslint-disable-next-line
       alert('카드정보를 입력하세요.');
       return;
     }
     // eslint-disable-next-line
-    delete data.useCheck
+    delete data.useCheck;
     // 회원가입 POST
     customer
       .signup(data)

@@ -24,7 +24,15 @@ export default function CategoryInput({
   const categoryList = [
     // 카테고리 리스트 목록(select에 map으로 뿌려주기 위함)
     // eslint-disable-next-line
-    {idx: 1,categoryName: '욕실',},{idx: 2,categoryName: '주방 ',},{idx: 3,categoryName: '전기/조명',},{idx: 4,categoryName: '가전',},{idx: 5,categoryName: '보일러',},{idx: 6,categoryName: '가구',},{idx: 7,categoryName: '도어/창문',},{idx: 8,categoryName: '벽지/바닥',},{idx: 9,categoryName: '디지털/IT',},
+    { idx: 1, categoryName: '욕실' },
+    { idx: 2, categoryName: '주방 ' },
+    { idx: 3, categoryName: '전기/조명' },
+    { idx: 4, categoryName: '가전' },
+    { idx: 5, categoryName: '보일러' },
+    { idx: 6, categoryName: '가구' },
+    { idx: 7, categoryName: '도어/창문' },
+    { idx: 8, categoryName: '벽지/바닥' },
+    { idx: 9, categoryName: '디지털/IT' },
   ];
 
   const handleChangeCategory = (event) => {

@@ -40,15 +40,15 @@ export default function ResidentNumberInput({
       residentNumber2.trim().length === 7
     ) {
       updateData({
-        birthday:
+        birthDay:
           event.target.value.trim() + residentNumber2.replaceAll('*', ''),
       });
-    } else updateData({ birthday: null });
+    } else updateData({ birthDay: null });
   };
   const changeResidentNumber2 = (event) => {
     const actualInput = event.target.value.replaceAll('*', '');
     if (!onlyNumber(actualInput)) {
-      updateData({ birthday: null });
+      updateData({ birthDay: null });
       return;
     }
     // 여기는 1~4까지만 가능
@@ -62,8 +62,8 @@ export default function ResidentNumberInput({
       }
     }
     if (residentNumber1.trim().length === 6 && actualInput.length === 1) {
-      updateData({ birthday: residentNumber1.trim() + actualInput });
-    } else updateData({ birthday: null });
+      updateData({ birthDay: residentNumber1.trim() + actualInput });
+    } else updateData({ birthDay: null });
   };
   return (
     <div>

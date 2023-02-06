@@ -28,7 +28,7 @@ export default function MasterSignUp() {
     id: null,
     password: null,
     name: null,
-    birthday: null,
+    birthDay: null,
     phoneNumber: null,
     useCheck: false,
     companyName: null,

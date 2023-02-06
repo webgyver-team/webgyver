@@ -1,6 +1,6 @@
 import Send from './send';
 
-const customerURL = 'http://i8b101.p.ssafy.io:9001/api/v1/customer';
+const customerURL = 'http://i8b101.p.ssafy.io:9000/api/v1/customer';
 export const customer = {
   // customer
   checkDuplicate: async (data) => {

@@ -85,10 +85,16 @@ function App() {
                 <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/videoservice" element={<VideoService />} />
-                <Route path="/master/videoservice" element={<MasterVideoService />} />
+                <Route
+                  path="/master/videoservice"
+                  element={<MasterVideoService />}
+                />
                 <Route path="/mypage/update" element={<MyPageUpdate />} />
                 <Route path="/endservice" element={<EndService />} />
-                <Route path="/master/endservice" element={<MasterEndService />} />
+                <Route
+                  path="/master/endservice"
+                  element={<MasterEndService />}
+                />
                 <Route path="/reviewform" element={<ReviewForm />} />
                 <Route path="/master/login" element={<MasterLogin />} />
                 <Route path="/master/schedule" element={<MasterSchedule />} />
@@ -97,7 +103,10 @@ function App() {
                 <Route path="/master/example" element={<MasterExample />} />
                 <Route path="/master/mypage" element={<MasterMypage />} />
                 <Route path="/master/signup" element={<MasterSignUp />} />
-                <Route path="/master/mypage/update" element={<MasterMyPageUpdate />} />
+                <Route
+                  path="/master/mypage/update"
+                  element={<MasterMyPageUpdate />}
+                />
 
                 <Route path="*" element={<div>404</div>} />
               </Routes>
