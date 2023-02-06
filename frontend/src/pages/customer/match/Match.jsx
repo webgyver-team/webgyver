@@ -1,24 +1,38 @@
-import React, { useEffect, useRef } from 'react';
+// eslint-disable-next-line object-curly-newline
+import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useNavigate } from 'react-router-dom';
-import { locateValueState } from '../../../atom';
 import './Match.scss';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select from '@mui/material/Select';
+import { locateValueState } from '../../../atom';
 
 // kakao 가져오기
 const { kakao } = window;
-
-// map style
-const mapStyle = {
-  width: '100%',
-  height: '500px',
-};
 
 export default function Matching() {
   const navigate = useNavigate();
   const routeMatchForm = () => navigate('/match/form');
   const locateValue = useRecoilValue(locateValueState);
+
+  // map resizer
+  const MainScreenRef = useRef(null);
+  const [mainScreenWidth, setMainScreenWidth] = useState('100%');
+  useLayoutEffect(() => {
+    const handleResize = () => {
+      setMainScreenWidth(MainScreenRef.current.offsetWidth);
+    };
+    window.addEventListener('resize', handleResize);
+  }, [MainScreenRef]);
+
+  const [distance, setDistance] = useState('5km 이내');
+
+  const handleChange = (event) => {
+    setDistance(event.target.value);
+  };
 
   const backCount = 3;
   // eslint-disable-next-line react/jsx-one-expression-per-line
@@ -32,6 +46,12 @@ export default function Matching() {
       <div className="wave2" />
     </div>
   );
+
+  // map style
+  const mapStyle = {
+    width: mainScreenWidth,
+    height: '100%',
+  };
 
   // 지도를 담을 영역의 DOM 레퍼런스
   const container = useRef();
@@ -53,26 +73,37 @@ export default function Matching() {
   });
 
   return (
-    <Main>
+    <Main ref={MainScreenRef}>
       <MapBox>
         <ArrowBox>
           <BackArrow style={{ fontSize: '120%' }} onClick={routeMatchForm} />
         </ArrowBox>
         <AlertBox>{alertText}</AlertBox>
         <MarkerBox>{marker}</MarkerBox>
-        <InfoBox>
-          <UpperInfo>
-            <span>자동결제 적용</span>
-            <span>1.0km 이내</span>
-          </UpperInfo>
-          <LowerInfo>
-            <p>{lowerText}</p>
-          </LowerInfo>
-        </InfoBox>
         <Map ref={container} style={mapStyle} />
         <UpperMap />
       </MapBox>
-      <NullBox />
+      <InfoBox>
+        <UpperInfo>
+          <span>자동결제 적용</span>
+          <FormControl size="small" variant="standard" sx={{ minWidth: 108 }}>
+            <Select
+              id="distance-selector"
+              value={distance}
+              onChange={handleChange}
+              label="distance"
+            >
+              <MenuItem value="거리무관">거리무관</MenuItem>
+              <MenuItem value="1km 이내">1km 이내</MenuItem>
+              <MenuItem value="5km 이내">5km 이내</MenuItem>
+              <MenuItem value="10km 이내">10km 이내</MenuItem>
+            </Select>
+          </FormControl>
+        </UpperInfo>
+        <LowerInfo>
+          <p>{lowerText}</p>
+        </LowerInfo>
+      </InfoBox>
     </Main>
   );
 }
@@ -80,11 +111,13 @@ export default function Matching() {
 const Main = styled.div`
   position: relative;
   width: 100%;
+  height: 100%;
 `;
 
 const MapBox = styled.div`
   position: relative;
   z-index: 10;
+  height: 75%;
 `;
 
 const ArrowBox = styled.div`
@@ -119,10 +152,11 @@ const MarkerBox = styled.div`
   position: absolute;
   z-index: 19;
   width: 100%;
-  height: 500px;
+  // height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
+  height: 100%;
 `;
 
 const Map = styled.div`
@@ -133,17 +167,15 @@ const UpperMap = styled.div`
   position: relative;
   z-index: 10;
   width: 100%;
-  height: 500px;
+  height: 100%;
   background-color: rgba(0, 0, 0, 0.3);
 `;
 
 const InfoBox = styled.div`
-  position: absolute;
   width: 100%;
+  height: 25%;
   z-index: 20;
   padding: 16px;
-  bottom: -150px;
-  border-radius: 20px 20px 0 0;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
 `;
 
@@ -174,8 +206,4 @@ const LowerInfo = styled.div`
     white-space: pre-line;
     line-height: 32px;
   }
-`;
-
-const NullBox = styled.div`
-  height: 150px;
 `;
