@@ -44,8 +44,7 @@ public class Customer extends BaseEntity {
     private String cardCvc;
 
     @Column(name = "card_validity")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime cardValidity;
+    private String cardValidity;
 
     private String name;
 
