@@ -3,6 +3,7 @@ import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
 import Message from './Message';
+import { master } from '../../../../api/accountsApi';
 
 export default function IdInput({ updateData, initialValue }) {
   const ID_MIN_LENGTH = 6;
@@ -22,6 +23,7 @@ export default function IdInput({ updateData, initialValue }) {
   };
 
   const changeId = (event) => {
+    setId(() => event.target.value);
     if (
       // eslint-disable-next-line operator-linebreak
       event.target.value.length < ID_MIN_LENGTH ||
@@ -36,9 +38,8 @@ export default function IdInput({ updateData, initialValue }) {
     }
     setMsg(() => '');
     setBtnDisabled(() => false);
-    setId(() => event.target.value);
   };
-  const checkExistId = () => {
+  const checkExistId = async () => {
     // 유효성 검사 한번 들어가자
     if (id.length !== id.trim().length) {
       setMsg(() => '아이디에 띄어쓰기를 포함할 수 없습니다,');
@@ -46,7 +47,8 @@ export default function IdInput({ updateData, initialValue }) {
     }
     setBtnDisabled(() => true);
     // 아이디 중복 검사 axios 호출(일단은 random함수로 대체)
-    if (Math.random() > 0.5) {
+    const response = await master.checkDuplicate({ id });
+    if (response.statusCode === '201') {
       // 중복이면 경고창 띄우기
       // eslint-disable-next-line
       alert('해당 아이디는 이미 존재합니다.');

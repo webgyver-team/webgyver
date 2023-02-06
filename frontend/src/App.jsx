@@ -25,7 +25,7 @@ import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
-import MasterMyPageUpdate from './pages/master/mypage/MyPageUpdate';
+import MasterMyPageUpdate from './pages/master/Mypage/MyPageUpdate';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
 import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';

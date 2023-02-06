@@ -23,7 +23,11 @@ const masterURL = '/api/v1/seller/';
 export const master = {
   // customer
   checkDuplicate: async (data) => {
-    const response = await Send.post(`${masterURL}check/duplicate/`, data);
+    const response = await Send.post(
+      `${masterURL}member/check/duplicate/`,
+      data,
+    );
+    console.log(response);
     return response;
   },
 

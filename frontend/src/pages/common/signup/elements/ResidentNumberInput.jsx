@@ -50,6 +50,7 @@ export default function ResidentNumberInput({
           `20${residentNumber1.trim()}${residentNumber2.replaceAll('*', '')}`,
         );
       }
+      console.log(submitNum);
       updateData({ birthDay: submitNum });
     } else updateData({ birthDay: null });
   };
@@ -76,6 +77,7 @@ export default function ResidentNumberInput({
       } else {
         setSubmitNum(`20${residentNumber1.trim()}${actualInput}`);
       }
+      console.log(submitNum);
       updateData({ birthDay: submitNum });
     } else updateData({ birthDay: null });
   };
