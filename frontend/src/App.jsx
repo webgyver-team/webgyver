@@ -142,9 +142,8 @@ const Page = styled.div`
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
-  // overflow-y: scroll;
-  // height: calc(100vh - 120px);
-  height: ${(props) => (props.onNav ? 'calc(100vh - 120px)' : '100vh')};
+  height: calc(100vh - 120px);
+  // height: ${(props) => (props.onNav ? 'calc(100vh - 120px)' : '100vh')};
   overflow-y: auto;
   background-color: ${(props) => props.theme.color.defaultWhite};
 `;
