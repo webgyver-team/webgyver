@@ -6,6 +6,7 @@ import com.ssafy.webgyver.db.entity.Reservation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class CustomerReservationListRes extends DataResponseBody {
@@ -22,13 +23,13 @@ public class CustomerReservationListRes extends DataResponseBody {
     public static class ReservationDTO{
         private Long reservationIdx;
         private String title;
-        private String time;
+        private LocalDateTime time;
         private String content;
         private String storeName;
         private List<PictureDTO> pictureList;
         private String state;
 
-        public ReservationDTO(Long reservationIdx, String title, String time, String content, String storeName, List<PictureDTO> pictureList, String state) {
+        public ReservationDTO(Long reservationIdx, String title, LocalDateTime time, String content, String storeName, List<PictureDTO> pictureList, String state) {
             this.reservationIdx = reservationIdx;
             this.title = title;
             this.time = time;

@@ -93,32 +93,46 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     @Override
     public CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req) {
-        List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdx(req.getCustomerIdx());
+        List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxOrderByIdxDesc(req.getCustomerIdx());
+        log.info("{} : ", reservationList);
         List<CustomerReservationListRes.ReservationDTO> reservationDTOList = new ArrayList<>();
         for (Reservation reservation : reservationList) {
-            String title = null;    // 예약 제목
-            String content = null; // 문의 내용
-            for (Article review : reservation.getArticleList()){
-                if (review.getType() == -1){
-                    title = review.getTitle();
-                    content = review.getContent();
-
-//                    for (Picture picture : review.get)
+            // 예약 상태가 아직 진행되지 않은 상태
+            if (reservation.getReservationState().equals("1") || reservation.getReservationState().equals("2") || reservation.getReservationState().equals("4")) {
+                String title = null;    // 예약 제목
+                String content = null; // 문의 내용
+                List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
+                // 문의 내용 찾기
+                for (Article review : reservation.getArticleList()) {
+                    if (review.getType() == -1) {
+                        title = review.getTitle();
+                        content = review.getContent();
+                        List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(review.getIdx());
+                        // 문의 내용에대한 사진 가져오기
+                        for (Picture picture : pictures) {
+                            CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(picture.getIdx(), picture.getOriginName(), picture.getSaveName());
+                            pictureDTOS.add(pictureTemp);
+                        }
+                    }
+                }
+                CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
+                        reservation.getIdx(),
+                        title,
+                        reservation.getReservationTime(),
+                        content,
+                        reservation.getSeller().getCompanyName(),
+                        pictureDTOS,
+                        reservation.getReservationState()
+                );
+                // 예약 상태가 현재 상담 진행중이면 제일 위로해서 보내주기 위해 0번 엔덱스에 추가
+                if (reservation.getReservationState().equals("4")){
+                    reservationDTOList.add(0,reservationDTO);
+                }else {
+                    reservationDTOList.add(reservationDTO);
                 }
             }
-//            CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
-//                    reservation.getIdx(),
-//                    reservation.getArticleList(),
-//                    title,
-//                    reservation.getReservationTime(),
-//                    content,
-//                    reservation.getSeller().getCompanyName(),
-//
-//                    reservation.getReservationState()
-//
-//            );
         }
-        log.info("list : {}", reservationList);
+
         return null;
     }
 }
