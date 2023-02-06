@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
+import { sha256 } from 'js-sha256';
+import AWS from 'aws-sdk';
 import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import NameInput from '../../common/signup/elements/NameInput';
@@ -13,6 +15,7 @@ import CategoryInput from '../masterSignUp/elements/CategoryInput';
 
 export default function MyPageUpdate() {
   const givenData = {
+    customerIdx: 100,
     profileImage:
       'data:image/png;base64,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',
     backgroundImage:
@@ -49,7 +52,7 @@ export default function MyPageUpdate() {
 
   // eslint-disable-next-line
   const [data, setData] = useState({
-    password: '',
+    password: null,
     name: givenData.name,
     phoneNumber: givenData.phoneNumber,
     companyName: givenData.companyName,
@@ -58,6 +61,8 @@ export default function MyPageUpdate() {
     address: givenData.address,
     detailAddress: givenData.detailAddress,
     categoryList: givenData.categoryList,
+    profileImage: givenData.profileImage,
+    backgroundImage: givenData.backgroundImage,
   });
   const [newBackgroundImage, setNewBackgroundImage] = useState(null);
   const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
@@ -91,12 +96,55 @@ export default function MyPageUpdate() {
       };
     }
   }, [newBackgroundImage]);
+
   const changeBackgroundImage = (event) => {
     setNewBackgroundImage(event.target.files[0]);
   };
 
+  // 이미지 S3 전송 함수
+  const sendImageToS3 = async (image, mode) => {
+    AWS.config.update({
+      region: process.env.REACT_APP_AWS_REGION,
+      accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
+      secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
+    });
+    const originName = image.name;
+    const date = new Date();
+    const extensionName = `.${originName.split('.').pop()}`;
+    const hashImageName = sha256(
+      `${date.toString()}${givenData.customerIdx}${originName}`,
+    );
+    const upload = new AWS.S3.ManagedUpload({
+      params: {
+        Bucket: process.env.REACT_APP_AWS_BUCKET,
+        Key: hashImageName + extensionName, // 고유한 파일명(현재 날짜 + 유저아이디 + 파일명을 합쳐 해시값 생성)
+        Body: image, // 파일 객체 자체를 보냄
+      },
+    });
+    const promise = upload.promise();
+    promise
+      .then((res) => {
+        // eslint-disable-next-line
+        console.log(res.Location+"에 "+image+`를 ${hashImageName} 경로에 저장 완료`);
+      })
+      .catch((err) => {
+        // eslint-disable-next-line
+        console.log(err);
+      });
+    const newData = {
+      saveName: hashImageName + extensionName,
+      originName,
+    };
+    if (mode === 1) {
+      // 프로필 이미지
+      updateData({ profileImage: newData.saveName });
+    } else {
+      // 배경 이미지
+      updateData({ backgroundImage: newData.saveName });
+    }
+  };
+
   const updateMasterInfo = () => {
-    console.log(data);
     // 모든 항목 유효성 검사
     // 비밀번호 -> 비밀번호 확인을 거친 비밀번호여야 인정됨, 그 전엔 null
     if (data.password === null) {
@@ -153,11 +201,11 @@ export default function MyPageUpdate() {
     // 프로필, 대표 이미지 새로 추가된 부분 S3에 보내줌 + 데이터 경로 setData
     if (newProfileImage !== null) {
       // S3 전송함수에 적용
-      // updateData({profileImage: res.location})
+      sendImageToS3(newProfileImage, 1);
     }
     if (newBackgroundImage !== null) {
       // S3 전송함수에 적용
-      // updateData({backgroundImage: res.location})
+      sendImageToS3(newBackgroundImage, 2);
     }
     // 데이터 POST
     // eslint-disable-next-line
@@ -275,7 +323,6 @@ export default function MyPageUpdate() {
     </div>
   );
 }
-
 const Title = styled.h2`
   font-size: 32px;
   font-weight: bold;
