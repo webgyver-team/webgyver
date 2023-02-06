@@ -5,19 +5,24 @@ import Button from '@mui/material/Button';
 import axios from 'axios';
 import Message from '../../../common/signup/elements/Message';
 
-export default function CompanyNumberInput({ updateData }) {
+export default function CompanyNumberInput({
+  updateData,
+  initialValue1,
+  initialValue2,
+  initialValue3,
+}) {
   // eslint-disable-next-line operator-linebreak
   const [companyNumber, setCompanyNumber] = useState(null);
   // eslint-disable-next-line operator-linebreak
-  const [companyNumber1, setCompanyNumber1] = useState('');
+  const [companyNumber1, setCompanyNumber1] = useState(initialValue1);
   // eslint-disable-next-line operator-linebreak
-  const [companyNumber2, setCompanyNumber2] = useState('');
+  const [companyNumber2, setCompanyNumber2] = useState(initialValue2);
   // eslint-disable-next-line operator-linebreak
-  const [companyNumber3, setCompanyNumber3] = useState('');
+  const [companyNumber3, setCompanyNumber3] = useState(initialValue3);
   const [msg, setMsg] = useState('');
   const [inputDisabled, setInputDisabled] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
-
+  const [changeBtnVisible, setChangeBtnVisible] = useState(true);
   const checkExistence = () => {
     // 유효성 검사 한번 들어가자
     if (companyNumber.length !== companyNumber.trim().length) {
@@ -116,7 +121,6 @@ export default function CompanyNumberInput({ updateData }) {
 
   const changeCompanyNumber1 = (event) => {
     if (!onlyNumber(event)) return;
-    // 가능한 숫자: 일단 앞자리는 010으로 고정
     setCompanyNumber1(() => event.target.value);
     checkMsg(event.target.value, 1);
   };
@@ -129,6 +133,14 @@ export default function CompanyNumberInput({ updateData }) {
     if (!onlyNumber(event)) return;
     setCompanyNumber3(() => event.target.value);
     checkMsg(event.target.value, 3);
+  };
+  const initiateValues = () => {
+    setCompanyNumber('');
+    setCompanyNumber1('');
+    setCompanyNumber2('');
+    setCompanyNumber3('');
+    setBtnDisabled(true);
+    setChangeBtnVisible(false);
   };
 
   const buttonStyle = {
@@ -145,19 +157,18 @@ export default function CompanyNumberInput({ updateData }) {
           variant="outlined"
           value={companyNumber1}
           required
-          disabled={inputDisabled}
+          disabled={inputDisabled || changeBtnVisible}
           style={{ width: '36%' }}
           inputProps={{ maxLength: 3 }}
           onChange={changeCompanyNumber1}
         />
-
         <p>-</p>
         <TextField
           label=""
           variant="outlined"
           value={companyNumber2}
           required
-          disabled={inputDisabled}
+          disabled={inputDisabled || changeBtnVisible}
           style={{ width: '12%' }}
           inputProps={{ maxLength: 2 }}
           onChange={changeCompanyNumber2}
@@ -168,19 +179,30 @@ export default function CompanyNumberInput({ updateData }) {
           variant="outlined"
           value={companyNumber3}
           required
-          disabled={inputDisabled}
+          disabled={inputDisabled || changeBtnVisible}
           style={{ width: '20%' }}
           inputProps={{ maxLength: 5 }}
           onChange={changeCompanyNumber3}
         />
-        <Button
-          variant="contained"
-          style={buttonStyle}
-          onClick={checkExistence}
-          disabled={btnDisabled}
-        >
-          검사
-        </Button>
+        {initialValue1 === '' || (initialValue1 !== '' && !changeBtnVisible) ? (
+          <Button
+            variant="contained"
+            style={buttonStyle}
+            onClick={checkExistence}
+            disabled={btnDisabled}
+          >
+            검사
+          </Button>
+        ) : (
+          <Button
+            variant="contained"
+            style={buttonStyle}
+            onClick={initiateValues}
+            disabled={btnDisabled}
+          >
+            변경
+          </Button>
+        )}
       </InputDiv>
 
       <Message msg={msg} />

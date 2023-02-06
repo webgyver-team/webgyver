@@ -25,6 +25,7 @@ import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
+import MasterMyPageUpdate from './pages/master/mypage/MyPageUpdate';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
 import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';
@@ -67,7 +68,6 @@ function App() {
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
-                <Route path="/master/signup" element={<MasterSignUp />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
                 <Route
@@ -96,6 +96,9 @@ function App() {
                 <Route path="/master/review" element={<MasterReview />} />
                 <Route path="/master/example" element={<MasterExample />} />
                 <Route path="/master/mypage" element={<MasterMypage />} />
+                <Route path="/master/signup" element={<MasterSignUp />} />
+                <Route path="/master/mypage/update" element={<MasterMyPageUpdate />} />
+
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>

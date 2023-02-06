@@ -41,8 +41,8 @@ export default function CustomerSignUp() {
     <div style={{ width: '100%', padding: '16px' }}>
       <SignUpTitle>고객 회원가입</SignUpTitle>
       <SignUpForm>
-        <IdInput updateData={updateData} />
-        <PasswordInput updateData={updateData} />
+        <IdInput updateData={updateData} initialValue="" />
+        <PasswordInput updateData={updateData} initialValue="" />
         <NameInput updateData={updateData} initialValue="" />
         <ResidentNumberInput
           updateData={updateData}
