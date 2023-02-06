@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
-import { locateValueState } from '../../../atom';
+import { useNavigate } from 'react-router-dom';
+import { locateValueState, authState, accessToken } from '../../../atom';
+import { master } from '../../../api/accountsApi';
 import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import NameInput from '../../common/signup/elements/NameInput';
@@ -16,17 +18,20 @@ import CompanyNumberInput from './elements/CompanyNumberInput';
 import CategoryInput from './elements/CategoryInput';
 
 export default function MasterSignUp() {
+  const navigate = useNavigate();
   const location = useRecoilValue(locateValueState);
+  const setAuth = useSetRecoilState(authState);
+  const setAccessToken = useSetRecoilState(accessToken);
   const [data, setData] = useState({
     id: null,
     password: null,
     name: null,
-    birthday: null,
+    birthDay: null,
     phoneNumber: null,
     useCheck: false,
     companyName: null,
     representativeName: null,
-    businessRegistrationNumber: null,
+    companyNumber: null,
     address: location.address,
     detailAddress: location.detail,
     categoryList: [
@@ -69,7 +74,7 @@ export default function MasterSignUp() {
       return;
     }
     // 주민등록번호 7자리 -> 제대로 반영되어야 반영됨, 아니면 null
-    if (data.birthday === null) {
+    if (data.birthDay === null) {
       // eslint-disable-next-line
       alert('주민등록번호 앞 7자리를 입력하세요.');
       return;
@@ -115,7 +120,17 @@ export default function MasterSignUp() {
     }
     // eslint-disable-next-line
     // api 호출 추가 예정
-    console.log(data);
+    delete data.useCheck;
+    const response = master.signup(data);
+    if (response.statusCode === '200') {
+      const loginResponse = master.login({
+        id: data.id,
+        password: data.password,
+      });
+      setAccessToken(loginResponse.data.accessToken);
+      setAuth('master');
+      navigate('/master/schedule');
+    }
   };
   return (
     <div style={{ width: '100%', padding: '16px' }}>

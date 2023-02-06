@@ -11,7 +11,7 @@ export default function MasterVideoService() {
   const myMainScreen = useRef(null);
   const mySubScreen = useRef(null);
   const peerFace = useRef(null);
-  const [mainScreenState, setMainScreenState] = useState('myScreen');
+  const [mainScreenState, setMainScreenState] = useState('peerScreen');
 
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
@@ -54,14 +54,14 @@ export default function MasterVideoService() {
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
 
   // 내 미디어 가져오기
-  const getUserCameraMain = async () => {
+  const getUserCameraSub = async () => {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
       })
       .then((stream) => {
         // 비디오 tag에 stream 추가
-        const video = myMainScreen.current;
+        const video = mySubScreen.current;
 
         video.srcObject = stream;
 
@@ -72,14 +72,14 @@ export default function MasterVideoService() {
     // });
   };
 
-  const getUserCameraSub = async () => {
+  const getUserCameraMain = async () => {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
       })
       .then((stream) => {
         // 비디오 tag에 stream 추가
-        const video = mySubScreen.current;
+        const video = myMainScreen.current;
 
         video.srcObject = stream;
 
