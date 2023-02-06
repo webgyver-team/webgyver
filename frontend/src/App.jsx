@@ -39,7 +39,7 @@ import MasterHistory from './pages/master/history/History';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
-const notNavList = ['/videoservice', '/master/login'];
+const notNavList = ['/videoservice', '/master/login', '/master/videoservice'];
 
 function App() {
   const [auth] = useRecoilState(authState);
@@ -60,7 +60,7 @@ function App() {
       {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
       <ThemeProvider theme={normal}>
         <All>
-          <Main>
+          <Main onNav={onNav}>
             {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
@@ -120,7 +120,6 @@ export default App;
 
 const All = styled.div`
   width: 100vw;
-  // min-height: 800px;
   display: flex;
   justify-content: center;
 `;
@@ -141,7 +140,8 @@ const Page = styled.div`
   font-family: 'Roboto';
   font-size: 32px;
   // overflow-y: scroll;
-  height: calc(100vh - 120px);
-  overflow-y: scroll;
+  // height: calc(100vh - 120px);
+  height: ${(props) => (props.onNav ? 'calc(100vh - 120px)' : '100vh')};
+  overflow-y: auto;
   background-color: ${(props) => props.theme.color.defaultWhite};
 `;

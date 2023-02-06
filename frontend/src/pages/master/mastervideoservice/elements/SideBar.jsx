@@ -39,17 +39,19 @@ export default function SideBar() {
     <Main>
       {sideBarOpen && (
         <ContentBox>
-          <SdBox>
-            <SliderBox>
-              <Slider {...slickSettings}>
-                {history[0].images.map((el) => (
-                  <ImgBox key={el}>
-                    <img src={el} alt="" />
-                  </ImgBox>
-                ))}
-              </Slider>
-            </SliderBox>
-          </SdBox>
+          <InnerBox>
+            <SdBox>
+              <SliderBox>
+                <Slider {...slickSettings}>
+                  {history[0].images.map((el) => (
+                    <ImgBox key={el}>
+                      <img src={el} alt="" />
+                    </ImgBox>
+                  ))}
+                </Slider>
+              </SliderBox>
+            </SdBox>
+          </InnerBox>
           <Title>{history[0].title}</Title>
           <Content>{history[0].content}</Content>
         </ContentBox>
@@ -63,8 +65,20 @@ export default function SideBar() {
 const Main = styled.div`
   display: flex;
   justify-content: flex-start;
-  min-height: 400px;
-  max-width: 300px;
+  min-height: 440px;
+  max-width: 380px;
+
+  .slick-prev:before {
+    color: gray;
+  }
+
+  .slick-next:before {
+    color: gray;
+  }
+`;
+
+const InnerBox = styled.div`
+  padding: 16px;
 `;
 
 const OpenToggle = styled.div`
@@ -94,12 +108,12 @@ const SdBox = styled.div`
 `;
 
 const SliderBox = styled.div`
-  width: 20vw;
+  width: 280px;
 `;
 
 const ImgBox = styled.div`
   position: relative;
-  height: 16vw;
+  height: 160px;
 
   img {
     position: absolute;
