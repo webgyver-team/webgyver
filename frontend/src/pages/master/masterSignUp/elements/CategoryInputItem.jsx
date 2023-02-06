@@ -9,6 +9,7 @@ import IconButton from '@mui/material/IconButton';
 import RemoveCircleOutlineRoundedIcon from '@mui/icons-material/RemoveCircleOutlineRounded';
 
 export default function CategoryInput({
+  categoryItem,
   changeCategoryItem, // 카테고리 리스트 안의 item을 변경하는 함수
   deleteCategoryItem, // "를 삭제하는 함수
   categorySelected, // 카테고리 visited 배열
@@ -17,12 +18,9 @@ export default function CategoryInput({
   index, // 내가 지금 카테고리 리스트의 몇 번째에 있는지
 }) {
   const [category, setCategory] = useState(
-    JSON.stringify({
-      idx: 0,
-      categoryName: 'None',
-    }),
+    JSON.stringify(categoryItem.category),
   ); // 카테고리
-  const [price, setPrice] = useState('0'); // 가격
+  const [price, setPrice] = useState(categoryItem.price); // 가격
   const categoryList = [
     // 카테고리 리스트 목록(select에 map으로 뿌려주기 위함)
     // eslint-disable-next-line

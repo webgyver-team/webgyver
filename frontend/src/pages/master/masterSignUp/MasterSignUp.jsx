@@ -20,6 +20,13 @@ import CategoryInput from './elements/CategoryInput';
 export default function MasterSignUp() {
   const navigate = useNavigate();
   const location = useRecoilValue(locateValueState);
+  const defaultCategoryList = [
+    {
+      index: 0, // categoryItemList에서의 순서(key에 사용)
+      category: { idx: 0, categoryName: 'None' },
+      price: '', // 헤당 카테고리 가격
+    }, // 기본 카테고리 리스트
+  ];
   const setAuth = useSetRecoilState(authState);
   const setAccessToken = useSetRecoilState(accessToken);
   const [data, setData] = useState({
@@ -34,16 +41,7 @@ export default function MasterSignUp() {
     companyNumber: null,
     address: location.address,
     detailAddress: location.detail,
-    categoryList: [
-      {
-        index: 0, // categoryItemList에서의 순서(key에 사용)
-        category: {
-          idx: 0, // categoryItem의 idx
-          categoryName: '', // categoryItem의 이름
-        },
-        price: 0, // 헤당 카테고리 가격
-      }, // 기본 카테고리 리스트
-    ],
+    categoryList: defaultCategoryList,
   });
   const updateData = (updateValue) => {
     setData((original) => ({
@@ -114,6 +112,7 @@ export default function MasterSignUp() {
     // 카테고리 리스트: 카테고리 idx가 0인 경우
     for (let i = 0; i < data.categoryList.length; i += 1) {
       if (data.categoryList[i].category.idx === 0) {
+        // eslint-disable-next-line
         alert('유효하지 않은 카테고리가 있습니다.');
         return;
       }
@@ -138,7 +137,7 @@ export default function MasterSignUp() {
       <SignUpForm>
         <FormDiv>
           <FormTitle>회원 정보 입력</FormTitle>
-          <IdInput updateData={updateData} />
+          <IdInput updateData={updateData} initialValue="" />
           <PasswordInput updateData={updateData} />
           <NameInput updateData={updateData} initialValue="" />
           <ResidentNumberInput
@@ -156,11 +155,19 @@ export default function MasterSignUp() {
         </FormDiv>
         <FormDiv>
           <FormTitle>사업 정보 입력</FormTitle>
-          <CompanyNameInput updateData={updateData} />
-          <RepresentativeNameInput updateData={updateData} />
-          <CompanyNumberInput updateData={updateData} />
+          <CompanyNameInput updateData={updateData} initialValue="" />
+          <RepresentativeNameInput updateData={updateData} initialValue="" />
+          <CompanyNumberInput
+            updateData={updateData}
+            initialValue1=""
+            initialValue2=""
+            initialValue3=""
+          />
           <AddressInput updateData={updateData} />
-          <CategoryInput updateData={updateData} />
+          <CategoryInput
+            updateData={updateData}
+            initialList={defaultCategoryList}
+          />
         </FormDiv>
       </SignUpForm>
 
