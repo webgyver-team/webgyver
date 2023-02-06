@@ -34,7 +34,7 @@ import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
 import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
 import MasterReview from './pages/master/masterReview/MasterReview';
 import MasterExample from './pages/master/masterExample/MasterExample';
-import MasterMypage from './pages/master/Mypage/Mypage';
+import MasterMypage from './pages/master/mypage/Mypage';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url

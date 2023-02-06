@@ -22,6 +22,7 @@ export default function IdInput({ updateData, initialValue }) {
   };
 
   const changeId = (event) => {
+    setId(() => event.target.value); // 아이디에 담아는 놓아주고
     if (
       // eslint-disable-next-line operator-linebreak
       event.target.value.length < ID_MIN_LENGTH ||
@@ -36,7 +37,6 @@ export default function IdInput({ updateData, initialValue }) {
     }
     setMsg(() => '');
     setBtnDisabled(() => false);
-    setId(() => event.target.value);
   };
   const checkExistId = () => {
     // 유효성 검사 한번 들어가자
