@@ -6,7 +6,7 @@ import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes
 import com.ssafy.webgyver.api.service.customer.CustomerReservationService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Reservation;
-import com.ssafy.webgyver.websocket.WebSocket;
+import com.ssafy.webgyver.websocket.WebSocketFaceTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("api/v1/customer/reservation")
 public class CustomerReservationController {
     final CustomerReservationService customerReservationService;
-    final WebSocket webSocket;
+    final WebSocketFaceTime webSocket;
 
     // 일반상담 등록
     @PostMapping("/normal/regist")

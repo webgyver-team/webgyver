@@ -1,6 +1,6 @@
 package com.ssafy.webgyver.api.controller.common;
 
-import com.ssafy.webgyver.websocket.WebSocket;
+import com.ssafy.webgyver.websocket.WebSocketFaceTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +15,7 @@ import java.util.Map;
 @RequestMapping("api/v1/common/reservation")
 public class ReservationController {
 
-    final WebSocket webSocket;
+    final WebSocketFaceTime webSocket;
 
     @GetMapping("/info/{reservationIdx}")
     public ResponseEntity<Map<String, Object>> getReservationInfo(@PathVariable("reservationIdx") Long reservationIdx) {

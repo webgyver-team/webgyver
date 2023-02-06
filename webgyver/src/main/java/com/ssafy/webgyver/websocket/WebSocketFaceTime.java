@@ -5,6 +5,8 @@ import com.google.gson.Gson;
 import com.ssafy.webgyver.api.service.common.ReservationService;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.websocket.dto.Message;
+import com.ssafy.webgyver.websocket.dto.MessageParser;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -19,10 +21,9 @@ import java.util.Map;
 
 @Log
 @Component
-@ServerEndpoint(value = "/enter/{type}/{idx}/{reservationIdx}", configurator = WebSocketConfig.class)
-public class WebSocket {
+@ServerEndpoint(value = "/facetime/{type}/{idx}/{reservationIdx}", configurator = WebSocketConfig.class)
+public class WebSocketFaceTime {
     private static final Map<Long, Room> rooms = Collections.synchronizedMap(new HashMap<Long, Room>());
-    private static final RealTimeWaitingRoom realTimeWatingRoom = new RealTimeWaitingRoom();
     @Autowired
     ReservationService reservationService;
 //    @PostConstruct

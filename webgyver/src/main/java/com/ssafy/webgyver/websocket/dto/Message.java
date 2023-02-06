@@ -1,4 +1,4 @@
-package com.ssafy.webgyver.websocket;
+package com.ssafy.webgyver.websocket.dto;
 
 public class Message {
 //    public MessageType method;
