@@ -58,7 +58,11 @@ export default function MasterLogin() {
     }
     // console.log(errors);
   };
-
+  const handleOnKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      submit();
+    }
+  };
   const routeSignup = () => {
     navigate('/master/signup');
   };
@@ -81,6 +85,7 @@ export default function MasterLogin() {
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
+              onKeyPress={handleOnKeyPress}
             />
             {errors.nullIdError && <ErrDiv>아이디를 입력하세요</ErrDiv>}
             <NullBox />
@@ -94,6 +99,7 @@ export default function MasterLogin() {
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
+              onKeyPress={handleOnKeyPress}
             />
             {errors.nullPasswordError && <ErrDiv>비밀번호를 입력하세요</ErrDiv>}
             {/* <NullBox /> */}
