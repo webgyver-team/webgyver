@@ -10,7 +10,7 @@ export default function ResidentNumberInput({
 }) {
   const [residentNumber1, setResidentNumber1] = useState(initialValue1);
   const [residentNumber2, setResidentNumber2] = useState(initialValue2);
-  const [submitNum, setSubmitNum] = useState('');
+  const [submitNum, setSubmitNum] = useState(''); // 제출할 문자열
   const [msg, setMsg] = useState('');
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {
@@ -40,6 +40,7 @@ export default function ResidentNumberInput({
       event.target.value.trim().length === 6 &&
       residentNumber2.trim().length === 7
     ) {
+      // submit 문자열 업데이트
       if (residentNumber2[0] === '1' || residentNumber2[0] === '2') {
         setSubmitNum(
           `19${residentNumber1.trim()}${residentNumber2.replaceAll('*', '')}`,
@@ -69,6 +70,7 @@ export default function ResidentNumberInput({
       }
     }
     if (residentNumber1.trim().length === 6 && actualInput.length === 1) {
+      // submit 문자열 업데이트
       if (actualInput === '1' || actualInput === '2') {
         setSubmitNum(`19${residentNumber1.trim()}${actualInput}`);
       } else {
