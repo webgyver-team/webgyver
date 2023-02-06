@@ -51,20 +51,20 @@ export default function IdInput({ updateData, initialValue, checkDuplicate }) {
         if (res !== 200) {
           // 중복이면 경고창 띄우기
           // eslint-disable-next-line
-        alert('해당 아이디는 이미 존재합니다.');
+          alert('해당 아이디는 이미 존재합니다.');
           setBtnDisabled(() => false);
           return;
         }
         // 성공 했으면 아이디 input disabled
         // eslint-disable-next-line
-      alert('해당 아이디는 사용 가능합니다.');
+        alert('해당 아이디는 사용 가능합니다.');
         updateData({ id });
         setIdDisabled(() => true);
         setBtnDisabled(() => true);
       })
       .catch((err) => {
         // eslint-disable-next-line
-      console.log(err);
+        console.log(err);
       });
   };
 
