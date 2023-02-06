@@ -1,7 +1,6 @@
-package com.ssafy.webgyver.websocket;
+package com.ssafy.webgyver.websocket.dto;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 
 public class MessageParser {
 

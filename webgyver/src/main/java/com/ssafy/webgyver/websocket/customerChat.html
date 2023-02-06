@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>실시간 매칭 테스트 페이지</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        var g_webSocket = null;
+        var websocket_address = "ws://localhost:9001/realtime/customer/1";
+        window.onload = async function () {
+
+            g_webSocket = new WebSocket(websocket_address);
+
+            g_webSocket.onopen = function (message) {
+                // 처음 접속할때 정보 설정.
+                const data = JSON.stringify(
+                    {
+                        'method': 'INIT',
+                        'lng': Math.random(),
+                        'lat': Math.random(),
+                        'fullAddress': '대전 서구 청사로 253, 111-2222',
+                        'title': '물이 안나와요',
+                        'content': '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n',
+                        'images': ['asd.png', 'qwer.png', '123.png'],
+                        'price': Math.random(),
+                        'viewDistance': -1
+                    }
+                );
+                console.log(data)
+                g_webSocket.send(data);
+            }
+
+            /**
+             * 웹소켓 메시지(From Server) 수신하는 경우 호출
+             */
+            g_webSocket.onmessage = function (message) {
+                const data = JSON.parse(message.data)
+                console.log(data);
+                addLineToChatBox(data)
+            };
+
+            /**
+             * 웹소켓 사용자 연결 해제하는 경우 호출
+             */
+            g_webSocket.onclose = function (message) {
+                addLineToChatBox("Server is disconnected.");
+            };
+
+            /**
+             * 웹소켓 에러 발생하는 경우 호출
+             */
+            g_webSocket.onerror = function (message) {
+                addLineToChatBox("Error!");
+            };
+        }
+
+        /**
+         * 채팅 박스영역에 내용 한 줄 추가
+         */
+        function addLineToChatBox(_line) {
+            if (_line == null) {
+                _line = "";
+            }
+
+            var chatBoxArea = document.getElementById("chatBoxArea");
+            chatBoxArea.value += _line + "\n";
+            chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
+        }
+
+
+    </script>
+</head>
+<body>
+<h1>실시간 매칭 테스트 페이지 CUSTOMER</h1>
+<br/>
+
+<input id="disconnectButton" value="Disconnect" type="button" onclick="disconnectButton_onclick()">
+<br/>
+<textarea id="chatBoxArea" style="width: 100%;" rows="10" cols="50" readonly="readonly"></textarea>
+<br/>
+
+</body>
+</html>
