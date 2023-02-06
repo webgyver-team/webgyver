@@ -33,6 +33,12 @@ export default function NavBar(props) {
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const setAccessToken = useSetRecoilState(accessToken);
   const openLoginModal = () => setLoginOpenState(true);
+
+  const doLogOut = () => {
+    setAuth(null);
+    setAccessToken('');
+  };
+
   const chooseMenu = (item) => {
     // 아래 사이드바 메뉴 클릭 시 실행
     // item의 조건을 추가해 함수 로직 작성
@@ -44,6 +50,8 @@ export default function NavBar(props) {
       navigate('/mypage');
     } else if (item === '이용내역') {
       navigate('/usagehistory');
+    } else if (item === '로그아웃') {
+      doLogOut();
     }
   };
   const routeHome = () => navigate('/');
@@ -61,10 +69,6 @@ export default function NavBar(props) {
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
-  };
-  const doLogOut = () => {
-    setAuth(null);
-    setAccessToken('');
   };
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
