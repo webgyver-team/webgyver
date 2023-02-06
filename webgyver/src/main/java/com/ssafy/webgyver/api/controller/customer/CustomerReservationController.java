@@ -1,6 +1,7 @@
 package com.ssafy.webgyver.api.controller.customer;
 
 import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
+import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.api.service.customer.CustomerReservationService;
@@ -36,5 +37,10 @@ public class CustomerReservationController {
     @GetMapping("/normal/store/list/{order}")
     public ResponseEntity<CustomerReservationNormalListRes> getOrderedStoreList(@RequestBody CustomerReservationNormalListReq req, @PathVariable("order") String order) {
         return ResponseEntity.ok(customerReservationService.getOrderedStoreList(order, req));
+    }
+    @GetMapping("list/{customerIdx}")
+    public ResponseEntity<?> getCustomerReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq){
+        customerReservationService.getCustomerReservationList(idxReq);
+        return null;
     }
 }

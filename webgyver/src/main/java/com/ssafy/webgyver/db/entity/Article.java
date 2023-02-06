@@ -3,11 +3,11 @@ package com.ssafy.webgyver.db.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @Getter
 @Entity
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="article")
@@ -35,5 +35,4 @@ public class Article extends BaseEntity{
     // -6 -> 리뷰, 별점 4개
     // -7 -> 리뷰, 별점 5개
     private Long type;
-
 }

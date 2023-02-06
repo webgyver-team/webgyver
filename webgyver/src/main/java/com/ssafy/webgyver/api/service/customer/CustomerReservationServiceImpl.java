@@ -2,7 +2,9 @@ package com.ssafy.webgyver.api.service.customer;
 
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
+import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
+import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.db.entity.*;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
@@ -15,15 +17,17 @@ import com.ssafy.webgyver.util.ReservationParsingUtil;
 import com.ssafy.webgyver.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
-@Log
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class CustomerReservationServiceImpl implements CustomerReservationService {
@@ -85,5 +89,36 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         }
 
         return CustomerReservationNormalListRes.of(200, "success", sellerList, req, existReservationTimeList, sellerCategoryPrice, order);
+    }
+
+    @Override
+    public CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req) {
+        List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdx(req.getCustomerIdx());
+        List<CustomerReservationListRes.ReservationDTO> reservationDTOList = new ArrayList<>();
+        for (Reservation reservation : reservationList) {
+            String title = null;    // 예약 제목
+            String content = null; // 문의 내용
+            for (Article review : reservation.getArticleList()){
+                if (review.getType() == -1){
+                    title = review.getTitle();
+                    content = review.getContent();
+
+//                    for (Picture picture : review.get)
+                }
+            }
+//            CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
+//                    reservation.getIdx(),
+//                    reservation.getArticleList(),
+//                    title,
+//                    reservation.getReservationTime(),
+//                    content,
+//                    reservation.getSeller().getCompanyName(),
+//
+//                    reservation.getReservationState()
+//
+//            );
+        }
+        log.info("list : {}", reservationList);
+        return null;
     }
 }
