@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import AddCardIcon from '@mui/icons-material/AddCard';
-import IdInput from './elements/IdInput';
-import PasswordInput from './elements/PasswordInput';
-import NameInput from './elements/NameInput';
-import ResidentNumberInput from './elements/ResidentNumberInput';
-import PhoneNumberInput from './elements/PhoneNumberInput';
-import Agreement from './elements/AgreementToTerms';
+import IdInput from '../../common/signup/elements/IdInput';
+import PasswordInput from '../../common/signup/elements/PasswordInput';
+import NameInput from '../../common/signup/elements/NameInput';
+import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
+import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
+import Agreement from '../../common/signup/elements/AgreementToTerms';
 
 export default function CustomerSignUp() {
   // const [cardNumber, setCardNumber] = useState(null);
@@ -40,11 +40,9 @@ export default function CustomerSignUp() {
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <SignUpTitle>고객 회원가입</SignUpTitle>
-      {/* {data.cardNumber} */}
-      {/* 글씨 크기 32로 조정 필요 */}
       <SignUpForm>
-        <IdInput updateData={updateData} />
-        <PasswordInput updateData={updateData} />
+        <IdInput updateData={updateData} initialValue="" />
+        <PasswordInput updateData={updateData} initialValue="" />
         <NameInput updateData={updateData} initialValue="" />
         <ResidentNumberInput
           updateData={updateData}

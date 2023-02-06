@@ -2,14 +2,22 @@ import { atom } from 'recoil';
 import { recoilPersist } from 'recoil-persist';
 // 해당 파일은 Recoil-atom을 선언하는 공간이다.
 
-// 로그인 판단용 State, null, master, customer
 const { persistAtom } = recoilPersist({
   key: 'recoil-persist',
-  storage: localStorage,
+  storage: sessionStorage,
 });
+
+// 로그인 판단용 State, null, master, customer
 export const authState = atom({
   key: 'authState',
-  default: true,
+  default: false,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const accessToken = atom({
+  key: 'accessToken',
+  default: '',
+  effects_UNSTABLE: [persistAtom],
 });
 
 // 테스트용
@@ -45,6 +53,7 @@ export const masterInfoModalState = atom({
 export const categoryState = atom({
   key: 'categoryState',
   default: '',
+  effects_UNSTABLE: [persistAtom],
 });
 
 export const loginOpenState = atom({
@@ -78,4 +87,9 @@ export const chosenReservation = atom({
     time: null,
   },
   effects_UNSTABLE: [persistAtom],
+});
+
+export const exampleFormState = atom({
+  key: 'exampleFormState',
+  default: false,
 });

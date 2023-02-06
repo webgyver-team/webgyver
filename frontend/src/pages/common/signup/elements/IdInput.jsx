@@ -4,10 +4,10 @@ import TextField from '@mui/material/TextField';
 import styled from 'styled-components';
 import Message from './Message';
 
-export default function IdInput({ updateData }) {
+export default function IdInput({ updateData, initialValue }) {
   const ID_MIN_LENGTH = 6;
   const ID_MAX_LENGTH = 10;
-  const [id, setId] = useState('');
+  const [id, setId] = useState(initialValue);
   const [msg, setMsg] = useState('');
   const [idDisabled, setIdDisabled] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
@@ -69,18 +69,21 @@ export default function IdInput({ updateData }) {
           variant="outlined"
           required
           inputProps={{ minLength: 6, maxLength: 10 }}
-          disabled={idDisabled}
+          disabled={initialValue !== '' ? true : idDisabled}
           onChange={changeId}
+          value={id}
           fullWidth
         />
-        <Button
-          variant="contained"
-          style={buttonStyle}
-          onClick={checkExistId}
-          disabled={btnDisabled}
-        >
-          검사
-        </Button>
+        {initialValue === '' ? (
+          <Button
+            variant="contained"
+            style={buttonStyle}
+            onClick={checkExistId}
+            disabled={btnDisabled}
+          >
+            검사
+          </Button>
+        ) : null}
       </InputDiv>
       <Message msg={msg} />
     </div>

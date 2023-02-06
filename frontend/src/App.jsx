@@ -1,11 +1,12 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable prettier/prettier */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.scss';
-import { Routes, Route } from 'react-router-dom';
-import { RecoilRoot } from 'recoil';
+import { Routes, Route, useLocation } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import styled, { ThemeProvider } from 'styled-components';
 import CustomerSignUp from './pages/customer/signup/CustomerSignUp';
-import ProSignUp from './pages/customer/signup/ProSignUp';
+import MasterSignUp from './pages/master/masterSignUp/MasterSignUp';
 import { normal } from './theme/theme';
 import Home from './pages/customer/homepage/home';
 import CustomerNavBar from './components/customer/navbar/NavBar';
@@ -23,44 +24,93 @@ import MyPageUpdate from './pages/customer/mypage/MyPageUpdate';
 import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
+import MasterLogin from './pages/master/masterLogin/MasterLogin';
+import MasterMyPageUpdate from './pages/master/mypage/MyPageUpdate';
+import MasterNavBar from './components/master/navbar/MasterNavBar';
+import PrivateRoute from './components/common/privateroute/PrivateRoute';
+import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';
+import MasterEndService from './pages/master/masterendservice/MasterEndService';
+import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
+import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
+import MasterReview from './pages/master/masterReview/MasterReview';
+import MasterExample from './pages/master/masterExample/MasterExample';
+import MasterMypage from './pages/master/Mypage/Mypage';
+import { authState } from './atom';
+
+// 네브바가 없어도 되는 url
+const notNavList = ['/videoservice', '/master/login'];
 
 function App() {
+  const [auth] = useRecoilState(authState);
+  // const [url, setUrl] = useState(''); // 현재 url
+  const [onNav, setOnNav] = useState(true);
+  // 마스터 url에 위치하는지 판단
+  const [onMaster, setOnMaster] = useState(false);
+  const location = useLocation();
+  useEffect(() => {
+    // setUrl(location.pathname);
+    notNavList.includes(location.pathname) ? setOnNav(false) : setOnNav(true);
+    location.pathname.includes('/master')
+      ? setOnMaster(true)
+      : setOnMaster(false);
+  }, [location]);
   return (
     <>
-      {/* RecoilRoot로 감싸인 부분 내에서만 Recoil-atom을 가져올 수 있다. */}
-      <RecoilRoot>
-        {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
-        <ThemeProvider theme={normal}>
-          <All>
-            <Main>
-              <CustomerNavBar />
-              <LoginModal />
-              <MasterInfo />
-              <LocateModal />
-              <Page>
-                <Routes>
-                  <Route path="/" element={<Home />} />
-                  <Route path="/signup" element={<CustomerSignUp />} />
-                  <Route path="/seller/signup" element={<ProSignUp />} />
-                  <Route path="/select" element={<Select />} />
-                  <Route path="/reservation" element={<Reservation />} />
-                  <Route path="/reservation/form" element={<ReservationForm />} />
-                  <Route path="/match" element={<Match />} />
-                  <Route path="/match/form" element={<MatchForm />} />
-                  <Route path="/masterinfo" element={<MasterInfo />} />
-                  <Route path="/usagehistory" element={<UsageHistory />} />
-                  <Route path="/mypage" element={<MyPage />} />
-                  <Route path="/videoservice" element={<VideoService />} />
-                  <Route path="/mypage/update" element={<MyPageUpdate />} />
-                  <Route path="/endservice" element={<EndService />} />
-                  <Route path="/reviewform" element={<ReviewForm />} />
-                  <Route path="*" element={<div>404</div>} />
-                </Routes>
-              </Page>
-            </Main>
-          </All>
-        </ThemeProvider>
-      </RecoilRoot>
+      {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
+      <ThemeProvider theme={normal}>
+        <All>
+          <Main>
+            {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
+            <LoginModal />
+            <MasterInfo />
+            <LocateModal />
+            <Page isMaster={onMaster}>
+              <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/signup" element={<CustomerSignUp />} />
+                <Route path="/select" element={<Select />} />
+                <Route path="/reservation" element={<Reservation />} />
+                <Route
+                  path="/reservation/form"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<ReservationForm />}
+                    />
+                  }
+                />
+                <Route path="/match" element={<Match />} />
+                <Route path="/match/form" element={<MatchForm />} />
+                <Route path="/sellerinfo" element={<MasterInfo />} />
+                <Route path="/usagehistory" element={<UsageHistory />} />
+                <Route path="/mypage" element={<MyPage />} />
+                <Route path="/videoservice" element={<VideoService />} />
+                <Route
+                  path="/master/videoservice"
+                  element={<MasterVideoService />}
+                />
+                <Route path="/mypage/update" element={<MyPageUpdate />} />
+                <Route path="/endservice" element={<EndService />} />
+                <Route
+                  path="/master/endservice"
+                  element={<MasterEndService />}
+                />
+                <Route path="/reviewform" element={<ReviewForm />} />
+                <Route path="/master/login" element={<MasterLogin />} />
+                <Route path="/master/schedule" element={<MasterSchedule />} />
+                <Route path="/master/realtime" element={<MasterRealtime />} />
+                <Route path="/master/review" element={<MasterReview />} />
+                <Route path="/master/example" element={<MasterExample />} />
+                <Route path="/master/mypage" element={<MasterMypage />} />
+                <Route path="/master/signup" element={<MasterSignUp />} />
+                <Route path="/master/mypage/update" element={<MasterMyPageUpdate />} />
+
+                <Route path="*" element={<div>404</div>} />
+              </Routes>
+            </Page>
+          </Main>
+        </All>
+      </ThemeProvider>
     </>
   );
 }
@@ -69,18 +119,18 @@ export default App;
 
 const All = styled.div`
   width: 100vw;
+  // min-height: 800px;
   display: flex;
   justify-content: center;
 `;
 
 const Main = styled.div`
-  // line-height: 160%;
   box-shadow: 0 0 8px 0 ${(props) => props.theme.color.defaultlightColor};
 `;
 
 const Page = styled.div`
   min-width: 360px;
-  max-width: 768px;
+  max-width: ${(props) => (props.isMaster ? 'auto' : '768px')};
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -90,4 +140,5 @@ const Page = styled.div`
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
+  // overflow-y: scroll;
 `;

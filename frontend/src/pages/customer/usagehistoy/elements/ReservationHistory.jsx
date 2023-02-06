@@ -74,7 +74,7 @@ function CardView({ history }) {
           <SliderBox>
             <Slider {...slickSettings}>
               {history.images.map((el) => (
-                <ImgBox>
+                <ImgBox key={el}>
                   <img src={el} alt="" />
                 </ImgBox>
               ))}
