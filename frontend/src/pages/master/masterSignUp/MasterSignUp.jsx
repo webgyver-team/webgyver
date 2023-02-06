@@ -120,9 +120,7 @@ export default function MasterSignUp() {
     // eslint-disable-next-line
     // api 호출 추가 예정
     delete data.useCheck;
-    console.log(data);
     const response = await master.signup(data);
-    console.log(response);
     if (response.statusCode === 200) {
       const loginResponse = await master.login({
         id: data.id,
