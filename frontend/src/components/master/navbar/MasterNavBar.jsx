@@ -137,10 +137,27 @@ export default function MasterNavBar(props) {
                 flexGrow: 1,
               }}
             >
-              <HomeIcon onClick={routeHome}>
-                <img src={Webgyver} alt="이런!" width="30px" />
-                <span>WebGyver</span>
-              </HomeIcon>
+              <MenuBox>
+                <HomeIcon onClick={routeHome}>
+                  <img src={Webgyver} alt="이런!" width="30px" />
+                  <span>WebGyver</span>
+                </HomeIcon>
+                <div>
+                  <MenuText>일정</MenuText>
+                </div>
+                <div>
+                  <MenuText>내역</MenuText>
+                </div>
+                <div>
+                  <MenuText>리뷰</MenuText>
+                </div>
+                <div>
+                  <MenuText>사례</MenuText>
+                </div>
+                <div>
+                  <MenuText>실시간</MenuText>
+                </div>
+              </MenuBox>
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
@@ -206,4 +223,17 @@ const HomeIcon = styled.div`
   span {
     margin-left: 8px;
   }
+`;
+
+const MenuBox = styled.div`
+  display: flex;
+  div {
+    margin-right: 16px;
+  }
+`;
+
+const MenuText = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
 `;

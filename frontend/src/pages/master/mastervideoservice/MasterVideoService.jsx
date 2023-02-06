@@ -4,8 +4,9 @@ import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 // import Button from '@mui/material/Button';
+import SideBar from './elements/SideBar';
 
-export default function VideoService() {
+export default function MasterVideoService() {
   const navigate = useNavigate();
   const myMainScreen = useRef(null);
   const mySubScreen = useRef(null);
@@ -48,7 +49,7 @@ export default function VideoService() {
   }, []);
 
   const routeEndService = () => {
-    navigate('/endservice');
+    navigate('/master/endservice');
   };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
 
@@ -116,7 +117,8 @@ export default function VideoService() {
   // });
   return (
     <Main>
-      <BoxBox>
+      <Box3>
+        <SideBar />
         {mainScreenState === 'myScreen' && (
           <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
             <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
@@ -148,13 +150,8 @@ export default function VideoService() {
             </SubScreen>
           </VideoBox>
         )}
-      </BoxBox>
+      </Box3>
       <NullBox2 width={subScreenWidth} />
-      <BoxBox>
-        <Btn>
-          <span>출장요청</span>
-        </Btn>
-      </BoxBox>
       <NullBox />
       <BoxBox>
         <RedBtn onClick={routeEndService}>
@@ -166,18 +163,25 @@ export default function VideoService() {
   );
 }
 const Main = styled.div`
-  width: 100%;
-  height: 100%;
+  width: 100vw;
+  height: 80vw;
 `;
 const BoxBox = styled.div`
   display: flex;
   justify-content: center;
 `;
 
+const Box3 = styled.div`
+  display: flex;
+  justify-content: space-between;
+  width: 100vw;
+`;
+
 const VideoBox = styled.div`
   position: relative;
   width: 100vw;
   height: ${(props) => props.width}px;
+  margin-right: 10vw;
 `;
 
 const MainScreen = styled.div`

@@ -1,7 +1,8 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue } from 'recoil';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
+import { useNavigate } from 'react-router-dom';
 import { locateValueState } from '../../../atom';
 import './Match.scss';
 
@@ -11,10 +12,12 @@ const { kakao } = window;
 // map style
 const mapStyle = {
   width: '100%',
-  height: '440px',
+  height: '500px',
 };
 
 export default function Matching() {
+  const navigate = useNavigate();
+  const routeMatchForm = () => navigate('/match/form');
   const locateValue = useRecoilValue(locateValueState);
 
   const backCount = 3;
@@ -30,9 +33,10 @@ export default function Matching() {
     </div>
   );
 
+  // 지도를 담을 영역의 DOM 레퍼런스
+  const container = useRef();
+
   useEffect(() => {
-    // 지도를 담을 영역의 DOM 레퍼런스
-    const container = document.getElementById('map');
     // 지도를 생성할 때 필요한 기본 옵션
     const options = {
       // 지도의 중심좌표.
@@ -45,14 +49,14 @@ export default function Matching() {
 
     // 지도 생성 및 객체 리턴
     // eslint-disable-next-line no-unused-vars
-    const map = new kakao.maps.Map(container, options);
+    const map = new kakao.maps.Map(container.current, options);
   });
 
   return (
     <Main>
       <MapBox>
         <ArrowBox>
-          <BackArrow style={{ fontSize: '120%' }} />
+          <BackArrow style={{ fontSize: '120%' }} onClick={routeMatchForm} />
         </ArrowBox>
         <AlertBox>{alertText}</AlertBox>
         <MarkerBox>{marker}</MarkerBox>
@@ -65,7 +69,7 @@ export default function Matching() {
             <p>{lowerText}</p>
           </LowerInfo>
         </InfoBox>
-        <Map id="map" style={mapStyle} />
+        <Map ref={container} style={mapStyle} />
         <UpperMap />
       </MapBox>
       <NullBox />
@@ -113,9 +117,9 @@ const AlertBox = styled.div`
 
 const MarkerBox = styled.div`
   position: absolute;
-  z-index: 20;
+  z-index: 19;
   width: 100%;
-  height: 440px;
+  height: 500px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -129,7 +133,7 @@ const UpperMap = styled.div`
   position: relative;
   z-index: 10;
   width: 100%;
-  height: 440px;
+  height: 500px;
   background-color: rgba(0, 0, 0, 0.3);
 `;
 

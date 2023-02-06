@@ -25,12 +25,20 @@ import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
-import MasterMyPage from './pages/master/mypage/MyPageUpdate';
+import MasterMyPageUpdate from './pages/master/mypage/MyPageUpdate';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
+import PrivateRoute from './components/common/privateroute/PrivateRoute';
+import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';
+import MasterEndService from './pages/master/masterendservice/MasterEndService';
+import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
+import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
+import MasterReview from './pages/master/masterReview/MasterReview';
+import MasterExample from './pages/master/masterExample/MasterExample';
+import MasterMypage from './pages/master/Mypage/Mypage';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
-const notNavList = ['/videoservice', '/master'];
+const notNavList = ['/videoservice', '/master/login'];
 
 function App() {
   const [auth] = useRecoilState(authState);
@@ -42,7 +50,9 @@ function App() {
   useEffect(() => {
     // setUrl(location.pathname);
     notNavList.includes(location.pathname) ? setOnNav(false) : setOnNav(true);
-    location.pathname.includes('/master') ? setOnMaster(true) : setOnMaster(false);
+    location.pathname.includes('/master')
+      ? setOnMaster(true)
+      : setOnMaster(false);
   }, [location]);
   return (
     <>
@@ -50,7 +60,7 @@ function App() {
       <ThemeProvider theme={normal}>
         <All>
           <Main>
-            { onNav && (auth === 'master' ? <MasterNavBar /> : <CustomerNavBar />) }
+            {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
@@ -60,19 +70,35 @@ function App() {
                 <Route path="/signup" element={<CustomerSignUp />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
-                <Route path="/reservation/form" element={<ReservationForm />} />
+                <Route
+                  path="/reservation/form"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<ReservationForm />}
+                    />
+                  }
+                />
                 <Route path="/match" element={<Match />} />
                 <Route path="/match/form" element={<MatchForm />} />
                 <Route path="/sellerinfo" element={<MasterInfo />} />
                 <Route path="/usagehistory" element={<UsageHistory />} />
                 <Route path="/mypage" element={<MyPage />} />
                 <Route path="/videoservice" element={<VideoService />} />
+                <Route path="/master/videoservice" element={<MasterVideoService />} />
                 <Route path="/mypage/update" element={<MyPageUpdate />} />
                 <Route path="/endservice" element={<EndService />} />
+                <Route path="/master/endservice" element={<MasterEndService />} />
                 <Route path="/reviewform" element={<ReviewForm />} />
-                <Route path="/master" element={<MasterLogin />} />
+                <Route path="/master/login" element={<MasterLogin />} />
+                <Route path="/master/schedule" element={<MasterSchedule />} />
+                <Route path="/master/realtime" element={<MasterRealtime />} />
+                <Route path="/master/review" element={<MasterReview />} />
+                <Route path="/master/example" element={<MasterExample />} />
+                <Route path="/master/mypage" element={<MasterMypage />} />
                 <Route path="/master/signup" element={<MasterSignUp />} />
-                <Route path="/master/mypage/update" element={<MasterMyPage />} />
+                <Route path="/master/mypage/update" element={<MasterMyPageUpdate />} />
+
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>
@@ -87,6 +113,7 @@ export default App;
 
 const All = styled.div`
   width: 100vw;
+  // min-height: 800px;
   display: flex;
   justify-content: center;
 `;
@@ -107,4 +134,5 @@ const Page = styled.div`
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
+  // overflow-y: scroll;
 `;
