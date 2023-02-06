@@ -10,7 +10,7 @@ build/
 
 ### env ###
 env.properties
-
+PropertyConfig
 
 ### STS ###
 .apt_generated
