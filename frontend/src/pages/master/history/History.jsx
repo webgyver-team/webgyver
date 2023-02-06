@@ -50,7 +50,9 @@ export default function History() {
       <HistoryBox>
         <HistoryInner>
           <HistoryHeader>
-            {`${String(value.$y)}년 ${String(value.$M + 1)}월 ${String(value.$D)}일`}
+            {`${String(value.$y)}년 ${String(value.$M + 1)}월 ${String(
+              value.$D,
+            )}일`}
           </HistoryHeader>
           {data.map((el) => (
             <HistoryCard data={el} />

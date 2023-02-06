@@ -50,7 +50,7 @@ export default function MasterSignUp() {
     }));
   };
 
-  const registCustomer = () => {
+  const registCustomer = async () => {
     // 각 입력정보 모아져 있는 data를 가지고 유효성 검사하자
     // 아이디 -> 글자수 제한 충족시킨 후 중복 검사 거쳐야 값 O, 그 전엔 null
 
@@ -120,9 +120,11 @@ export default function MasterSignUp() {
     // eslint-disable-next-line
     // api 호출 추가 예정
     delete data.useCheck;
-    const response = master.signup(data);
-    if (response.statusCode === '200') {
-      const loginResponse = master.login({
+    console.log(data);
+    const response = await master.signup(data);
+    console.log(response);
+    if (response.statusCode === 200) {
+      const loginResponse = await master.login({
         id: data.id,
         password: data.password,
       });
