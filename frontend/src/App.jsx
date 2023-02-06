@@ -103,7 +103,10 @@ function App() {
                 <Route path="/master/example" element={<MasterExample />} />
                 <Route path="/master/mypage" element={<MasterMypage />} />
                 <Route path="/master/signup" element={<MasterSignUp />} />
-                <Route path="/master/mypage/update" element={<MasterMyPageUpdate />} />
+                <Route
+                  path="/master/mypage/update"
+                  element={<MasterMyPageUpdate />}
+                />
 
                 <Route path="*" element={<div>404</div>} />
               </Routes>
