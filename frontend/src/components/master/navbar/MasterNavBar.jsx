@@ -6,10 +6,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -17,17 +14,23 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import styled from 'styled-components';
-import { useRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import Webgyver from '../../../assets/icon/webgyver_white.png';
-import { authState } from '../../../atom';
+import { authState, accessToken } from '../../../atom';
 
 const drawerWidth = 240;
 
 export default function MasterNavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
+  const setAccessToken = useSetRecoilState(accessToken);
   const navigate = useNavigate();
   const masterNavItems = ['일정', '내역', '리뷰', '사례', '실시간'];
+  const doLogOut = () => {
+    setAuth(null);
+    setAccessToken('');
+    navigate('/');
+  };
   const chooseMenu = (item) => {
     // 아래 사이드바 메뉴 클릭 시 실행
     // item의 조건을 추가해 함수 로직 작성
@@ -44,9 +47,7 @@ export default function MasterNavBar(props) {
     }
   };
   const routeHome = () => navigate('/master/schedule');
-  const handleChange = (event) => {
-    setAuth(event.target.checked);
-  };
+  const routeMyPage = () => navigate('/master/mypage');
 
   // eslint-disable-next-line react/prop-types
   const { window } = props;
@@ -85,18 +86,6 @@ export default function MasterNavBar(props) {
   return (
     <Main>
       <Box sx={{ flexGrow: 1 }}>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={auth === 'master'}
-                onChange={handleChange}
-                aria-label="login switch"
-              />
-            }
-            label={auth ? 'Logout' : 'Login'}
-          />
-        </FormGroup>
         <AppBar position="static" color="primary">
           <Toolbar>
             {/* 메뉴 버튼 */}
@@ -149,13 +138,16 @@ export default function MasterNavBar(props) {
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Button color="inherit">로그아웃</Button>
+                <Button color="inherit" onClick={doLogOut}>
+                  로그아웃
+                </Button>
                 <IconButton
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
+                  onClick={routeMyPage}
                 >
                   <AccountCircle />
                 </IconButton>

@@ -25,7 +25,7 @@ import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
-import MasterMyPageUpdate from './pages/master/Mypage/MyPageUpdate';
+import MasterMyPageUpdate from './pages/master/mypage/MyPageUpdate';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
 import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';
@@ -34,7 +34,7 @@ import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
 import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
 import MasterReview from './pages/master/masterReview/MasterReview';
 import MasterExample from './pages/master/masterExample/MasterExample';
-import MasterMypage from './pages/master/Mypage/Mypage';
+import MasterMypage from './pages/master/mypage/Mypage';
 import MasterHistory from './pages/master/history/History';
 import { authState } from './atom';
 
@@ -104,7 +104,10 @@ function App() {
                 <Route path="/master/example" element={<MasterExample />} />
                 <Route path="/master/mypage" element={<MasterMypage />} />
                 <Route path="/master/signup" element={<MasterSignUp />} />
-                <Route path="/master/mypage/update" element={<MasterMyPageUpdate />} />
+                <Route
+                  path="/master/mypage/update"
+                  element={<MasterMyPageUpdate />}
+                />
                 <Route path="/master/history" element={<MasterHistory />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
