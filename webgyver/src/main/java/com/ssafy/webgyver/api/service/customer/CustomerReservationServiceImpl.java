@@ -91,14 +91,73 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         return CustomerReservationNormalListRes.of(200, "success", sellerList, req, existReservationTimeList, sellerCategoryPrice, order);
     }
 
+    static List<CustomerReservationListRes.ReservationDTO> reservationDTOList;
+
     @Override
+    @Transactional
     public CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req) {
-        List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxOrderByIdxDesc(req.getCustomerIdx());
-        log.info("{} : ", reservationList);
-        List<CustomerReservationListRes.ReservationDTO> reservationDTOList = new ArrayList<>();
+        reservationDTOList = new ArrayList<>();
+        // 1. 예약 상태 4 => 최상단 띄우기
+        List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(req.getCustomerIdx(), "4");
+        reservationState4ListMethod(reservationList);
+        // 2. 예약 상태 1 => 수락 대기 중 => 5분 지났으면 상태를 3번으로 변경하고 리턴할 리스트엔 추가하지 않음
+        reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(req.getCustomerIdx(), "1");
+        reservationState1ListMethod(reservationList);
+        // 3. 예약 상태 2 => 예약 확정 => 아직 예약시간이 안됨
+        // 4. 예약 상태 2 => 예약 확정 => 예약시간이 됨 => 상태 6으로 변경, 디비 저장 리턴 값 추가
+        reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(req.getCustomerIdx(), "2");
+        reservationState2ListMethod(reservationList);
+        System.out.println(reservationList);
+        CustomerReservationListRes res = CustomerReservationListRes.of(200, "Success", reservationDTOList);
+        return res;
+    }
+
+    public void reservationState4ListMethod(List<Reservation> reservationList) {
+        LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
-            // 예약 상태가 아직 진행되지 않은 상태
-            if (reservation.getReservationState().equals("1") || reservation.getReservationState().equals("2") || reservation.getReservationState().equals("4")) {
+            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
+                reservation.updateReservationState("5");
+                reservationRepository.save(reservation);
+            } else {
+                String title = null;    // 예약 제목
+                String content = null; // 문의 내용
+                List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
+                // 문의 내용 찾기
+                for (Article review : reservation.getArticleList()) {
+                    if (review.getType() == -1) {
+                        title = review.getTitle();
+                        content = review.getContent();
+                        List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(
+                                review.getIdx());
+                        // 문의 내용에대한 사진 가져오기
+                        for (Picture picture : pictures) {
+                            CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(
+                                    picture.getIdx(), picture.getOriginName(),
+                                    picture.getSaveName());
+                            pictureDTOS.add(pictureTemp);
+                        }
+                    }
+                }
+                CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
+                        reservation.getIdx(),
+                        title,
+                        reservation.getReservationTime(),
+                        content,
+                        reservation.getSeller().getCompanyName(),
+                        pictureDTOS,
+                        reservation.getReservationState()
+                );
+                reservationDTOList.add(reservationDTO);
+            }
+        }
+    }
+
+    public void reservationState1ListMethod(List<Reservation> reservationList) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        for (Reservation reservation : reservationList) {
+            // true면 아직 시간 안지남 false면 시간지남 => 상태 업데이트 해줘야함
+            // 시간 안지남
+            if (reservation.getCreatedAt().plusMinutes(5).isAfter(currentTime)) {
                 String title = null;    // 예약 제목
                 String content = null; // 문의 내용
                 List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
@@ -124,15 +183,57 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                         pictureDTOS,
                         reservation.getReservationState()
                 );
-                // 예약 상태가 현재 상담 진행중이면 제일 위로해서 보내주기 위해 0번 엔덱스에 추가
-                if (reservation.getReservationState().equals("4")){
-                    reservationDTOList.add(0,reservationDTO);
-                }else {
-                    reservationDTOList.add(reservationDTO);
-                }
+                reservationDTOList.add(reservationDTO);
+            }
+            // 시간 지남 상태 업데이트
+            else {
+                reservation.updateReservationState("3");
+                reservationRepository.save(reservation);
             }
         }
+    }
 
-        return null;
+    public void reservationState2ListMethod(List<Reservation> reservationList) {
+        LocalDateTime currentTime = LocalDateTime.now();
+        System.out.println("현재시간 : " + currentTime);
+        for (Reservation reservation : reservationList) {
+            // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
+            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime))
+             {
+                reservation.updateReservationState("3");
+                reservationRepository.save(reservation);
+            }
+            // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
+            else if (reservation.getReservationTime().isAfter(currentTime)){
+                reservation.updateReservationState("6");
+                reservationRepository.save(reservation);
+            }
+            String title = null;    // 예약 제목
+            String content = null; // 문의 내용
+            List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
+            // 문의 내용 찾기
+            for (Article review : reservation.getArticleList()) {
+                if (review.getType() == -1) {
+                    title = review.getTitle();
+                    content = review.getContent();
+                    List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(review.getIdx());
+                    // 문의 내용에대한 사진 가져오기
+                    for (Picture picture : pictures) {
+                        CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(picture.getIdx(), picture.getOriginName(), picture.getSaveName());
+                        pictureDTOS.add(pictureTemp);
+                    }
+                }
+            }
+            CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
+                    reservation.getIdx(),
+                    title,
+                    reservation.getReservationTime(),
+                    content,
+                    reservation.getSeller().getCompanyName(),
+                    pictureDTOS,
+                    reservation.getReservationState()
+            );
+            reservationDTOList.add(reservationDTO);
+        }
     }
 }

@@ -9,6 +9,10 @@ import java.util.List;
 
 public interface ReservationRepository extends JpaRepository<Reservation, Long> {
     List<Reservation> findReservationsByCustomerIdx(Long idx);
+
     List<Reservation> findReservationsBySellerAndReservationTimeBetween(Seller seller, LocalDateTime start, LocalDateTime end);
+
     List<Reservation> findReservationsByCustomerIdxOrderByIdxDesc(Long idx);
+
+    List<Reservation> findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(Long idx, String type);
 }
