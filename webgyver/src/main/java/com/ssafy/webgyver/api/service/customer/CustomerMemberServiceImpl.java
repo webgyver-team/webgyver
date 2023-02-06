@@ -10,18 +10,19 @@ import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.repository.customer.CustomerMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.json.simple.JSONObject;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-import org.springframework.web.client.RestTemplate;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Optional;
 
 @Slf4j
@@ -54,24 +55,177 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
 
     @Override
     public BaseResponseBody payTest(CustomerSignUpPostReq req) {
-        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add("cardNumber", req.getCardNumber());
-        map.add("cardExpirationYear", req.getCardValidity().substring(2, 4));
-        map.add("cardExpirationMonth", req.getCardValidity().substring(0, 2));
-        map.add("cardPassword", "12");
-        map.add("customerIdentityNumber", req.getCardValidity());
-        map.add("customerKey", "test");
+        try {
+            URL url = new URL("https://api.tosspayments.com/v1/billing/authorizations/card");
 
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", "test_ck_d26DlbXAaV0j0ZWLKWx8qY50Q9RB");
-        headers.add("Content-Type", "application/json");
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Authorization", "Basic dGVzdF9za19CRTkyTEFhNVBWYjFFWmFSS0dZMzdZbXBYeUpqOg==");
+            connection.setDoOutput(true);
 
-        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
-        RestTemplate rt = new RestTemplate();
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cardNumber", req.getCardNumber());
+            jsonObject.put("cardExpirationYear", req.getCardValidity().substring(2, 4));
+            jsonObject.put("cardExpirationMonth", req.getCardValidity().substring(0, 2));
+            jsonObject.put("cardPassword", "12"); //비밀번호 앞 2자리
+            jsonObject.put("customerIdentityNumber", req.getBirthDay());
+            jsonObject.put("customerKey", "test"); //고객 ID, 무작위값 설정하여 사용
 
-        ResponseEntity<String> response = rt.exchange("https://api.tosspayments.com/v1/billing/authorizations/card", HttpMethod.POST, entity, String.class);
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            outputStream.writeBytes(jsonObject.toString());
+            outputStream.flush();
+            outputStream.close();
 
-        System.out.println("response: " + response.getBody());
+            Map<String, String> map = new HashMap<>();
+            int respCode = connection.getResponseCode(); // New items get NOT_FOUND on PUT
+
+            if (respCode == HttpURLConnection.HTTP_OK) {
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Read input data stream.
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                while ((line = reader.readLine()) != null) {
+                    response.append(line).append('\n');
+                }
+                reader.close();
+                map.put("response", response.toString());
+            } else {
+                map.put("error", connection.getResponseCode() + " " + connection.getResponseMessage());
+            }
+
+            /**
+             * response
+             * {
+             *     "mId": "tvivarepublica4",
+             *     "customerKey": "test", //저장 필요 - 이후 자동결제 시 필요
+             *     "authenticatedAt": "2023-02-06T22:34:55.235307+09:00",
+             *     "method": "카드",
+             *     "billingKey": "JQFG7vbvL6xRfn0K5cilsxODHSdiIVHdmQLbVs62fSE=", //저장 필요 - 이후 자동결제 시 필요
+             *     "cardCompany": "농협",
+             *     "cardNumber": "54611120****611*",
+             *     "card": {
+             *         "issuerCode": "91",
+             *         "acquirerCode": "91",
+             *         "number": "54611120****611*",
+             *         "cardType": "체크",
+             *         "ownerType": "개인"
+             *     }
+             * }
+             */
+
+
+            System.out.println(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
+    @Override
+    public BaseResponseBody requestPay(String customerKey, String billingKey) {
+        try {
+            URL url = new URL("https://api.tosspayments.com/v1/billing/" + billingKey);
+
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Authorization", "Basic dGVzdF9za19CRTkyTEFhNVBWYjFFWmFSS0dZMzdZbXBYeUpqOg==");
+            connection.setDoOutput(true);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("customerKey", customerKey);
+            jsonObject.put("amount", 1500); //가격
+            jsonObject.put("orderId", "testOrderId"); //주문 ID - 무작위값 설정하여 사용
+            jsonObject.put("orderName", "12"); //주문 명
+
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            outputStream.writeBytes(jsonObject.toString());
+            outputStream.flush();
+            outputStream.close();
+
+            Map<String, String> map = new HashMap<>();
+            int respCode = connection.getResponseCode(); // New items get NOT_FOUND on PUT
+
+            if (respCode == HttpURLConnection.HTTP_OK) {
+                StringBuilder response = new StringBuilder();
+                String line;
+
+                // Read input data stream.
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                while ((line = reader.readLine()) != null) {
+                    response.append(line).append('\n');
+                }
+                reader.close();
+                map.put("response", response.toString());
+            } else {
+                map.put("error", connection.getResponseCode() + " " + connection.getResponseMessage());
+            }
+
+            /**
+             * response
+             * {
+             *     "mId": "tvivarepublica2",
+             *     "lastTransactionKey": "68A06A34234613A6C40059A5CDDDAB60",
+             *     "paymentKey": "MKlA4XDvdYoEjb0gm23PjJqqpxv5MgrpGwBJn5eya1RPQkx9", //결제내역 조회 시 필요
+             *     "orderId": "order2",
+             *     "orderName": "orderName1",
+             *     "taxExemptionAmount": 0,
+             *     "status": "DONE",
+             *     "requestedAt": "2023-02-06T22:42:59+09:00",
+             *     "approvedAt": "2023-02-06T22:43:00+09:00",
+             *     "useEscrow": false,
+             *     "cultureExpense": false,
+             *     "card": {
+             *         "issuerCode": "91",
+             *         "acquirerCode": "91",
+             *         "number": "54611120****611*",
+             *         "installmentPlanMonths": 0,
+             *         "isInterestFree": false,
+             *         "interestPayer": null,
+             *         "approveNo": "00000000",
+             *         "useCardPoint": false,
+             *         "cardType": "체크",
+             *         "ownerType": "개인",
+             *         "acquireStatus": "READY",
+             *         "amount": 1500
+             *     },
+             *     "virtualAccount": null,
+             *     "transfer": null,
+             *     "mobilePhone": null,
+             *     "giftCertificate": null,
+             *     "cashReceipt": null,
+             *     "discount": null,
+             *     "cancels": null,
+             *     "secret": null,
+             *     "type": "BILLING",
+             *     "easyPay": null,
+             *     "country": "KR",
+             *     "failure": null,
+             *     "isPartialCancelable": true,
+             *     "receipt": {
+             *         "url": "https://dashboard.tosspayments.com/sales-slip?transactionId=xIXYgxY0lGGQAYIHgT70rFbV8MXpMFamyf0ZP5tT%2FZZyBYo7JnuMyAiPOhTg%2BVK8&ref=PX"
+             *     },
+             *     "checkout": {
+             *         "url": "https://api.tosspayments.com/v1/payments/MKlA4XDvdYoEjb0gm23PjJqqpxv5MgrpGwBJn5eya1RPQkx9/checkout"
+             *     },
+             *     "currency": "KRW",
+             *     "totalAmount": 1500,
+             *     "balanceAmount": 1500,
+             *     "suppliedAmount": 1364,
+             *     "vat": 136,
+             *     "taxFreeAmount": 0,
+             *     "method": "카드",
+             *     "version": "2022-11-16"
+             * }
+             */
+
+            System.out.println(map);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
         return null;
     }

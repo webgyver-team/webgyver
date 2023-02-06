@@ -12,4 +12,5 @@ public interface CustomerMemberService {
     CustomerLoginRes login(CustomerLoginReq req);
 
     BaseResponseBody payTest(CustomerSignUpPostReq req);
+    BaseResponseBody requestPay(String customerKey, String billingKey);
 }

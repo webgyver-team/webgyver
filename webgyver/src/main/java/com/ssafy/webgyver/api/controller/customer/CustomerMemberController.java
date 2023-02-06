@@ -31,7 +31,6 @@ public class CustomerMemberController {
 
     @PostMapping("/pay/test")
     public ResponseEntity<?> pay(@RequestBody CustomerSignUpPostReq signUpInfo) {
-        System.out.println("param : " + signUpInfo);
         customerMemberService.payTest(signUpInfo);
 
         return null;
