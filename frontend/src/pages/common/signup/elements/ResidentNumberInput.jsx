@@ -10,7 +10,13 @@ export default function ResidentNumberInput({
 }) {
   const [residentNumber1, setResidentNumber1] = useState(initialValue1);
   const [residentNumber2, setResidentNumber2] = useState(initialValue2);
-  const [submitNum, setSubmitNum] = useState(''); // 제출할 문자열
+  const residentNumberToBirthDay = (input) => {
+    // eslint-disable-next-line
+    const birthYearStart =
+      input.slice(-1) === '1' || input.slice(-1) === '2' ? '19' : '20';
+    console.log(`${birthYearStart}${input}`);
+    updateData({ birthDay: `${birthYearStart}${input}` });
+  };
   const [msg, setMsg] = useState('');
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {
@@ -41,16 +47,10 @@ export default function ResidentNumberInput({
       residentNumber2.trim().length === 7
     ) {
       // submit 문자열 업데이트
-      if (residentNumber2[0] === '1' || residentNumber2[0] === '2') {
-        setSubmitNum(
-          `19${residentNumber1.trim()}${residentNumber2.replaceAll('*', '')}`,
-        );
-      } else {
-        setSubmitNum(
-          `20${residentNumber1.trim()}${residentNumber2.replaceAll('*', '')}`,
-        );
-      }
-      updateData({ birthDay: submitNum });
+      residentNumberToBirthDay(
+        `${event.target.value.trim()}${residentNumber2.replaceAll('*', '')}`,
+      );
+      // updateData({ birthDay: submitNum });
     } else updateData({ birthDay: null });
   };
   const changeResidentNumber2 = (event) => {
@@ -71,12 +71,8 @@ export default function ResidentNumberInput({
     }
     if (residentNumber1.trim().length === 6 && actualInput.length === 1) {
       // submit 문자열 업데이트
-      if (actualInput === '1' || actualInput === '2') {
-        setSubmitNum(`19${residentNumber1.trim()}${actualInput}`);
-      } else {
-        setSubmitNum(`20${residentNumber1.trim()}${actualInput}`);
-      }
-      updateData({ birthDay: submitNum });
+      residentNumberToBirthDay(`${residentNumber1.trim()}${actualInput}`);
+      // updateData({ birthDay: submitNum });
     } else updateData({ birthDay: null });
   };
   return (
