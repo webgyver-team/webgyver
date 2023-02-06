@@ -73,7 +73,7 @@ public class SellerServiceImpl implements SellerService {
     public BaseResponseBody checkDuplicate(SellerCheckDuplicateReq req) {
         boolean check = sellerRepository.existsById(req.getId());
         if (check) {
-            return BaseResponseBody.of(200, "중복된 아이디");
+            return BaseResponseBody.of(201, "중복된 아이디");
         } else {
             return BaseResponseBody.of(200, "사용 가능한 아이디");
         }
