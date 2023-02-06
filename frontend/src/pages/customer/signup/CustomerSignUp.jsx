@@ -87,7 +87,7 @@ export default function CustomerSignUp() {
       .then((res) => {
         // eslint-disable-next-line
         console.log(res);
-        if (res.status === 200) {
+        if (res.statusCode === 200) {
           // eslint-disable-next-line
           alert('회원가입이 완료되었습니다.');
           navigate('/');
