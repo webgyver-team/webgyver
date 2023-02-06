@@ -108,6 +108,7 @@ const NullBox = styled.div`
 const TransparentBox = styled.div`
   padding: 16px;
   width: 40vw;
+
   .first {
     font-weight: bold;
   }

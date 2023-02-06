@@ -56,7 +56,7 @@ export default function MasterSignUp() {
 
     if (data.id === null) {
       // eslint-disable-next-line
-      alert('아이디를 입력하세요.');
+      alert('아이디를 입력한 후 중복 검사를 하세요.');
       return;
     }
     // 비밀번호 -> 비밀번호 확인을 거친 비밀번호여야 인정됨, 그 전엔 null
@@ -137,7 +137,11 @@ export default function MasterSignUp() {
       <SignUpForm>
         <FormDiv>
           <FormTitle>회원 정보 입력</FormTitle>
-          <IdInput updateData={updateData} initialValue="" />
+          <IdInput
+            updateData={updateData}
+            initialValue=""
+            checkDuplicate={master.checkDuplicate}
+          />
           <PasswordInput updateData={updateData} />
           <NameInput updateData={updateData} initialValue="" />
           <ResidentNumberInput

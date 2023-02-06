@@ -1,14 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
 export default function RealTime({ data }) {
-  const navigate = useNavigate();
-  const routeVideoService = () => navigate('/master/videoservice');
   // 더보기 on/off
   const [isDetail, setIsDetail] = useState(false);
   const handleIsDetail = () => {
@@ -23,8 +20,6 @@ export default function RealTime({ data }) {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-
-  const currentState = ['수락'];
 
   return (
     <Card>
@@ -57,11 +52,6 @@ export default function RealTime({ data }) {
             <div className="contentdiv">
               <span className="content">{data.content}</span>
             </div>
-            <BtnBox>
-              <AcceptBtn onClick={routeVideoService}>
-                <span>{currentState[0]}</span>
-              </AcceptBtn>
-            </BtnBox>
           </DetailBox>
         )}
       </ContentBox>
@@ -75,7 +65,7 @@ const Card = styled.div`
   border-radius: 5px;
   margin: 8px;
   // width: 912px;
-  width: 80vw;
+  width: 90%;
   min-width: 600px;
 
   .header {
@@ -174,9 +164,4 @@ const StateBtn = styled.div`
     cursor: pointer;
     // background-color: ${(props) => props.theme.color.dafaultBorder};
   }
-`;
-
-const AcceptBtn = styled(StateBtn)`
-  color: ${(props) => props.theme.color.defaultWhite};
-  background-color: ${(props) => props.theme.color.defaultBlue};
 `;

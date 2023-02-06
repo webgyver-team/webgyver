@@ -25,7 +25,7 @@ import VideoService from './pages/customer/videoservice/VideoService';
 import EndService from './pages/customer/endservice/EndService';
 import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
-import MasterMyPageUpdate from './pages/master/Mypage/MyPageUpdate';
+import MasterMyPageUpdate from './pages/master/mypage/MyPageUpdate';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
 import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';
@@ -34,11 +34,12 @@ import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
 import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
 import MasterReview from './pages/master/masterReview/MasterReview';
 import MasterExample from './pages/master/masterExample/MasterExample';
-import MasterMypage from './pages/master/Mypage/Mypage';
+import MasterMypage from './pages/master/mypage/Mypage';
+import MasterHistory from './pages/master/history/History';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
-const notNavList = ['/videoservice', '/master/login'];
+const notNavList = ['/videoservice', '/master/login', '/master/videoservice'];
 
 function App() {
   const [auth] = useRecoilState(authState);
@@ -59,7 +60,7 @@ function App() {
       {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
       <ThemeProvider theme={normal}>
         <All>
-          <Main>
+          <Main onNav={onNav}>
             {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
@@ -103,11 +104,8 @@ function App() {
                 <Route path="/master/example" element={<MasterExample />} />
                 <Route path="/master/mypage" element={<MasterMypage />} />
                 <Route path="/master/signup" element={<MasterSignUp />} />
-                <Route
-                  path="/master/mypage/update"
-                  element={<MasterMyPageUpdate />}
-                />
-
+                <Route path="/master/mypage/update" element={<MasterMyPageUpdate />} />
+                <Route path="/master/history" element={<MasterHistory />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>
@@ -122,7 +120,6 @@ export default App;
 
 const All = styled.div`
   width: 100vw;
-  // min-height: 800px;
   display: flex;
   justify-content: center;
 `;
@@ -137,11 +134,14 @@ const Page = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   color: ${(props) => props.theme.color.defaultColor};
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
   // overflow-y: scroll;
+  // height: calc(100vh - 120px);
+  height: ${(props) => (props.onNav ? 'calc(100vh - 120px)' : '100vh')};
+  overflow-y: auto;
+  background-color: ${(props) => props.theme.color.defaultWhite};
 `;
