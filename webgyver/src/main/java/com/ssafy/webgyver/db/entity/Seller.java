@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "seller")
 @DynamicInsert
+@ToString
 public class Seller extends BaseEntity {
 
     @Column(unique = true, length = 50)

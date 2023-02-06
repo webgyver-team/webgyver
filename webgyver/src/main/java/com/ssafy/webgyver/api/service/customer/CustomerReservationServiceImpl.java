@@ -36,7 +36,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     @Override
     @Transactional
-    public void save(ReservationAllReq req) {
+    public Reservation save(ReservationAllReq req) {
         // 작업 프로세스
         // 1. Reservation에 먼저 등록
         // 1-1. 등록할때 category + seller + sellerCategory랑 조인해서 가격이랑 카테고리 정보 가져와야함!
@@ -62,6 +62,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         for (PictureReq image : req.getImages()) {
             pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article));
         }
+        return reservation;
 //        req.getImages().stream().map(image -> pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article)));
 
     }
@@ -83,6 +84,6 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
             existReservationTimeList.add(existReservationTime);
         }
 
-        return CustomerReservationNormalListRes.of(200, "success", sellerList, req, existReservationTimeList, sellerCategoryPrice,order);
+        return CustomerReservationNormalListRes.of(200, "success", sellerList, req, existReservationTimeList, sellerCategoryPrice, order);
     }
 }

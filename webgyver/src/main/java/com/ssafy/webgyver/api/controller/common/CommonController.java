@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("api/v1/common")
 public class CommonController {
     final CommonService commonService;
+
     @GetMapping("/category/list")
     public ResponseEntity<CategoryListRes> getCategoryList() {
         log.info("카테고리/리스트 요청");
