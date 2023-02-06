@@ -13,6 +13,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "picture")
+@ToString
 public class Picture extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

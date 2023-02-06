@@ -1,8 +1,6 @@
 package com.ssafy.webgyver.db.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
@@ -12,6 +10,7 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
 @Table(name = "reservation")
 public class Reservation extends BaseEntity {
     @ManyToOne

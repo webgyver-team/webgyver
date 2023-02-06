@@ -11,6 +11,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="article")
+@ToString
 public class Article extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
