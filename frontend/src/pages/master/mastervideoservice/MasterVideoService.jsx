@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 // import Button from '@mui/material/Button';
 import SideBar from './elements/SideBar';
+import Order from './elements/Order';
 
 export default function MasterVideoService() {
   const navigate = useNavigate();
@@ -115,8 +116,11 @@ export default function MasterVideoService() {
   // myConnection.addEventListener('track', (data) => {
   //   peerFace.srcObject = new MediaStream([data.track]);
   // });
+
+  const open = true;
   return (
     <Main>
+      <Order open={open} />
       <Side>
         <SideBar />
       </Side>
