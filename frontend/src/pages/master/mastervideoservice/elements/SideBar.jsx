@@ -39,7 +39,7 @@ export default function SideBar() {
     <Main>
       {sideBarOpen && (
         <ContentBox>
-          <div>
+          <SdBox>
             <SliderBox>
               <Slider {...slickSettings}>
                 {history[0].images.map((el) => (
@@ -49,51 +49,57 @@ export default function SideBar() {
                 ))}
               </Slider>
             </SliderBox>
-          </div>
+          </SdBox>
           <Title>{history[0].title}</Title>
           <Content>{history[0].content}</Content>
         </ContentBox>
       )}
-      <OpenToggle onClick={handleDrawerToggle}>문의 내용 보기</OpenToggle>
+      <OpenToggle onClick={handleDrawerToggle}>
+        <span>{sideBarOpen ? '문의 내용 닫기' : '문의 내용 보기'}</span>
+      </OpenToggle>
     </Main>
   );
 }
 const Main = styled.div`
   display: flex;
   justify-content: flex-start;
-  margin-top: 10vw;
-  width: 25vw;
-  height: 40vw;
+  min-height: 400px;
+  max-width: 300px;
 `;
 
 const OpenToggle = styled.div`
-  width: 5vw;
-  height: 10vw;
+  display: flex;
+  padding: 8px;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  font-size: 16px;
+  width: 24px;
+  height: 160px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
-  border-radius: 10px;
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
 `;
 
 const ContentBox = styled.div`
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
-  border-radius: 10px;
+  border-radius: 0 0 10px 0;
+  padding: 16px;
 `;
 
-// const Side = styled.div`
-//   display: flex;
-//   border-right: 1px solid #e0e0e0;
-//   flex-direction: column;
-//   align-items: center;
-//   justify-content: center;
-//   width: 20%;
-// `
+const SdBox = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-bottom: 8px;
+`;
 
 const SliderBox = styled.div`
-  width: 180px;
+  width: 20vw;
 `;
 
 const ImgBox = styled.div`
   position: relative;
-  height: 120px;
+  height: 16vw;
 
   img {
     position: absolute;
@@ -109,12 +115,10 @@ const ImgBox = styled.div`
 
 const Title = styled.div`
   font-size: 16px;
-  display: flex;
-  justify-content: center;
+  font-weight: bold;
+  margin-bottom: 8px;
 `;
 
 const Content = styled.div`
-  font-size: 8px;
-  display: flex;
-  justify-content: center;
+  font-size: 14px;
 `;

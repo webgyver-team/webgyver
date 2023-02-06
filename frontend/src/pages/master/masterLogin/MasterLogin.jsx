@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import Box from '@mui/material/Box';
 import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
+import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
+import { authState, accessToken } from '../../../atom';
+import { master } from '../../../api/accountsApi';
 import WebGyver from '../../../assets/image/WebGyver.png';
 
 const style = {
@@ -15,6 +18,8 @@ const style = {
 
 export default function MasterLogin() {
   const navigate = useNavigate();
+  const setAuth = useSetRecoilState(authState);
+  const setAccessToken = useSetRecoilState(accessToken);
   const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
     nullIdError: false,
@@ -43,18 +48,19 @@ export default function MasterLogin() {
         nullIdError: false,
         nullPasswordError: false,
       });
-      // const response = customer.login(data);
-      // if (response.statusCode === 200) {
-      //   // 리코일persist 상태 변경
-      //   setAccessToken(response.data.accessToken);
-      //   setAuthState('customer');
-      // }
+      const response = master.login(data);
+      console.log(data.id, data.password);
+      if (response.statusCode === 200) {
+        // 리코일persist 상태 변경
+        setAccessToken(response.data.accessToken);
+        setAuth('customer');
+      }
     }
     // console.log(errors);
   };
 
   const routeSignup = () => {
-    navigate('/partner/signup');
+    navigate('/master/signup');
   };
 
   return (

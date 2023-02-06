@@ -11,7 +11,7 @@ export default function MasterVideoService() {
   const myMainScreen = useRef(null);
   const mySubScreen = useRef(null);
   const peerFace = useRef(null);
-  const [mainScreenState, setMainScreenState] = useState('myScreen');
+  const [mainScreenState, setMainScreenState] = useState('peerScreen');
 
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
@@ -54,14 +54,14 @@ export default function MasterVideoService() {
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
 
   // 내 미디어 가져오기
-  const getUserCameraMain = async () => {
+  const getUserCameraSub = async () => {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
       })
       .then((stream) => {
         // 비디오 tag에 stream 추가
-        const video = myMainScreen.current;
+        const video = mySubScreen.current;
 
         video.srcObject = stream;
 
@@ -72,14 +72,14 @@ export default function MasterVideoService() {
     // });
   };
 
-  const getUserCameraSub = async () => {
+  const getUserCameraMain = async () => {
     navigator.mediaDevices
       .getUserMedia({
         video: true,
       })
       .then((stream) => {
         // 비디오 tag에 stream 추가
-        const video = mySubScreen.current;
+        const video = myMainScreen.current;
 
         video.srcObject = stream;
 
@@ -117,8 +117,10 @@ export default function MasterVideoService() {
   // });
   return (
     <Main>
-      <Box3>
+      <Side>
         <SideBar />
+      </Side>
+      <Box1>
         {mainScreenState === 'myScreen' && (
           <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
             <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
@@ -150,8 +152,7 @@ export default function MasterVideoService() {
             </SubScreen>
           </VideoBox>
         )}
-      </Box3>
-      <NullBox2 width={subScreenWidth} />
+      </Box1>
       <NullBox />
       <BoxBox>
         <RedBtn onClick={routeEndService}>
@@ -164,35 +165,42 @@ export default function MasterVideoService() {
 }
 const Main = styled.div`
   width: 100vw;
-  height: 80vw;
+  position: relative;
 `;
+
+const Side = styled.div`
+  position: absolute;
+  z-index: 30;
+  top: 8%;
+`;
+
 const BoxBox = styled.div`
   display: flex;
   justify-content: center;
 `;
 
-const Box3 = styled.div`
+const Box1 = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   width: 100vw;
 `;
 
 const VideoBox = styled.div`
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100vw;
-  height: ${(props) => props.width}px;
-  margin-right: 10vw;
+  position: relative;
 `;
 
 const MainScreen = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 768px;
+  max-height: 700px;
   width: 92%;
   height: ${(props) => props.width}px;
-  position: absolute;
-  top: 8%;
-  left: 4%;
   z-index: 1;
   background-color: ${(props) => props.theme.color.defaultColor};
   box-shadow: 2px 2px 4px 0px ${(props) => props.theme.color.defaultlightColor};
@@ -204,11 +212,8 @@ const SubScreen = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  position: absolute;
-  width: 40%;
+  width: 30%;
   height: ${(props) => props.width}px;
-  right: 0;
-  bottom: -16%;
   z-index: 2;
   background-color: ${(props) => props.theme.color.defaultColor};
   border-radius: 10px;
@@ -242,8 +247,4 @@ const RedBtn = styled(Btn)`
 
 const NullBox = styled.div`
   height: 24px;
-`;
-
-const NullBox2 = styled(NullBox)`
-  height: calc(${(props) => props.width}px / 2);
 `;

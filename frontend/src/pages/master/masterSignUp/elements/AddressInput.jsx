@@ -1,15 +1,12 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 // import LocateModal from '../../../../components/common/sitepopup/LocateModal';
 import { TextField } from '@mui/material';
 import { locateModalState, locateValueState } from '../../../../atom';
 
-export default function AddressInput({ updateData }) {
+export default function AddressInput() {
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const location = useRecoilValue(locateValueState);
-  useEffect(() => {
-    updateData({ addressInput: location });
-  }, [location, updateData]);
   const openLocateModal = () => setLocateModalOpen(true);
   return (
     <div>

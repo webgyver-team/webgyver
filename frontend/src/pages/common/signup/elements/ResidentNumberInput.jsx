@@ -10,6 +10,13 @@ export default function ResidentNumberInput({
 }) {
   const [residentNumber1, setResidentNumber1] = useState(initialValue1);
   const [residentNumber2, setResidentNumber2] = useState(initialValue2);
+  const residentNumberToBirthDay = (input) => {
+    // eslint-disable-next-line
+    const birthYearStart =
+      input.slice(-1) === '1' || input.slice(-1) === '2' ? '19' : '20';
+    console.log(`${birthYearStart}${input}`);
+    updateData({ birthDay: `${birthYearStart}${input}` });
+  };
   const [msg, setMsg] = useState('');
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {
@@ -39,10 +46,11 @@ export default function ResidentNumberInput({
       event.target.value.trim().length === 6 &&
       residentNumber2.trim().length === 7
     ) {
-      updateData({
-        birthDay:
-          event.target.value.trim() + residentNumber2.replaceAll('*', ''),
-      });
+      // submit 문자열 업데이트
+      residentNumberToBirthDay(
+        `${event.target.value.trim()}${residentNumber2.replaceAll('*', '')}`,
+      );
+      // updateData({ birthDay: submitNum });
     } else updateData({ birthDay: null });
   };
   const changeResidentNumber2 = (event) => {
@@ -62,7 +70,9 @@ export default function ResidentNumberInput({
       }
     }
     if (residentNumber1.trim().length === 6 && actualInput.length === 1) {
-      updateData({ birthDay: residentNumber1.trim() + actualInput });
+      // submit 문자열 업데이트
+      residentNumberToBirthDay(`${residentNumber1.trim()}${actualInput}`);
+      // updateData({ birthDay: submitNum });
     } else updateData({ birthDay: null });
   };
   return (
