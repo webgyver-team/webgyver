@@ -7,6 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import { exampleFormState } from '../../../../atom';
+import ImageInput from '../../../customer/reservation/elements/ImageInput';
 
 const style = {
   position: 'absolute',
@@ -34,6 +35,9 @@ export default function Form() {
     } else setMsgForContent('');
   };
 
+  // eslint-disable-nextline
+  const [imageList, setImageList] = useState([]);
+
   const registReview = () => {
     const data = {
       customerIdx: null,
@@ -41,6 +45,10 @@ export default function Form() {
       categoryIdx: null,
       content: formContent,
     };
+    // 이미지 업로드한거 있으면
+    // AWS S3에 보내고 저장한 경로명을 data에 담아라
+    // eslint-disable-next-line
+    console.log(imageList);
     // eslint-disable-next-line
     console.log(data);
     // data로 axios POST하고
@@ -71,6 +79,7 @@ export default function Form() {
               onChange={changeFormContent}
               value={formContent}
             />
+            <ImageInput sendImageList={setImageList} />
             <Button variant="contained" onClick={registReview}>
               리뷰 등록
             </Button>
