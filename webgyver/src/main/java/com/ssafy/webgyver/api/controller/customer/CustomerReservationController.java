@@ -44,4 +44,9 @@ public class CustomerReservationController {
         CustomerReservationListRes res = customerReservationService.getCustomerReservationList(idxReq);
         return ResponseEntity.ok(res);
     }
+    @GetMapping("/completed/list/{customerIdx}")
+    public ResponseEntity<?> getCustomerCompletedReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq){
+        CustomerReservationListRes res = customerReservationService.getCustomerCompletedReservationList(idxReq);
+        return ResponseEntity.ok(res);
+    }
 }

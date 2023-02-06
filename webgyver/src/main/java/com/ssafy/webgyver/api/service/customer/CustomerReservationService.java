@@ -11,4 +11,6 @@ public interface CustomerReservationService {
     Reservation save(ReservationAllReq req);
     public CustomerReservationNormalListRes getOrderedStoreList(String order, CustomerReservationNormalListReq req);
     CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req);
+    CustomerReservationListRes getCustomerCompletedReservationList(CustomerIdxReq req);
+
 }

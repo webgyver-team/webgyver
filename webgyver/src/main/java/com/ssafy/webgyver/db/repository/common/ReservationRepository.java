@@ -15,4 +15,5 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findReservationsByCustomerIdxOrderByIdxDesc(Long idx);
 
     List<Reservation> findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(Long idx, String type);
+    List<Reservation> findReservationsByCustomerIdxAndReservationStateIsInOrderByReservationTimeDesc(Long idx, String[] reservationState);
 }

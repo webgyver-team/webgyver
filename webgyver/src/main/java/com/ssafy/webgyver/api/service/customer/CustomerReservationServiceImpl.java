@@ -52,7 +52,8 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         Seller seller = Seller.builder().build();
         seller.setIdx(req.getSellerIdx());
         Category category = Category.builder().idx(req.getCategoryIdx()).build();
-        SellerCategory sellerCategory = sellerCategoryRepository.findSellerCategoryBySellerAndCategory(seller, category);
+        SellerCategory sellerCategory = sellerCategoryRepository.findSellerCategoryBySellerAndCategory(
+                seller, category);
         int price = sellerCategory.getPrice();
 
         reservation.setSeller(seller);
@@ -60,11 +61,13 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         reservation.setReservationPrice(price);
         reservationRepository.save(reservation);
 
-        Article article = Article.builder().reservation(reservation).title(req.getTitle()).content(req.getContent()).type(-1L).build();
+        Article article = Article.builder().reservation(reservation).title(req.getTitle())
+                .content(req.getContent()).type(-1L).build();
         articleRepository.save(article);
 
         for (PictureReq image : req.getImages()) {
-            pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article));
+            pictureRepository.save(
+                    PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article));
         }
         return reservation;
 //        req.getImages().stream().map(image -> pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article)));
@@ -72,23 +75,30 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     }
 
     // 예약 가능한 모든 상점리스트를 정렬해서 리턴함.
-    public CustomerReservationNormalListRes getOrderedStoreList(String order, CustomerReservationNormalListReq req) {
-        List<SellerCategory> sellerCategoryList = sellerCategoryRepository.findSellerCategoriesByCategory(Category.builder().idx(req.getCategoryIdx()).build());
-        List<Seller> sellerList = sellerCategoryList.stream().map(SellerCategory::getSeller).collect(Collectors.toList());
-        List<Integer> sellerCategoryPrice = sellerCategoryList.stream().map(SellerCategory::getPrice).collect(Collectors.toList());
+    public CustomerReservationNormalListRes getOrderedStoreList(String order,
+            CustomerReservationNormalListReq req) {
+        List<SellerCategory> sellerCategoryList = sellerCategoryRepository.findSellerCategoriesByCategory(
+                Category.builder().idx(req.getCategoryIdx()).build());
+        List<Seller> sellerList = sellerCategoryList.stream().map(SellerCategory::getSeller)
+                .collect(Collectors.toList());
+        List<Integer> sellerCategoryPrice = sellerCategoryList.stream()
+                .map(SellerCategory::getPrice).collect(Collectors.toList());
         LocalDateTime start = TimeUtil.string2Time(req.getDate());
         LocalDateTime end = start.plusDays(1).minusMinutes(1);
         List<List<String>> existReservationTimeList = new ArrayList<>();
         for (Seller seller : sellerList) {
-            List<Reservation> reservationList = reservationRepository.findReservationsBySellerAndReservationTimeBetween(seller, start, end);
+            List<Reservation> reservationList = reservationRepository.findReservationsBySellerAndReservationTimeBetween(
+                    seller, start, end);
             List<String> existReservationTime = new ArrayList<>();
             for (Reservation reservation : reservationList) {
-                existReservationTime.add(TimeUtil.time2String(reservation.getReservationTime(), "HHmm"));
+                existReservationTime.add(
+                        TimeUtil.time2String(reservation.getReservationTime(), "HHmm"));
             }
             existReservationTimeList.add(existReservationTime);
         }
 
-        return CustomerReservationNormalListRes.of(200, "success", sellerList, req, existReservationTimeList, sellerCategoryPrice, order);
+        return CustomerReservationNormalListRes.of(200, "success", sellerList, req,
+                existReservationTimeList, sellerCategoryPrice, order);
     }
 
     static List<CustomerReservationListRes.ReservationDTO> reservationDTOList;
@@ -98,18 +108,68 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req) {
         reservationDTOList = new ArrayList<>();
         // 1. 예약 상태 4 => 최상단 띄우기
-        List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(req.getCustomerIdx(), "4");
+        List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(
+                req.getCustomerIdx(), "4");
         reservationState4ListMethod(reservationList);
         // 2. 예약 상태 1 => 수락 대기 중 => 5분 지났으면 상태를 3번으로 변경하고 리턴할 리스트엔 추가하지 않음
-        reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(req.getCustomerIdx(), "1");
+        reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(
+                req.getCustomerIdx(), "1");
         reservationState1ListMethod(reservationList);
         // 3. 예약 상태 2 => 예약 확정 => 아직 예약시간이 안됨
         // 4. 예약 상태 2 => 예약 확정 => 예약시간이 됨 => 상태 6으로 변경, 디비 저장 리턴 값 추가
-        reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(req.getCustomerIdx(), "2");
+        reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(
+                req.getCustomerIdx(), "2");
         reservationState2ListMethod(reservationList);
         System.out.println(reservationList);
-        CustomerReservationListRes res = CustomerReservationListRes.of(200, "Success", reservationDTOList);
+        CustomerReservationListRes res = CustomerReservationListRes.of(200, "Success",
+                reservationDTOList);
         return res;
+    }
+
+    @Override
+    public CustomerReservationListRes getCustomerCompletedReservationList(CustomerIdxReq req) {
+        reservationDTOList = new ArrayList<>();
+        List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateIsInOrderByReservationTimeDesc(
+                req.getCustomerIdx(),
+                new String[]{"3", "5"});
+        reservationListMethod(reservationList);
+        CustomerReservationListRes res = CustomerReservationListRes.of(200, "Success",
+                reservationDTOList);
+        return res;
+    }
+
+    public void reservationListMethod(List<Reservation> reservationList) {
+        for (Reservation reservation : reservationList) {
+            String title = null;    // 예약 제목
+            String content = null; // 문의 내용
+            List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
+            // 문의 내용 찾기
+            for (Article review : reservation.getArticleList()) {
+                if (review.getType() == -1) {
+                    title = review.getTitle();
+                    content = review.getContent();
+                    List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(
+                            review.getIdx());
+                    // 문의 내용에대한 사진 가져오기
+                    for (Picture picture : pictures) {
+                        CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(
+                                picture.getIdx(), picture.getOriginName(),
+                                picture.getSaveName());
+                        pictureDTOS.add(pictureTemp);
+                    }
+                }
+            }
+            CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
+                    reservation.getIdx(),
+                    title,
+                    reservation.getReservationTime(),
+                    content,
+                    reservation.getSeller().getCompanyName(),
+                    pictureDTOS,
+                    reservation.getReservationState()
+            );
+            reservationDTOList.add(reservationDTO);
+        }
     }
 
     public void reservationState4ListMethod(List<Reservation> reservationList) {
@@ -166,10 +226,13 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                     if (review.getType() == -1) {
                         title = review.getTitle();
                         content = review.getContent();
-                        List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(review.getIdx());
+                        List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(
+                                review.getIdx());
                         // 문의 내용에대한 사진 가져오기
                         for (Picture picture : pictures) {
-                            CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(picture.getIdx(), picture.getOriginName(), picture.getSaveName());
+                            CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(
+                                    picture.getIdx(), picture.getOriginName(),
+                                    picture.getSaveName());
                             pictureDTOS.add(pictureTemp);
                         }
                     }
@@ -198,13 +261,12 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         System.out.println("현재시간 : " + currentTime);
         for (Reservation reservation : reservationList) {
             // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
-            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime))
-             {
+            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
             }
             // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
-            else if (reservation.getReservationTime().isAfter(currentTime)){
+            else if (reservation.getReservationTime().isAfter(currentTime)) {
                 reservation.updateReservationState("6");
                 reservationRepository.save(reservation);
             }
@@ -216,10 +278,12 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                 if (review.getType() == -1) {
                     title = review.getTitle();
                     content = review.getContent();
-                    List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(review.getIdx());
+                    List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(
+                            review.getIdx());
                     // 문의 내용에대한 사진 가져오기
                     for (Picture picture : pictures) {
-                        CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(picture.getIdx(), picture.getOriginName(), picture.getSaveName());
+                        CustomerReservationListRes.PictureDTO pictureTemp = new CustomerReservationListRes.PictureDTO(
+                                picture.getIdx(), picture.getOriginName(), picture.getSaveName());
                         pictureDTOS.add(pictureTemp);
                     }
                 }
