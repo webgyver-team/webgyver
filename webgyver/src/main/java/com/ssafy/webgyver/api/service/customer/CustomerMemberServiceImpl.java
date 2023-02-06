@@ -10,8 +10,15 @@ import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.repository.customer.CustomerMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.client.RestTemplate;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -43,6 +50,30 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
         customerMemberRepository.save(customer);
         BaseResponseBody result = BaseResponseBody.of(200, "Success");
         return result;
+    }
+
+    @Override
+    public BaseResponseBody payTest(CustomerSignUpPostReq req) {
+        MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
+        map.add("cardNumber", req.getCardNumber());
+        map.add("cardExpirationYear", req.getCardValidity().substring(2, 4));
+        map.add("cardExpirationMonth", req.getCardValidity().substring(0, 2));
+        map.add("cardPassword", "12");
+        map.add("customerIdentityNumber", req.getCardValidity());
+        map.add("customerKey", "test");
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", "test_ck_d26DlbXAaV0j0ZWLKWx8qY50Q9RB");
+        headers.add("Content-Type", "application/json");
+
+        HttpEntity<MultiValueMap<String, String>> entity = new HttpEntity<>(map, headers);
+        RestTemplate rt = new RestTemplate();
+
+        ResponseEntity<String> response = rt.exchange("https://api.tosspayments.com/v1/billing/authorizations/card", HttpMethod.POST, entity, String.class);
+
+        System.out.println("response: " + response.getBody());
+
+        return null;
     }
 
     @Override
