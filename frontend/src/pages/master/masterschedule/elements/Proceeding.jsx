@@ -4,8 +4,10 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
+import { useNavigate } from 'react-router-dom';
 
 export default function Proceeding({ history }) {
+  const navigate = useNavigate();
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -22,6 +24,7 @@ export default function Proceeding({ history }) {
   };
 
   const currentState = ['입장하기'];
+  const routeVideoService = () => navigate('/master/videoservice');
 
   return (
     <Card>
@@ -48,7 +51,7 @@ export default function Proceeding({ history }) {
           </MoreBtn>
         </div>
         <BtnBox>
-          <StateBtn>
+          <StateBtn onClick={routeVideoService}>
             <span>{currentState[0]}</span>
           </StateBtn>
         </BtnBox>

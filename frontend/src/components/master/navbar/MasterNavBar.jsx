@@ -17,35 +17,33 @@ import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
 import Drawer from '@mui/material/Drawer';
 import styled from 'styled-components';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import Webgyver from '../../../assets/icon/webgyver_white.png';
-import { authState, loginOpenState } from '../../../atom';
+import { authState } from '../../../atom';
 
 const drawerWidth = 240;
 
 export default function MasterNavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
   const navigate = useNavigate();
-  const navItems = auth
-    ? ['logout', 'account', '이용내역']
-    : ['login', 'signup'];
-  const setLoginOpenState = useSetRecoilState(loginOpenState);
-  const openLoginModal = () => setLoginOpenState(true);
+  const masterNavItems = ['일정', '내역', '리뷰', '사례', '실시간'];
   const chooseMenu = (item) => {
     // 아래 사이드바 메뉴 클릭 시 실행
     // item의 조건을 추가해 함수 로직 작성
-    if (item === 'login') {
-      openLoginModal();
-    } else if (item === 'signup') {
-      navigate('/signup');
-    } else if (item === 'account') {
-      navigate('/mypage');
-    } else if (item === '이용내역') {
-      navigate('/usagehistory');
+    if (item === '일정') {
+      navigate('/master/schedule');
+    } else if (item === '내역') {
+      navigate('/master/schedule');
+    } else if (item === '리뷰') {
+      navigate('/master/review');
+    } else if (item === '사례') {
+      navigate('/master/example');
+    } else if (item === '실시간') {
+      navigate('/master/realtime');
     }
   };
-  const routeHome = () => navigate('/');
+  const routeHome = () => navigate('/master/schedule');
   const handleChange = (event) => {
     setAuth(event.target.checked);
   };
@@ -65,7 +63,7 @@ export default function MasterNavBar(props) {
       </Typography>
       <Divider />
       <List>
-        {navItems.map((item) => (
+        {masterNavItems.map((item) => (
           <ListItem key={item} disablePadding>
             <ListItemButton
               sx={{ textAlign: 'center' }}
@@ -142,21 +140,11 @@ export default function MasterNavBar(props) {
                   <img src={Webgyver} alt="이런!" width="30px" />
                   <span>WebGyver</span>
                 </HomeIcon>
-                <div>
-                  <MenuText>일정</MenuText>
-                </div>
-                <div>
-                  <MenuText>내역</MenuText>
-                </div>
-                <div>
-                  <MenuText>리뷰</MenuText>
-                </div>
-                <div>
-                  <MenuText>사례</MenuText>
-                </div>
-                <div>
-                  <MenuText>실시간</MenuText>
-                </div>
+                {masterNavItems.map((item) => (
+                  <div key={item} onClick={() => chooseMenu(item)}>
+                    <MenuText>{item}</MenuText>
+                  </div>
+                ))}
               </MenuBox>
             </Typography>
             {auth && (
@@ -171,14 +159,6 @@ export default function MasterNavBar(props) {
                 >
                   <AccountCircle />
                 </IconButton>
-              </Box>
-            )}
-            {!auth && (
-              <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Button color="inherit" onClick={openLoginModal}>
-                  로그인
-                </Button>
-                <Button color="inherit">회원가입</Button>
               </Box>
             )}
           </Toolbar>

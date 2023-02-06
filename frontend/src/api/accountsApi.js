@@ -19,21 +19,21 @@ export const customer = {
   },
 };
 
-const partnerURL = '/api/v1/partner/';
-export const partner = {
+const masterURL = '/api/v1/seller/';
+export const master = {
   // customer
   checkDuplicate: async (data) => {
-    const response = await Send.post(`${partnerURL}check/duplicate/`, data);
+    const response = await Send.post(`${masterURL}check/duplicate/`, data);
     return response;
   },
 
   signup: async (data) => {
-    const response = await Send.post(`${partnerURL}member/join/`, data);
+    const response = await Send.post(`${masterURL}member/join/`, data);
     return response;
   },
 
   login: async (data) => {
-    const response = await Send.post(`${partnerURL}member/login/`, data);
+    const response = await Send.post(`${masterURL}member/login/`, data);
     return response;
   },
 };

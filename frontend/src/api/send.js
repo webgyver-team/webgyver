@@ -3,8 +3,11 @@ import axios from 'axios';
 import { accessToken } from '../atom';
 
 const instance = axios.create({
-  baseURL: '/',
+  baseURL: 'http://i8b101.p.ssafy.io:9000',
   timeout: 2000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 instance.interceptors.request.use(
