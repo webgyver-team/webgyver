@@ -12,6 +12,7 @@ import {
   locateValueState,
   categoryState,
 } from '../../../atom';
+import { customer } from '../../../api/customerService';
 
 export default function ReservationForm() {
   const navigate = useNavigate();
@@ -77,17 +78,17 @@ export default function ReservationForm() {
     }
   };
 
-  const registReservation = () => {
+  const registReservation = async () => {
     const data = {
       customerIdx: 100, // 고객 idx
-      partenrIdx: reservation.idx, // 예약 업체 idx
+      sellerIdx: reservation.idx, // 예약 업체 idx
+      categoryIdx, // 선택한 카테고리의 idx
       time: `${reservation.date.replaceAll('-', '')}-${reservation.time.replace(
         ':',
         '',
       )}`, // 예약 시간(연월일-시분)
       address: location.address, // 주소
       detailAddress: location.detail, // 상세주소
-      categoryIdx, // 선택한 카테고리의 idx
       title: formTitle, // 제목
       content: formContent, // 내용
       images: imageData, // 이미지 파일의 hash 이름, 원래 이름
@@ -133,17 +134,20 @@ export default function ReservationForm() {
     // 이미지 전송 후 받은 url을 picture에 넣고 보낸 후에
     // 잘 보내졌으면 data를 POST
     sendImageListToS3()
-      .then(() => {
+      .then(async () => {
         // eslint-disable-next-line
         console.log(data); // POST로 수정 예정
+        const response = await customer.post.reservation(data);
+        // eslint-disable-next-line
+        console.log(response);
       })
       .then(() => {
-        navigate('/usagehistory');
+        navigate('');
+      })
+      .catch((err) => {
+        // eslint-disable-next-line
+        console.log(err);
       });
-    // .catch((err) => {
-    //   // eslint-disable-next-line
-    //   console.log(err);
-    // });
   };
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
     reservation.date.split('-')[1]

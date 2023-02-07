@@ -1,15 +1,34 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import DatePicker from '../../../customer/reservation/elements/DatePicker';
 
 export default function AlertDialog({ open, setOpen }) {
   const handleClose = () => {
     setOpen(false);
   };
+  const today = new Date();
+  const [formDate, setFormDate] = useState(
+    `${today.getFullYear()}-${
+      (today.getMonth() + 1).toString().length === 2
+        ? today.getMonth() + 1
+        : `0${today.getMonth() + 1}`
+    }-${
+      today.getDate().toString().length === 2
+        ? today.getDate()
+        : `0${today.getDate()}`
+    }`,
+  );
+
+  const [dateText, setDateText] = useState('');
+  useEffect(() => {
+    const temp = formDate.split('-');
+    setDateText(`${temp[0]}년 ${temp[1]}월 ${temp[2]}일`);
+  }, [formDate]);
 
   const [formContent, setFormContent] = useState({
     startTime: '08:00',
@@ -20,7 +39,7 @@ export default function AlertDialog({ open, setOpen }) {
       customerIdx: null,
       partenrIdx: null,
       categoryIdx: null,
-      date: new Date(),
+      date: formDate,
       time: formContent,
     };
     // eslint-disable-next-line
@@ -44,7 +63,7 @@ export default function AlertDialog({ open, setOpen }) {
   };
 
   return (
-    <div>
+    <Main>
       <Dialog
         open={open}
         onClose={handleClose}
@@ -53,8 +72,11 @@ export default function AlertDialog({ open, setOpen }) {
       >
         <DialogTitle id="alert-dialog-title">방문 예약</DialogTitle>
         <InfoBox>
-          <p>여기에 날짜 선택</p>
-          <div>
+          <YMD>{dateText}</YMD>
+          <Nullbox />
+          <DatePicker handleDate={setFormDate} />
+          <Nullbox />
+          <TimePick>
             <TimeBox>
               <span>시작 시간</span>
               <div> </div>
@@ -83,7 +105,7 @@ export default function AlertDialog({ open, setOpen }) {
                 onChange={(e) => changeEndTime(e.target.value)}
               />
             </TimeBox>
-          </div>
+          </TimePick>
         </InfoBox>
         <DialogActions>
           <Button onClick={handleClose}>취소</Button>
@@ -92,13 +114,27 @@ export default function AlertDialog({ open, setOpen }) {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Main>
   );
 }
+
+const Main = styled.div`
+  max-width: 600px;
+`;
 
 const InfoBox = styled.div`
   padding: 8px;
   margin: 8px;
+`;
+
+const YMD = styled.p`
+  margin-left: 8px;
+`;
+
+const TimePick = styled.div`
+  display: flex;
+  justify-content: space-evenly;
+  flex-wrap: wrap;
 `;
 
 const TimeBox = styled.div`
@@ -114,4 +150,8 @@ const TimeBox = styled.div`
   div {
     min-width: 8px;
   }
+`;
+
+const Nullbox = styled.div`
+  height: 16px;
 `;

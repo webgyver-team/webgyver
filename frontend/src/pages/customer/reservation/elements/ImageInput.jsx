@@ -136,6 +136,14 @@ export default function ImageInput({ sendImageList }) {
                       right: '-8px',
                       color: '#EB4D4D',
                     }}
+                    sx={[
+                      {
+                        '&:hover': {
+                          opacity: 0.7,
+                          cursor: 'pointer',
+                        },
+                      },
+                    ]}
                   />
                 </ImageBox>
               );

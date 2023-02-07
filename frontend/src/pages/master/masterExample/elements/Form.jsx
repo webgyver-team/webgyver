@@ -15,7 +15,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 380,
-  height: 380,
+  height: 430,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -74,12 +74,14 @@ export default function Form() {
               required
               fullWidth
               multiline
-              maxRows={4}
+              rows={4}
               style={{ maxWidth: '700px' }}
               onChange={changeFormContent}
               value={formContent}
             />
+            <NullBox />
             <ImageInput sendImageList={setImageList} />
+            <NullBox />
             <Button variant="contained" onClick={registReview}>
               리뷰 등록
             </Button>
@@ -130,9 +132,9 @@ const ErrorMessage = styled.div`
   margin: 4px 0px;
 `;
 
-// const NullBox = styled.div`
-//   height: 13.6px;
-// `;
+const NullBox = styled.div`
+  height: 16px;
+`;
 
 // const BtnBox = styled.div`
 //   display: flex;

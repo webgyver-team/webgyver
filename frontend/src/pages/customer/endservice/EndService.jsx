@@ -46,8 +46,8 @@ export default function EndService() {
         <GrayBtn onClick={routeVideoService}>다시 연결하기</GrayBtn>
       </BoxBox>
       <BoxBox>
-        <BtnBox>
-          <Btn onClick={routeReviewForm}>리뷰 작성</Btn>
+        <BtnBox onClick={routeReviewForm}>
+          <Btn>리뷰 작성</Btn>
         </BtnBox>
       </BoxBox>
     </Main>
@@ -114,6 +114,11 @@ const BtnBox = styled.div`
   width: 80%;
   padding: 16px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
+  border-radius: 10px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const Btn = styled.div`

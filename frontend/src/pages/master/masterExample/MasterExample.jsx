@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
@@ -33,7 +34,9 @@ export default function MasterSchedule() {
         </StateBtn>
       </BtnBox>
       <TableBox>
-        <Example history={historys[0]} />
+        {historys.map((el, i) => (
+          <Example key={i} history={el} />
+        ))}
       </TableBox>
     </Main>
   );
