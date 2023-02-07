@@ -58,7 +58,7 @@ export const masterInfoModalState = atom({
 // 선택된 카테고리
 export const categoryState = atom({
   key: 'categoryState',
-  default: '',
+  default: null,
   effects_UNSTABLE: [persistAtom],
 });
 

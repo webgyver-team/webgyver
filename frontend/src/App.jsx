@@ -55,6 +55,17 @@ function App() {
       ? setOnMaster(true)
       : setOnMaster(false);
   }, [location]);
+
+  // 모바일 100vh 맞추는 로직
+  function setScreenSize() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  useEffect(() => {
+    setScreenSize();
+    window.addEventListener('resize', setScreenSize);
+  });
+
   return (
     <>
       {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
@@ -142,8 +153,12 @@ const Page = styled.div`
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
-  // height: calc(100vh - 120px);
-  height: ${(props) => (props.isNav ? 'calc(100vh - 64px)' : '100vh')};
+  // height: 'calc(var(--vh,1vh) * 100)');
+  height: ${(props) => (props.isNav ? 'calc(var(--vh,1vh) * 100 - 64px - 38px)' : 'calc(var(--vh,1vh) * 100)')};
   overflow-y: auto;
   background-color: ${(props) => props.theme.color.defaultWhite};
+
+  @media screen and (max-width: 600px) {
+    height: ${(props) => (props.isNav ? 'calc(var(--vh,1vh) * 100 - 56px - 38px)' : 'calc(var(--vh,1vh) * 100)')};
+  }
 `;

@@ -158,7 +158,7 @@ export default function ReservationForm() {
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <FormTitle>바로상담 등록</FormTitle>
-      <FromBox>
+      <FormBox>
         <div>
           <FormInput>
             <TextField
@@ -218,12 +218,12 @@ export default function ReservationForm() {
             </Button>
           </div>
         </div>
-      </FromBox>
+      </FormBox>
     </div>
   );
 }
 
-const FromBox = styled.div`
+const FormBox = styled.div`
   width: 100%;
   display: flex;
   justify-content: center;
@@ -248,5 +248,5 @@ const ErrorMessage = styled.div`
 
 const FormInput = styled.div`
   max-width: 400px;
-  width: 100vw;
+  width: 90vw;
 `;

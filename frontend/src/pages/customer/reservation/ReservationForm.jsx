@@ -257,5 +257,5 @@ const ErrorMessage = styled.div`
 
 const FormInput = styled.div`
   max-width: 400px;
-  width: 100vw;
+  width: 90vw;
 `;

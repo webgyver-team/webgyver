@@ -53,7 +53,9 @@ export default function StoreInfo({
             {personName}
           </span>
           <p style={{ fontSize: '12px' }}>
-            {`${address} ${detailAddress} (${distance}km)`}
+            {`${address} ${detailAddress} (${
+              Math.round(distance * 100) / 100
+            }km)`}
           </p>
           <div
             style={{ display: 'flex', alignItems: 'center', fontSize: '12px' }}
@@ -64,7 +66,9 @@ export default function StoreInfo({
               precision={0.1}
               readOnly
             />
-            <span style={{ fontSize: '12px' }}>{star}</span>
+            <span style={{ fontSize: '12px' }}>
+              {Math.round(star * 100) / 100}
+            </span>
           </div>
         </div>
       </div>

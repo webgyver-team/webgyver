@@ -213,6 +213,7 @@ export default function NavBar(props) {
 
 const Main = styled.div`
   width: 100%;
+  min-height: 64px;
   .css-hip9hq-MuiPaper-root-MuiAppBar-root {
     // background-color: ${(props) => props.theme.color.defaultaccentColor};
   }
