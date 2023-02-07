@@ -6,7 +6,6 @@ import { sha256 } from 'js-sha256';
 import AWS from 'aws-sdk';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
 import CompanyNameInput from '../masterSignUp/elements/CompanyNameInput';
@@ -21,32 +20,32 @@ export default function MyPageUpdate() {
   const navigate = useNavigate();
   const [idx] = useRecoilState(userIdx);
   const [myPageData, setMyPageData] = useState(null);
+  const [data, setData] = useState({});
   useEffect(() => {
     const getMyPageData = async () => {
       const response = await master.get.myPage(idx);
       setMyPageData(response.data.profile);
-      console.log(myPageData);
+      setData({
+        password: null,
+        companyName: response.data.profile.companyName,
+        phoneNumber: response.data.profile.phoneNumber,
+        partnerName: response.data.profile.partnerName,
+        companyNumber: response.data.profile.companyNumber,
+        address: response.data.profile.address,
+        detailAddress: response.data.profile.detailAddress,
+        categoryList: response.data.profile.category,
+        profileImage: response.data.profile.profileImage,
+        backgroundImage: response.data.profile.backgroundImage,
+      });
     };
     getMyPageData();
   }, []);
-  const [newProfileImage, setNewProfileImage] = useState(null);
-  const [profileImagePreview, setProfileImagePreview] = useState(null);
+  const [newProfileImage, setNewProfileImage] = useState('');
+  const [profileImagePreview, setProfileImagePreview] = useState('');
 
   // eslint-disable-next-line
-  const [data, setData] = useState({
-    password: null,
-    phoneNumber: myPageData.phoneNumber,
-    companyName: myPageData.companyName,
-    partnerName: myPageData.partnerName,
-    companyNumber: myPageData.companyNumber,
-    address: myPageData.address,
-    detailAddress: myPageData.detailAddress,
-    categoryList: myPageData.category,
-    profileImage: myPageData.profileImage,
-    backgroundImage: myPageData.backgroundImage,
-  });
-  const [newBackgroundImage, setNewBackgroundImage] = useState(null);
-  const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
+  const [newBackgroundImage, setNewBackgroundImage] = useState('');
+  const [backgroundImagePreview, setBackgroundImagePreview] = useState('');
 
   const updateData = (updateValue) => {
     setData((original) => ({
@@ -93,7 +92,7 @@ export default function MyPageUpdate() {
     const date = new Date();
     const extensionName = `.${originName.split('.').pop()}`;
     const hashImageName = sha256(
-      `${date.toString()}${myPageData.idx}${originName}`,
+      `${date.toString()}${myPageData && myPageData.idx}${originName}`,
     );
     const upload = new AWS.S3.ManagedUpload({
       params: {
@@ -202,6 +201,7 @@ export default function MyPageUpdate() {
       alert('다시 시도해주세요.');
     }
   };
+
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <Title>마스터 회원정보 수정</Title>
@@ -249,22 +249,21 @@ export default function MyPageUpdate() {
       </ImageForm>
       <UpdateForm>
         <FormDiv>
-          <IdInput updateData={updateData} initialValue={myPageData.id} />
           <PasswordInput updateData={updateData} />
           <PhoneNumberInput
             updateData={updateData}
             initialValue1={
-              myPageData.phoneNumber !== null
+              myPageData && myPageData.phoneNumber !== null
                 ? myPageData.phoneNumber.slice(0, 3)
                 : null
             }
             initialValue2={
-              myPageData.phoneNumber !== null
+              myPageData && myPageData.phoneNumber !== null
                 ? myPageData.phoneNumber.slice(3, 7)
                 : null
             }
             initialValue3={
-              myPageData.phoneNumber !== null
+              myPageData && myPageData.phoneNumber !== null
                 ? myPageData.phoneNumber.slice(7, 11)
                 : null
             }
@@ -273,36 +272,38 @@ export default function MyPageUpdate() {
         <FormDiv>
           <CompanyNameInput
             updateData={updateData}
-            initialValue={myPageData.companyName}
+            initialValue={myPageData && myPageData.companyName}
           />
           <RepresentativeNameInput
             updateData={updateData}
-            initialValue={myPageData.partnerName}
+            initialValue={myPageData && myPageData.partnerName}
           />
           <CompanyNumberInput
             updateData={updateData}
             i
             initialValue1={
-              myPageData.companyNumber !== null
+              myPageData && myPageData.companyNumber !== null
                 ? myPageData.companyNumber.slice(0, 3)
                 : null
             }
             initialValue2={
-              myPageData.companyNumber !== null
+              myPageData && myPageData.companyNumber !== null
                 ? myPageData.companyNumber.slice(3, 5)
                 : null
             }
             initialValue3={
-              myPageData.companyNumber !== null
+              myPageData && myPageData.companyNumber !== null
                 ? myPageData.companyNumber.slice(5, 11)
                 : null
             }
           />
           <AddressInput updateData={updateData} />
-          <CategoryInput
-            updateData={updateData}
-            initialList={myPageData.categoryList}
-          />
+          {myPageData && (
+            <CategoryInput
+              updateData={updateData}
+              initialList={myPageData.categoryList}
+            />
+          )}
         </FormDiv>
       </UpdateForm>
       <div style={{ textAlign: 'center' }}>

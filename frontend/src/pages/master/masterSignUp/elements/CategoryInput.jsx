@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import IconButton from '@mui/material/IconButton';
@@ -76,7 +77,7 @@ export default function CategoryInput({ updateData, initialList }) {
       <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>카데고리 등록</h2>
       <Message msg={msg} />
       <CategoryItemListDiv>
-        {categoryItemList.map((item) => (
+        {categoryItemList && categoryItemList.map((item) => (
           <CategoryInputItem
             categoryItem={item}
             changeCategoryItem={changeCategoryItem}
