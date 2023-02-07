@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable array-callback-return */
 import React, { useState } from 'react';
@@ -32,14 +33,14 @@ export default function Mypage() {
   };
 
   const [businessHour, setBusinessHour] = useState([
-    { day: '월요일', open: '09:00', close: '18:00' },
-    { day: '화요일', open: '09:00', close: '18:00' },
-    { day: '수요일', open: '09:00', close: '18:00' },
-    { day: '목요일', open: '09:00', close: '18:00' },
-    { day: '금요일', open: '09:00', close: '18:00' },
-    { day: '토요일', open: '09:00', close: '18:00' },
-    { day: '일요일', open: '09:00', close: '18:00' },
-    { day: '공휴일', open: '09:00', close: '18:00' },
+    { day: '월요일', open: '09:00', close: '18:00', isHoliday: false },
+    { day: '화요일', open: '09:00', close: '18:00', isHoliday: false },
+    { day: '수요일', open: '09:00', close: '18:00', isHoliday: false },
+    { day: '목요일', open: '09:00', close: '18:00', isHoliday: false },
+    { day: '금요일', open: '09:00', close: '18:00', isHoliday: false },
+    { day: '토요일', open: '09:00', close: '18:00', isHoliday: false },
+    { day: '일요일', open: '09:00', close: '18:00', isHoliday: false },
+    { day: '공휴일', open: '09:00', close: '18:00', isHoliday: true },
   ]);
   const routeMyPageUpdate = () => {
     navigate('/master/mypage/update');

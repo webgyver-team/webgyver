@@ -156,6 +156,7 @@ const Page = styled.div`
   // height: 'calc(var(--vh,1vh) * 100)');
   height: ${(props) => (props.isNav ? 'calc(var(--vh,1vh) * 100 - 64px - 38px)' : 'calc(var(--vh,1vh) * 100)')};
   overflow-y: auto;
+  overflow-x: hidden;
   background-color: ${(props) => props.theme.color.defaultWhite};
 
   @media screen and (max-width: 600px) {
