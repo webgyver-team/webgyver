@@ -43,7 +43,6 @@ export default function Reservation() {
 
   // 날짜 선택했을 때 실행되는 함수
   const handleDate = (value) => {
-    console.log(value);
     if (date !== value) {
       // 이전과 다른날짜를 선택했을 때
       if (clickedTimeButton !== null) {

@@ -142,12 +142,13 @@ export default function ReservationForm() {
       // eslint-disable-next-line
         if(response.statusCode === 200){
         // eslint-disable-next-line
-          alert("예약상담이 등록되었습니다.");
+        alert("예약상담이 등록되었습니다.");
         navigate('/usagehistory');
       } else {
         // eslint-disable-next-line
-          console.log(response);
-        alert('예약 내용을 다시 확인바랍니다.');
+        console.log(response);
+        // eslint-disable-next-line
+        alert('예약상담 등록에 실패하였습니다.');
       }
     });
   };

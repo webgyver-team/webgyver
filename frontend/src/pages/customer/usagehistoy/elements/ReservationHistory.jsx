@@ -1,30 +1,32 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import ReviewImg1 from '../../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../../assets/image/review3.jpg';
+import { customer } from '../../../../api/customerService';
+import { userIdx } from '../../../../atom';
 
 export default function ReservationHistory() {
-  const [historys] = useState([
-    {
-      title: '뜨거운 물이 나오지 않는 건에 대하여',
-      content:
-        '수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!',
-      date: '01월 28일 09:00',
-      images: [ReviewImg1, ReviewImg2, ReviewImg3],
-      company: '수리Ssap고수Shop',
-    },
-  ]);
-
+  const [histories, setHistories] = useState([]);
+  const customerIdx = useRecoilValue(userIdx);
+  useEffect(() => {
+    const getHistory = async () => {
+      const response = await customer.get.reservationHistory(customerIdx);
+      if (response.statusCode === 200) {
+        setHistories(response.data.reservationList);
+      }
+    };
+    getHistory();
+    // disable-eslint-next-line
+  }, [customerIdx]);
   return (
     <Main>
-      <CardView history={historys[0]} />
-      <CardView history={historys[0]} />
+      {histories.map((history) => (
+        <CardView key={history} history={history} />
+      ))}
     </Main>
   );
 }
@@ -43,15 +45,22 @@ function CardView({ history }) {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-
+  const [contentOverLimit] = useState(history.content.length > 50);
   const [isShowMore, setIsShowMore] = useState(false);
   const shortComment = history.content.slice(0, 60);
   const onChangeShowMore = () => {
     setIsShowMore(!isShowMore);
   };
 
-  const currentState = ['수락대기중', '예약취소', '예약확정', '화상상담하기'];
-
+  const currentState = [
+    '',
+    '수락대기중',
+    '예약취소',
+    '예약확정',
+    '화상상담하기',
+  ];
+  const date = history.reservationTime.split(' ')[0].split('-');
+  const time = history.reservationTime.split(' ')[1].split(':');
   const routeVideoService = () => {
     navigate('/videoservice');
   };
@@ -61,28 +70,35 @@ function CardView({ history }) {
       <p className="title">{history.title}</p>
       <ContentBox>
         <div className="contentdiv">
-          <p className="date">{`일시: ${history.date}`}</p>
-          <p className="company">{`업체: ${history.company}`}</p>
+          <p className="date">{`일시: ${date[0]}년 ${date[1]}월 ${date[2]}일 ${time[0]}시 ${time[1]}분`}</p>
+          <p className="company">{`업체: ${history.storeName}`}</p>
           <span className="content">
-            {isShowMore ? history.content : shortComment}
+            {contentOverLimit && !isShowMore ? shortComment : history.content}
           </span>
-          <MoreBtn type="button" onClick={onChangeShowMore}>
-            {isShowMore ? '[닫기]' : '[더보기]'}
-          </MoreBtn>
+          {contentOverLimit ? (
+            <MoreBtn type="button" onClick={onChangeShowMore}>
+              {isShowMore ? '[닫기]' : '[더보기]'}
+            </MoreBtn>
+          ) : null}
         </div>
         <div>
           <SliderBox>
             <Slider {...slickSettings}>
-              {history.images.map((el) => (
-                <ImgBox key={el}>
-                  <img src={el} alt="" />
+              {history.imageList.map((image) => (
+                <ImgBox key={image.saveName}>
+                  <img
+                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${image.saveName}`}
+                    alt=""
+                  />
                 </ImgBox>
               ))}
             </Slider>
           </SliderBox>
           <BtnBox>
             <StateBtn>
-              <span onClick={routeVideoService}>{currentState[3]}</span>
+              <span onClick={routeVideoService}>
+                {currentState[history.state]}
+              </span>
             </StateBtn>
           </BtnBox>
         </div>
