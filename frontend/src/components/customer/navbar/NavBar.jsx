@@ -114,7 +114,7 @@ export default function NavBar(props) {
             label={auth ? 'customer' : false}
           />
         </FormGroup>
-        <AppBar position="static" color="primary" sx={{ height: '64px' }}>
+        <AppBar position="static" color="primary">
           <Toolbar>
             {/* 메뉴 버튼 */}
             <IconButton
