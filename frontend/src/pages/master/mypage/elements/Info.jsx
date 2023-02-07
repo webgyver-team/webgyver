@@ -1,31 +1,38 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useRecoilState } from 'recoil';
 import Button from '@mui/material/Button';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
-
 import TextField from '@mui/material/TextField';
+import { master } from '../../../../api/masterService';
+import { userIdx } from '../../../../atom';
 
 export default function AlertDialog({ open, setOpen, info }) {
   const handleClose = () => {
     setOpen(false);
   };
+  const [idx] = useRecoilState(userIdx);
 
   const [formContent, setFormContent] = useState('');
   useState(() => {
     setFormContent(info);
   }, []);
-  const registInfo = () => {
+  const changeContent = (event) => {
+    setFormContent(event.target.value);
+  };
+  const registInfo = async () => {
     const data = {
-      customerIdx: null,
-      partenrIdx: null,
-      categoryIdx: null,
-      content: formContent,
+      companyDescription: formContent,
     };
     // eslint-disable-next-line
-    console.log(data);
-    handleClose();
+    const response = await master.put.description(data, idx);
+    if (response.statusCode === 200) {
+      handleClose();
+    } else {
+      alert('오류가 발생했습니다.');
+    }
   };
 
   return (
@@ -46,7 +53,8 @@ export default function AlertDialog({ open, setOpen, info }) {
             multiline
             rows={10}
             style={{ minWidth: '360px' }}
-            value={info}
+            value={formContent}
+            onChange={changeContent}
           />
         </InfoBox>
         <DialogActions>

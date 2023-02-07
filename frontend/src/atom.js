@@ -20,6 +20,12 @@ export const accessToken = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+export const userIdx = atom({
+  key: 'userIdx',
+  default: '',
+  effects_UNSTABLE: [persistAtom],
+});
+
 // 테스트용
 export const testState = atom({
   key: 'testState',
