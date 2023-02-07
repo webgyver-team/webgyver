@@ -5,9 +5,8 @@ import com.google.gson.Gson;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.service.common.CommonService;
 import com.ssafy.webgyver.config.WebSocketConfig;
-import com.ssafy.webgyver.db.entity.*;
+import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.util.CommonUtil;
-import com.ssafy.webgyver.util.PictureParsingUtil;
 import com.ssafy.webgyver.websocket.dto.RefreshCustomerMessage;
 import com.ssafy.webgyver.websocket.dto.RefreshSellerMessage;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +17,6 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.*;
 
 @Log
@@ -28,6 +26,7 @@ import java.util.*;
 public class WebSocketRealTime {
     private final CommonService commonService;
 
+    // MAP으로 리팩토링 필요함~
     private static final Set<Session> customerSession = Collections.synchronizedSet(new HashSet<>());
     private static final Set<Session> sellerSession = Collections.synchronizedSet(new HashSet<>());
     private static List<RefreshSellerMessage> refreshSellerMessageList = Collections.synchronizedList(new ArrayList<>());
@@ -78,9 +77,16 @@ public class WebSocketRealTime {
     }
 
     // 실시간 상담 reservation 테이블에 등록!!!!!!!
-    public void METHOD_MAKE_RESERVATION(Session session, Map<String, Object> info) {
-        long sellerIdx = (long) session.getUserProperties().get("idx");
+    public void METHOD_MAKE_RESERVATION(Session seller, Map<String, Object> info) {
+        long sellerIdx = (long) seller.getUserProperties().get("idx");
         long customerIdx = Math.round((double) info.get("customerIdx"));
+        Session customer = null;
+        for (Session session : customerSession) {
+            if (customerIdx == (long) session.getUserProperties().get("idx")) {
+                customer = session;
+                break;
+            }
+        }
         RefreshSellerMessage reservationInfo = null;
         for (RefreshSellerMessage cur : refreshSellerMessageList) {
             if (cur.getIdx() == customerIdx) {
@@ -89,15 +95,12 @@ public class WebSocketRealTime {
             }
         }
 
-        if (reservationInfo == null) {
-            System.out.println("이럴리가없음...진짜...휴ㅜ....ㅠㅜㅠ..");
-            return;
-        }
 
         // 실시간 상담 reservation 테이블에 등록!!!!!!!
+        Reservation insertedRes = commonService.insertReservationArticlePictureList(customerIdx, sellerIdx, reservationInfo);
+        long reservationIdx = insertedRes.getIdx();
+//        customer.
 
-
-        commonService.insertReservationArticlePictureList(customerIdx,sellerIdx,reservationInfo);
 //
 //        System.out.println(reservation);
 //        System.out.println(article);

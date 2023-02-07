@@ -76,6 +76,9 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     // 예약 가능한 모든 상점리스트를 정렬해서 리턴함.
     public CustomerReservationNormalListRes getOrderedStoreList(String order, CustomerReservationNormalListReq req) {
         List<SellerCategory> sellerCategoryList = sellerCategoryRepository.findSellerCategoriesByCategory(Category.builder().idx(req.getCategoryIdx()).build());
+        if (sellerCategoryList.size() == 0) {
+            return CustomerReservationNormalListRes.of(200, "noData");
+        }
         List<Seller> sellerList = sellerCategoryList.stream().map(SellerCategory::getSeller).filter(seller -> seller.getBookTime() != null).collect(Collectors.toList());
         List<Integer> sellerCategoryPrice = sellerCategoryList.stream().map(SellerCategory::getPrice).collect(Collectors.toList());
         LocalDateTime start = TimeUtil.string2Time(req.getDate());
