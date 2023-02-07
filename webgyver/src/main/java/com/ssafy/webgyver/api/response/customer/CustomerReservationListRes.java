@@ -1,8 +1,6 @@
 package com.ssafy.webgyver.api.response.customer;
 
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
-import com.ssafy.webgyver.db.entity.Customer;
-import com.ssafy.webgyver.db.entity.Reservation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -29,8 +27,8 @@ public class CustomerReservationListRes extends DataResponseBody {
         private String content;
         private String storeName;
         private List<PictureDTO> imageList;
-        private String state;
-        private String type;
+        private Long state;
+        private Long type;
 
         public ReservationDTO(Long reservationIdx, String title, LocalDateTime time, String content, String storeName, List<PictureDTO> pictureList, String state, String type) {
             this.reservationIdx = reservationIdx;
@@ -39,8 +37,8 @@ public class CustomerReservationListRes extends DataResponseBody {
             this.content = content;
             this.storeName = storeName;
             this.imageList = pictureList;
-            this.state = state;
-            this.type = type;
+            this.state = Long.parseLong(state);
+            this.type = Long.parseLong(type);
         }
     }
     @Getter
@@ -62,10 +60,7 @@ public class CustomerReservationListRes extends DataResponseBody {
         res.setStatusCode(statusCode);
         res.setMessage(message);
         // 예약 정보 넣기
-//        Response response = new Response(reservationList);
-
         res.getData().put("reservationList", reservationList);
-
         return res;
     }
 }
