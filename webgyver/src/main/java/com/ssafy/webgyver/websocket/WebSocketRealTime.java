@@ -2,10 +2,16 @@ package com.ssafy.webgyver.websocket;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
+import com.ssafy.webgyver.api.request.common.picture.PictureReq;
+import com.ssafy.webgyver.api.service.common.CommonService;
 import com.ssafy.webgyver.config.WebSocketConfig;
+import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.util.CommonUtil;
+import com.ssafy.webgyver.websocket.dto.Message;
+import com.ssafy.webgyver.websocket.dto.MethodType;
 import com.ssafy.webgyver.websocket.dto.RefreshCustomerMessage;
 import com.ssafy.webgyver.websocket.dto.RefreshSellerMessage;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
 
@@ -18,12 +24,14 @@ import java.util.*;
 @Log
 @Component
 @ServerEndpoint(value = "/realtime/{type}/{idx}", configurator = WebSocketConfig.class)
+@RequiredArgsConstructor
 public class WebSocketRealTime {
+    private final CommonService commonService;
+
+    // MAP으로 리팩토링 필요함~
     private static final Set<Session> customerSession = Collections.synchronizedSet(new HashSet<>());
     private static final Set<Session> sellerSession = Collections.synchronizedSet(new HashSet<>());
-    private static final List<RefreshSellerMessage> refreshSellerMessageList = Collections.synchronizedList(new ArrayList<>());
-    // 소비자는 들어올때 글정보, Price, 위도, 경도, 몇km반경까지 볼건지를 들고 들어와야함
-    // 판매자는 들어올때 위도, 경도를 들고 들어와야함
+    private static List<RefreshSellerMessage> refreshSellerMessageList = Collections.synchronizedList(new ArrayList<>());
 
     @OnOpen
     public void onOpen(Session session, @PathParam("type") String type, @PathParam("idx") Long idx) throws IOException {
@@ -41,28 +49,76 @@ public class WebSocketRealTime {
     public void OnClose(Session session, CloseReason closeReason) throws IOException {
         if ("customer".equals(session.getUserProperties().get("type"))) {
             customerSession.remove(session);
-            refreshSeller();
+            updateRefreshSellerMessageList();
+            refreshSellerAllSeller();
         } else if ("seller".equals(session.getUserProperties().get("type"))) {
             sellerSession.remove(session);
-            refreshCustomer();
+            refreshCustomerAllCustomer();
         }
     }
 
     @OnMessage
     public void onMessage(String jsonMessage, Session session) throws IOException {
+        // 소비자는 들어올때 글정보, 가격, 카테고리인덱스, 위도, 경도, 몇km반경까지 볼건지를 들고 들어와야함
+        // 판매자는 들어올때 위도, 경도를 들고 들어와야함
+
         Gson gson = new Gson();
         Map<String, Object> info = gson.fromJson(jsonMessage, new TypeToken<Map<String, Object>>() {
         }.getType());
+        System.out.println(info);
+        // 리플렉션도 추가해보자.
+        // Class<?> cls = Class.forName(obj.getClass().getName());
         String method = (String) info.remove("method");
+        if ("INIT".equals(method)) {
+            METHOD_INIT(session, info);
+        } else if ("CHANGE_DISTANCE".equals(method)) {
+            METHOD_CHANGE_DISTANCE(session, info);
+        } else if ("MAKE_RESERVATION".equals(method)) {
+            METHOD_MAKE_RESERVATION(session, info);
+        }
+    }
 
-        if (method.equals("INIT")) {
-            setStatus(session, info);
-            if ("seller".equals(session.getUserProperties().get("type"))) {
-                refreshCustomer();
-            } else if ("customer".equals(session.getUserProperties().get("type"))) {
-                refreshSeller();
+    // 실시간 상담 reservation 테이블에 등록!!!!!!!
+    public void METHOD_MAKE_RESERVATION(Session seller, Map<String, Object> info) throws IOException {
+        long sellerIdx = (long) seller.getUserProperties().get("idx");
+        long customerIdx = Math.round((double) info.get("customerIdx"));
+        Session customer = null;
+        for (Session session : customerSession) {
+            if (customerIdx == (long) session.getUserProperties().get("idx")) {
+                customer = session;
+                break;
             }
         }
+        RefreshSellerMessage reservationInfo = null;
+        for (RefreshSellerMessage cur : refreshSellerMessageList) {
+            if (cur.getIdx() == customerIdx) {
+                reservationInfo = cur;
+                break;
+            }
+        }
+
+
+        // 실시간 상담 reservation 테이블에 등록!!!!!!!
+        Reservation insertedRes = commonService.insertReservationArticlePictureList(customerIdx, sellerIdx, reservationInfo);
+        long reservationIdx = insertedRes.getIdx();
+        Message message = new Message(MethodType.GO_FACE_TIME);
+        Map<String, Object> data = new HashMap<>();
+        data.put("customerIdx", customerIdx);
+        data.put("sellerIdx", sellerIdx);
+        data.put("reservationIdx", reservationIdx);
+        message.setData(data);
+
+        Gson gson = new Gson();
+        String messageString = gson.toJson(message);
+
+        customer.getBasicRemote().sendText(messageString);
+        seller.getBasicRemote().sendText(messageString);
+//        System.out.println(messageString);
+
+//
+//        System.out.println(reservation);
+//        System.out.println(article);
+//        System.out.println(pictureList);
     }
 
     @OnError
@@ -76,40 +132,45 @@ public class WebSocketRealTime {
         }
     }
 
-    // seller가 들어올때, customer에게 정보 갱신해주자
-    public void refreshCustomer() throws IOException {
-        Gson gson = new Gson();
+    // seller가 들어오거나 나갈때 customer에게 정보 갱신해주자
+    public void refreshCustomerAllCustomer() throws IOException {
         for (Session customer : customerSession) {
-            if (!customer.isOpen())
-                continue;
-            Map<String, Object> customerProperties = customer.getUserProperties();
-            int viewDistance = (int) Math.round((double) customerProperties.get("viewDistance"));
-            int sellerCnt = 0;
-
-            if (viewDistance == -1) {
-                // 거리 무관으로 설정한 경우.
-                sellerCnt = (int) sellerSession.stream().filter(Session::isOpen).count();
-            } else {
-                double lat1 = (double) customerProperties.get("lat");
-                double lng1 = (double) customerProperties.get("lng");
-                for (Session seller : sellerSession) {
-                    Map<String, Object> sellerProperties = seller.getUserProperties();
-                    double lat2 = (double) sellerProperties.get("lat");
-                    double lng2 = (double) sellerProperties.get("lng");
-                    double distance = CommonUtil.getDistanceWithKM(lat1, lng1, lat2, lng2);
-                    if (distance <= viewDistance) {
-                        sellerCnt += 1;
-                    }
-                }
-            }
-            RefreshCustomerMessage refreshCustomerMessage = new RefreshCustomerMessage(sellerCnt, viewDistance);
-            customer.getBasicRemote().sendText(gson.toJson(refreshCustomerMessage));
+            refreshCustomerOneCustomer(customer);
         }
     }
 
-    public void refreshSeller() throws IOException {
+    public void refreshCustomerOneCustomer(Session customer) throws IOException {
+        if (!customer.isOpen())
+            return;
         Gson gson = new Gson();
+        Map<String, Object> customerProperties = customer.getUserProperties();
+        int viewDistance = (int) Math.round((double) customerProperties.get("viewDistance"));
+        int sellerCnt = 0;
 
+        if (viewDistance == -1) {
+            // 거리 무관으로 설정한 경우.
+            sellerCnt = (int) sellerSession.stream().filter(Session::isOpen).count();
+        } else {
+            double lat1 = (double) customerProperties.get("lat");
+            double lng1 = (double) customerProperties.get("lng");
+            for (Session seller : sellerSession) {
+                Map<String, Object> sellerProperties = seller.getUserProperties();
+                double lat2 = (double) sellerProperties.get("lat");
+                double lng2 = (double) sellerProperties.get("lng");
+                double distance = CommonUtil.getDistanceWithKM(lat1, lng1, lat2, lng2);
+                if (distance <= viewDistance) {
+                    sellerCnt += 1;
+                }
+            }
+        }
+        RefreshCustomerMessage refreshCustomerMessage = new RefreshCustomerMessage(sellerCnt, viewDistance);
+        customer.getBasicRemote().sendText(gson.toJson(refreshCustomerMessage));
+    }
+
+    // customer가 들어오거나 나갈때 refreshSellerList를 업데이트해주자.
+    public void updateRefreshSellerMessageList() throws IOException {
+        refreshSellerMessageList = Collections.synchronizedList(new ArrayList<>());
+        Gson gson = new Gson();
         for (Session customer : customerSession) {
             if (!customer.isOpen()) {
                 continue;
@@ -120,12 +181,21 @@ public class WebSocketRealTime {
                     .lng((double) customerProperties.get("lng"))
                     .title((String) customerProperties.get("title"))
                     .content((String) customerProperties.get("content"))
-                    .fullAddress((String) customerProperties.get("fullAddress"))
+                    .address((String) customerProperties.get("address"))
+                    .detailAddress((String) customerProperties.get("detailAddress"))
                     .price((int) Math.round((double) customerProperties.get("price")))
-                    .images((List<String>) customerProperties.get("images"))
+                    .images(gson.fromJson(gson.toJson(customerProperties.get("images")), new TypeToken<List<PictureReq>>() {
+                    }.getType()))
+                    .idx((long) customerProperties.get("idx"))
+                    .categoryIdx(Math.round((double) customerProperties.get("categoryIdx")))
                     .build();
+
             refreshSellerMessageList.add(refreshSellerMessage);
         }
+    }
+
+    public void refreshSellerAllSeller() {
+        Gson gson = new Gson();
         String refreshSellerMessageListJson = gson.toJson(refreshSellerMessageList);
         sellerSession.stream().filter(Session::isOpen).forEach(seller -> {
             try {
@@ -136,4 +206,26 @@ public class WebSocketRealTime {
         });
     }
 
+    public void refreshSellerOneSeller(Session session) throws IOException {
+        Gson gson = new Gson();
+        String refreshSellerMessageListJson = gson.toJson(refreshSellerMessageList);
+        session.getBasicRemote().sendText(refreshSellerMessageListJson);
+    }
+
+    public void METHOD_INIT(Session session, Map<String, Object> info) throws IOException {
+        setStatus(session, info);
+        updateRefreshSellerMessageList();
+        if ("seller".equals(session.getUserProperties().get("type"))) {
+            refreshSellerOneSeller(session);
+            refreshCustomerAllCustomer();
+        } else if ("customer".equals(session.getUserProperties().get("type"))) {
+            refreshCustomerOneCustomer(session);
+            refreshSellerAllSeller();
+        }
+    }
+
+    public void METHOD_CHANGE_DISTANCE(Session session, Map<String, Object> info) throws IOException {
+        session.getUserProperties().put("viewDistance", Double.valueOf((String) info.get("viewDistance")));
+        refreshCustomerAllCustomer();
+    }
 }

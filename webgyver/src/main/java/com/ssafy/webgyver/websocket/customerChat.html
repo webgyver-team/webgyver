@@ -6,23 +6,32 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         var g_webSocket = null;
-        var websocket_address = "ws://localhost:9001/realtime/customer/1";
+        var websocket_address = "ws://localhost:9000/realtime/customer/1";
+        var categoryIdx = 1;
+        var price = 99999;
         window.onload = async function () {
-
             g_webSocket = new WebSocket(websocket_address);
-
             g_webSocket.onopen = function (message) {
                 // 처음 접속할때 정보 설정.
                 const data = JSON.stringify(
                     {
                         'method': 'INIT',
+                        'categoryIdx': categoryIdx,
                         'lng': Math.random(),
                         'lat': Math.random(),
-                        'fullAddress': '대전 서구 청사로 253, 111-2222',
+                        'address': '대전 서구 청사로 253',
+                        'detailAddress': '111-2222',
                         'title': '물이 안나와요',
-                        'content': '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n',
-                        'images': ['asd.png', 'qwer.png', '123.png'],
-                        'price': Math.random(),
+                        'content': '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n손이 너무 더러운디 씻을수가 없어유\n',
+                        'images': [{
+                            "saveName": "test123",
+                            "originName": "test123"
+                        },
+                            {
+                                "saveName": "asdf123",
+                                "originName": "asdf123"
+                            }],
+                        'price': price,
                         'viewDistance': -1
                     }
                 );
@@ -36,7 +45,8 @@
             g_webSocket.onmessage = function (message) {
                 const data = JSON.parse(message.data)
                 console.log(data);
-                addLineToChatBox(data)
+                addLineToChatBox(JSON.stringify(data))
+                addLineToChatBox('-----------------------------');
             };
 
             /**
@@ -67,6 +77,15 @@
             chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
         }
 
+        function change_distance() {
+            const data = JSON.stringify(
+                {
+                    'method': 'CHANGE_DISTANCE',
+                    'viewDistance': document.getElementById("viewDistance").value
+                })
+            g_webSocket.send(data);
+        }
+
 
     </script>
 </head>
@@ -78,6 +97,8 @@
 <br/>
 <textarea id="chatBoxArea" style="width: 100%;" rows="10" cols="50" readonly="readonly"></textarea>
 <br/>
+판매자와의 거리가 <input id="viewDistance">
+<button onclick="change_distance()">km 이내만 보기</button>
 
 </body>
 </html>

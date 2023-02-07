@@ -6,7 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         var g_webSocket = null;
-        var websocket_address = "ws://localhost:9001/realtime/seller/1";
+        var websocket_address = "ws://localhost:9000/realtime/seller/1";
         window.onload = async function () {
 
             g_webSocket = new WebSocket(websocket_address);
@@ -30,11 +30,14 @@
             g_webSocket.onmessage = function (message) {
                 const data = JSON.parse(message.data)
                 for (var i = 0; i < data.length; i++) {
-                    console.log(data[i]);
-                    addLineToChatBox(data[i]);
+                    addLineToChatBox(JSON.stringify(data[i]));
+                    console.log(data[i])
                 }
+                console.log(data)
 
-            };
+                addLineToChatBox('-----------------------------');
+            }
+
 
             /**
              * 웹소켓 사용자 연결 해제하는 경우 호출
@@ -48,8 +51,9 @@
              */
             g_webSocket.onerror = function (message) {
                 addLineToChatBox("Error!");
-            };
-        }
+            }
+
+        };
 
         /**
          * 채팅 박스영역에 내용 한 줄 추가
@@ -58,7 +62,6 @@
             if (_line == null) {
                 _line = "";
             }
-
             var chatBoxArea = document.getElementById("chatBoxArea");
             chatBoxArea.value += _line + "\n";
             chatBoxArea.scrollTop = chatBoxArea.scrollHeight;
@@ -73,6 +76,19 @@
             }
         }
 
+        function makeReservation(customerIdx) {
+            const data = JSON.stringify(
+                {
+                    'method': 'MAKE_RESERVATION',
+                    'customerIdx': customerIdx,
+                    // selleridx는 보낼 필요 없음. 메세지를 보내는 주체가 seller라서.
+
+                }
+            );
+            console.log(data)
+            g_webSocket.send(data);
+        }
+
 
     </script>
 </head>
@@ -83,6 +99,7 @@
 <input id="disconnectButton" value="Disconnect" type="button" onclick="disconnectButton_onclick()">
 <br/>
 <textarea id="chatBoxArea" style="width: 100%;" rows="10" cols="50" readonly="readonly"></textarea>
+<button onclick="makeReservation(1)">(임시)1번 소비자와 예약 잡기</button>
 <br/>
 
 </body>

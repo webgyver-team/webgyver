@@ -7,6 +7,7 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class CustomerReservationNormalListReq {
     private Long categoryIdx;
     //    private String address;

@@ -2,26 +2,26 @@ package com.ssafy.webgyver.api.service.Seller;
 
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
+import com.ssafy.webgyver.api.request.common.picture.PictureListReq;
+import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.seller.*;
+import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
-import com.ssafy.webgyver.db.entity.Article;
-import com.ssafy.webgyver.db.entity.Reservation;
-import com.ssafy.webgyver.db.entity.Seller;
-import com.ssafy.webgyver.db.entity.SellerCategory;
+import com.ssafy.webgyver.db.entity.*;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
+import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
+import com.ssafy.webgyver.util.PictureParsingUtil;
 import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -31,11 +31,21 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     final ArticleRepository articleRepository;
     final SellerRepository sellerRepository;
     final SellerCategoryRepository sellerCategoryRepository;
+    final PictureRepository pictureRepository;
     final ReservationRepository reservationRepository;
     final PasswordEncoder passwordEncoder;
+
     @Override
     public List<Article> getAllHistory(SellerIdxReq req) {
         return articleRepository.findArticlesByType(req.getSellerIdx());
+    }
+
+    public Map<Long, List<Picture>> getAllPictureMap(List<Article> articleList) {
+        Map<Long, List<Picture>> pictureListReqMap = new HashMap<>();
+        for (Article article : articleList) {
+            pictureListReqMap.put(article.getIdx(), pictureRepository.findPicturesByArticleIdx(article.getIdx()));
+        }
+        return pictureListReqMap;
     }
 
     @Override
@@ -58,6 +68,18 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     }
 
     @Override
+    public void insertPictures(Article article, PictureListReq req) {
+        for (PictureReq picture : req.getImages()) {
+            pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(picture, article));
+        }
+    }
+
+    @Override
+    public void updatePictures(Article article, PictureListReq req) {
+
+    }
+
+    @Override
     public void deleteHistory(ArticleIdxReq req) {
 
         articleRepository.deleteById(req.getArticleIdx());
@@ -69,7 +91,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         ///// 영업시간 구하기
         List<SellerMyPageIntroRes.CompanyTimeDTO> companyTimeDTOList = null;
         String companyTime = seller.getCompanyTime();
-        if (companyTime != null){
+        if (companyTime != null) {
             String[] list = companyTime.split("%");
             companyTimeDTOList = new ArrayList<>();
             for (int i = 0; i < list.length; i++){
@@ -107,7 +129,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         seller.updateSellerDescription(description.getCompanyDescription());
         sellerRepository.save(seller);
-        BaseResponseBody res = BaseResponseBody.of(200,"Success");
+        BaseResponseBody res = BaseResponseBody.of(200, "Success");
         return res;
     }
 
@@ -138,7 +160,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
                 passwordEncoder.encode(profileReq.getPassword()), profileReq.getPhoneNumber(), profileReq.getStoreName(),
                 profileReq.getAddress(), profileReq.getDetailAddress());
         sellerCategoryRepository.deleteAllInBatch(seller.getSellerCategories());
-        for (SellerCategory SC : profileReq.getCategoryList()){
+        for (SellerCategory SC : profileReq.getCategoryList()) {
             SellerCategory sellerCategory = SellerCategory.builder()
                     .category(SC.getCategory())
                     .price(SC.getPrice())

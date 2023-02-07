@@ -1,5 +1,6 @@
 package com.ssafy.webgyver.websocket.dto;
 
+import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import lombok.*;
 
 import java.util.List;
@@ -11,11 +12,15 @@ import java.util.List;
 @Builder
 @ToString
 public class RefreshSellerMessage {
+    // 커스터머의 인덱스
+    private long idx;
     private double lat;
     private double lng;
-    private String fullAddress;
+    private String address;
+    private String detailAddress;
     private String title;
     private String content;
-    private List<String> images;
+    private List<PictureReq> images;
     private int price;
+    private long categoryIdx;
 }

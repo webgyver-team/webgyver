@@ -6,7 +6,7 @@ import com.ssafy.webgyver.api.service.common.ReservationService;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.websocket.dto.Message;
-import com.ssafy.webgyver.websocket.dto.MessageParser;
+import com.ssafy.webgyver.websocket.dto.MethodType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
 import org.springframework.stereotype.Component;
@@ -64,12 +64,16 @@ public class WebSocketFaceTime {
         session.getUserProperties().put("idx", idx);
         session.getUserProperties().put("reservationIdx", reservationIdx);
         room.join(session);
+
+        Message message = null;
         if (room.sessions.size() == 1) {
-            Message message = new Message("ALONE");
+            message = new Message(MethodType.ALONE);
         } else if (room.sessions.size() == 2) {
-            Message message = new Message("TOGETHER");
-            session.getBasicRemote().sendText(new Gson().toJson(message));
+            message = new Message(MethodType.TOGETHER);
+            // 여기서부터 화상통화 시작하면 됨
         }
+        session.getBasicRemote().sendText(new Gson().toJson(message));
+
 //        if (type.equals("selelr")) {
 //            Seller seller = sellerRepository.findById(idx).get();
 //            session.getUserProperties().put("object", seller);
@@ -100,9 +104,8 @@ public class WebSocketFaceTime {
 
     @OnMessage
     public void onMessage(String jsonMessage, Session session) {
-        Message message = MessageParser.parse(jsonMessage);
-        System.out.println(message.method);
-//        System.out.println(jsonMessage);
+//        Message message = MessageParser.parse(jsonMessage);
+//        System.out.println(message.method);
         Room room = extractRoom(session);
         room.sendMessage(jsonMessage);
     }
