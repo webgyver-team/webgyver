@@ -43,7 +43,6 @@ public class SellerMyPageIntroRes extends DataResponseBody {
             this.reviewCnt = String.valueOf(entity.getReviewCount());
         }
     }
-    @ToString
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -53,14 +52,14 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         private Integer price;
 
     }
-    @ToString
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CompanyTimeDTO{
         private String day;
-        private String time;
-
+        private String open;
+        private String close;
+        private boolean isHoliday;
 
     }
 
