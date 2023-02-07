@@ -73,7 +73,7 @@ public class SellerServiceImpl implements SellerService {
     public BaseResponseBody checkDuplicate(SellerCheckDuplicateReq req) {
         boolean check = sellerRepository.existsById(req.getId());
         if (check) {
-            return BaseResponseBody.of(200, "중복된 아이디");
+            return BaseResponseBody.of(201, "중복된 아이디");
         } else {
             return BaseResponseBody.of(200, "사용 가능한 아이디");
         }
@@ -89,9 +89,9 @@ public class SellerServiceImpl implements SellerService {
         if (passwordEncoder.matches(password, seller.getPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             return SellerLoginRes.of(200, "Success", JwtTokenUtil.getToken(
-                    String.valueOf(seller.getIdx())));
+                    String.valueOf(seller.getIdx())), seller.getIdx());
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-        return SellerLoginRes.of(401, "Invalid Password", null);
+        return SellerLoginRes.of(401, "Invalid Password", null, null);
     }
 }

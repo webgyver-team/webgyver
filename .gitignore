@@ -9,7 +9,7 @@ build/
 
 ### env ###
 env.properties
-PropertyConfig
+webgyver/src/main/java/com/ssafy/webgyver/config/PropertyConfig.java
 ### STS ###
 .apt_generated
 .classpath

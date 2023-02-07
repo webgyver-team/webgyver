@@ -3,6 +3,7 @@ package com.ssafy.webgyver.api.controller.customer;
 import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
 import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
+import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.api.service.customer.CustomerReservationService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
@@ -40,8 +41,13 @@ public class CustomerReservationController {
     }
 
     @GetMapping("list/{customerIdx}")
-    public ResponseEntity<?> getCustomerReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq) {
-        customerReservationService.getCustomerReservationList(idxReq);
-        return null;
+    public ResponseEntity<?> getCustomerReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq){
+        CustomerReservationListRes res = customerReservationService.getCustomerReservationList(idxReq);
+        return ResponseEntity.ok(res);
+    }
+    @GetMapping("/completed/list/{customerIdx}")
+    public ResponseEntity<?> getCustomerCompletedReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq){
+        CustomerReservationListRes res = customerReservationService.getCustomerCompletedReservationList(idxReq);
+        return ResponseEntity.ok(res);
     }
 }
