@@ -39,6 +39,7 @@ public class CustomerReservationController {
     public ResponseEntity<CustomerReservationNormalListRes> getOrderedStoreList(@RequestBody CustomerReservationNormalListReq req, @PathVariable("order") String order) {
         return ResponseEntity.ok(customerReservationService.getOrderedStoreList(order, req));
     }
+
     @GetMapping("list/{customerIdx}")
     public ResponseEntity<?> getCustomerReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq){
         CustomerReservationListRes res = customerReservationService.getCustomerReservationList(idxReq);

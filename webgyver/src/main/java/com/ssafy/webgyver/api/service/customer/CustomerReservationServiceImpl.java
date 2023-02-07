@@ -57,6 +57,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         reservation.setSeller(seller);
         reservation.setCategory(category);
         reservation.setReservationPrice(price);
+        reservation.setReservationType("2");
         reservationRepository.save(reservation);
 
         Article article = Article.builder().reservation(reservation).title(req.getTitle())
@@ -73,14 +74,10 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     }
 
     // 예약 가능한 모든 상점리스트를 정렬해서 리턴함.
-    public CustomerReservationNormalListRes getOrderedStoreList(String order,
-            CustomerReservationNormalListReq req) {
-        List<SellerCategory> sellerCategoryList = sellerCategoryRepository.findSellerCategoriesByCategory(
-                Category.builder().idx(req.getCategoryIdx()).build());
-        List<Seller> sellerList = sellerCategoryList.stream().map(SellerCategory::getSeller)
-                .collect(Collectors.toList());
-        List<Integer> sellerCategoryPrice = sellerCategoryList.stream()
-                .map(SellerCategory::getPrice).collect(Collectors.toList());
+    public CustomerReservationNormalListRes getOrderedStoreList(String order, CustomerReservationNormalListReq req) {
+        List<SellerCategory> sellerCategoryList = sellerCategoryRepository.findSellerCategoriesByCategory(Category.builder().idx(req.getCategoryIdx()).build());
+        List<Seller> sellerList = sellerCategoryList.stream().map(SellerCategory::getSeller).filter(seller -> seller.getBookTime() != null).collect(Collectors.toList());
+        List<Integer> sellerCategoryPrice = sellerCategoryList.stream().map(SellerCategory::getPrice).collect(Collectors.toList());
         LocalDateTime start = TimeUtil.string2Time(req.getDate());
         LocalDateTime end = start.plusDays(1).minusMinutes(1);
         List<List<String>> existReservationTimeList = new ArrayList<>();
