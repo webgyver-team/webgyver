@@ -7,7 +7,10 @@ import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { loginOpenState, authState, accessToken } from '../../../atom';
+import {
+  // eslint-disable-next-line
+ loginOpenState, authState, accessToken, userIdx 
+} from '../../../atom';
 import { customer } from '../../../api/accountsApi';
 
 const style = {
@@ -28,6 +31,7 @@ export default function LoginModal() {
   const setLoginState = useSetRecoilState(loginOpenState);
   const setAccessToken = useSetRecoilState(accessToken);
   const setAuthState = useSetRecoilState(authState);
+  const setUserIdx = useSetRecoilState(userIdx);
   const closeLogin = () => setLoginState(false);
   const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
@@ -63,6 +67,7 @@ export default function LoginModal() {
         // 리코일persist 상태 변경
         setAuthState('customer');
         setAccessToken(response.data['access-token']);
+        setUserIdx(response.data.customerIdx);
         setLoginState(false);
       } else {
         setAuthState(null);
