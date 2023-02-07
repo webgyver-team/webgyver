@@ -44,13 +44,13 @@ const notNavList = ['/videoservice', '/master/login', '/master/videoservice'];
 function App() {
   const [auth] = useRecoilState(authState);
   // const [url, setUrl] = useState(''); // 현재 url
-  const [onNav, setOnNav] = useState(true);
+  const [isNav, setIsNav] = useState(true);
   // 마스터 url에 위치하는지 판단
   const [onMaster, setOnMaster] = useState(false);
   const location = useLocation();
   useEffect(() => {
     // setUrl(location.pathname);
-    notNavList.includes(location.pathname) ? setOnNav(false) : setOnNav(true);
+    notNavList.includes(location.pathname) ? setIsNav(false) : setIsNav(true);
     location.pathname.includes('/master')
       ? setOnMaster(true)
       : setOnMaster(false);
@@ -61,11 +61,11 @@ function App() {
       <ThemeProvider theme={normal}>
         <All>
           <Main>
-            {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
+            {isNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
-            <Page isMaster={onMaster} onNav={onNav}>
+            <Page isMaster={onMaster} isNav={isNav}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
@@ -143,7 +143,7 @@ const Page = styled.div`
   font-family: 'Roboto';
   font-size: 32px;
   // height: calc(100vh - 120px);
-  height: ${(props) => (props.onNav ? 'calc(100vh - 120px)' : '100vh')};
+  height: ${(props) => (props.isNav ? 'calc(100vh - 120px)' : '100vh')};
   overflow-y: auto;
   background-color: ${(props) => props.theme.color.defaultWhite};
 `;
