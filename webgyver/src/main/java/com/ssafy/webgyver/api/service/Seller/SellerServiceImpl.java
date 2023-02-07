@@ -48,17 +48,18 @@ public class SellerServiceImpl implements SellerService {
                 .companyNumber(sellerRegisterInfo.getCompanyNumber())
                 .address(sellerRegisterInfo.getAddress())
                 .detailAddress(sellerRegisterInfo.getDetailAddress())
+                .lat(sellerRegisterInfo.getLat())
+                .lng(sellerRegisterInfo.getLng())
+                .point(0)
                 .sellerCategories(sellerRegisterInfo.getCategoryList())
                 .build();
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
         Seller sellerRes = sellerRepository.save(seller);
         List<SellerCategory> sellerCategories = new ArrayList<>();
         for (SellerCategory S : sellerRegisterInfo.getCategoryList()) {
-//            Category category = new Category(S.getCategory().getIdx());
             SellerCategory sellerCategory = SellerCategory.builder()
                     .seller(seller)
                     .category(S.getCategory())
-//                    .category(category)
                     .price(S.getPrice())
                     .build();
             sellerCategories.add(sellerCategory);

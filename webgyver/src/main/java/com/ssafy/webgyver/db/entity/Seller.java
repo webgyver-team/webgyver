@@ -81,6 +81,7 @@ public class Seller extends BaseEntity {
     private Long starTotal;
     private Double lat;
     private Double lng;
+    private Integer point;
 
     public void updateSellerDescription(String companyDescription){
         this.companyDescription = companyDescription;
