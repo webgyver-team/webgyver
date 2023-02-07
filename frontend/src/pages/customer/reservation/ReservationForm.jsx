@@ -137,16 +137,16 @@ export default function ReservationForm() {
     // 잘 보내졌으면 data를 POST
     sendImageListToS3().then(async () => {
       // eslint-disable-next-line
-        console.log(data); // POST로 수정 예정
+      console.log(data); // POST로 수정 예정
       const response = await customer.post.reservation(data);
       // eslint-disable-next-line
-        if(response.statusCode === 200){
+      if (response.statusCode === 200) {
         // eslint-disable-next-line
-          alert("예약상담이 등록되었습니다.");
+        alert('예약상담이 등록되었습니다.');
         navigate('/usagehistory');
       } else {
         // eslint-disable-next-line
-          console.log(response);
+        console.log(response);
         alert('예약 내용을 다시 확인바랍니다.');
       }
     });

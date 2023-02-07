@@ -106,7 +106,7 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
                   <FormControlLabel
                     control={
                       <Checkbox
-                        checked={el.isHoliday}
+                        checked={el.holiday}
                         onChange={() => {
                           changeIsHoliday(i);
                         }}
