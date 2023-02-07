@@ -5,10 +5,12 @@ import com.google.gson.Gson;
 import com.ssafy.webgyver.api.service.common.ReservationService;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.util.MessageParsingUtil;
 import com.ssafy.webgyver.websocket.dto.Message;
 import com.ssafy.webgyver.websocket.dto.MethodType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -26,11 +28,9 @@ import java.util.Map;
 public class WebSocketFaceTime {
     private static final Map<Long, Room> rooms = Collections.synchronizedMap(new HashMap<Long, Room>());
     private final ReservationService reservationService;
-//    @PostConstruct
-//    public void init() {
-////        Arrays.stream(new String[]{"1", "2", "3", "4"}).forEach(room -> rooms.computeIfAbsent(room, key -> new Room(key)));
-////        System.out.println(rooms);
-//    }
+
+    @Value("${properties.file.toss.secret}")
+    String tossKey;
 
     @OnOpen
     public void onOpen(Session session, @PathParam("type") String type, @PathParam("idx") Long idx, @PathParam("reservationIdx") Long reservationIdx) throws IOException {
@@ -71,6 +71,7 @@ public class WebSocketFaceTime {
         } else if (room.sessions.size() == 2) {
             message = new Message(MethodType.TOGETHER);
             // 여기서부터 화상통화 시작하면 됨
+
         }
         session.getBasicRemote().sendText(new Gson().toJson(message));
 
@@ -104,8 +105,8 @@ public class WebSocketFaceTime {
 
     @OnMessage
     public void onMessage(String jsonMessage, Session session) {
-//        Message message = MessageParser.parse(jsonMessage);
-//        System.out.println(message.method);
+        Message message = MessageParsingUtil.parsingMessage(jsonMessage);
+        System.out.println(message.getMethod());
         Room room = extractRoom(session);
         room.sendMessage(jsonMessage);
     }
