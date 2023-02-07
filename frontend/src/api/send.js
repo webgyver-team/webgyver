@@ -1,5 +1,6 @@
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
+// import { useRecoilValue } from 'recoil';
 import { accessToken } from '../atom';
 
 const instance = axios.create({
@@ -10,6 +11,9 @@ const instance = axios.create({
   },
 });
 
+// eslint-disable-next-line
+// const token = useRecoilValue(accessToken);
+// console.log(token);
 instance.interceptors.request.use(
   // 요청 전
   (config) => {

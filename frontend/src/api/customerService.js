@@ -6,7 +6,7 @@ export const customer = {
   get: {
     stores: async (order, data) => {
       const response = await Send.get(
-        `${customerURL}/reservation/normal/store/list/:{${order}}`,
+        `${customerURL}/reservation/normal/store/list/${order}`,
         data,
       );
       return response;
