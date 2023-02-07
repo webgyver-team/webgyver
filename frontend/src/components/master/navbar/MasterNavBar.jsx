@@ -37,7 +37,7 @@ export default function MasterNavBar(props) {
     if (item === '일정') {
       navigate('/master/schedule');
     } else if (item === '내역') {
-      navigate('/master/schedule');
+      navigate('/master/history');
     } else if (item === '리뷰') {
       navigate('/master/review');
     } else if (item === '사례') {

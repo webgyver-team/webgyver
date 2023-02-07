@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import { sha256 } from 'js-sha256';
 import AWS from 'aws-sdk';
+import { useNavigate } from 'react-router-dom';
 import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import NameInput from '../../common/signup/elements/NameInput';
@@ -12,8 +13,10 @@ import RepresentativeNameInput from '../masterSignUp/elements/RepresentativeName
 import CompanyNumberInput from '../masterSignUp/elements/CompanyNumberInput';
 import AddressInput from '../masterSignUp/elements/AddressInput';
 import CategoryInput from '../masterSignUp/elements/CategoryInput';
+import { master } from '../../../api/masterService';
 
 export default function MyPageUpdate() {
+  const navigate = useNavigate();
   const givenData = {
     customerIdx: 100,
     profileImage:
@@ -146,7 +149,7 @@ export default function MyPageUpdate() {
     }
   };
 
-  const updateMasterInfo = () => {
+  const updateMasterInfo = async () => {
     // 모든 항목 유효성 검사
     // 비밀번호 -> 비밀번호 확인을 거친 비밀번호여야 인정됨, 그 전엔 null
     if (data.password === null) {
@@ -212,6 +215,14 @@ export default function MyPageUpdate() {
     // 데이터 POST
     // eslint-disable-next-line
     console.log(data);
+    const response = await master.put.profile(data);
+    if (response.statusCode === 200) {
+      alert('수정이 완료되었습니다.');
+      navigate('/master/mypage');
+    } else {
+      // eslint-disable-next-line
+      alert('다시 시도해주세요.');
+    }
   };
   return (
     <div style={{ width: '100%', padding: '16px' }}>

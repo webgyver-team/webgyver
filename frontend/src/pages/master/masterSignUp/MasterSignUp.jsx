@@ -118,17 +118,20 @@ export default function MasterSignUp() {
       }
     }
     // eslint-disable-next-line
-    // api 호출 추가 예정
     delete data.useCheck;
     const response = await master.signup(data);
     if (response.statusCode === 200) {
+      alert('회원가입이 완료되었습니다.');
       const loginResponse = await master.login({
         id: data.id,
         password: data.password,
       });
-      setAccessToken(loginResponse.data.accessToken);
+      setAccessToken(loginResponse.data['access-token']);
       setAuth('master');
       navigate('/master/schedule');
+    } else {
+      // eslint-disable-next-line
+      alert('다시 시도해주세요.');
     }
   };
   return (
