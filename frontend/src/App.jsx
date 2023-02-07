@@ -18,7 +18,7 @@ import ReservationForm from './pages/customer/reservation/ReservationForm';
 import Match from './pages/customer/match/Match';
 import MatchForm from './pages/customer/match/MatchForm';
 import MasterInfo from './components/customer/masterInfo/MasterInfo';
-import UsageHistory from './pages/customer/usagehistoy/UsageHistory';
+import UsageHistory from './pages/customer/usagehistory/UsageHistory';
 import MyPage from './pages/customer/mypage/MyPage';
 import MyPageUpdate from './pages/customer/mypage/MyPageUpdate';
 import VideoService from './pages/customer/videoservice/VideoService';
@@ -155,14 +155,15 @@ const Page = styled.div`
   font-size: 32px;
   // height: 'calc(var(--vh,1vh) * 100)');
   height: ${(props) => (props.isNav
-    ? 'calc(var(--vh,1vh) * 100 - 64px - 38px)'
+    ? 'calc(var(--vh,1vh) * 100 - 64px)'
     : 'calc(var(--vh,1vh) * 100)')};
   overflow-y: auto;
+  overflow-x: hidden;
   background-color: ${(props) => props.theme.color.defaultWhite};
 
   @media screen and (max-width: 600px) {
     height: ${(props) => (props.isNav
-    ? 'calc(var(--vh,1vh) * 100 - 56px - 38px)'
+    ? 'calc(var(--vh,1vh) * 100 - 56px)'
     : 'calc(var(--vh,1vh) * 100)')};
   }
 `;

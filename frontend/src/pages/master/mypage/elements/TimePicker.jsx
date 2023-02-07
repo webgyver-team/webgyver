@@ -7,6 +7,8 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
 import { useRecoilState } from 'recoil';
 import { userIdx } from '../../../../atom';
 import { master } from '../../../../api/masterService';
@@ -61,6 +63,16 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
     setFormContent([...formContent]);
   };
 
+  const changeIsHoliday = (idx) => {
+    // close
+    setFormContent((prevState) => {
+      const temp = prevState;
+      temp[idx].isHoliday = !temp[idx].isHoliday;
+      return temp;
+    });
+    setFormContent([...formContent]);
+  };
+
   const update = () => {
     setHour(formContent);
     registInfo();
@@ -100,6 +112,19 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
                   sx={{ width: 150 }}
                   onChange={(e) => changeCloseTime(i, e.target.value)}
                 />
+                <CheckDiv>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={el.holiday}
+                        onChange={() => {
+                          changeIsHoliday(i);
+                        }}
+                      />
+                    }
+                    label="휴무"
+                  />
+                </CheckDiv>
               </TimeBox>
             </div>
           ))}
@@ -127,4 +152,8 @@ const TimeBox = styled.div`
 
 const Day = styled.span`
   margin-right: 8px;
+`;
+
+const CheckDiv = styled.div`
+  margin-left: 8px;
 `;
