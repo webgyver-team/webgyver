@@ -65,9 +65,9 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
         if (passwordEncoder.matches(password, customer.getPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             return CustomerLoginRes.of(200, "Success", JwtTokenUtil.getToken(
-                    String.valueOf(customer.getIdx())));
+                    String.valueOf(customer.getIdx())),customer.getIdx());
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-        return CustomerLoginRes.of(401, "Invalid Password", null);
+        return CustomerLoginRes.of(401, "Invalid Password", null, null);
     }
 }
