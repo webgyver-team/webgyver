@@ -2,12 +2,14 @@
 /* eslint-disable array-callback-return */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 import LimHS from '../../../assets/image/LimHS.png';
 import Background from '../../../assets/image/MasterBackground.jpg';
 import Info from './elements/Info';
 import TimePicker from './elements/TimePicker';
 
 export default function Mypage() {
+  const navigate = useNavigate();
   const [businessHoursOpen, setBusinessHoursOpen] = useState(false);
   const onChangeBusinessHoursOpen = () => {
     setBusinessHoursOpen(!businessHoursOpen);
@@ -39,6 +41,9 @@ export default function Mypage() {
     { day: '일요일', open: '09:00', close: '18:00' },
     { day: '공휴일', open: '09:00', close: '18:00' },
   ]);
+  const routeMyPageUpdate = () => {
+    navigate('/master/mypage/update');
+  };
 
   return (
     <Main>
@@ -59,7 +64,7 @@ export default function Mypage() {
       </div>
       <MasterInfoBox>
         <EditBox2>
-          <MoreBtn2>개인정보 수정</MoreBtn2>
+          <MoreBtn2 onClick={routeMyPageUpdate}>개인정보 수정</MoreBtn2>
         </EditBox2>
         <MasterImgBox>
           <img src={LimHS} alt="마스터얼굴" />
