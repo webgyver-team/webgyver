@@ -34,18 +34,17 @@ public class SellerReservationServiceImpl implements SellerReservationService{
         List<Reservation> reservationList  = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(req.getSellerIdx(), "4");
         proceedingList = new ArrayList<>();
         reservationState4ListMethod(reservationList);
+        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(req.getSellerIdx(), "1");
         System.out.println(proceedingList);
         //
 
         return null;
     }
     public void reservationState4ListMethod(List<Reservation> reservationList) {
-        System.out.println("메소드 들어옴");
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
             // 상담 시간 지났으면 종료로 보냄
             if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
-                System.out.println("변경 로직 들어옴");
                 reservation.updateReservationState("5");
                 reservationRepository.save(reservation);
             } else {

@@ -178,7 +178,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public void reservationState4ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
-            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
+            if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("5");
                 reservationRepository.save(reservation);
             } else {
