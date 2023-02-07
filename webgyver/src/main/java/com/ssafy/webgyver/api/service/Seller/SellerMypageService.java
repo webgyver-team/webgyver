@@ -7,6 +7,7 @@ import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
 import com.ssafy.webgyver.api.request.seller.SellerProfileUpdateReq;
 import com.ssafy.webgyver.api.request.seller.SellerTimeUpdateReq;
+import com.ssafy.webgyver.api.response.common.picture.PictureListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
@@ -23,6 +24,8 @@ public interface SellerMypageService {
     Article updateHistory(ArticleAllReq req);
 
     Map<Long, List<Picture>> getAllPictureMap(List<Article> articleList);
+
+    void deleteAllPicture(long articleIdx);
 
     void insertPictures(Article article, PictureListReq req);
 

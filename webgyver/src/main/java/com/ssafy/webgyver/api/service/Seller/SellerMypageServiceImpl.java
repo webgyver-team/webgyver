@@ -49,6 +49,11 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     }
 
     @Override
+    public void deleteAllPicture(long articleIdx) {
+        pictureRepository.deleteAllByArticleIdx(articleIdx);
+    }
+
+    @Override
     public Article insertHistory(ArticleAllReq req) {
         Article article = Article.builder().title(req.getTitle())
                 .content(req.getContent())
