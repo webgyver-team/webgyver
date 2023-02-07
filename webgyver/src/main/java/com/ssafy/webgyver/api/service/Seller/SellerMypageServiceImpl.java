@@ -137,9 +137,13 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     public BaseResponseBody updateSellerTime(SellerIdxReq req, SellerTimeUpdateReq timeReq) {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         String timeString = "";
-        for (int i = 0; i < 8; i++) {
-            System.out.println(timeReq.getCompanyTime().get(i));
-            timeString += timeReq.getCompanyTime().get(i).getDay() + "$" + timeReq.getCompanyTime().get(i).getTime() + "%";
+        for (int i = 0; i < 8; i++){
+            if (timeReq.getCompanyTime().get(i).getHoliday()){
+                timeString += timeReq.getCompanyTime().get(i).getDay() + "$휴일%";
+            } else {
+                timeString += timeReq.getCompanyTime().get(i).getDay() + "$"
+                        + timeReq.getCompanyTime().get(i).getOpen() + "~" + timeReq.getCompanyTime().get(i).getClose() + "%";
+            }
         }
         seller.updateSellerTime(timeString);
         sellerRepository.save(seller);
