@@ -30,8 +30,9 @@ public class CustomerReservationListRes extends DataResponseBody {
         private String storeName;
         private List<PictureDTO> pictureList;
         private String state;
+        private String type;
 
-        public ReservationDTO(Long reservationIdx, String title, LocalDateTime time, String content, String storeName, List<PictureDTO> pictureList, String state) {
+        public ReservationDTO(Long reservationIdx, String title, LocalDateTime time, String content, String storeName, List<PictureDTO> pictureList, String state, String type) {
             this.reservationIdx = reservationIdx;
             this.title = title;
             this.reservationTime = time;
@@ -39,6 +40,7 @@ public class CustomerReservationListRes extends DataResponseBody {
             this.storeName = storeName;
             this.pictureList = pictureList;
             this.state = state;
+            this.type = type;
         }
     }
     @Getter

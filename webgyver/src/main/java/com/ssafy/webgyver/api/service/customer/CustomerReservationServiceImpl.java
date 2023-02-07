@@ -16,7 +16,6 @@ import com.ssafy.webgyver.util.PictureParsingUtil;
 import com.ssafy.webgyver.util.ReservationParsingUtil;
 import com.ssafy.webgyver.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.java.Log;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
@@ -24,7 +23,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -101,8 +99,10 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                 existReservationTimeList, sellerCategoryPrice, order);
     }
 
+    // 리턴할 값
     static List<CustomerReservationListRes.ReservationDTO> reservationDTOList;
 
+    // 고객 진행중 예약 리스트 조회 기능
     @Override
     @Transactional
     public CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req) {
@@ -120,13 +120,14 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(
                 req.getCustomerIdx(), "2");
         reservationState2ListMethod(reservationList);
-        System.out.println(reservationList);
         CustomerReservationListRes res = CustomerReservationListRes.of(200, "Success",
                 reservationDTOList);
         return res;
     }
 
+    // 고객 완료된 예약 리스트 조회 기능
     @Override
+    @Transactional
     public CustomerReservationListRes getCustomerCompletedReservationList(CustomerIdxReq req) {
         reservationDTOList = new ArrayList<>();
         List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateIsInOrderByReservationTimeDesc(
@@ -157,6 +158,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                                 picture.getSaveName());
                         pictureDTOS.add(pictureTemp);
                     }
+                    break;
                 }
             }
             CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
@@ -166,7 +168,8 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                     content,
                     reservation.getSeller().getCompanyName(),
                     pictureDTOS,
-                    reservation.getReservationState()
+                    reservation.getReservationState(),
+                    reservation.getReservationType()
             );
             reservationDTOList.add(reservationDTO);
         }
@@ -196,6 +199,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                                     picture.getSaveName());
                             pictureDTOS.add(pictureTemp);
                         }
+                        break;
                     }
                 }
                 CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
@@ -205,7 +209,8 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                         content,
                         reservation.getSeller().getCompanyName(),
                         pictureDTOS,
-                        reservation.getReservationState()
+                        reservation.getReservationState(),
+                        reservation.getReservationType()
                 );
                 reservationDTOList.add(reservationDTO);
             }
@@ -235,6 +240,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                                     picture.getSaveName());
                             pictureDTOS.add(pictureTemp);
                         }
+                        break;
                     }
                 }
                 CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
@@ -244,7 +250,8 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                         content,
                         reservation.getSeller().getCompanyName(),
                         pictureDTOS,
-                        reservation.getReservationState()
+                        reservation.getReservationState(),
+                        reservation.getReservationType()
                 );
                 reservationDTOList.add(reservationDTO);
             }
@@ -258,7 +265,6 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     public void reservationState2ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
-        System.out.println("현재시간 : " + currentTime);
         for (Reservation reservation : reservationList) {
             // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
             if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
@@ -286,6 +292,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                                 picture.getIdx(), picture.getOriginName(), picture.getSaveName());
                         pictureDTOS.add(pictureTemp);
                     }
+                    break;
                 }
             }
             CustomerReservationListRes.ReservationDTO reservationDTO = new CustomerReservationListRes.ReservationDTO(
@@ -295,7 +302,8 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                     content,
                     reservation.getSeller().getCompanyName(),
                     pictureDTOS,
-                    reservation.getReservationState()
+                    reservation.getReservationState(),
+                    reservation.getReservationType()
             );
             reservationDTOList.add(reservationDTO);
         }
