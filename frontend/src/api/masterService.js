@@ -4,8 +4,12 @@ const masterURL = '/api/v1/seller';
 
 export const master = {
   get: {
+    myPage: async (id) => {
+      const response = await Send.get(`${masterURL}/mypage/intro/${id}`);
+      return response;
+    },
     history: async (id) => {
-      const response = await Send.get(`${masterURL}/mypage/history/:{${id}}`);
+      const response = await Send.get(`${masterURL}/mypage/history/${id}`);
       return response;
     },
   },
@@ -23,7 +27,7 @@ export const master = {
     },
     example: async (data, idx) => {
       const response = await Send.post(
-        `${masterURL}/mypage/history:${idx}`,
+        `${masterURL}/mypage/history/${idx}`,
         data,
       );
       return response;
@@ -32,7 +36,14 @@ export const master = {
   put: {
     profile: async (data, idx) => {
       const response = await Send.put(
-        `${masterURL}/mypage/profile/:${idx}`,
+        `${masterURL}/mypage/profile/${idx}`,
+        data,
+      );
+      return response;
+    },
+    description: async (data, idx) => {
+      const response = await Send.put(
+        `${masterURL}/mypage/intro/description/${idx}`,
         data,
       );
       return response;

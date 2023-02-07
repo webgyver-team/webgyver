@@ -1,21 +1,34 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable array-callback-return */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilState } from 'recoil';
 import LimHS from '../../../assets/image/LimHS.png';
 import Background from '../../../assets/image/MasterBackground.jpg';
 import Info from './elements/Info';
 import TimePicker from './elements/TimePicker';
+import { master } from '../../../api/masterService';
+import { userIdx } from '../../../atom';
 
 export default function Mypage() {
   const navigate = useNavigate();
+  const [idx] = useRecoilState(userIdx);
+  const [myPageData, setMyPageData] = useState(null);
   const [businessHoursOpen, setBusinessHoursOpen] = useState(false);
+  useEffect(() => {
+    const getMyPageData = async () => {
+      const response = await master.get.myPage(idx);
+      setMyPageData(response.data.profile);
+      console.log(myPageData);
+    };
+    getMyPageData();
+  }, []);
   const onChangeBusinessHoursOpen = () => {
     setBusinessHoursOpen(!businessHoursOpen);
   };
-  // eslint-disable-next-line prettier/prettier
-  const content = '안녕하세요 저는 수리 Ssaf 고수 Shop을 운영하고 있는 임희상입니다. \n\n ☆ 1주년 기념 상담료 무료!!!\n ☆ 웹가이버 1년간 평점 5점 유일 매장! \n\n 저희 업체는 하수도! 욕실! 주방! 보일러! 전기! 조명! 유리! 문! 창호! 가리지 않고 전부 다 수리 가능한 만능 수리점입니다.\n\n 과다 정비 절대 사양합니다. \n 고객님의 재산 저의 것이라고  \n 리모델링도 가능합니다. \n 문의 넣어주시면 감사하겠습니다.';
 
   // 업체소개 수정 팝업
   const [openInfo, setOpenInfo] = useState(false);
@@ -47,7 +60,11 @@ export default function Mypage() {
 
   return (
     <Main>
-      <Info open={openInfo} setOpen={setOpenInfo} info={content} />
+      <Info
+        open={openInfo}
+        setOpen={setOpenInfo}
+        info={myPageData && myPageData.companyDescription}
+      />
       <TimePicker
         open={openTime}
         setOpen={setOpenTime}
@@ -71,45 +88,45 @@ export default function Mypage() {
         </MasterImgBox>
         <InfoBox>
           <InfoTextBox>
-            <p>수리SsaF고수Shop</p>
-            <p>임희상</p>
-            <p>대전 유성구 덕명동 124</p>
+            <p>{myPageData && myPageData.storeName}</p>
+            <p>{myPageData && myPageData.partnerName}</p>
+            <p>{myPageData && myPageData.address}</p>
           </InfoTextBox>
         </InfoBox>
       </MasterInfoBox>
       <CountBox>
         <div>
-          <span>5.0</span>
+          <span>{myPageData && myPageData.ratingAvg}</span>
           <span>점</span>
           <p>평점</p>
         </div>
         <VerticalBar />
         <div>
-          <span>1,000</span>
+          <span>{myPageData && myPageData.reviewCnt}</span>
           <span>개</span>
           <p>전체 후기 수</p>
         </div>
       </CountBox>
-      <IntrduceoBox>{content}</IntrduceoBox>
+      <IntrduceoBox>{myPageData && myPageData.companyDescription}</IntrduceoBox>
       <EditBox>
         <MoreBtn onClick={handleClickOpenInfo}>수정하기</MoreBtn>
       </EditBox>
       <DetailBox>
         <div>
           <DetailTitle>대표자명</DetailTitle>
-          <DetailContent>임희상</DetailContent>
+          <DetailContent>{myPageData && myPageData.partnerName}</DetailContent>
         </div>
         <div>
           <DetailTitle>상호명</DetailTitle>
-          <DetailContent>수리SsaF고수Shop</DetailContent>
+          <DetailContent>{myPageData && myPageData.storeName}</DetailContent>
         </div>
         <div>
           <DetailTitle>사업자주소</DetailTitle>
-          <DetailContent>대전 유성구 덕명동 124</DetailContent>
+          <DetailContent>{myPageData && myPageData.address}</DetailContent>
         </div>
         <div>
           <DetailTitle>사업자등록번호</DetailTitle>
-          <DetailContent>123-45-67890</DetailContent>
+          <DetailContent>{myPageData && myPageData.companyNumber}</DetailContent>
         </div>
         <BusinessBox>
           <DetailTitle>영업시간</DetailTitle>
@@ -136,10 +153,12 @@ export default function Mypage() {
           <DetailTitle>카테고리</DetailTitle>
         </BusinessBox>
         <BusinessHoursBox>
-          <div>
-            <DetailTitle>주방</DetailTitle>
-            <DetailContent>3,000원</DetailContent>
-          </div>
+          {myPageData && myPageData.category.map((item, i) => (
+            <div key={i}>
+              <DetailTitle>{item.categoryName}</DetailTitle>
+              <DetailContent>{`${item.price}원`}</DetailContent>
+            </div>
+          ))}
         </BusinessHoursBox>
       </DetailBox>
       <NullBox />
