@@ -56,7 +56,10 @@ export default function VideoService() {
   const getUserCameraMain = async () => {
     navigator.mediaDevices
       .getUserMedia({
-        video: true,
+        video: {
+          facingMode: 'environment',
+        },
+        audio: true,
       })
       .then((stream) => {
         // 비디오 tag에 stream 추가
@@ -74,7 +77,10 @@ export default function VideoService() {
   const getUserCameraSub = async () => {
     navigator.mediaDevices
       .getUserMedia({
-        video: true,
+        video: {
+          facingMode: 'environment',
+        },
+        audio: true,
       })
       .then((stream) => {
         // 비디오 tag에 stream 추가
