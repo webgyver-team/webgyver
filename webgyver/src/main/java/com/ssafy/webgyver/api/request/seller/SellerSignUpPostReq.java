@@ -30,5 +30,7 @@ public class SellerSignUpPostReq {
     private RoleType roleType;
     private String address;
     private String detailAddress;
+    private Double lng;
+    private Double lat;
     private List<SellerCategory> categoryList = new ArrayList<>();
 }
