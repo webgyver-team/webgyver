@@ -37,6 +37,7 @@ export default function NavBar(props) {
   const doLogOut = () => {
     setAuth(null);
     setAccessToken('');
+    navigate('/');
   };
 
   const chooseMenu = (item) => {
@@ -55,6 +56,8 @@ export default function NavBar(props) {
     }
   };
   const routeHome = () => navigate('/');
+  const routeMypage = () => navigate('/mypage');
+  const routeSignup = () => navigate('/signup');
   const handleChange = (event) => {
     if (event.target.checked) {
       setAuth('customer');
@@ -165,6 +168,7 @@ export default function NavBar(props) {
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
+                  onClick={routeMypage}
                 >
                   <AccountCircle />
                 </IconButton>
@@ -175,7 +179,9 @@ export default function NavBar(props) {
                 <Button color="inherit" onClick={openLoginModal}>
                   로그인
                 </Button>
-                <Button color="inherit">회원가입</Button>
+                <Button color="inherit" onClick={routeSignup}>
+                  회원가입
+                </Button>
               </Box>
             )}
           </Toolbar>

@@ -1,6 +1,6 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
-import { accessToken } from '../atom';
 
 const instance = axios.create({
   baseURL: 'http://i8b101.p.ssafy.io:9000',
@@ -13,11 +13,17 @@ const instance = axios.create({
 instance.interceptors.request.use(
   // 요청 전
   (config) => {
-    if (accessToken === '') {
+    const storage = JSON.parse(sessionStorage.getItem('recoil-persist'));
+    if (
+      storage === null
+      || !Object.keys(storage).includes('accessToken')
+      || storage.accessToken === ''
+    ) {
       config.headers.Authorization = null;
     } else {
-      config.headers.Authorization = accessToken;
+      config.headers.Authorization = storage.accessToken;
     }
+    console.log(config);
     return config;
   },
   (error) => {
