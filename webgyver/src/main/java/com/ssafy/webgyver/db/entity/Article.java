@@ -18,7 +18,8 @@ public class Article extends BaseEntity{
     @Column(name = "idx")
     private Long idx;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_idx", nullable = true)
     private Reservation reservation;
 

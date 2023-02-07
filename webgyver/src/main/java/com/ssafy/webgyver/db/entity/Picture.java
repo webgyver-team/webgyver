@@ -20,7 +20,8 @@ public class Picture extends BaseEntity {
     @Column(name = "idx")
     private Long idx;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    //    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_idx", nullable = false)
     private Article article;
 

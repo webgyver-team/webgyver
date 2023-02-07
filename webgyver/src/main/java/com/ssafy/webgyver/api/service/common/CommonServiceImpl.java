@@ -51,19 +51,48 @@ public class CommonServiceImpl implements CommonService {
 
         reservationRepository.save(reservation);
 
-        Article article = Article.builder()
-                .reservation(reservation)
-                .title(reservationInfo.getTitle())
-                .content(reservationInfo.getContent())
-                .type(-1L)
-                .build();
-        System.out.println(article.getReservation().getIdx());
-//        articleRepository.save(article);
-//
-//        for (PictureReq image : reservationInfo.getImages()) {
-//            Picture picture = Picture.builder().originName(image.getOriginName()).saveName(image.getSaveName()).build();
-//            pictureRepository.save(picture);
-//        }
+        Article article = null;
+        try {
+
+            article = Article.builder()
+                    .reservation(reservation)
+                    .title(reservationInfo.getTitle())
+                    .content(reservationInfo.getContent())
+                    .type(-1L)
+                    .build();
+        } catch (Exception e) {
+            System.out.println("객체생성할때오류");
+        }
+        System.out.println("--------------------------");
+        try {
+            System.out.println(reservation.getIdx());
+            System.out.println(article.getReservation().getIdx());
+            System.out.println(article.getReservation().getReservationPrice());
+        } catch (Exception e) {
+            System.out.println("아티클의 예약정보 가져올때 오류");
+        }
+        System.out.println("--------------------------");
+        try {
+            System.out.println(article.getType());
+            System.out.println(article.getTitle());
+            System.out.println(article.getContent());
+        } catch (Exception e) {
+            System.out.println("아티클의 기본정보 가져올때 오류");
+        }
+
+        System.out.println("--------------------------");
+        try {
+            articleRepository.save(article);
+        } catch (Exception e) {
+            e.printStackTrace();
+            System.out.println("저장할때 오류...?");
+        }
+        System.out.println(article.getIdx());
+        for (PictureReq image : reservationInfo.getImages()) {
+            Picture picture = Picture.builder().originName(image.getOriginName()).saveName(image.getSaveName()).article(article).build();
+            pictureRepository.save(picture);
+            System.out.println(picture.getIdx());
+        }
 
         // 영속성 문제, SETTER 사용 불가로 일단 못쓰겠음.
 //        System.out.println("----------------------------------");

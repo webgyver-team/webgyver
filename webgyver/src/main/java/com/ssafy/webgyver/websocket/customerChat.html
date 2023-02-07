@@ -8,9 +8,8 @@
         var g_webSocket = null;
         var websocket_address = "ws://localhost:9000/realtime/customer/1";
         var categoryIdx = 1;
-        var price = 1000;
+        var price = 99999;
         window.onload = async function () {
-
             g_webSocket = new WebSocket(websocket_address);
             g_webSocket.onopen = function (message) {
                 // 처음 접속할때 정보 설정.
@@ -25,12 +24,12 @@
                         'title': '물이 안나와요',
                         'content': '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n손이 너무 더러운디 씻을수가 없어유\n',
                         'images': [{
-                            "saveName": "123!@#$@!#$@!#$.jpg",
-                            "originName": "cat123.jpg"
+                            "saveName": "test123",
+                            "originName": "test123"
                         },
                             {
-                                "saveName": "123^&(*^&(^&(*.jpg",
-                                "originName": "dog123.jpg"
+                                "saveName": "asdf123",
+                                "originName": "asdf123"
                             }],
                         'price': price,
                         'viewDistance': -1
