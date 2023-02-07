@@ -35,18 +35,27 @@ public class CustomerReservationController {
         return ResponseEntity.ok(BaseResponseBody.of(200, "success"));
     }
 
-    @GetMapping("/normal/store/list/{order}")
-    public ResponseEntity<CustomerReservationNormalListRes> getOrderedStoreList(@RequestBody CustomerReservationNormalListReq req, @PathVariable("order") String order) {
+    @GetMapping("/normal/store/list/{categoryIdx}/{date}/{lat}/{lng}/{order}")
+    public ResponseEntity<CustomerReservationNormalListRes> getOrderedStoreList(
+//            @RequestBody CustomerReservationNormalListReq req,
+            @PathVariable("categoryIdx") Long categoryIdx,
+            @PathVariable("date") String date,
+            @PathVariable("lat") double lat,
+            @PathVariable("lng") double lng,
+            @PathVariable("order") String order
+    ) {
+        CustomerReservationNormalListReq req = CustomerReservationNormalListReq.builder().categoryIdx(categoryIdx).date(date).lat(lat).lng(lng).build();
         return ResponseEntity.ok(customerReservationService.getOrderedStoreList(order, req));
     }
 
     @GetMapping("list/{customerIdx}")
-    public ResponseEntity<?> getCustomerReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq){
+    public ResponseEntity<?> getCustomerReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq) {
         CustomerReservationListRes res = customerReservationService.getCustomerReservationList(idxReq);
         return ResponseEntity.ok(res);
     }
+
     @GetMapping("/completed/list/{customerIdx}")
-    public ResponseEntity<?> getCustomerCompletedReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq){
+    public ResponseEntity<?> getCustomerCompletedReservationList(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq) {
         CustomerReservationListRes res = customerReservationService.getCustomerCompletedReservationList(idxReq);
         return ResponseEntity.ok(res);
     }
