@@ -48,6 +48,14 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
 
     }
 
+    public static CustomerReservationNormalListRes of(Integer statusCode, String message) {
+
+        CustomerReservationNormalListRes res = new CustomerReservationNormalListRes();
+        res.setStatusCode(statusCode);
+        res.setMessage(message);
+        res.getData().put("storeList", new ArrayList<>());
+        return res;
+    }
 
     public static CustomerReservationNormalListRes of(Integer statusCode, String message, List<Seller> sellerList, CustomerReservationNormalListReq req, List<List<String>> existReservationTimeList, List<Integer> sellerCategoryPrice, String order) {
         CustomerReservationNormalListRes res = new CustomerReservationNormalListRes();
