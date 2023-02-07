@@ -155,7 +155,7 @@ const Page = styled.div`
   font-size: 32px;
   // height: 'calc(var(--vh,1vh) * 100)');
   height: ${(props) => (props.isNav
-    ? 'calc(var(--vh,1vh) * 100 - 64px - 38px)'
+    ? 'calc(var(--vh,1vh) * 100 - 64px)'
     : 'calc(var(--vh,1vh) * 100)')};
   overflow-y: auto;
   overflow-x: hidden;
@@ -163,7 +163,7 @@ const Page = styled.div`
 
   @media screen and (max-width: 600px) {
     height: ${(props) => (props.isNav
-    ? 'calc(var(--vh,1vh) * 100 - 56px - 38px)'
+    ? 'calc(var(--vh,1vh) * 100 - 56px)'
     : 'calc(var(--vh,1vh) * 100)')};
   }
 `;

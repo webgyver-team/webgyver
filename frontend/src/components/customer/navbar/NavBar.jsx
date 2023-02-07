@@ -6,10 +6,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -58,13 +55,13 @@ export default function NavBar(props) {
   const routeHome = () => navigate('/');
   const routeMypage = () => navigate('/mypage');
   const routeSignup = () => navigate('/signup');
-  const handleChange = (event) => {
-    if (event.target.checked) {
-      setAuth('customer');
-    } else {
-      setAuth(null);
-    }
-  };
+  // const handleChange = (event) => {
+  //   if (event.target.checked) {
+  //     setAuth('customer');
+  //   } else {
+  //     setAuth(null);
+  //   }
+  // };
 
   // eslint-disable-next-line react/prop-types
   const { window } = props;
@@ -102,18 +99,6 @@ export default function NavBar(props) {
   return (
     <Main>
       <Box sx={{ flexGrow: 1 }}>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={auth === 'customer'}
-                onChange={handleChange}
-                aria-label="login switch"
-              />
-            }
-            label={auth ? 'customer' : false}
-          />
-        </FormGroup>
         <AppBar position="static" color="primary">
           <Toolbar>
             {/* 메뉴 버튼 */}
@@ -213,7 +198,6 @@ export default function NavBar(props) {
 
 const Main = styled.div`
   width: 100%;
-  min-height: 64px;
   .css-hip9hq-MuiPaper-root-MuiAppBar-root {
     // background-color: ${(props) => props.theme.color.defaultaccentColor};
   }
