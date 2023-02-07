@@ -2,7 +2,6 @@ package com.ssafy.webgyver.api.controller.customer;
 
 import com.ssafy.webgyver.api.request.customer.CustomerMypageReq;
 import com.ssafy.webgyver.api.response.article.CustomerReviewListRes;
-import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerMypageRes;
 import com.ssafy.webgyver.api.service.customer.CustomerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
@@ -37,7 +36,12 @@ public class CustomerMypageController {
 
     @PutMapping("/profile/{idx}")
     public ResponseEntity<?> setProfile(@RequestBody CustomerMypageReq req) {
-        Customer customer = customerMypageService.setProfile(req);
+        BaseResponseBody result = customerMypageService.setProfile(req);
+
+        if(result.getStatusCode() != 200)
+            return ResponseEntity.ok().body(result);
+
+        Customer customer = customerMypageService.getProfile(req.getIdx());
 
         if(customer != null) {
             return ResponseEntity.ok().body(CustomerMypageRes.of(200, "OK", customer));
