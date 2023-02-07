@@ -5,12 +5,24 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import DatePicker from '../../../customer/reservation/elements/DatePicker';
 
 export default function AlertDialog({ open, setOpen }) {
   const handleClose = () => {
     setOpen(false);
   };
-
+  const today = new Date();
+  const [formDate, setFormDate] = useState(
+    `${today.getFullYear()}-${
+      (today.getMonth() + 1).toString().length === 2
+        ? today.getMonth() + 1
+        : `0${today.getMonth() + 1}`
+    }-${
+      today.getDate().toString().length === 2
+        ? today.getDate()
+        : `0${today.getDate()}`
+    }`,
+  );
   const [formContent, setFormContent] = useState({
     startTime: '08:00',
     endTime: '10:00',
@@ -20,7 +32,7 @@ export default function AlertDialog({ open, setOpen }) {
       customerIdx: null,
       partenrIdx: null,
       categoryIdx: null,
-      date: new Date(),
+      date: formDate,
       time: formContent,
     };
     // eslint-disable-next-line
@@ -53,7 +65,11 @@ export default function AlertDialog({ open, setOpen }) {
       >
         <DialogTitle id="alert-dialog-title">방문 예약</DialogTitle>
         <InfoBox>
-          <p>여기에 날짜 선택</p>
+          <p>
+            여기에 날짜 선택:
+            {formDate}
+          </p>
+          <DatePicker handleDate={setFormDate} />
           <div>
             <TimeBox>
               <span>시작 시간</span>

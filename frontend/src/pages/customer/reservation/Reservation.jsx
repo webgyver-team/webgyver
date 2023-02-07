@@ -12,9 +12,11 @@ import {
   reservationDate,
   chosenReservation,
   locateModalState,
+  categoryState,
 } from '../../../atom';
 import StoreInfo from './elements/StoreInfo';
 import { storeList } from './dummyData';
+import { customer } from '../../../api/customerService';
 
 export default function Reservation() {
   const navigate = useNavigate();
@@ -22,8 +24,11 @@ export default function Reservation() {
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const openLoginModal = () => setLoginOpenState(true);
   // 위치설정 모달 on/off
+  const categoryIdx = useRecoilValue(categoryState);
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const openLocateModal = () => setLocateModalOpen(true);
+  const [type, setType] = useState(1);
+
   // 예약 정보 {idx, storeName, date, time}
   const reservationNull = {
     idx: null,
@@ -114,13 +119,21 @@ export default function Reservation() {
   const location = useRecoilValue(locateValueState); // 주소 정보
   useEffect(() => {
     // 주소 또는 선택 날짜가 바뀌었으면
-    // storeList 갱신해야 함
-
+    // storeList 갱신해야
     // eslint-disable-next-line
     console.log('[가게 정보] axios 호출 필요');
-  }, [location, date]);
-
-  const [type, setType] = useState(1);
+    const data = {
+      categoryIdx: 1, // 현재 String으로 되어있는데 이거 idx로 바꿔야 함
+      lat: location.latitude,
+      lng: location.longitude,
+      date: date.replaceAll('-', ''),
+    };
+    // const response = customer.get.stores(type, data);
+    // eslint-disable-next-line
+    console.log(data);
+    // eslint-disable-next-line
+    console.log(customer);
+  }, [location, date, categoryIdx, type]);
 
   return (
     <Main>
@@ -154,9 +167,9 @@ export default function Reservation() {
       <FilterBox type={type}>
         <span onClick={() => setType(1)}>거리순</span>
         <VerticalBar />
-        <span onClick={() => setType(3)}>평점순</span>
+        <span onClick={() => setType(2)}>평점순</span>
         <VerticalBar />
-        <span onClick={() => setType(5)}>가격순</span>
+        <span onClick={() => setType(3)}>가격순</span>
       </FilterBox>
       <div>
         {storeList.map((store) => (
@@ -281,7 +294,7 @@ const FilterBox = styled.div`
   span {
     cursor: pointer;
 
-    :nth-child(${(props) => props.type}) {
+    :nth-child(${(props) => props.type * 2 - 1}) {
       font-weight: bold;
     }
   }
