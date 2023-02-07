@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
@@ -21,6 +22,22 @@ export default function MyPageUpdate() {
   const [idx] = useRecoilState(userIdx);
   const [myPageData, setMyPageData] = useState(null);
   const [data, setData] = useState({});
+  const [newProfileImage, setNewProfileImage] = useState(null);
+  const [profileImagePreview, setProfileImagePreview] = useState(null);
+
+  // eslint-disable-next-line
+  const [newBackgroundImage, setNewBackgroundImage] = useState(null);
+  const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
+
+  const updateData = (updateValue) => {
+    setData((original) => ({
+      ...original,
+      ...updateValue,
+    }));
+  };
+  const changeProfileImage = (event) => {
+    setNewProfileImage(event.target.files[0]);
+  };
   useEffect(() => {
     const getMyPageData = async () => {
       const response = await master.get.myPage(idx);
@@ -37,25 +54,11 @@ export default function MyPageUpdate() {
         profileImage: response.data.profile.profileImage,
         backgroundImage: response.data.profile.backgroundImage,
       });
+      setNewProfileImage(`https://webgyver.s3.ap-northeast-2.amazonaws.com/${response.data.profile.profileImage}`);
+      setNewBackgroundImage(`https://webgyver.s3.ap-northeast-2.amazonaws.com/${response.data.profile.backgroundImage}`);
     };
     getMyPageData();
   }, []);
-  const [newProfileImage, setNewProfileImage] = useState('');
-  const [profileImagePreview, setProfileImagePreview] = useState('');
-
-  // eslint-disable-next-line
-  const [newBackgroundImage, setNewBackgroundImage] = useState('');
-  const [backgroundImagePreview, setBackgroundImagePreview] = useState('');
-
-  const updateData = (updateValue) => {
-    setData((original) => ({
-      ...original,
-      ...updateValue,
-    }));
-  };
-  const changeProfileImage = (event) => {
-    setNewProfileImage(event.target.files[0]);
-  };
   useEffect(() => {
     if (newProfileImage !== null) {
       const reader = new FileReader();
@@ -205,107 +208,109 @@ export default function MyPageUpdate() {
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <Title>마스터 회원정보 수정</Title>
-      <ImageForm>
-        <ImageDiv>
-          <label htmlFor="profile-image-input">
-            <ProfileImage
-              src={
-                profileImagePreview === null
-                  ? myPageData.profileImage
-                  : profileImagePreview.url
-              }
-              alt="#"
+      {myPageData && (
+        <ImageForm>
+          <ImageDiv>
+            <label htmlFor="profile-image-input">
+              <ProfileImage
+                src={
+                  profileImagePreview === null
+                    ? myPageData.profileImage
+                    : profileImagePreview.url
+                }
+                alt="#"
+              />
+            </label>
+            <ImageLabel>프로필 이미지</ImageLabel>
+            <input
+              type="file"
+              id="profile-image-input"
+              accept="image/*"
+              onChange={changeProfileImage}
+              style={{ display: 'none' }}
             />
-          </label>
-          <ImageLabel>프로필 이미지</ImageLabel>
-          <input
-            type="file"
-            id="profile-image-input"
-            accept="image/*"
-            onChange={changeProfileImage}
-            style={{ display: 'none' }}
-          />
-        </ImageDiv>
-        <ImageDiv>
-          <label htmlFor="background-image-input">
-            <RepresentImage
-              src={
-                backgroundImagePreview === null
-                  ? myPageData.backgroundImage
-                  : backgroundImagePreview.url
-              }
-              alt="#"
+          </ImageDiv>
+          <ImageDiv>
+            <label htmlFor="background-image-input">
+              <RepresentImage
+                src={
+                  backgroundImagePreview === null
+                    ? myPageData.backgroundImage
+                    : backgroundImagePreview.url
+                }
+                alt="#"
+              />
+            </label>
+            <ImageLabel>대표 이미지</ImageLabel>
+            <input
+              type="file"
+              id="background-image-input"
+              accept="image/*"
+              onChange={changeBackgroundImage}
+              style={{ display: 'none' }}
             />
-          </label>
-          <ImageLabel>대표 이미지</ImageLabel>
-          <input
-            type="file"
-            id="background-image-input"
-            accept="image/*"
-            onChange={changeBackgroundImage}
-            style={{ display: 'none' }}
-          />
-        </ImageDiv>
-      </ImageForm>
-      <UpdateForm>
-        <FormDiv>
-          <PasswordInput updateData={updateData} />
-          <PhoneNumberInput
-            updateData={updateData}
-            initialValue1={
-              myPageData && myPageData.phoneNumber !== null
-                ? myPageData.phoneNumber.slice(0, 3)
-                : null
-            }
-            initialValue2={
-              myPageData && myPageData.phoneNumber !== null
-                ? myPageData.phoneNumber.slice(3, 7)
-                : null
-            }
-            initialValue3={
-              myPageData && myPageData.phoneNumber !== null
-                ? myPageData.phoneNumber.slice(7, 11)
-                : null
-            }
-          />
-        </FormDiv>
-        <FormDiv>
-          <CompanyNameInput
-            updateData={updateData}
-            initialValue={myPageData && myPageData.companyName}
-          />
-          <RepresentativeNameInput
-            updateData={updateData}
-            initialValue={myPageData && myPageData.partnerName}
-          />
-          <CompanyNumberInput
-            updateData={updateData}
-            i
-            initialValue1={
-              myPageData && myPageData.companyNumber !== null
-                ? myPageData.companyNumber.slice(0, 3)
-                : null
-            }
-            initialValue2={
-              myPageData && myPageData.companyNumber !== null
-                ? myPageData.companyNumber.slice(3, 5)
-                : null
-            }
-            initialValue3={
-              myPageData && myPageData.companyNumber !== null
-                ? myPageData.companyNumber.slice(5, 11)
-                : null
-            }
-          />
-          <AddressInput updateData={updateData} />
-          {myPageData && (
+          </ImageDiv>
+        </ImageForm>
+      )}
+      {myPageData && (
+        <UpdateForm>
+          <FormDiv>
+            <PasswordInput updateData={updateData} />
+            <PhoneNumberInput
+              updateData={updateData}
+              initialValue1={
+                myPageData && myPageData.phoneNumber !== null
+                  ? myPageData.phoneNumber.slice(0, 3)
+                  : null
+              }
+              initialValue2={
+                myPageData && myPageData.phoneNumber !== null
+                  ? myPageData.phoneNumber.slice(3, 7)
+                  : null
+              }
+              initialValue3={
+                myPageData && myPageData.phoneNumber !== null
+                  ? myPageData.phoneNumber.slice(7, 11)
+                  : null
+              }
+            />
+          </FormDiv>
+          <FormDiv>
+            <CompanyNameInput
+              updateData={updateData}
+              initialValue={myPageData && myPageData.companyName}
+            />
+            <RepresentativeNameInput
+              updateData={updateData}
+              initialValue={myPageData && myPageData.partnerName}
+            />
+            <CompanyNumberInput
+              updateData={updateData}
+              i
+              initialValue1={
+                myPageData && myPageData.companyNumber !== null
+                  ? myPageData.companyNumber.slice(0, 3)
+                  : null
+              }
+              initialValue2={
+                myPageData && myPageData.companyNumber !== null
+                  ? myPageData.companyNumber.slice(3, 5)
+                  : null
+              }
+              initialValue3={
+                myPageData && myPageData.companyNumber !== null
+                  ? myPageData.companyNumber.slice(5, 11)
+                  : null
+              }
+            />
+            <AddressInput updateData={updateData} />
             <CategoryInput
               updateData={updateData}
               initialList={myPageData.categoryList}
             />
-          )}
-        </FormDiv>
-      </UpdateForm>
+          </FormDiv>
+        </UpdateForm>
+      )}
       <div style={{ textAlign: 'center' }}>
         <Button variant="contained" onClick={updateMasterInfo}>
           수정

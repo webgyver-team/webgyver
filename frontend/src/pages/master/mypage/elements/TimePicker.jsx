@@ -71,6 +71,7 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
       return temp;
     });
     setFormContent([...formContent]);
+    console.log(formContent);
   };
 
   const update = () => {
