@@ -117,7 +117,7 @@ const Main = styled.div`
 const MapBox = styled.div`
   position: relative;
   z-index: 10;
-  height: 75%;
+  height: calc(100% - 180px);
 `;
 
 const ArrowBox = styled.div`
@@ -173,7 +173,7 @@ const UpperMap = styled.div`
 
 const InfoBox = styled.div`
   width: 100%;
-  height: 25%;
+  height: 180px;
   z-index: 20;
   padding: 16px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
