@@ -111,7 +111,7 @@ export default function NavBar(props) {
             label={auth ? 'customer' : false}
           />
         </FormGroup>
-        <AppBar position="static" color="primary">
+        <AppBar position="static" color="primary" sx={{ height: '64px' }}>
           <Toolbar>
             {/* 메뉴 버튼 */}
             <IconButton
@@ -207,6 +207,7 @@ export default function NavBar(props) {
 
 const Main = styled.div`
   width: 100%;
+  min-height: 64px;
   .css-hip9hq-MuiPaper-root-MuiAppBar-root {
     // background-color: ${(props) => props.theme.color.defaultaccentColor};
   }
