@@ -34,11 +34,11 @@ export default function CategoryLine(props) {
   const leftCategory = categories[0][props.left];
   const rightCategory = categories[0][props.right];
   const setLeftCategory = () => {
-    setCategory(leftCategory);
+    setCategory(props.left + 1);
     navigate('/select');
   };
   const setRightCategory = () => {
-    setCategory(rightCategory);
+    setCategory(props.right + 1);
     navigate('/select');
   };
   const icons = useState([
