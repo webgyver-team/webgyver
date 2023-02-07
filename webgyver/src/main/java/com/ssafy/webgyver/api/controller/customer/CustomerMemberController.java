@@ -11,8 +11,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
-
 @Slf4j
 @CrossOrigin(origins = "*")
 @RequiredArgsConstructor
@@ -29,13 +27,6 @@ public class CustomerMemberController {
         return ResponseEntity.ok().body(result);
     }
 
-    @PostMapping("/pay/test")
-    public ResponseEntity<?> pay(@RequestBody CustomerSignUpPostReq signUpInfo) {
-        customerMemberService.payTest(signUpInfo);
-
-        return null;
-    }
-
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody CustomerLoginReq req) {
         CustomerLoginRes result = customerMemberService.login(req);
@@ -47,5 +38,4 @@ public class CustomerMemberController {
         BaseResponseBody result = customerMemberService.checkDuplicate(req);
         return ResponseEntity.ok().body(result);
     }
-
 }

@@ -54,4 +54,9 @@ public class Customer extends BaseEntity {
     @Column(name = "profile_image")
     private String profileImage;
 
+    @Column(name = "customer_key")
+    private String customerKey;
+
+    @Column(name = "billing_key")
+    private String billingKey;
 }

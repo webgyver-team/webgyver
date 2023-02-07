@@ -37,12 +37,23 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
     @Override
     public Customer setProfile(CustomerMypageReq req) {
         Customer customer = customerRepository.findByIdx(req.getIdx()).get();
-        customer.setName(req.getName());
-        customer.setPhoneNumber(req.getPhoneNumber());
-        customer.setCardNumber(req.getCardNumber());
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-        customer.setBirthDay(LocalDate.parse(req.getBirth(), formatter).atStartOfDay());
+        //카드 등록
+
+        if(req.getName() != null && !req.getName().isEmpty())
+            customer.setName(req.getName());
+
+        if(req.getPhoneNumber() != null && !req.getPhoneNumber().isEmpty())
+            customer.setPhoneNumber(req.getPhoneNumber());
+
+        if(req.getCardNumber() != null && !req.getCardNumber().isEmpty())
+            customer.setCardNumber(req.getCardNumber());
+
+        if(req.getBirth() != null && !req.getBirth().isEmpty()) {
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+            customer.setBirthDay(LocalDate.parse(req.getBirth(), formatter).atStartOfDay());
+        }
+
 
         return customer;
     }

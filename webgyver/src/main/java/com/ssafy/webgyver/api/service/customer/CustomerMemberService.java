@@ -10,7 +10,4 @@ public interface CustomerMemberService {
     BaseResponseBody SignUpCustomer(CustomerSignUpPostReq sellerRegisterInfo);
     BaseResponseBody checkDuplicate(CustomerCheckDuplicateReq req);
     CustomerLoginRes login(CustomerLoginReq req);
-
-    BaseResponseBody payTest(CustomerSignUpPostReq req);
-    BaseResponseBody requestPay(String customerKey, String billingKey);
 }
