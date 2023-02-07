@@ -11,6 +11,7 @@ import {
   chosenReservation,
   locateValueState,
   categoryState,
+  userIdx,
 } from '../../../atom';
 import { customer } from '../../../api/customerService';
 
@@ -25,6 +26,7 @@ export default function ReservationForm() {
   const [msgForContent, setMsgForContent] = useState('');
   const [imageList, setImageList] = useState([]);
   const [imageData, setImageData] = useState([]);
+  const customerIdx = useRecoilValue(userIdx);
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
     if (event.target.value.trim().length === 0) {
@@ -51,7 +53,7 @@ export default function ReservationForm() {
       const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
       const hashImageName = sha256(
-        `${date.toString()}customerIdx${imageList[i].name}`,
+        `${date.toString()}${customerIdx}${imageList[i].name}`,
       ); // [날짜 객체 + 회원 idx + 기존 파일명]을 조합하여 해시 처리
       const upload = new AWS.S3.ManagedUpload({
         params: {
@@ -80,7 +82,7 @@ export default function ReservationForm() {
 
   const registReservation = async () => {
     const data = {
-      customerIdx: 100, // 고객 idx
+      customerIdx, // 고객 idx
       sellerIdx: reservation.idx, // 예약 업체 idx
       categoryIdx, // 선택한 카테고리의 idx
       time: `${reservation.date.replaceAll('-', '')}-${reservation.time.replace(
@@ -133,21 +135,21 @@ export default function ReservationForm() {
 
     // 이미지 전송 후 받은 url을 picture에 넣고 보낸 후에
     // 잘 보내졌으면 data를 POST
-    sendImageListToS3()
-      .then(async () => {
-        // eslint-disable-next-line
+    sendImageListToS3().then(async () => {
+      // eslint-disable-next-line
         console.log(data); // POST로 수정 예정
-        const response = await customer.post.reservation(data);
+      const response = await customer.post.reservation(data);
+      // eslint-disable-next-line
+        if(response.statusCode === 200){
         // eslint-disable-next-line
-        console.log(response);
-      })
-      .then(() => {
-        navigate('');
-      })
-      .catch((err) => {
+          alert("예약상담이 등록되었습니다.");
+        navigate('/usagehistory');
+      } else {
         // eslint-disable-next-line
-        console.log(err);
-      });
+          console.log(response);
+        alert('예약 내용을 다시 확인바랍니다.');
+      }
+    });
   };
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
     reservation.date.split('-')[1]
