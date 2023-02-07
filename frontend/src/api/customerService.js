@@ -1,3 +1,4 @@
+/* eslint-disable */
 import Send from './send';
 
 const customerURL = '/api/v1/customer';

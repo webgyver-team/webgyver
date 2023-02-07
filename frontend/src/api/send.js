@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable */
 /* eslint-disable no-param-reassign */
 import axios from 'axios';
 
@@ -10,17 +10,14 @@ const instance = axios.create({
   },
 });
 
-// eslint-disable-next-line
-// const token = useRecoilValue(accessToken);
-// console.log(token);
 instance.interceptors.request.use(
   // 요청 전
   (config) => {
     const storage = JSON.parse(sessionStorage.getItem('recoil-persist'));
     if (
-      storage === null
-      || !Object.keys(storage).includes('accessToken')
-      || storage.accessToken === ''
+      storage === null ||
+      !Object.keys(storage).includes('accessToken') ||
+      storage.accessToken === ''
     ) {
       config.headers.Authorization = null;
     } else {
