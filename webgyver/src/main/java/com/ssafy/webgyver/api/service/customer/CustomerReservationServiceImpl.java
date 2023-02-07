@@ -90,7 +90,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
             List<String> existReservationTime = new ArrayList<>();
             for (Reservation reservation : reservationList) {
                 existReservationTime.add(
-                        TimeUtil.time2String(reservation.getReservationTime(), "HHmm"));
+                        TimeUtil.time2String(reservation.getReservationTime(), "HH:mm"));
             }
             existReservationTimeList.add(existReservationTime);
         }
