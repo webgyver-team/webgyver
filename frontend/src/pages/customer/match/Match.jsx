@@ -86,17 +86,26 @@ export default function Matching() {
       <InfoBox>
         <UpperInfo>
           <span>자동결제 적용</span>
-          <FormControl size="small" variant="standard" sx={{ minWidth: 108 }}>
+          <FormControl size="small" variant="standard" sx={{ minWidth: 80 }}>
             <Select
               id="distance-selector"
               value={distance}
               onChange={handleChange}
               label="distance"
+              sx={{ fontSize: 12 }}
             >
-              <MenuItem value="거리무관">거리무관</MenuItem>
-              <MenuItem value="1km 이내">1km 이내</MenuItem>
-              <MenuItem value="5km 이내">5km 이내</MenuItem>
-              <MenuItem value="10km 이내">10km 이내</MenuItem>
+              <MenuItem sx={{ fontSize: 12 }} value="거리무관">
+                거리무관
+              </MenuItem>
+              <MenuItem sx={{ fontSize: 12 }} value="1km 이내">
+                1km 이내
+              </MenuItem>
+              <MenuItem sx={{ fontSize: 12 }} value="5km 이내">
+                5km 이내
+              </MenuItem>
+              <MenuItem sx={{ fontSize: 12 }} value="10km 이내">
+                10km 이내
+              </MenuItem>
             </Select>
           </FormControl>
         </UpperInfo>
@@ -117,7 +126,7 @@ const Main = styled.div`
 const MapBox = styled.div`
   position: relative;
   z-index: 10;
-  height: calc(100% - 180px);
+  height: calc(100% - 160px);
 `;
 
 const ArrowBox = styled.div`
@@ -173,7 +182,7 @@ const UpperMap = styled.div`
 
 const InfoBox = styled.div`
   width: 100%;
-  height: 180px;
+  height: 160px;
   z-index: 20;
   padding: 16px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
