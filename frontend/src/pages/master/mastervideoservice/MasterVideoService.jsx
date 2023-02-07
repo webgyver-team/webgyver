@@ -117,10 +117,11 @@ export default function MasterVideoService() {
   //   peerFace.srcObject = new MediaStream([data.track]);
   // });
 
-  const open = true;
+  const [visitOrderOpen, setVisitOrderOpen] = useState(true);
+
   return (
     <Main>
-      <Order open={open} />
+      <Order open={visitOrderOpen} setOpen={setVisitOrderOpen} />
       <Side>
         <SideBar />
       </Side>
