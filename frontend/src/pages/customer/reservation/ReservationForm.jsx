@@ -146,7 +146,7 @@ export default function ReservationForm() {
       })
       .catch((err) => {
         // eslint-disable-next-line
-      console.log(err);
+        console.log(err);
       });
   };
   const reservationTime = `${reservation.date.split('-')[0]}년 ${
