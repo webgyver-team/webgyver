@@ -69,6 +69,7 @@ public class WebSocketRealTime {
         // 리플렉션도 추가해보자.
         // Class<?> cls = Class.forName(obj.getClass().getName());
         String method = (String) info.remove("method");
+        // 이거 ENUM으로 바꿔야함
         if ("INIT".equals(method)) {
             METHOD_INIT(session, info);
         } else if ("CHANGE_DISTANCE".equals(method)) {

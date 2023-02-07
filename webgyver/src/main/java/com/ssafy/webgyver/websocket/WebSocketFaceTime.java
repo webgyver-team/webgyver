@@ -107,6 +107,8 @@ public class WebSocketFaceTime {
     public void onMessage(String jsonMessage, Session session) {
         Message message = MessageParsingUtil.parsingMessage(jsonMessage);
         System.out.println(message.getMethod());
+        // 클라이언트로 받은 method명에 따라 할일 분기해야함
+        // 1. 화상통화 요청
         Room room = extractRoom(session);
         room.sendMessage(jsonMessage);
     }
