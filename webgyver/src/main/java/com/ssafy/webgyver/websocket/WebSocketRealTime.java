@@ -102,10 +102,10 @@ public class WebSocketRealTime {
         Reservation insertedRes = commonService.insertReservationArticlePictureList(customerIdx, sellerIdx, reservationInfo);
         long reservationIdx = insertedRes.getIdx();
         Message message = new Message(MethodType.GO_FACE_TIME);
-        Map<String,Object> data = new HashMap<>();
-        data.put("customerIdx",customerIdx);
-        data.put("sellerIdx",sellerIdx);
-        data.put("reservationIdx",reservationIdx);
+        Map<String, Object> data = new HashMap<>();
+        data.put("customerIdx", customerIdx);
+        data.put("sellerIdx", sellerIdx);
+        data.put("reservationIdx", reservationIdx);
         message.setData(data);
 
         Gson gson = new Gson();
