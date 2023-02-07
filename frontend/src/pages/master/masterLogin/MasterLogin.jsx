@@ -5,7 +5,7 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { authState, accessToken } from '../../../atom';
+import { authState, accessToken, userIdx } from '../../../atom';
 import { master } from '../../../api/accountsApi';
 import WebGyver from '../../../assets/image/WebGyver.png';
 
@@ -20,6 +20,7 @@ export default function MasterLogin() {
   const navigate = useNavigate();
   const setAuth = useSetRecoilState(authState);
   const setAccessToken = useSetRecoilState(accessToken);
+  const setUserIdx = useSetRecoilState(userIdx);
   const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
     nullIdError: false,
@@ -52,6 +53,7 @@ export default function MasterLogin() {
       if (response.statusCode === 200) {
         // 리코일persist 상태 변경
         setAccessToken(response.data['access-token']);
+        setUserIdx(response.data.sellerIdx);
         setAuth('master');
         navigate('/master/schedule');
       } else {
