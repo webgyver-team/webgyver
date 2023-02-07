@@ -14,7 +14,7 @@ export default function MasterEndService() {
     visitTime: '2023-02-05 10:00',
   };
   const routeVideoService = () => navigate('/master/videoservice');
-  const routeHome = () => navigate('/schedule');
+  const routeHome = () => navigate('/master/schedule');
 
   return (
     <Main>
@@ -60,8 +60,8 @@ export default function MasterEndService() {
         <GrayBtn onClick={routeVideoService}>다시 연결하기</GrayBtn>
       </BoxBox>
       <BoxBox>
-        <BtnBox>
-          <Btn onClick={routeHome}>홈으로</Btn>
+        <BtnBox onClick={routeHome}>
+          <Btn>홈으로</Btn>
         </BtnBox>
       </BoxBox>
     </Main>
@@ -130,6 +130,11 @@ const BtnBox = styled.div`
   width: 80%;
   padding: 16px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
+  border-radius: 10px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const Btn = styled.div`
