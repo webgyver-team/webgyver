@@ -133,7 +133,7 @@ export default function Reservation() {
     // 주소 또는 선택 날짜가 바뀌었으면
     // storeList 갱신해야
     // eslint-disable-next-line
-   loadStoreList(); 
+    loadStoreList();
   }, [location, date, category, type]);
 
   return (
