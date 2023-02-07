@@ -15,5 +15,4 @@ public class CustomerMypageReq {
     String cardNumber;
     String cardValidity;
     String password;
-    String profileImage;
 }

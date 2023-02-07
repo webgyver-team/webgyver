@@ -1,9 +1,12 @@
 package com.ssafy.webgyver.api.service.customer;
 
+import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.customer.CustomerMypageReq;
+import com.ssafy.webgyver.api.request.customer.CustomerRegisterReviewReq;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Customer;
+import com.ssafy.webgyver.db.entity.Picture;
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
@@ -156,4 +159,36 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
 
         return reviews;
     }
+
+    @Override
+    @Transactional
+    public BaseResponseBody regiterReview(CustomerRegisterReviewReq req) {
+        Reservation reservation = Reservation.builder().build();
+        reservation.setIdx(req.getReservationIdx());
+
+        long type = (req.getStar() * -1L) - 2;
+        Article review = Article.builder()
+                .title(req.getTitle())
+                .content(req.getContent())
+                .reservation(reservation)
+                .type(type).build();
+
+        Article article = articleRepository.save(review);
+
+        List<Picture> pictures = new ArrayList<>();
+        for (PictureReq pictureReq : req.getPictureListReq().getImages()) {
+            Picture picture = Picture.builder()
+                    .article(article)
+                    .originName(pictureReq.getOriginName())
+                    .saveName(pictureReq.getSaveName())
+                    .build();
+
+            pictures.add(picture);
+        }
+
+        pictureRepository.saveAll(pictures);
+
+        return BaseResponseBody.of(200, "Success");
+    }
 }
+
