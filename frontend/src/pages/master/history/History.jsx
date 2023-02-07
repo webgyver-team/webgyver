@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
@@ -54,8 +55,8 @@ export default function History() {
               value.$D,
             )}일`}
           </HistoryHeader>
-          {data.map((el) => (
-            <HistoryCard data={el} />
+          {data.map((el, i) => (
+            <HistoryCard key={i} data={el} />
           ))}
         </HistoryInner>
       </HistoryBox>
