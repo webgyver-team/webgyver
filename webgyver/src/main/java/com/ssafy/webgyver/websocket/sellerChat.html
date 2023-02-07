@@ -30,12 +30,14 @@
             g_webSocket.onmessage = function (message) {
                 const data = JSON.parse(message.data)
                 for (var i = 0; i < data.length; i++) {
-                    console.log(data[i]);
                     addLineToChatBox(JSON.stringify(data[i]));
+                    console.log(data[i])
                 }
-                addLineToChatBox('-----------------------------');
+                console.log(data)
 
-            };
+                addLineToChatBox('-----------------------------');
+            }
+
 
             /**
              * 웹소켓 사용자 연결 해제하는 경우 호출
@@ -49,8 +51,9 @@
              */
             g_webSocket.onerror = function (message) {
                 addLineToChatBox("Error!");
-            };
-        }
+            }
+
+        };
 
         /**
          * 채팅 박스영역에 내용 한 줄 추가

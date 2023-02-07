@@ -9,6 +9,8 @@ import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.CategoryRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
+import com.ssafy.webgyver.util.CommonUtil;
+import com.ssafy.webgyver.util.TimeUtil;
 import com.ssafy.webgyver.websocket.dto.RefreshSellerMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -46,7 +48,7 @@ public class CommonServiceImpl implements CommonService {
         reservation.setSeller(seller);
         reservation.setCategory(category);
         reservation.setReservationPrice(reservationInfo.getPrice());
-        reservation.setReservationTime(LocalDateTime.now());
+        reservation.setReservationTime(TimeUtil.getNeareastHourIn15Inc(LocalDateTime.now()));
         reservation.setReservationType("1");
 
         reservationRepository.save(reservation);

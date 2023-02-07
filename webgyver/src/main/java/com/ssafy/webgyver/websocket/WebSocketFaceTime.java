@@ -70,6 +70,7 @@ public class WebSocketFaceTime {
             message = new Message(MethodType.ALONE);
         } else if (room.sessions.size() == 2) {
             message = new Message(MethodType.TOGETHER);
+            // 여기서부터 화상통화 시작하면 됨
         }
         session.getBasicRemote().sendText(new Gson().toJson(message));
 
