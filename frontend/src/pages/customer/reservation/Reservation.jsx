@@ -15,7 +15,6 @@ import {
   categoryState,
 } from '../../../atom';
 import StoreInfo from './elements/StoreInfo';
-import { storeList } from './dummyData';
 import { customer } from '../../../api/customerService';
 
 export default function Reservation() {
@@ -24,11 +23,11 @@ export default function Reservation() {
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const openLoginModal = () => setLoginOpenState(true);
   // 위치설정 모달 on/off
-  const categoryIdx = useRecoilValue(categoryState);
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const openLocateModal = () => setLocateModalOpen(true);
   const [type, setType] = useState(1);
-
+  const [storeList, setStoreList] = useState([]);
+  const category = useRecoilValue(categoryState);
   // 예약 정보 {idx, storeName, date, time}
   const reservationNull = {
     idx: null,
@@ -117,23 +116,25 @@ export default function Reservation() {
   }, [clickedTimeButton]);
 
   const location = useRecoilValue(locateValueState); // 주소 정보
+
   useEffect(() => {
+    const loadStoreList = async () => {
+      const data = {
+        categoryIdx: category, // 현재 String으로 되어있는데 이거 idx로 바꿔야 함
+        lat: location.latitude,
+        lng: location.longitude,
+        date: date.replaceAll('-', ''),
+      };
+      // const response = customer.get.stores(type, data);
+      // eslint-disable-next-line
+      const response = await customer.get.stores(type, data);
+      setStoreList(response.data.storeList);
+    };
     // 주소 또는 선택 날짜가 바뀌었으면
     // storeList 갱신해야
     // eslint-disable-next-line
-    console.log('[가게 정보] axios 호출 필요');
-    const data = {
-      categoryIdx: 1, // 현재 String으로 되어있는데 이거 idx로 바꿔야 함
-      lat: location.latitude,
-      lng: location.longitude,
-      date: date.replaceAll('-', ''),
-    };
-    // const response = customer.get.stores(type, data);
-    // eslint-disable-next-line
-    console.log(data);
-    // eslint-disable-next-line
-    console.log(customer);
-  }, [location, date, categoryIdx, type]);
+   loadStoreList(); 
+  }, [location, date, category, type]);
 
   return (
     <Main>
@@ -174,8 +175,8 @@ export default function Reservation() {
       <div>
         {storeList.map((store) => (
           <StoreInfo
-            key={store.idx}
-            idx={store.idx}
+            key={store.sellerIdx}
+            idx={store.sellerIdx}
             storeName={store.storeName}
             personName={store.personName}
             address={store.address}

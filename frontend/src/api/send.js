@@ -9,7 +9,6 @@ const instance = axios.create({
     'Content-Type': 'application/json',
   },
 });
-
 instance.interceptors.request.use(
   // 요청 전
   (config) => {
@@ -23,7 +22,6 @@ instance.interceptors.request.use(
     } else {
       config.headers.Authorization = storage.accessToken;
     }
-    console.log(config);
     return config;
   },
   (error) => {
