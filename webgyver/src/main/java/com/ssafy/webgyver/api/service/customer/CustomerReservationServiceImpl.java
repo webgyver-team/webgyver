@@ -58,6 +58,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         reservation.setCategory(category);
         reservation.setReservationPrice(price);
         reservation.setReservationType("2");
+        reservation.setReservationState("1");
         reservationRepository.save(reservation);
 
         Article article = Article.builder().reservation(reservation).title(req.getTitle())
