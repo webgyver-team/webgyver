@@ -15,6 +15,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         private Long idx;
         private String storeName;
         private String partnerName;
+        private String phoneNumber;
         private String address;
         private String detailAddress;
         private String companyNumber;
@@ -29,6 +30,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
             this.idx = entity.getIdx();
             this.storeName = entity.getCompanyName();
             this.partnerName = entity.getRepresentativeName();
+            this.phoneNumber = entity.getPhoneNumber();
             this.address = entity.getAddress();
             this.detailAddress = entity.getDetailAddress();
             this.companyNumber = entity.getCompanyNumber();
@@ -41,7 +43,6 @@ public class SellerMyPageIntroRes extends DataResponseBody {
             this.reviewCnt = String.valueOf(entity.getReviewCount());
         }
     }
-    @ToString
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -51,14 +52,14 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         private Integer price;
 
     }
-    @ToString
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
     public static class CompanyTimeDTO{
         private String day;
-        private String time;
-
+        private String open;
+        private String close;
+        private boolean isHoliday;
 
     }
 

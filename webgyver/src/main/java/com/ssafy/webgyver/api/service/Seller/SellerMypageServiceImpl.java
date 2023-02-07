@@ -99,8 +99,20 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         if (companyTime != null) {
             String[] list = companyTime.split("%");
             companyTimeDTOList = new ArrayList<>();
-            for (int i = 0; i < list.length; i++) {
-                companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0, 3), list[i].substring(4)));
+            for (int i = 0; i < list.length; i++){
+                boolean isHoliday;
+                String open = "";
+                String close = "";
+                // 공휴일 여부 추가
+                if (list[i].substring(4).equals("휴일")){
+                    isHoliday = true;
+                } else {
+                    String[] listTime = list[i].substring(4).split("~");
+                    open = listTime[0];
+                    close = listTime[1];
+                    isHoliday = false;
+                }
+                companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0,3), open, close, isHoliday));
             }
         }
         ///// 끝
