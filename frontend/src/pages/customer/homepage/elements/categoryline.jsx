@@ -92,6 +92,10 @@ const CategoryBtn = styled.div`
   span {
     padding-right: 8px;
   }
+
+  .material-symbols-outlined {
+    padding: 0;
+  }
 `;
 
 const Linediv = styled.div`
