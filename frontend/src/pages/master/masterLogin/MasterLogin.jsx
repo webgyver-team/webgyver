@@ -32,7 +32,7 @@ export default function MasterLogin() {
     });
   };
   // 제출 시 id/pw 빈 칸이 아닌지 검증
-  const submit = () => {
+  const submit = async () => {
     if (data?.id === '') {
       setErrors({
         nullIdError: true,
@@ -48,17 +48,21 @@ export default function MasterLogin() {
         nullIdError: false,
         nullPasswordError: false,
       });
-      const response = master.login(data);
-      console.log(data.id, data.password);
+      const response = await master.login(data);
       if (response.statusCode === 200) {
         // 리코일persist 상태 변경
-        setAccessToken(response.data.accessToken);
-        setAuth('customer');
+        setAccessToken(response.data['access-token']);
+        setAuth('master');
+        navigate('/master/schedule');
       }
     }
     // console.log(errors);
   };
-
+  const handleOnKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      submit();
+    }
+  };
   const routeSignup = () => {
     navigate('/master/signup');
   };
@@ -81,6 +85,7 @@ export default function MasterLogin() {
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
+              onKeyPress={handleOnKeyPress}
             />
             {errors.nullIdError && <ErrDiv>아이디를 입력하세요</ErrDiv>}
             <NullBox />
@@ -94,6 +99,7 @@ export default function MasterLogin() {
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
+              onKeyPress={handleOnKeyPress}
             />
             {errors.nullPasswordError && <ErrDiv>비밀번호를 입력하세요</ErrDiv>}
             {/* <NullBox /> */}

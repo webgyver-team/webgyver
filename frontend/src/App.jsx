@@ -35,21 +35,22 @@ import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
 import MasterReview from './pages/master/masterReview/MasterReview';
 import MasterExample from './pages/master/masterExample/MasterExample';
 import MasterMypage from './pages/master/mypage/Mypage';
+import MasterHistory from './pages/master/history/History';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
-const notNavList = ['/videoservice', '/master/login'];
+const notNavList = ['/videoservice', '/master/login', '/master/videoservice'];
 
 function App() {
   const [auth] = useRecoilState(authState);
   // const [url, setUrl] = useState(''); // 현재 url
-  const [onNav, setOnNav] = useState(true);
+  const [isNav, setIsNav] = useState(true);
   // 마스터 url에 위치하는지 판단
   const [onMaster, setOnMaster] = useState(false);
   const location = useLocation();
   useEffect(() => {
     // setUrl(location.pathname);
-    notNavList.includes(location.pathname) ? setOnNav(false) : setOnNav(true);
+    notNavList.includes(location.pathname) ? setIsNav(false) : setIsNav(true);
     location.pathname.includes('/master')
       ? setOnMaster(true)
       : setOnMaster(false);
@@ -60,11 +61,11 @@ function App() {
       <ThemeProvider theme={normal}>
         <All>
           <Main>
-            {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
+            {isNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
-            <Page isMaster={onMaster}>
+            <Page isMaster={onMaster} isNav={isNav}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
@@ -107,7 +108,7 @@ function App() {
                   path="/master/mypage/update"
                   element={<MasterMyPageUpdate />}
                 />
-
+                <Route path="/master/history" element={<MasterHistory />} />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>
@@ -122,7 +123,6 @@ export default App;
 
 const All = styled.div`
   width: 100vw;
-  // min-height: 800px;
   display: flex;
   justify-content: center;
 `;
@@ -137,11 +137,13 @@ const Page = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   color: ${(props) => props.theme.color.defaultColor};
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
-  // overflow-y: scroll;
+  // height: calc(100vh - 120px);
+  height: ${(props) => (props.isNav ? 'calc(100vh - 120px)' : '100vh')};
+  overflow-y: auto;
+  background-color: ${(props) => props.theme.color.defaultWhite};
 `;

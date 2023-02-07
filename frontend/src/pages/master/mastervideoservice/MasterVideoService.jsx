@@ -5,6 +5,7 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 // import Button from '@mui/material/Button';
 import SideBar from './elements/SideBar';
+import Order from './elements/Order';
 
 export default function MasterVideoService() {
   const navigate = useNavigate();
@@ -115,8 +116,12 @@ export default function MasterVideoService() {
   // myConnection.addEventListener('track', (data) => {
   //   peerFace.srcObject = new MediaStream([data.track]);
   // });
+
+  const [visitOrderOpen, setVisitOrderOpen] = useState(true);
+
   return (
     <Main>
+      <Order open={visitOrderOpen} setOpen={setVisitOrderOpen} />
       <Side>
         <SideBar />
       </Side>
@@ -166,6 +171,7 @@ export default function MasterVideoService() {
 const Main = styled.div`
   width: 100vw;
   position: relative;
+  top: 5%;
 `;
 
 const Side = styled.div`
@@ -181,7 +187,7 @@ const BoxBox = styled.div`
 
 const Box1 = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   width: 100vw;
 `;
 

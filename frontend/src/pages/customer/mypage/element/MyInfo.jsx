@@ -37,6 +37,7 @@ const Main = styled.div`
 `;
 
 const InfoBox = styled.div`
+  font-size: 16px;
   padding: 16px;
   border-radius: 15px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};

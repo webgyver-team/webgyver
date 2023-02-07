@@ -216,8 +216,6 @@ export default function Reservation() {
 
 const Main = styled.div`
   width: 100%;
-  height: calc(100vh - 120px);
-  overflow-y: scroll;
   position: 'relative';
 `;
 

@@ -38,7 +38,7 @@ export default function IdInput({ updateData, initialValue, checkDuplicate }) {
     setMsg(() => '');
     setBtnDisabled(() => false);
   };
-  const checkExistId = () => {
+  const checkExistId = async () => {
     // 유효성 검사 한번 들어가자
     if (id.length !== id.trim().length) {
       setMsg(() => '아이디에 띄어쓰기를 포함할 수 없습니다,');
