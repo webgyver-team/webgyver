@@ -60,12 +60,12 @@ function App() {
       {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
       <ThemeProvider theme={normal}>
         <All>
-          <Main onNav={onNav}>
+          <Main>
             {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
             <LoginModal />
             <MasterInfo />
             <LocateModal />
-            <Page isMaster={onMaster}>
+            <Page isMaster={onMaster} onNav={onNav}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
@@ -142,8 +142,8 @@ const Page = styled.div`
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
-  height: calc(100vh - 120px);
-  // height: ${(props) => (props.onNav ? 'calc(100vh - 120px)' : '100vh')};
+  // height: calc(100vh - 120px);
+  height: ${(props) => (props.onNav ? 'calc(100vh - 120px)' : '100vh')};
   overflow-y: auto;
   background-color: ${(props) => props.theme.color.defaultWhite};
 `;
