@@ -7,6 +7,8 @@ import com.ssafy.webgyver.api.service.common.CommonService;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.util.CommonUtil;
+import com.ssafy.webgyver.websocket.dto.Message;
+import com.ssafy.webgyver.websocket.dto.MethodType;
 import com.ssafy.webgyver.websocket.dto.RefreshCustomerMessage;
 import com.ssafy.webgyver.websocket.dto.RefreshSellerMessage;
 import lombok.RequiredArgsConstructor;
@@ -77,7 +79,7 @@ public class WebSocketRealTime {
     }
 
     // 실시간 상담 reservation 테이블에 등록!!!!!!!
-    public void METHOD_MAKE_RESERVATION(Session seller, Map<String, Object> info) {
+    public void METHOD_MAKE_RESERVATION(Session seller, Map<String, Object> info) throws IOException {
         long sellerIdx = (long) seller.getUserProperties().get("idx");
         long customerIdx = Math.round((double) info.get("customerIdx"));
         Session customer = null;
@@ -99,7 +101,19 @@ public class WebSocketRealTime {
         // 실시간 상담 reservation 테이블에 등록!!!!!!!
         Reservation insertedRes = commonService.insertReservationArticlePictureList(customerIdx, sellerIdx, reservationInfo);
         long reservationIdx = insertedRes.getIdx();
-//        customer.
+        Message message = new Message(MethodType.GO_FACE_TIME);
+        Map<String,Object> data = new HashMap<>();
+        data.put("customerIdx",customerIdx);
+        data.put("sellerIdx",sellerIdx);
+        data.put("reservationIdx",reservationIdx);
+        message.setData(data);
+
+        Gson gson = new Gson();
+        String messageString = gson.toJson(message);
+
+        customer.getBasicRemote().sendText(messageString);
+        seller.getBasicRemote().sendText(messageString);
+//        System.out.println(messageString);
 
 //
 //        System.out.println(reservation);

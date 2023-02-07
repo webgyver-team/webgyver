@@ -26,7 +26,7 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
         private String address;
         private String detailAddress;
         private String distance;
-        private String star;
+        private double star;
         private List<String> allTime;
         private List<String> noTime;
         private String image;
@@ -39,7 +39,7 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
             this.address = seller.getAddress();
             this.detailAddress = seller.getDetailAddress();
             this.distance = String.valueOf(CommonUtil.getDistanceWithKM(seller.getLat(), seller.getLng(), req.getLat(), req.getLng()));
-            this.star = String.format("%.1f", CommonUtil.getStar(seller.getStarTotal(), seller.getReviewCount()));
+            this.star = CommonUtil.getStar(seller.getStarTotal(), seller.getReviewCount());
             this.allTime = TimeUtil.getAllTime(seller.getBookTime(), TimeUtil.string2Time(req.getDate(), "yyyyMMdd"));
             this.noTime = existReservationTime;
             this.image = seller.getCompanyImage();
@@ -69,7 +69,7 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
         if (order.equals("1")) {
             comparator = (a, b) -> (Double.compare(Double.parseDouble(a.getDistance()), Double.parseDouble(b.getDistance())));
         } else if (order.equals("2")) {
-            comparator = (a, b) -> (Double.compare(Double.parseDouble(b.getStar()), Double.parseDouble(a.getStar())));
+            comparator = (a, b) -> (Double.compare(b.getStar(), a.getStar()));
         } else {
             comparator = Comparator.comparingInt(Store::getPrice);
         }
