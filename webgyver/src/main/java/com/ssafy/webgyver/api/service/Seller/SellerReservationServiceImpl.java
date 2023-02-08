@@ -12,10 +12,14 @@ import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import java.time.LocalDate;
 import java.util.Date;
+
+import com.ssafy.webgyver.util.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +30,8 @@ import java.util.List;
 public class SellerReservationServiceImpl implements SellerReservationService{
     final ReservationRepository reservationRepository;
     final PictureRepository pictureRepository;
-
+    @Value("${properties.file.toss.secret}")
+    String tossKey;
 
     static List<SellerReservationListRes.ReservationDTO> proceedingList;
     static List<SellerReservationListRes.ReservationDTO> waitingList;
@@ -52,6 +57,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
     }
 
     @Override
+    @Transactional
     public BaseResponseBody updateAcceptReservation(SellerAcceptReservationReq req) {
         LocalDateTime now = LocalDateTime.now();
         BaseResponseBody res;
@@ -60,7 +66,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
             res = BaseResponseBody.of(200, "이미 상태가 변경됐습니다.");
             return res;
         }
-        if (reservation.getUpdatedAt().plusMinutes(5).isAfter(now)){
+        if (!reservation.getCreatedAt().plusMinutes(5).isAfter(now)){
             reservation.updateReservationState("3");
             reservationRepository.save(reservation);
             res = BaseResponseBody.of(200, "승낙 가능한 시간이 지났습니다.");
@@ -68,18 +74,30 @@ public class SellerReservationServiceImpl implements SellerReservationService{
         }else {
             // 승낙
             if (req.isAcceptFlag()) {
-                reservation.updateReservationState("2");
-                res = BaseResponseBody.of(200, "승낙 성공");
-                List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(reservation.getSeller().getIdx(), "1");
-                for (Reservation tempReservation : reservationList) {
-                    if (tempReservation.getIdx() == reservation.getIdx()) continue;
-                    // 예약 시간이 같은데 하나 승낙 했으면 나머지 state 3으로 변경
-                    if (tempReservation.getReservationTime().isEqual(reservation.getReservationTime())){
-                        tempReservation.updateReservationState("3");
-                        reservationRepository.save(tempReservation);
+                res = BaseResponseBody.of(200, "승낙 및 결제 성공");
+                String title = "";
+                for (Article article : reservation.getArticleList()){
+                    if (article.getType() == -1){
+                        title = article.getTitle();
                     }
                 }
-                return res;
+                BaseResponseBody payRes = CommonUtil.requestPay(tossKey, reservation.getCustomer().getCustomerKey(), reservation.getCustomer().getBillingKey(), title, reservation.getReservationPrice());
+                if (payRes.getStatusCode() == 200){
+                    reservation.updateReservationState("2");
+                    reservationRepository.save(reservation);
+                    List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(reservation.getSeller().getIdx(), "1");
+                    for (Reservation tempReservation : reservationList) {
+                        if (tempReservation.getIdx() == reservation.getIdx()) continue;
+                        // 예약 시간이 같은데 하나 승낙 했으면 나머지 state 3으로 변경
+                        if (tempReservation.getReservationTime().isEqual(reservation.getReservationTime())){
+                            tempReservation.updateReservationState("3");
+                            reservationRepository.save(tempReservation);
+                        }
+                    }
+                    return res;
+                } else {
+                    return payRes;
+                }
             }
             // 거절
             else {
