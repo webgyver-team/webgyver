@@ -25,7 +25,7 @@ export default function CategoryInput({
     // 카테고리 리스트 목록(select에 map으로 뿌려주기 위함)
     // eslint-disable-next-line
     { idx: 1, categoryName: '욕실' },
-    { idx: 2, categoryName: '주방 ' },
+    { idx: 2, categoryName: '주방' },
     { idx: 3, categoryName: '전기/조명' },
     { idx: 4, categoryName: '가전' },
     { idx: 5, categoryName: '보일러' },

@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useLayoutEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import Button from '@mui/material/Button';
@@ -16,7 +17,7 @@ export default function AlertDialog({ open, setOpen, info }) {
   const [idx] = useRecoilState(userIdx);
 
   const [formContent, setFormContent] = useState('');
-  useState(() => {
+  useLayoutEffect(() => {
     setFormContent(info);
   }, []);
   const changeContent = (event) => {

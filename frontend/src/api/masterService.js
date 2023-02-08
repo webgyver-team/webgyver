@@ -52,5 +52,12 @@ export const master = {
       );
       return response;
     },
+    businessHour: async (data, idx) => {
+      const response = await Send.put(
+        `${masterURL}/mypage/intro/time/${idx}`,
+        data,
+      );
+      return response;
+    },
   },
 };

@@ -1,12 +1,12 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import { sha256 } from 'js-sha256';
 import AWS from 'aws-sdk';
-import { useNavigate } from 'react-router-dom';
+// import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
 import CompanyNameInput from '../masterSignUp/elements/CompanyNameInput';
@@ -18,33 +18,15 @@ import { master } from '../../../api/masterService';
 import { userIdx } from '../../../atom';
 
 export default function MyPageUpdate() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const [idx] = useRecoilState(userIdx);
   const [myPageData, setMyPageData] = useState(null);
-  useEffect(() => {
-    const getMyPageData = async () => {
-      const response = await master.get.myPage(idx);
-      setMyPageData(response.data.profile);
-      console.log(myPageData);
-    };
-    getMyPageData();
-  }, []);
+  const [data, setData] = useState({});
   const [newProfileImage, setNewProfileImage] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
+  // let ready = true;
 
   // eslint-disable-next-line
-  const [data, setData] = useState({
-    password: null,
-    phoneNumber: myPageData.phoneNumber,
-    companyName: myPageData.companyName,
-    partnerName: myPageData.partnerName,
-    companyNumber: myPageData.companyNumber,
-    address: myPageData.address,
-    detailAddress: myPageData.detailAddress,
-    categoryList: myPageData.category,
-    profileImage: myPageData.profileImage,
-    backgroundImage: myPageData.backgroundImage,
-  });
   const [newBackgroundImage, setNewBackgroundImage] = useState(null);
   const [backgroundImagePreview, setBackgroundImagePreview] = useState(null);
 
@@ -57,9 +39,29 @@ export default function MyPageUpdate() {
   const changeProfileImage = (event) => {
     setNewProfileImage(event.target.files[0]);
   };
+  useLayoutEffect(() => {
+    const getMyPageData = async () => {
+      const response = await master.get.myPage(idx);
+      setMyPageData(response.data.profile);
+      setData({
+        password: null,
+        companyName: response.data.profile.companyName,
+        phoneNumber: response.data.profile.phoneNumber,
+        partnerName: response.data.profile.partnerName,
+        companyNumber: response.data.profile.companyNumber,
+        address: response.data.profile.address,
+        detailAddress: response.data.profile.detailAddress,
+        categoryList: response.data.profile.categoryList,
+        profileImage: response.data.profile.profileImage,
+        backgroundImage: response.data.profile.backgroundImage,
+      });
+    };
+    getMyPageData();
+  }, []);
   useEffect(() => {
     if (newProfileImage !== null) {
       const reader = new FileReader();
+      console.log(newProfileImage);
       reader.readAsDataURL(newProfileImage);
 
       reader.onload = () => {
@@ -82,6 +84,17 @@ export default function MyPageUpdate() {
     setNewBackgroundImage(event.target.files[0]);
   };
 
+  // const sendRequest = async () => {
+  //   const response = await master.put.profile(data, idx);
+  //   if (response.statusCode === 200) {
+  //     alert('수정이 완료되었습니다.');
+  //     navigate('/master/mypage');
+  //   } else {
+  //     // eslint-disable-next-line
+  //     alert('다시 시도해주세요.');
+  //   }
+  // };
+
   // 이미지 S3 전송 함수
   const sendImageToS3 = async (image, mode) => {
     AWS.config.update({
@@ -93,7 +106,7 @@ export default function MyPageUpdate() {
     const date = new Date();
     const extensionName = `.${originName.split('.').pop()}`;
     const hashImageName = sha256(
-      `${date.toString()}${myPageData.idx}${originName}`,
+      `${date.toString()}${myPageData && myPageData.idx}${originName}`,
     );
     const upload = new AWS.S3.ManagedUpload({
       params: {
@@ -190,128 +203,121 @@ export default function MyPageUpdate() {
       // S3 전송함수에 적용
       sendImageToS3(newBackgroundImage, 2);
     }
+  };
     // 데이터 POST
     // eslint-disable-next-line
-    console.log(data);
-    const response = await master.put.profile(data, idx);
-    if (response.statusCode === 200) {
-      alert('수정이 완료되었습니다.');
-      navigate('/master/mypage');
-    } else {
-      // eslint-disable-next-line
-      alert('다시 시도해주세요.');
-    }
-  };
-  return (
-    <div style={{ width: '100%', padding: '16px' }}>
-      <Title>마스터 회원정보 수정</Title>
-      <ImageForm>
-        <ImageDiv>
-          <label htmlFor="profile-image-input">
-            <ProfileImage
-              src={
-                profileImagePreview === null
-                  ? myPageData.profileImage
-                  : profileImagePreview.url
-              }
-              alt="#"
+
+  if (myPageData) {
+    return (
+      <div style={{ width: '100%', padding: '16px' }}>
+        <Title>마스터 회원정보 수정</Title>
+        <ImageForm>
+          <ImageDiv>
+            <label htmlFor="profile-image-input">
+              <ProfileImage
+                src={
+                  profileImagePreview === null
+                    ? `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.profileImage}`
+                    : profileImagePreview.url
+                }
+                alt="#"
+              />
+            </label>
+            <ImageLabel>프로필 이미지</ImageLabel>
+            <input
+              type="file"
+              id="profile-image-input"
+              accept="image/*"
+              onChange={changeProfileImage}
+              style={{ display: 'none' }}
             />
-          </label>
-          <ImageLabel>프로필 이미지</ImageLabel>
-          <input
-            type="file"
-            id="profile-image-input"
-            accept="image/*"
-            onChange={changeProfileImage}
-            style={{ display: 'none' }}
-          />
-        </ImageDiv>
-        <ImageDiv>
-          <label htmlFor="background-image-input">
-            <RepresentImage
-              src={
-                backgroundImagePreview === null
-                  ? myPageData.backgroundImage
-                  : backgroundImagePreview.url
-              }
-              alt="#"
+          </ImageDiv>
+          <ImageDiv>
+            <label htmlFor="background-image-input">
+              <RepresentImage
+                src={
+                  backgroundImagePreview === null
+                    ? `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.backgroundImage}`
+                    : backgroundImagePreview.url
+                }
+                alt="#"
+              />
+            </label>
+            <ImageLabel>대표 이미지</ImageLabel>
+            <input
+              type="file"
+              id="background-image-input"
+              accept="image/*"
+              onChange={changeBackgroundImage}
+              style={{ display: 'none' }}
             />
-          </label>
-          <ImageLabel>대표 이미지</ImageLabel>
-          <input
-            type="file"
-            id="background-image-input"
-            accept="image/*"
-            onChange={changeBackgroundImage}
-            style={{ display: 'none' }}
-          />
-        </ImageDiv>
-      </ImageForm>
-      <UpdateForm>
-        <FormDiv>
-          <IdInput updateData={updateData} initialValue={myPageData.id} />
-          <PasswordInput updateData={updateData} />
-          <PhoneNumberInput
-            updateData={updateData}
-            initialValue1={
-              myPageData.phoneNumber !== null
-                ? myPageData.phoneNumber.slice(0, 3)
-                : null
-            }
-            initialValue2={
-              myPageData.phoneNumber !== null
-                ? myPageData.phoneNumber.slice(3, 7)
-                : null
-            }
-            initialValue3={
-              myPageData.phoneNumber !== null
-                ? myPageData.phoneNumber.slice(7, 11)
-                : null
-            }
-          />
-        </FormDiv>
-        <FormDiv>
-          <CompanyNameInput
-            updateData={updateData}
-            initialValue={myPageData.companyName}
-          />
-          <RepresentativeNameInput
-            updateData={updateData}
-            initialValue={myPageData.partnerName}
-          />
-          <CompanyNumberInput
-            updateData={updateData}
-            i
-            initialValue1={
-              myPageData.companyNumber !== null
-                ? myPageData.companyNumber.slice(0, 3)
-                : null
-            }
-            initialValue2={
-              myPageData.companyNumber !== null
-                ? myPageData.companyNumber.slice(3, 5)
-                : null
-            }
-            initialValue3={
-              myPageData.companyNumber !== null
-                ? myPageData.companyNumber.slice(5, 11)
-                : null
-            }
-          />
-          <AddressInput updateData={updateData} />
-          <CategoryInput
-            updateData={updateData}
-            initialList={myPageData.categoryList}
-          />
-        </FormDiv>
-      </UpdateForm>
-      <div style={{ textAlign: 'center' }}>
-        <Button variant="contained" onClick={updateMasterInfo}>
-          수정
-        </Button>
+          </ImageDiv>
+        </ImageForm>
+        <UpdateForm>
+          <FormDiv>
+            <PasswordInput updateData={updateData} />
+            <PhoneNumberInput
+              updateData={updateData}
+              initialValue1={
+                myPageData.phoneNumber !== null
+                  ? myPageData.phoneNumber.slice(0, 3)
+                  : null
+              }
+              initialValue2={
+                myPageData.phoneNumber !== null
+                  ? myPageData.phoneNumber.slice(3, 7)
+                  : null
+              }
+              initialValue3={
+                myPageData.phoneNumber !== null
+                  ? myPageData.phoneNumber.slice(7, 11)
+                  : null
+              }
+            />
+          </FormDiv>
+          <FormDiv>
+            <CompanyNameInput
+              updateData={updateData}
+              initialValue={myPageData.companyName}
+            />
+            <RepresentativeNameInput
+              updateData={updateData}
+              initialValue={myPageData.partnerName}
+            />
+            <CompanyNumberInput
+              updateData={updateData}
+              i
+              initialValue1={
+                myPageData.companyNumber !== null
+                  ? myPageData.companyNumber.slice(0, 3)
+                  : null
+              }
+              initialValue2={
+                myPageData.companyNumber !== null
+                  ? myPageData.companyNumber.slice(3, 5)
+                  : null
+              }
+              initialValue3={
+                myPageData.companyNumber !== null
+                  ? myPageData.companyNumber.slice(5, 11)
+                  : null
+              }
+            />
+            <AddressInput updateData={updateData} />
+            <CategoryInput
+              updateData={updateData}
+              initialList={myPageData.categoryList}
+            />
+          </FormDiv>
+        </UpdateForm>
+        <div style={{ textAlign: 'center' }}>
+          <Button variant="contained" onClick={updateMasterInfo}>
+            수정
+          </Button>
+        </div>
       </div>
-    </div>
-  );
+    );
+  }
 }
 const Title = styled.h2`
   font-size: 32px;

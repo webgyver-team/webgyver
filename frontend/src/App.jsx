@@ -39,7 +39,7 @@ import MasterHistory from './pages/master/history/History';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
-const notNavList = ['/videoservice', '/master/login', '/master/videoservice'];
+const notNavList = ['/videoservice', '/master/login', '/master/videoservice', '/master/signup'];
 
 function App() {
   const [auth] = useRecoilState(authState);
