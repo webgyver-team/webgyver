@@ -80,6 +80,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         if (sellerCategoryList.size() == 0) {
             return CustomerReservationNormalListRes.of(200, "noData");
         }
+
         List<Seller> sellerList = sellerCategoryList.stream().map(SellerCategory::getSeller).filter(seller -> seller.getBookTime() != null).collect(Collectors.toList());
         List<Integer> sellerCategoryPrice = sellerCategoryList.stream().map(SellerCategory::getPrice).collect(Collectors.toList());
         LocalDateTime start = TimeUtil.string2Time(req.getDate());
@@ -87,7 +88,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         List<List<String>> existReservationTimeList = new ArrayList<>();
         for (Seller seller : sellerList) {
             List<Reservation> reservationList = reservationRepository.findReservationsBySellerAndReservationTimeBetween(
-                    seller, start, end);
+                    seller, start, end).stream().filter(reservation -> !(reservation.getReservationType().equals("1") || reservation.getReservationType().equals("3"))).collect(Collectors.toList());
             List<String> existReservationTime = new ArrayList<>();
             for (Reservation reservation : reservationList) {
                 existReservationTime.add(
