@@ -2,7 +2,10 @@ package com.ssafy.webgyver.api.response.seller;
 
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
 import com.ssafy.webgyver.db.entity.Seller;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.util.List;
 

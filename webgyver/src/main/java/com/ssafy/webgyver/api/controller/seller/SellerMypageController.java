@@ -6,9 +6,7 @@ import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureListReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
-import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
-import com.ssafy.webgyver.api.request.seller.SellerProfileUpdateReq;
-import com.ssafy.webgyver.api.request.seller.SellerTimeUpdateReq;
+import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
@@ -20,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -130,8 +127,21 @@ public class SellerMypageController {
 
     @GetMapping("/review/{sellerIdx}")
     public ResponseEntity<?> getReviewList(@PathVariable Long sellerIdx, SellerIdxReq req) {
-        SellerMypageReviewListRes res = sellerMypageService.getReviewList(req);
+        return ResponseEntity.ok().body(sellerMypageService.getReviewList(req));
+    }
 
-        return ResponseEntity.ok().body(res);
+    @PostMapping("/comment")
+    public ResponseEntity<?> registerComment(@RequestBody SellerCommentRegisterReq req) {
+        return ResponseEntity.ok().body(sellerMypageService.registerComment(req));
+    }
+
+    @PutMapping("/comment/{a_idx}")
+    public ResponseEntity<?> modifyComment(@RequestBody SellerCommentModifyReq req) {
+        return ResponseEntity.ok().body(sellerMypageService.modifyComment(req));
+    }
+
+    @DeleteMapping("/comment/{a_idx}")
+    public ResponseEntity<?> deleteComment(@PathVariable(name = "a_idx") Long commentIdx) {
+        return ResponseEntity.ok().body(sellerMypageService.deleteComment(commentIdx));
     }
 }

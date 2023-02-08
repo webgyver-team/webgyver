@@ -1,6 +1,5 @@
 package com.ssafy.webgyver.api.response.seller;
 
-import com.ssafy.webgyver.api.response.article.CustomerReviewListRes;
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Customer;
@@ -9,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,22 +22,24 @@ public class SellerMypageReviewListRes extends DataResponseBody {
     @NoArgsConstructor
     static class Review {
         Long reviewIdx;
+        Long reservationIdx;
         Long customerIdx;
         String customerName;
         String title;
         String content;
         Long rating;
-        String comment;
+        Comment comment;
         List<ReviewImage> images;
 
         public Review(Article article, Customer customer, Article comment, List<ReviewImage> images) {
             this.reviewIdx = article.getIdx();
+            this.reservationIdx = article.getReservation().getIdx();
             this.customerIdx = customer.getIdx();
             this.customerName = customer.getName();
             this.title = article.getTitle();
             this.content = article.getContent();
             this.rating = Math.abs(article.getType()) - 2;
-            this.comment = comment != null ? comment.getContent() : null;
+            this.comment = comment != null ? new Comment(comment.getIdx(), comment.getContent()) : null;
             this.images = images;
         }
     }
@@ -52,6 +54,13 @@ public class SellerMypageReviewListRes extends DataResponseBody {
             this.originName = picture.getOriginName();
             this.saveName = picture.getSaveName();
         }
+    }
+
+    @Getter
+    @AllArgsConstructor
+    static class Comment {
+        Long commentIdx;
+        String commentContent;
     }
 
     public static SellerMypageReviewListRes of(Integer statusCode, String message, List<Map<String, Object>> reviewList) {

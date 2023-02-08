@@ -5,10 +5,8 @@ import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureListReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.seller.*;
-import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
-import com.ssafy.webgyver.api.service.common.ReservationService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.*;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
@@ -17,15 +15,15 @@ import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import com.ssafy.webgyver.util.PictureParsingUtil;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.*;
-import java.util.function.Predicate;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -204,5 +202,55 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         }
 
         return SellerMypageReviewListRes.of(200, "OK", reviews);
+    }
+
+    @Override
+    public BaseResponseBody registerComment(SellerCommentRegisterReq req) {
+        Article article = articleRepository.findArticleByReservationIdxAndType(req.getReservationIdx(), -2);
+
+        if(article == null) {
+            Reservation reservation = reservationRepository.findByIdx(req.getReservationIdx());
+
+            if(reservation.getSeller().getIdx() != req.getSellerIdx())
+                return BaseResponseBody.of(500, "Fail");
+
+            Article comment = Article.builder()
+                    .content(req.getComment())
+                    .reservation(reservation)
+                    .type(-2L)
+                    .build();
+
+            articleRepository.save(comment);
+
+            return BaseResponseBody.of(200, "OK");
+        }
+
+        return BaseResponseBody.of(500, "Fail");
+    }
+
+    @Transactional
+    @Override
+    public BaseResponseBody modifyComment(SellerCommentModifyReq req) {
+        Article article = articleRepository.findByIdx(req.getCommentIdx());
+
+        if(article.getReservation().getSeller().getIdx() == req.getSellerIdx()) {
+            article.setContent(req.getCommentContent());
+
+            return BaseResponseBody.of(200, "OK");
+        }
+
+        return BaseResponseBody.of(500, "Fail");
+    }
+
+    @Override
+    public BaseResponseBody deleteComment(Long commentIdx) {
+        Article article = articleRepository.findByIdx(commentIdx);
+
+        if(article != null && article.getType() == -2) {
+            articleRepository.delete(article);
+            return BaseResponseBody.of(200, "OK");
+        }
+
+        return BaseResponseBody.of(500, "Fail");
     }
 }
