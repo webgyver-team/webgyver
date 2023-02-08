@@ -215,8 +215,8 @@ export default function MyPageUpdate() {
       setReady([ready[0], true]);
     }
   };
-    // 데이터 POST
-    // eslint-disable-next-line
+  // 데이터 POST
+  // eslint-disable-next-line
 
   if (myPageData) {
     return (

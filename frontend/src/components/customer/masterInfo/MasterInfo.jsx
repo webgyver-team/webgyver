@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import PropTypes from 'prop-types';
@@ -66,8 +66,7 @@ export default function MasterInfo() {
   const [modalState, setmodalState] = useRecoilState(masterInfoModalState);
   const closeMasterInfoState = () => setmodalState(false);
 
-  const [value, setValue] = React.useState(0);
-
+  const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
