@@ -9,7 +9,10 @@ import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import {
   // eslint-disable-next-line
- loginOpenState, authState, accessToken, userIdx 
+  loginOpenState,
+  authState,
+  accessToken,
+  userIdx,
 } from '../../../atom';
 import { customer } from '../../../api/accountsApi';
 

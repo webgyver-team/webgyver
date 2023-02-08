@@ -126,7 +126,9 @@ export default function Mypage() {
         </div>
         <div>
           <DetailTitle>사업자등록번호</DetailTitle>
-          <DetailContent>{myPageData && myPageData.companyNumber}</DetailContent>
+          <DetailContent>
+            {myPageData && myPageData.companyNumber}
+          </DetailContent>
         </div>
         <BusinessBox>
           <DetailTitle>영업시간</DetailTitle>
@@ -153,12 +155,13 @@ export default function Mypage() {
           <DetailTitle>카테고리</DetailTitle>
         </BusinessBox>
         <BusinessHoursBox>
-          {myPageData && myPageData.category.map((item, i) => (
-            <div key={i}>
-              <DetailTitle>{item.categoryName}</DetailTitle>
-              <DetailContent>{`${item.price}원`}</DetailContent>
-            </div>
-          ))}
+          {myPageData
+            && myPageData.category.map((item, i) => (
+              <div key={i}>
+                <DetailTitle>{item.categoryName}</DetailTitle>
+                <DetailContent>{`${item.price}원`}</DetailContent>
+              </div>
+            ))}
         </BusinessHoursBox>
       </DetailBox>
       <NullBox />
