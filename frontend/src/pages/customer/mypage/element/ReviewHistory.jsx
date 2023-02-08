@@ -12,13 +12,13 @@ import { userIdx } from '../../../../atom';
 
 export default function ReviewHistory() {
   const customerIdx = useRecoilValue(userIdx);
-  console.log(customerIdx);
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
     const getMyReview = async () => {
       const response = await customer.get.myReview(customerIdx);
+
       if (response.statusCode === 200) {
-        setReviews(response.data.customer);
+        setReviews(response.data.reviews);
       } else {
         // eslint-disable-next-line
         alert(response.message);
@@ -42,6 +42,9 @@ export default function ReviewHistory() {
       {reviews.map((review) => (
         <CardView key={review.reviewIdx} review={review} />
       ))}
+      {reviews.length === 0 ? (
+        <NoReviewMessage>리뷰 내역이 없습니다.</NoReviewMessage>
+      ) : null}
     </Main>
   );
 }
@@ -134,4 +137,13 @@ const ImgBox = styled.div`
     object-fit: cover;
     border-radius: 5px;
   }
+`;
+
+const NoReviewMessage = styled.p`
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: 18px;
 `;
