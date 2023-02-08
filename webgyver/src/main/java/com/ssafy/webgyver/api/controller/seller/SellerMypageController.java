@@ -11,6 +11,7 @@ import com.ssafy.webgyver.api.request.seller.SellerProfileUpdateReq;
 import com.ssafy.webgyver.api.request.seller.SellerTimeUpdateReq;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
+import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
@@ -124,6 +125,13 @@ public class SellerMypageController {
     @PutMapping("/profile/{sellerIdx}")
     public ResponseEntity<?> updatePartnerProfile(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, @RequestBody SellerProfileUpdateReq profileReq) {
         BaseResponseBody res = sellerMypageService.updateSellerProfile(req, profileReq);
+        return ResponseEntity.ok().body(res);
+    }
+
+    @GetMapping("/review/{sellerIdx}")
+    public ResponseEntity<?> getReviewList(@PathVariable Long sellerIdx, SellerIdxReq req) {
+        SellerMypageReviewListRes res = sellerMypageService.getReviewList(req);
+
         return ResponseEntity.ok().body(res);
     }
 }

@@ -10,6 +10,6 @@ import java.util.List;
 public interface ArticleRepository extends JpaRepository<Article, Long> {
     List<Article> findArticlesByType(long sellerIdx);
     Article findArticleByReservationIdxAndTypeLessThan(long idx, long type);
-
     Article findByIdx(long idx);
+    Article findArticleByReservationIdxAndType(long idx, long type);
 }
