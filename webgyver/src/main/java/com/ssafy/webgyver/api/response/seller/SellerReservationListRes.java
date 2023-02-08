@@ -66,4 +66,13 @@ public class SellerReservationListRes extends DataResponseBody {
         res.getData().put("todayList", todayList);
         return res;
     }
+    public static SellerReservationListRes of(Integer statusCode, String message, List<ReservationDTO> reservationDTOList){
+        SellerReservationListRes res = new SellerReservationListRes();
+        res.setStatusCode(statusCode);
+        res.setMessage(message);
+        // 예약 정보 넣기
+//        Response response = new Response(reservationList);
+        res.getData().put("reservationList", reservationDTOList);
+        return res;
+    }
 }

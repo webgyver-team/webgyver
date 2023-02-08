@@ -1,9 +1,11 @@
 package com.ssafy.webgyver.api.service.Seller;
 
 import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
+import com.ssafy.webgyver.api.request.seller.SellerCalendarReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
+import com.ssafy.webgyver.api.response.seller.SellerReservationListRes.ReservationDTO;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
@@ -107,6 +109,47 @@ public class SellerReservationServiceImpl implements SellerReservationService{
                 return res;
             }
         }
+    }
+
+    @Override
+    public SellerReservationListRes getSellerCalendarReservationList(SellerCalendarReq req) {
+        List<SellerReservationListRes.ReservationDTO> res = new ArrayList<>();
+        List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdxAndReservationTimeBetween(req.getSellerIdx(), req.getDay(), req.getDay().plusDays(1));
+        for (Reservation reservation : reservationList) {
+            String title = null;    // 예약 제목
+            String content = null; // 문의 내용
+            List<SellerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
+            // 문의 내용 찾기
+            for (Article review : reservation.getArticleList()) {
+                if (review.getType() == -1) {
+                    title = review.getTitle();
+                    content = review.getContent();
+                    List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(
+                            review.getIdx());
+                    // 문의 내용에대한 사진 가져오기
+                    for (Picture picture : pictures) {
+                        SellerReservationListRes.PictureDTO pictureTemp = new SellerReservationListRes.PictureDTO(
+                                picture.getIdx(), picture.getOriginName(),
+                                picture.getSaveName());
+                        pictureDTOS.add(pictureTemp);
+                    }
+                    break;
+                }
+            }
+            SellerReservationListRes.ReservationDTO reservationDTO = new SellerReservationListRes.ReservationDTO(
+                    reservation.getIdx(),
+                    title,
+                    reservation.getReservationTime(),
+                    content,
+                    reservation.getSeller().getCompanyName(),
+                    pictureDTOS,
+                    reservation.getReservationState(),
+                    reservation.getReservationType()
+            );
+            res.add(reservationDTO);
+        }
+        SellerReservationListRes response = SellerReservationListRes.of(200, "Success", res);
+        return response;
     }
 
     public void reservationState4ListMethod(List<Reservation> reservationList) {
