@@ -162,7 +162,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         System.out.println(profileReq);
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         seller.updateSellerProfile(profileReq.getProfileImage(), profileReq.getBackgroundImage(),
-                passwordEncoder.encode(profileReq.getPassword()), profileReq.getPhoneNumber(), profileReq.getStoreName(),
+                passwordEncoder.encode(profileReq.getPassword()), profileReq.getPhoneNumber(), profileReq.getCompanyName(),
                 profileReq.getAddress(), profileReq.getDetailAddress());
         sellerCategoryRepository.deleteAllInBatch(seller.getSellerCategories());
         for (SellerCategory SC : profileReq.getCategoryList()) {

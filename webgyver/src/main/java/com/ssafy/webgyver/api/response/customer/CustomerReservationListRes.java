@@ -25,7 +25,7 @@ public class CustomerReservationListRes extends DataResponseBody {
         private String title;
         private LocalDateTime reservationTime;
         private String content;
-        private String storeName;
+        private String companyName;
         private List<PictureDTO> imageList;
         private Long state;
         private Long type;
@@ -35,7 +35,7 @@ public class CustomerReservationListRes extends DataResponseBody {
             this.title = title;
             this.reservationTime = time;
             this.content = content;
-            this.storeName = storeName;
+            this.companyName = storeName;
             this.imageList = pictureList;
             this.state = Long.parseLong(state);
             this.type = Long.parseLong(type);
