@@ -59,7 +59,6 @@ export default function MasterVideoService() {
   const routeEndService = () => {
     navigate('/master/endservice');
   };
-  // const conn = new WebSocket('wss://webgyver.site:9000/socket');
 
   // 내 미디어 가져오기
   const getUserCameraSub = async () => {
@@ -123,29 +122,29 @@ export default function MasterVideoService() {
       },
     ],
   };
-
-  const myConnection = new RTCPeerConnection(configuration);
-  const send = async (message) => {
-    conn.send(JSON.stringify(message));
-  };
-  const sendCandidate = (event) => {
-    send({
-      event: 'candidate',
-      data: event.candidate,
-    });
-  };
-  const myPeerConnection = new RTCPeerConnection(configuration);
-  myPeerConnection.onicecandidate = sendCandidate;
-  myConnection.addEventListener('track', (data) => {
-    let video = peerMainScreen.current;
-    video.srcObject = new MediaStream([data.track]);
-    video.play();
-
-    video = peerSubScreen.current;
-    video.srcObject = new MediaStream([data.track]);
-    video.play();
-  });
   useLayoutEffect(() => {
+    conn.onopen = () => console.log('시작');
+    const send = async (message) => {
+      console.log(message);
+      conn.send(JSON.stringify(message));
+    };
+    const sendCandidate = (event) => {
+      send({
+        event: 'candidate',
+        data: event.candidate,
+      });
+    };
+    const myPeerConnection = new RTCPeerConnection(configuration);
+    myPeerConnection.onicecandidate = sendCandidate;
+    myPeerConnection.addEventListener('track', (data) => {
+      const video = peerMainScreen.current;
+      video.srcObject = new MediaStream([data.track]);
+      video.play();
+
+      // video = peerSubScreen.current;
+      // video.srcObject = new MediaStream([data.track]);
+      // video.play();
+    });
     navigator.mediaDevices
       .getUserMedia({
         audio: true,
@@ -163,8 +162,10 @@ export default function MasterVideoService() {
         data: offer,
       });
     };
+
     conn.onmessage = async (message) => {
       const content = JSON.parse(message.data);
+      console.log(message);
       if (content.event === 'offer') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
@@ -183,7 +184,8 @@ export default function MasterVideoService() {
         myPeerConnection.addIceCandidate(content.data);
       }
     };
-    createOffer();
+    conn.onclose = () => console.log('끝');
+    setTimeout(() => createOffer(), 50);
   });
 
   return (

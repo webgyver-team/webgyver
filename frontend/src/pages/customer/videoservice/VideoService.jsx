@@ -60,9 +60,7 @@ export default function VideoService() {
   const getUserCameraMain = async () => {
     navigator.mediaDevices
       .getUserMedia({
-        video: {
-          facingMode: 'user',
-        },
+        video: true,
         audio: true,
       })
       .then((stream) => {
@@ -81,9 +79,7 @@ export default function VideoService() {
   const getUserCameraSub = async () => {
     navigator.mediaDevices
       .getUserMedia({
-        video: {
-          facingMode: 'environment',
-        },
+        video: true,
         audio: true,
       })
       .then((stream) => {
@@ -122,31 +118,30 @@ export default function VideoService() {
     ],
   };
 
-  const myConnection = new RTCPeerConnection(configuration);
-  const send = async (message) => {
-    // 소켓으로 메세지 보내기
-    conn.send(JSON.stringify(message));
-  };
-  const sendCandidate = (event) => {
-    send({
-      event: 'candidate',
-      data: event.candidate,
-    });
-  };
-  const myPeerConnection = new RTCPeerConnection(configuration);
-  myConnection.addEventListener('track', (data) => {
-    let video = peerMainScreen.current;
-    video.srcObject = new MediaStream([data.track]);
-    video.play();
-
-    video = peerSubScreen.current;
-    video.srcObject = new MediaStream([data.track]);
-    video.play();
-  });
   useLayoutEffect(() => {
-    myPeerConnection.onicecandidate = sendCandidate();
+    const send = async (message) => {
+      // 소켓으로 메세지 보내기
+      conn.send(JSON.stringify(message));
+    };
+    const myPeerConnection = new RTCPeerConnection(configuration);
+    myPeerConnection.addEventListener('track', (data) => {
+      const video = peerMainScreen.current;
+      video.srcObject = new MediaStream([data.track]);
+      video.play();
+
+      // video = peerSubScreen.current;
+      // video.srcObject = new MediaStream([data.track]);
+      // video.play();
+    });
+    myPeerConnection.onicecandidate = (event) => {
+      send({
+        event: 'candidate',
+        data: event.candidate,
+      });
+    };
     conn.onmessage = async (message) => {
       const content = JSON.parse(message.data);
+      console.log(message);
       if (content.event === 'offer') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
@@ -177,6 +172,7 @@ export default function VideoService() {
         myPeerConnection.addIceCandidate(content.data);
       }
     };
+    conn.onclose = () => console.log('끝');
   });
 
   return (
