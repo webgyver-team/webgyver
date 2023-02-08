@@ -265,5 +265,6 @@ const LowerInfo = styled.div`
     font-weight: bold;
     white-space: pre-line;
     line-height: 32px;
+    margin-bottom: 16px;
   }
 `;

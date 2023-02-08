@@ -1,42 +1,52 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable react/no-array-index-key */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
-import { exampleFormState } from '../../../atom';
-import ReviewImg1 from '../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../assets/image/review3.jpg';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { exampleFormState, userIdx } from '../../../atom';
 import Example from './elements/Example';
 import Form from './elements/Form';
+import { master } from '../../../api/masterService';
 
-export default function MasterSchedule() {
+export default function MasterExample() {
   const setModalOpen = useSetRecoilState(exampleFormState);
   const modalOpen = () => {
     setModalOpen(true);
   };
 
-  const [historys] = useState([
-    {
-      content:
-        '물이 아니라 불이 나오는 고객님이 계셨습니다. 다행스럽게도 큰일나기 전에, 전화상담을 통해서 연결된 밸브를 제거하고 온수로 재연결하셨습니다.',
-      images: [ReviewImg1, ReviewImg2, ReviewImg3],
-    },
-  ]);
+  // 새 글 작성시 리로드
+  const [reload, setReload] = useState(false);
 
-  // const NoData = <NoDataBox>아직 사례가 없습니다.</NoDataBox>;
+  const NoData = <NoDataBox>아직 사례가 없습니다.</NoDataBox>;
+
+  // 로드데이타
+  const [exampleList, setExampleList] = useState([]);
+  const useId = useRecoilValue(userIdx);
+  useEffect(() => {
+    const loadExampleList = async () => {
+      const response = await master.get.example(useId);
+      setExampleList(response.data.historyList);
+    };
+    // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
+    // eslint-disable-next-line
+    loadExampleList();
+    setReload(false);
+  }, [useId, reload]);
 
   return (
     <Main>
-      <Form />
+      <Form setReload={setReload} />
       <BtnBox>
         <StateBtn onClick={modalOpen}>
           <span>작성하기</span>
         </StateBtn>
       </BtnBox>
       <TableBox>
-        {historys.map((el, i) => (
-          <Example key={i} history={el} />
-        ))}
+        {!exampleList.length && NoData}
+        {exampleList &&
+          exampleList
+            .reverse()
+            .map((el, i) => <Example key={i} example={el} />)}
       </TableBox>
     </Main>
   );
@@ -74,7 +84,8 @@ const StateBtn = styled.div`
   cursor: pointer;
 `;
 
-// const NoDataBox = styled.div`
-//   text-align: center;
-//   font-size: 24px;
-// `;
+const NoDataBox = styled.div`
+  text-align: center;
+  font-size: 24px;
+  min-width: 70vw;
+`;
