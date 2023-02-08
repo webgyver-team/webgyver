@@ -1,5 +1,6 @@
 package com.ssafy.webgyver.api.controller.customer;
 
+import com.ssafy.webgyver.api.request.customer.CustomerModifyReviewReq;
 import com.ssafy.webgyver.api.request.customer.CustomerMypageReq;
 import com.ssafy.webgyver.api.request.customer.CustomerRegisterReviewReq;
 import com.ssafy.webgyver.api.response.article.CustomerReviewListRes;
@@ -66,8 +67,22 @@ public class CustomerMypageController {
 
     @PostMapping("/review")
     public ResponseEntity<?> registerReview(@RequestBody CustomerRegisterReviewReq req) {
+        BaseResponseBody result = customerMypageService.regiterReview(req);
 
+        return ResponseEntity.ok().body(result);
+    }
 
-        return null;
+    @PutMapping("/review/{a_idx}")
+    public ResponseEntity<?> modifyReview(@PathVariable(name = "a_idx") Long reviewIdx, @RequestBody CustomerModifyReviewReq req) {
+        BaseResponseBody result = customerMypageService.modifyReview(req);
+
+        return ResponseEntity.ok().body(result);
+    }
+
+    @DeleteMapping("/review/{a_idx}")
+    public ResponseEntity<?> deleteReview(@PathVariable(name = "a_idx") Long reviewIdx) {
+        BaseResponseBody result = customerMypageService.deleteReview(reviewIdx);
+
+        return ResponseEntity.ok().body(result);
     }
 }

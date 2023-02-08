@@ -1,6 +1,7 @@
 package com.ssafy.webgyver.api.service.customer;
 
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
+import com.ssafy.webgyver.api.request.customer.CustomerModifyReviewReq;
 import com.ssafy.webgyver.api.request.customer.CustomerMypageReq;
 import com.ssafy.webgyver.api.request.customer.CustomerRegisterReviewReq;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
@@ -43,6 +44,11 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
     @Value("${properties.file.toss.secret}")
     String tossKey;
 
+    /**
+     * 사용자 profile 조회
+     * @param idx 사용자 구분 idx
+     * @return customer - 사용자 정보
+     */
     @Override
     public Customer getProfile(Long idx) {
         Optional<Customer> customer = customerRepository.findByIdx(idx);
@@ -50,13 +56,18 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
         return customer.orElse(null);
     }
 
+    /**
+     * 사용자 profile 수정
+     * @param req 수정할 profile 정보
+     * @return 수정 여부
+     */
     @Transactional
     @Override
     public BaseResponseBody setProfile(CustomerMypageReq req) {
         Customer customer = customerRepository.findByIdx(req.getIdx()).get();
 
         //카드 등록
-        if(isProfileCheck(req.getCardNumber())) {
+        if(isCheck(req.getCardNumber())) {
             String customerKey = new String(Base64.getEncoder().encode((customer.getId() + req.getCardNumber()).getBytes()));
             BaseResponseBody resultBilling = registerCard(customerKey, req);
 
@@ -67,35 +78,46 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
             customer.setCustomerKey(customerKey);
         }
 
-        if(isProfileCheck(req.getName()))
+        if(isCheck(req.getName()))
             customer.setName(req.getName());
 
-        if(isProfileCheck(req.getPhoneNumber()))
+        if(isCheck(req.getPhoneNumber()))
             customer.setPhoneNumber(req.getPhoneNumber());
 
-        if(isProfileCheck(req.getBirth())) {
+        if(isCheck(req.getBirth())) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
             customer.setBirthDay(LocalDate.parse(req.getBirth(), formatter).atStartOfDay());
         }
 
-        if(isProfileCheck(req.getCardNumber()))
+        if(isCheck(req.getCardNumber()))
             customer.setCardNumber(req.getCardNumber());
 
-        if(isProfileCheck(req.getCardValidity())) {
+        if(isCheck(req.getCardValidity())) {
             customer.setCardValidity(req.getCardValidity());
         }
 
-        if(isProfileCheck(req.getPassword())) {
+        if(isCheck(req.getPassword())) {
             customer.setPassword(passwordEncoder.encode(req.getPassword()));
         }
 
         return BaseResponseBody.of(200, "Success");
     }
 
-    private boolean isProfileCheck(String check) {
+    /**
+     * 수정할 요소 유효성 검사
+     * @param check 검사할 요소
+     * @return boolean
+     */
+    private boolean isCheck(String check) {
         return check != null && !check.isEmpty();
     }
 
+    /**
+     * 카드 등록
+     * @param customerKey 사용자 구분을 위한 key
+     * @param req 카드 정보
+     * @return 등록 여부
+     */
     private BaseResponseBody registerCard(String customerKey, CustomerMypageReq req) {
         try {
             URL url = new URL("https://api.tosspayments.com/v1/billing/authorizations/card");
@@ -143,6 +165,11 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
         }
     }
 
+    /**
+     * 사용자 리뷰 조회
+     * @param req 사용자 정보
+     * @return 리뷰 목록
+     */
     @Override
     public List<Map<String, Object>> getReviewList(CustomerMypageReq req) {
         List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdx(req.getIdx());
@@ -151,22 +178,33 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
         for(Reservation reservation : reservationList) {
             Map<String, Object> review = new HashMap<>();
             Article article = articleRepository.findArticleByReservationIdxAndTypeLessThan(reservation.getIdx(), -2);
-            review.put("review", article);
-            review.put("images", pictureRepository.findPicturesByArticleIdx(article.getIdx()));
 
-            reviews.add(review);
+            if(article != null) {
+                review.put("review", article);
+                Object images = pictureRepository.findPicturesByArticleIdx(article.getIdx());
+
+                if(images != null)
+                    review.put("images", images);
+
+                reviews.add(review);
+            }
         }
 
         return reviews;
     }
 
+    /**
+     * 사용자 리뷰 등록
+     * @param req 등록할 리뷰 정보
+     * @return 등록 여부
+     */
     @Override
     @Transactional
     public BaseResponseBody regiterReview(CustomerRegisterReviewReq req) {
         Reservation reservation = Reservation.builder().build();
         reservation.setIdx(req.getReservationIdx());
 
-        long type = (req.getStar() * -1L) - 2;
+        long type = (req.getRating() * -1L) - 2; //별점
         Article review = Article.builder()
                 .title(req.getTitle())
                 .content(req.getContent())
@@ -175,8 +213,60 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
 
         Article article = articleRepository.save(review);
 
+        savePictures(req.getImages(), article);
+
+        return BaseResponseBody.of(200, "Success");
+    }
+
+    /**
+     * 사용자 리뷰 수정
+     * @param req 수정할 리뷰 정보
+     * @return 수정 여부
+     */
+    @Transactional
+    @Override
+    public BaseResponseBody modifyReview(CustomerModifyReviewReq req) {
+        Article article = articleRepository.findByIdx(req.getReviewIdx());
+        pictureRepository.deletePictureByArticle(article);
+
+        if(isCheck(req.getTitle()))
+            article.setTitle(req.getTitle());
+
+        if(isCheck(req.getContent()))
+            article.setContent(req.getContent());
+
+        if(req.getRating() != null)
+            article.setType((req.getRating() * -1L) - 2);
+
+        savePictures(req.getImages(), article);
+
+        return BaseResponseBody.of(200, "Success");
+    }
+
+    /**
+     * 사용자 리뷰 삭제
+     * @param reviewIdx 리뷰 idx
+     * @return 삭제 여부
+     */
+    @Transactional
+    @Override
+    public BaseResponseBody deleteReview(Long reviewIdx) {
+        Article article = articleRepository.findByIdx(reviewIdx);
+
+        pictureRepository.deletePictureByArticle(article);
+        articleRepository.delete(article);
+
+        return BaseResponseBody.of(200, "OK");
+    }
+
+    /**
+     * 이미지 저장
+     * @param pictureList 저장할 이미지 리스트
+     * @param article 이미지가 참조할 Article
+     */
+    private void savePictures(List<PictureReq> pictureList, Article article) {
         List<Picture> pictures = new ArrayList<>();
-        for (PictureReq pictureReq : req.getPictureListReq().getImages()) {
+        for (PictureReq pictureReq : pictureList) {
             Picture picture = Picture.builder()
                     .article(article)
                     .originName(pictureReq.getOriginName())
@@ -187,8 +277,6 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
         }
 
         pictureRepository.saveAll(pictures);
-
-        return BaseResponseBody.of(200, "Success");
     }
 }
 
