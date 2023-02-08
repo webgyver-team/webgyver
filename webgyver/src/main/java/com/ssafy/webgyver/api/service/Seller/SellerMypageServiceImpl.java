@@ -115,7 +115,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         List<SellerCategory> categories = seller.getSellerCategories();
         List<SellerMyPageIntroRes.CategoryDTO> categoryDTOList = new ArrayList<>();
         for (SellerCategory temp : categories) {
-            categoryDTOList.add(new SellerMyPageIntroRes.CategoryDTO(new SellerMyPageIntroRes.Category(temp.getIdx(), temp.getCategory().getCategoryName()), temp.getPrice()));
+            categoryDTOList.add(new SellerMyPageIntroRes.CategoryDTO(new SellerMyPageIntroRes.Category(temp.getCategory().getIdx(), temp.getCategory().getCategoryName()), temp.getPrice()));
         }
         ///// 끝
         SellerMyPageIntroRes result = SellerMyPageIntroRes.of(200, "Success", seller, companyTimeDTOList, categoryDTOList);
