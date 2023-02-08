@@ -126,6 +126,8 @@ public class WebSocketFaceTime {
                 reply.put("method", MethodType.WANT_MEET);
                 break;
             case ACCEPT_MEET:
+                // 판매자의 방문요청 수락.
+                // 예약테이블에서 정보 꺼내와서 time, state 바꿔야함.
                 reply.put("method", MethodType.ACCEPT_MEET);
                 break;
         }
