@@ -3,10 +3,7 @@ package com.ssafy.webgyver.api.service.Seller;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureListReq;
-import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
-import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
-import com.ssafy.webgyver.api.request.seller.SellerProfileUpdateReq;
-import com.ssafy.webgyver.api.request.seller.SellerTimeUpdateReq;
+import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.api.response.common.picture.PictureListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
@@ -43,4 +40,10 @@ public interface SellerMypageService {
     BaseResponseBody updateSellerProfile(SellerIdxReq req, SellerProfileUpdateReq timeReq);
 
     SellerMypageReviewListRes getReviewList(SellerIdxReq req);
+
+    BaseResponseBody registerComment(SellerCommentRegisterReq req);
+
+    BaseResponseBody modifyComment(SellerCommentModifyReq req);
+
+    BaseResponseBody deleteComment(Long commentIdx);
 }

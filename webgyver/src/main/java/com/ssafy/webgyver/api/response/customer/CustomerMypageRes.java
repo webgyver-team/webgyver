@@ -6,7 +6,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -17,15 +19,19 @@ public class CustomerMypageRes extends DataResponseBody {
         private Long idx;
         private String name;
         private String phoneNumber;
-        private LocalDateTime birth;
+        private String birth;
         private String cardNumber;
+        private String cardValidity;
 
         public Response(Customer customer) {
             this.idx = customer.getIdx();
             this.name = customer.getName();
             this.phoneNumber = customer.getPhoneNumber();
-            this.birth = customer.getBirthDay();
             this.cardNumber = customer.getCardNumber();
+            this.cardValidity = customer.getCardValidity();
+
+            String birth = customer.getBirthDay().format(DateTimeFormatter.ofPattern("yyMMdd"));
+            this.birth = birth + customer.getGender();
         }
     }
 
