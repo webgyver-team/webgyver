@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -47,8 +48,8 @@ function CardView({ review }) {
       <p className="title">{review.title}</p>
       <p className="score">{`평점 : ${review.score}`}</p>
       <Slider {...slickSettings}>
-        {review.images.map((el) => (
-          <ImgBox>
+        {review.images.map((el, i) => (
+          <ImgBox key={i}>
             <img src={el} alt="" />
           </ImgBox>
         ))}
