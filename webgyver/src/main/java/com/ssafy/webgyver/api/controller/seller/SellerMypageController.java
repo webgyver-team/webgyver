@@ -50,6 +50,32 @@ public class SellerMypageController {
 //            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
     ) {
         ArticleAllReq articleAllReq = new ArticleAllReq();
+        articleAllReq.setType(new Long((int)request.get("type")));
+        articleAllReq.setContent((String) request.get("content"));
+
+        PictureListReq pictureListReq = new PictureListReq();
+        Gson gson = new Gson();
+        pictureListReq.setImages(gson.fromJson(gson.toJson(request.get("images")), new TypeToken<List<PictureReq>>() {
+        }.getType()));
+
+
+        Article result = sellerMypageService.insertHistory(articleAllReq);
+        sellerMypageService.insertPictures(result, pictureListReq);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
+    }
+
+    @PutMapping("/history/{articleIdx}")
+    public ResponseEntity<BaseResponseBody> updateHistory(
+            @PathVariable Long articleIdx,
+            @RequestBody Map<String, Object> request
+//            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
+    ) {
+        // 1. 아티클과 연관단 사진 모두 삭제
+        sellerMypageService.deleteAllPicture(articleIdx);
+        // 2. 아티클 업데이트
+        // 3. 사진 일괄등록
+
+        ArticleAllReq articleAllReq = new ArticleAllReq();
         articleAllReq.setType(Long.valueOf((String) request.get("type")));
         articleAllReq.setContent((String) request.get("content"));
 
@@ -58,25 +84,10 @@ public class SellerMypageController {
         pictureListReq.setImages(gson.fromJson(gson.toJson(request.get("images")), new TypeToken<List<PictureReq>>() {
         }.getType()));
 
-        System.out.println(articleAllReq);
-        System.out.println("----------------------------");
-        System.out.println(pictureListReq);
 
         Article result = sellerMypageService.insertHistory(articleAllReq);
         sellerMypageService.insertPictures(result, pictureListReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-    }
-
-    @PutMapping("/history/{articleIdx}")
-    public ResponseEntity<BaseResponseBody> updateHistory(@PathVariable Long articleIdx, @RequestBody ArticleAllReq req) {
-        log.info("updateHistory : {}", req);
-        Article result = sellerMypageService.updateHistory(req);
-
-        if (result != null) {
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-        } else {
-            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
-        }
     }
 
     @DeleteMapping("/history/{articleIdx}")

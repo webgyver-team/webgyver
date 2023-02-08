@@ -49,6 +49,11 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     }
 
     @Override
+    public void deleteAllPicture(long articleIdx) {
+        pictureRepository.deleteAllByArticleIdx(articleIdx);
+    }
+
+    @Override
     public Article insertHistory(ArticleAllReq req) {
         Article article = Article.builder().title(req.getTitle())
                 .content(req.getContent())
@@ -115,7 +120,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         List<SellerCategory> categories = seller.getSellerCategories();
         List<SellerMyPageIntroRes.CategoryDTO> categoryDTOList = new ArrayList<>();
         for (SellerCategory temp : categories) {
-            categoryDTOList.add(new SellerMyPageIntroRes.CategoryDTO(temp.getIdx(), temp.getCategory().getCategoryName(), temp.getPrice()));
+            categoryDTOList.add(new SellerMyPageIntroRes.CategoryDTO(new SellerMyPageIntroRes.Category(temp.getCategory().getIdx(), temp.getCategory().getCategoryName()), temp.getPrice()));
         }
         ///// 끝
         SellerMyPageIntroRes result = SellerMyPageIntroRes.of(200, "Success", seller, companyTimeDTOList, categoryDTOList);
@@ -157,7 +162,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         System.out.println(profileReq);
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         seller.updateSellerProfile(profileReq.getProfileImage(), profileReq.getBackgroundImage(),
-                passwordEncoder.encode(profileReq.getPassword()), profileReq.getPhoneNumber(), profileReq.getStoreName(),
+                passwordEncoder.encode(profileReq.getPassword()), profileReq.getPhoneNumber(), profileReq.getCompanyName(),
                 profileReq.getAddress(), profileReq.getDetailAddress());
         sellerCategoryRepository.deleteAllInBatch(seller.getSellerCategories());
         for (SellerCategory SC : profileReq.getCategoryList()) {

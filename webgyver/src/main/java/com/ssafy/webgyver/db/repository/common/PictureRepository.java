@@ -8,5 +8,8 @@ import java.util.List;
 
 public interface PictureRepository extends JpaRepository<Picture, Long> {
     List<Picture> findPicturesByArticleIdx(Long idx);
+
     void deletePictureByArticle(Article article);
+
+    void deleteAllByArticleIdx(Long idx);
 }

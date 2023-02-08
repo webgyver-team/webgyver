@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
 import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
+import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.db.entity.*;
@@ -12,6 +13,7 @@ import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
+import com.ssafy.webgyver.db.repository.customer.CustomerRepository;
 import com.ssafy.webgyver.util.PictureParsingUtil;
 import com.ssafy.webgyver.util.ReservationParsingUtil;
 import com.ssafy.webgyver.util.TimeUtil;
@@ -35,6 +37,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     final PictureRepository pictureRepository;
     final SellerCategoryRepository sellerCategoryRepository;
     final SellerRepository sellerRepository;
+    final CustomerRepository customerRepository;
 
     @Override
     @Transactional
@@ -137,6 +140,20 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         reservationListMethod(reservationList);
         CustomerReservationListRes res = CustomerReservationListRes.of(200, "Success",
                 reservationDTOList);
+        return res;
+    }
+
+    @Override
+    public CustomerAddressRes getCustomerAddress(CustomerIdxReq req) {
+        Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
+        CustomerAddressRes res;
+        if (customer.getAddress() == null){
+            res = CustomerAddressRes.of(200, "null address", null);
+        } else {
+            CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
+            res = CustomerAddressRes.of(200, "have address", response);
+        }
+
         return res;
     }
 
@@ -267,15 +284,18 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public void reservationState2ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
+            boolean addFirst = false;
             // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
             if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
+                continue;
             }
             // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
             else if (reservation.getReservationTime().isAfter(currentTime)) {
-                reservation.updateReservationState("6");
+                reservation.updateReservationState("4");
                 reservationRepository.save(reservation);
+                addFirst = true;
             }
             String title = null;    // 예약 제목
             String content = null; // 문의 내용
@@ -306,7 +326,11 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                     reservation.getReservationState(),
                     reservation.getReservationType()
             );
-            reservationDTOList.add(reservationDTO);
+            if (addFirst) {
+                reservationDTOList.add(0, reservationDTO);
+            } else {
+                reservationDTOList.add(reservationDTO);
+            }
         }
     }
 }

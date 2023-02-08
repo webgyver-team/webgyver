@@ -22,4 +22,6 @@ public class SellerReservationController {
         SellerReservationListRes res = sellerReservationService.getSellerReservationList(idxReq);
         return ResponseEntity.ok(res);
     }
+//    @PutMapping("/accept/{reservationIdx}")
+
 }

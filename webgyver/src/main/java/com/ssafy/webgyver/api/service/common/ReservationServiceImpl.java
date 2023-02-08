@@ -17,8 +17,6 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public Reservation getReservation(long reservationIdx) {
         System.out.println("서비스까지 들어옴");
-        Optional<Reservation> res = reservationRepository.findById(reservationIdx);
-        System.out.println(res.isPresent());
         return reservationRepository.findById(reservationIdx).get();
     }
 }

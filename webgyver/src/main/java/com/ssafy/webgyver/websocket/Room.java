@@ -77,6 +77,16 @@ public class Room {
         }
     }
 
+    public synchronized void sendMessageOther(String msg, Session me) {
+        for (Session session : sessions) {
+            if (session.getId().equals(me.getId())|| !session.isOpen())
+                continue;
+            System.out.println("나 메세지 보낸다!!~!");
+            sendMessage(msg, session);
+        }
+
+    }
+
     public synchronized void sendMessage(String msg, Session session) {
         try {
             session.getBasicRemote().sendText(msg);
