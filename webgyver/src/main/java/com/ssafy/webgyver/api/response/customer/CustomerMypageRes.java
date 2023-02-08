@@ -29,7 +29,6 @@ public class CustomerMypageRes extends DataResponseBody {
             this.phoneNumber = customer.getPhoneNumber();
             this.birth = customer.getBirthDay();
             this.cardNumber = customer.getCardNumber();
-            this.profileImage = customer.getProfileImage();
         }
     }
     public static CustomerMypageRes of(Integer statusCode, String message, Customer profile) {

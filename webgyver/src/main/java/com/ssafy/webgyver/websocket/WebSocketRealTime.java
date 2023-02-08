@@ -68,14 +68,21 @@ public class WebSocketRealTime {
         System.out.println(info);
         // 리플렉션도 추가해보자.
         // Class<?> cls = Class.forName(obj.getClass().getName());
-        String method = (String) info.remove("method");
-        // 이거 ENUM으로 바꿔야함
-        if ("INIT".equals(method)) {
-            METHOD_INIT(session, info);
-        } else if ("CHANGE_DISTANCE".equals(method)) {
-            METHOD_CHANGE_DISTANCE(session, info);
-        } else if ("MAKE_RESERVATION".equals(method)) {
-            METHOD_MAKE_RESERVATION(session, info);
+        MethodType method = MethodType.valueOf((String) info.remove("method"));
+        if (method == null) {
+            session.getBasicRemote().sendText("메세지 형식을 지켜주세요.");
+            return;
+        }
+        switch (method) {
+            case INIT:
+                METHOD_INIT(session, info);
+                break;
+            case CHANGE_DISTANCE:
+                METHOD_CHANGE_DISTANCE(session, info);
+                break;
+            case MAKE_RESERVATION:
+                METHOD_MAKE_RESERVATION(session, info);
+                break;
         }
     }
 

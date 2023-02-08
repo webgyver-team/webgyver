@@ -1,6 +1,7 @@
 package com.ssafy.webgyver.websocket;
 
 
+import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.ssafy.webgyver.api.service.common.ReservationService;
 import com.ssafy.webgyver.config.WebSocketConfig;
@@ -37,15 +38,15 @@ public class WebSocketFaceTime {
         if (!rooms.containsKey(reservationIdx)) {
             System.out.println("noReservationIdx");
             Reservation reservation = reservationService.getReservation(reservationIdx);
+            // 올바르지 않은 입력일때 1. 예약번호 잘못 입력함
+            if (reservation == null) {
+                session.close();
+                return;
+            }
             addRoom(reservation);
-//            String msg = "해당 입장코드로 입장 가능한 방이 없습니다.";
-//            session.getBasicRemote().sendText(msg);
-//            CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.NOT_CONSISTENT, msg);
-//            session.close(closeReason);
-//            return;
         }
 
-        // 올바르지 않은 입력일때
+        // 올바르지 않은 입력일때2
         // ex) reservationIdx = 100, customerIdx = 1, sellerIdx = 2일때
         // 100번 예약으로 6번 소비자가 왔다던가, 1번 판매자가 왔다던가 등..
         Room room = rooms.get(reservationIdx);
@@ -96,6 +97,8 @@ public class WebSocketFaceTime {
         }
 
         Room room = extractRoom(session);
+        if (room == null)
+            return;
         room.leave(session);
         if (room.sessions.size() == 0) {
             rooms.remove(room.getReservation().getIdx());
@@ -104,13 +107,30 @@ public class WebSocketFaceTime {
     }
 
     @OnMessage
-    public void onMessage(String jsonMessage, Session session) {
-        Message message = MessageParsingUtil.parsingMessage(jsonMessage);
-        System.out.println(message.getMethod());
-        // 클라이언트로 받은 method명에 따라 할일 분기해야함
-        // 1. 화상통화 요청
+    public void onMessage(String jsonMessage, Session session) throws IOException {
+        Gson gson = new Gson();
+        Map<String, Object> info = gson.fromJson(jsonMessage, new TypeToken<Map<String, Object>>() {
+        }.getType());
+        System.out.println(info);
         Room room = extractRoom(session);
-        room.sendMessage(jsonMessage);
+//        room.sendMessage(jsonMessage);
+        MethodType method = MethodType.valueOf((String) info.remove("method"));
+        if (method == null) {
+            session.getBasicRemote().sendText("메세지 형식을 지켜주세요.");
+            return;
+        }
+//        room.sendMessageOther(jsonMessage, session);
+        Map<String, MethodType> reply = new HashMap<>();
+        switch (method) {
+            case WANT_MEET:
+                reply.put("method", MethodType.WANT_MEET);
+                break;
+            case ACCEPT_MEET:
+                reply.put("method", MethodType.ACCEPT_MEET);
+                break;
+        }
+        System.out.println(reply);
+        room.sendMessageOther(gson.toJson(reply), session);
     }
 
     @OnError
@@ -119,7 +139,10 @@ public class WebSocketFaceTime {
     }
 
     public Room extractRoom(Session session) {
-        long reservationIdx = (long) session.getUserProperties().get("reservationIdx");
+        Long reservationIdx = (Long) session.getUserProperties().get("reservationIdx");
+        if (reservationIdx == null)
+            return null;
+
         return rooms.get(reservationIdx);
     }
 
