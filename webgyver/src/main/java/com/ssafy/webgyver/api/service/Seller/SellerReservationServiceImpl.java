@@ -31,20 +31,21 @@ public class SellerReservationServiceImpl implements SellerReservationService{
     static List<SellerReservationListRes.ReservationDTO> todayList;
     @Override
     public SellerReservationListRes getSellerReservationList(SellerIdxReq req) {
-        // 현재 진행중인 상담
-        proceedingList = new ArrayList<>();
-        List<Reservation> reservationList  = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(req.getSellerIdx(), "4");
-        reservationState4ListMethod(reservationList);
+
         // 예약 대기중인 상담
         waitingList = new ArrayList<>();
-        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(req.getSellerIdx(), "1");
+        List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(req.getSellerIdx(), "1");
         reservationState1ListMethod(reservationList);
+        // 오늘 잡혀 있는 상담
         todayList = new ArrayList<>();
-        LocalDateTime today = LocalDateTime.now();
+        LocalDateTime today = LocalDateTime.now().plusDays(1);
         reservationList = reservationRepository.findReservationsBySellerIdxAndReservationTimeBeforeAndReservationState(req.getSellerIdx(), today, "2");
         reservationState2ListMethod(reservationList);
+        // 현재 진행중인 상담
+        proceedingList = new ArrayList<>();
+        reservationList  = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(req.getSellerIdx(), "4");
+        reservationState4ListMethod(reservationList);
         SellerReservationListRes res = SellerReservationListRes.of(200, "Success", proceedingList, waitingList, todayList);
-
         return res;
     }
     public void reservationState4ListMethod(List<Reservation> reservationList) {
@@ -141,11 +142,13 @@ public class SellerReservationServiceImpl implements SellerReservationService{
             if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
+                continue;
             }
             // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
             else if (!reservation.getReservationTime().isAfter(currentTime)) {
-                reservation.updateReservationState("6");
+                reservation.updateReservationState("4");
                 reservationRepository.save(reservation);
+                continue;
             }
             String title = null;    // 예약 제목
             String content = null; // 문의 내용
