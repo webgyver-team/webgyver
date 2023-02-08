@@ -95,7 +95,20 @@ export const chosenReservation = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+// 사례페이지 등록 모달 ON/OFF
 export const exampleFormState = atom({
   key: 'exampleFormState',
   default: false,
+});
+
+// 사례페이지 수정 모달 ON/OFF
+export const exampleEditState = atom({
+  key: 'exampleEditState',
+  default: false,
+});
+
+// 사례 수정용 데이터 전송
+export const exampleDataState = atom({
+  key: 'exampleDataState',
+  default: [],
 });

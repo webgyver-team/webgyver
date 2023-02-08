@@ -1,14 +1,28 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable operator-linebreak */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import { master } from '../../../../api/masterService';
+import { exampleEditState, exampleDataState } from '../../../../atom';
 
-export default function Example({ example }) {
+export default function Example({ example, setReload }) {
+  // 사례 작성 모달창 ON
+  const setExampleEditOpen = useSetRecoilState(exampleEditState);
+  // 사례 수정 데이터 보관
+  const setExampleDataOpen = useSetRecoilState(exampleDataState);
+  const editModalOpen = () => {
+    console.log('hi');
+    setExampleDataOpen(example);
+    setExampleEditOpen(true);
+  };
+
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -16,6 +30,26 @@ export default function Example({ example }) {
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
+  };
+  // console.log(example);
+
+  const deleteExample = () => {
+    const deleteExampleItem = async () => {
+      const { articleIdx } = example;
+      const response = await master.delete.example(articleIdx);
+
+      if (response.statusCode === 200) {
+        // eslint-disable-next-line no-alert
+        alert('사례가 삭제되었습니다.');
+        setReload(true);
+      } else {
+        // eslint-disable-next-line no-console
+        console.log(response);
+        // eslint-disable-next-line no-alert
+        alert('삭제에 실패하였습니다.');
+      }
+    };
+    deleteExampleItem();
   };
 
   return (
@@ -28,7 +62,6 @@ export default function Example({ example }) {
               <Slider {...slickSettings}>
                 {example.images.map((el) => (
                   <ImgBox key={el}>
-                    {console.log(el)}
                     <img
                       src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
                       alt={el.originName}
@@ -44,11 +77,11 @@ export default function Example({ example }) {
         </div>
       </ContentBox>
       <BtnBox>
-        <Btn>
+        <Btn onClick={editModalOpen}>
           <EditIcon fontSize="small" />
           <BtnText>수정</BtnText>
         </Btn>
-        <Btn color="#FF4444">
+        <Btn color="#FF4444" onClick={deleteExample}>
           <DeleteIcon fontSize="small" style={{ color: '#FF4444' }} />
           <BtnText style={{ color: '#FF4444' }}>삭제</BtnText>
         </Btn>
