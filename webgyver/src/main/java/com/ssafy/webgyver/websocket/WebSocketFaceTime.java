@@ -11,8 +11,11 @@ import com.ssafy.webgyver.util.TimeUtil;
 import com.ssafy.webgyver.websocket.dto.Message;
 import com.ssafy.webgyver.websocket.dto.MethodType;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.java.Log;
+import net.bytebuddy.asm.Advice;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -20,22 +23,31 @@ import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
+import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @Log
 @Component
 @ServerEndpoint(value = "/facetime/{type}/{idx}/{reservationIdx}", configurator = WebSocketConfig.class)
 @RequiredArgsConstructor
 public class WebSocketFaceTime {
+    @Value("${explore.machine.start.flag}")
+    String startFlag;
+    @Value("${explore.machine.fresh.second}")
+    String freshSecond;
+
     private static final Map<Long, Room> rooms = Collections.synchronizedMap(new HashMap<Long, Room>());
     private final ReservationService reservationService;
-
-
+    private static boolean runCheck = false;
+    private final Gson gson = new Gson();
 
     @OnOpen
     public void onOpen(Session session, @PathParam("type") String type, @PathParam("idx") Long idx, @PathParam("reservationIdx") Long reservationIdx) throws IOException {
+        // 폭발머신 출동!!!!!
+        startExplosionMachine();
+
         if (!rooms.containsKey(reservationIdx)) {
             System.out.println("noReservationIdx");
             Reservation reservation = reservationService.getReservation(reservationIdx);
@@ -176,5 +188,38 @@ public class WebSocketFaceTime {
     public Map<String, Object> roomInfo(long reservationIdx) {
         addRoom(reservationService.getReservation(reservationIdx));
         return rooms.get(reservationIdx).roomInfo();
+    }
+
+    public void startExplosionMachine() {
+        if (!runCheck) {
+            TimerTask task = new TimerTask() {
+                @SneakyThrows
+                @Override
+                public void run() {
+                    System.out.println("폭발머신 가동중!!!!!!!!!!!!!!!!");
+                    Set<Long> roomsKeySet = new HashSet<>(rooms.keySet());
+                    for (long key : roomsKeySet) {
+                        System.out.println(key + "번방 검사중...");
+                        Room room = rooms.get(key);
+                        LocalDateTime explorerReservationTime = room.getReservation().getReservationTime().plusMinutes(15);
+                        if (LocalDateTime.now().isAfter(explorerReservationTime)) {
+                            Map<String, Object> reply = new HashMap<>();
+                            reply.put("method", MethodType.TIME_OUT);
+                            reply.put("msg", "시간종료!! 폭팔!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                            room.sendMessage(gson.toJson(reply));
+                            room.explore();
+                            rooms.remove(key);
+                        }
+                    }
+                }
+            };
+            runCheck = true;
+            Timer timer = new Timer(true);
+            LocalDateTime now = LocalDateTime.now();
+            Date first = Date.from(now.withMinute((now.getMinute() / Integer.valueOf(startFlag) + 1) * Integer.valueOf(startFlag)).withSecond(0).atZone(ZoneId.systemDefault()).toInstant());
+            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+            System.out.println(first);
+            timer.schedule(task, first, Integer.valueOf(freshSecond) * 1000);
+        }
     }
 }

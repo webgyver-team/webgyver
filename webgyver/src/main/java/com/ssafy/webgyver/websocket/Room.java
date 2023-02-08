@@ -95,6 +95,13 @@ public class Room {
         }
     }
 
+    public void explore() {
+        Set<Session> copySessions = new HashSet<>(sessions);
+        for(Session session:copySessions){
+            leave(session);
+        }
+    }
+
 //    static String makeEnterCode(String cIdx, String sIdx) {
 //        return cIdx + sep + sIdx;
 //    }
