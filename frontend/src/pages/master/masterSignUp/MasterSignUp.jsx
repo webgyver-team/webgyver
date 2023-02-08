@@ -121,6 +121,7 @@ export default function MasterSignUp() {
     delete data.useCheck;
     const response = await master.signup(data);
     if (response.statusCode === 200) {
+      // eslint-disable-next-line no-alert
       alert('회원가입이 완료되었습니다.');
       const loginResponse = await master.login({
         id: data.id,

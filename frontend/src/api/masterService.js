@@ -8,7 +8,7 @@ export const master = {
       const response = await Send.get(`${masterURL}/mypage/intro/${id}`);
       return response;
     },
-    history: async (id) => {
+    example: async (id) => {
       const response = await Send.get(`${masterURL}/mypage/history/${id}`);
       return response;
     },
@@ -25,11 +25,8 @@ export const master = {
       );
       return response;
     },
-    example: async (data, idx) => {
-      const response = await Send.post(
-        `${masterURL}/mypage/history/${idx}`,
-        data,
-      );
+    example: async (data) => {
+      const response = await Send.post(`${masterURL}/mypage/history/`, data);
       return response;
     },
   },
@@ -44,6 +41,13 @@ export const master = {
     description: async (data, idx) => {
       const response = await Send.put(
         `${masterURL}/mypage/intro/description/${idx}`,
+        data,
+      );
+      return response;
+    },
+    example: async (data, idx) => {
+      const response = await Send.put(
+        `${masterURL}/mypage/history/${idx}`,
         data,
       );
       return response;
