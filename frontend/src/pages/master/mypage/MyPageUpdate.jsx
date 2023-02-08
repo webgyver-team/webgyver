@@ -204,8 +204,8 @@ export default function MyPageUpdate() {
       sendImageToS3(newBackgroundImage, 2);
     }
   };
-    // 데이터 POST
-    // eslint-disable-next-line
+  // 데이터 POST
+  // eslint-disable-next-line
 
   if (myPageData) {
     return (

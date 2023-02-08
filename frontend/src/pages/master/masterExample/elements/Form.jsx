@@ -24,7 +24,7 @@ const style = {
   p: 4,
 };
 
-export default function Form() {
+export default function Form({ setReload }) {
   // 폼 모달 ON/OFF 함수
   const [modalOpen, setModalOpen] = useRecoilState(exampleFormState);
   const modalClose = () => setModalOpen(false);
@@ -119,9 +119,11 @@ export default function Form() {
       const response = await master.post.example(data);
       // eslint-disable-next-line
       if (response.statusCode === 200) {
+        setReload(true);
         // eslint-disable-next-line
         alert('사례가 등록되었습니다.');
         modalClose();
+        setFormContent('');
       } else {
         // eslint-disable-next-line
         console.log(response);
@@ -158,7 +160,7 @@ export default function Form() {
             <ImageInput sendImageList={setImageList} />
             <NullBox />
             <Button variant="contained" onClick={registReview}>
-              리뷰 등록
+              사례 등록
             </Button>
             <ErrorMessage>{msgForContent}</ErrorMessage>
           </Body>

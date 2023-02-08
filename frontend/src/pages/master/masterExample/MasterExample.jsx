@@ -14,6 +14,9 @@ export default function MasterExample() {
     setModalOpen(true);
   };
 
+  // 새 글 작성시 리로드
+  const [reload, setReload] = useState(false);
+
   const NoData = <NoDataBox>아직 사례가 없습니다.</NoDataBox>;
 
   // 로드데이타
@@ -27,11 +30,12 @@ export default function MasterExample() {
     // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
     // eslint-disable-next-line
     loadExampleList();
-  }, [useId]);
+    setReload(false);
+  }, [useId, reload]);
 
   return (
     <Main>
-      <Form />
+      <Form setReload={setReload} />
       <BtnBox>
         <StateBtn onClick={modalOpen}>
           <span>작성하기</span>
@@ -40,7 +44,9 @@ export default function MasterExample() {
       <TableBox>
         {!exampleList.length && NoData}
         {exampleList &&
-          exampleList.map((el, i) => <Example key={i} history={el} />)}
+          exampleList
+            .reverse()
+            .map((el, i) => <Example key={i} example={el} />)}
       </TableBox>
     </Main>
   );

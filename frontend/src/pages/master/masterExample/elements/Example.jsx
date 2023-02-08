@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
 import styled from 'styled-components';
@@ -5,7 +6,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-export default function Example({ history }) {
+export default function Example({ example }) {
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -19,18 +20,21 @@ export default function Example({ history }) {
     <Card>
       <ContentBox>
         <div>
-          <SliderBox>
-            <Slider {...slickSettings}>
-              {history.images.map((el) => (
-                <ImgBox key={el}>
-                  <img src={el} alt="" />
-                </ImgBox>
-              ))}
-            </Slider>
-          </SliderBox>
+          {!example.images.length && <NoImgBox />}
+          {example.images && (
+            <SliderBox>
+              <Slider {...slickSettings}>
+                {example.images.map((el) => (
+                  <ImgBox key={el}>
+                    <img src={el} alt="" />
+                  </ImgBox>
+                ))}
+              </Slider>
+            </SliderBox>
+          )}
         </div>
         <div className="contentdiv">
-          <span className="content">{history.content}</span>
+          <span className="content">{example.content}</span>
         </div>
       </ContentBox>
     </Card>
@@ -89,4 +93,11 @@ const ContentBox = styled.div`
 
 const SliderBox = styled.div`
   width: 136px;
+`;
+
+const NoImgBox = styled.div`
+  width: 128px;
+  height: 120px;
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  margin: 0 4px 0 4px;
 `;

@@ -79,12 +79,23 @@ export default function Mypage() {
           <Money>₩ 1,000원</Money>
         </BtnBox>
       </div>
-      <MasterInfoBox backgroundImage={myPageData && `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.backgroundImage}`}>
+      <MasterInfoBox
+        backgroundImage={
+          myPageData
+          && `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.backgroundImage}`
+        }
+      >
         <EditBox2>
           <MoreBtn2 onClick={routeMyPageUpdate}>개인정보 수정</MoreBtn2>
         </EditBox2>
         <MasterImgBox>
-          <img src={myPageData && `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.profileImage}`} alt="마스터얼굴" />
+          <img
+            src={
+              myPageData
+              && `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.profileImage}`
+            }
+            alt="마스터얼굴"
+          />
         </MasterImgBox>
         <InfoBox>
           <InfoTextBox>
