@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
 import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
+import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.db.entity.*;
@@ -12,6 +13,7 @@ import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
+import com.ssafy.webgyver.db.repository.customer.CustomerRepository;
 import com.ssafy.webgyver.util.PictureParsingUtil;
 import com.ssafy.webgyver.util.ReservationParsingUtil;
 import com.ssafy.webgyver.util.TimeUtil;
@@ -35,6 +37,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     final PictureRepository pictureRepository;
     final SellerCategoryRepository sellerCategoryRepository;
     final SellerRepository sellerRepository;
+    final CustomerRepository customerRepository;
 
     @Override
     @Transactional
@@ -137,6 +140,20 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         reservationListMethod(reservationList);
         CustomerReservationListRes res = CustomerReservationListRes.of(200, "Success",
                 reservationDTOList);
+        return res;
+    }
+
+    @Override
+    public CustomerAddressRes getCustomerAddress(CustomerIdxReq req) {
+        Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
+        CustomerAddressRes res;
+        if (customer.getAddress() == null){
+            res = CustomerAddressRes.of(200, "null address", null);
+        } else {
+            CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
+            res = CustomerAddressRes.of(200, "have address", response);
+        }
+
         return res;
     }
 
