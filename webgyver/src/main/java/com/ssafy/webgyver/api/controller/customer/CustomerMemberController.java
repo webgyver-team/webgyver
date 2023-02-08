@@ -38,5 +38,4 @@ public class CustomerMemberController {
         BaseResponseBody result = customerMemberService.checkDuplicate(req);
         return ResponseEntity.ok().body(result);
     }
-
 }

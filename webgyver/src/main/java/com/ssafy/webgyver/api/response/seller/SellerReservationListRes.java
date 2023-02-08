@@ -55,15 +55,15 @@ public class SellerReservationListRes extends DataResponseBody {
         }
     }
 
-    public static SellerReservationListRes of(Integer statusCode, String message, List<ReservationDTO> reservationList) {
+    public static SellerReservationListRes of(Integer statusCode, String message, List<ReservationDTO> proceedingList, List<ReservationDTO> waitingList, List<ReservationDTO> todayList) {
         SellerReservationListRes res = new SellerReservationListRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
         // 예약 정보 넣기
 //        Response response = new Response(reservationList);
-
-        res.getData().put("reservationList", reservationList);
-
+        res.getData().put("proceedList", proceedingList);
+        res.getData().put("waitingList", waitingList);
+        res.getData().put("todayList", todayList);
         return res;
     }
 }

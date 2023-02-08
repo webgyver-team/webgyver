@@ -13,4 +13,7 @@ public class CustomerMypageReq {
     String phoneNumber;
     String birth;
     String cardNumber;
+    String cardValidity;
+    String password;
+    String profileImage;
 }

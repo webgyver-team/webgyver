@@ -1,8 +1,6 @@
 package com.ssafy.webgyver.api.response.customer;
 
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
-import com.ssafy.webgyver.db.entity.Customer;
-import com.ssafy.webgyver.db.entity.Reservation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
@@ -28,9 +26,9 @@ public class CustomerReservationListRes extends DataResponseBody {
         private LocalDateTime reservationTime;
         private String content;
         private String storeName;
-        private List<PictureDTO> pictureList;
-        private String state;
-        private String type;
+        private List<PictureDTO> imageList;
+        private Long state;
+        private Long type;
 
         public ReservationDTO(Long reservationIdx, String title, LocalDateTime time, String content, String storeName, List<PictureDTO> pictureList, String state, String type) {
             this.reservationIdx = reservationIdx;
@@ -38,20 +36,20 @@ public class CustomerReservationListRes extends DataResponseBody {
             this.reservationTime = time;
             this.content = content;
             this.storeName = storeName;
-            this.pictureList = pictureList;
-            this.state = state;
-            this.type = type;
+            this.imageList = pictureList;
+            this.state = Long.parseLong(state);
+            this.type = Long.parseLong(type);
         }
     }
     @Getter
     @NoArgsConstructor
     public static class PictureDTO{
-        private Long pictureIdx;
+        private Long imageIdx;
         private String originName;
         private String saveName;
 
         public PictureDTO(Long pictureIdx, String originName, String saveName) {
-            this.pictureIdx = pictureIdx;
+            this.imageIdx = pictureIdx;
             this.originName = originName;
             this.saveName = saveName;
         }
@@ -62,10 +60,7 @@ public class CustomerReservationListRes extends DataResponseBody {
         res.setStatusCode(statusCode);
         res.setMessage(message);
         // 예약 정보 넣기
-//        Response response = new Response(reservationList);
-
         res.getData().put("reservationList", reservationList);
-
         return res;
     }
 }

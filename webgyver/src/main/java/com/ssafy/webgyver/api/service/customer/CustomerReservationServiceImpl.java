@@ -179,7 +179,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public void reservationState4ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
-            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
+            if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("5");
                 reservationRepository.save(reservation);
             } else {
@@ -267,15 +267,18 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public void reservationState2ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
+            boolean addFirst = false;
             // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
             if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
+                continue;
             }
             // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
             else if (reservation.getReservationTime().isAfter(currentTime)) {
-                reservation.updateReservationState("6");
+                reservation.updateReservationState("4");
                 reservationRepository.save(reservation);
+                addFirst = true;
             }
             String title = null;    // 예약 제목
             String content = null; // 문의 내용
@@ -306,7 +309,11 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                     reservation.getReservationState(),
                     reservation.getReservationType()
             );
-            reservationDTOList.add(reservationDTO);
+            if (addFirst) {
+                reservationDTOList.add(0, reservationDTO);
+            } else {
+                reservationDTOList.add(reservationDTO);
+            }
         }
     }
 }

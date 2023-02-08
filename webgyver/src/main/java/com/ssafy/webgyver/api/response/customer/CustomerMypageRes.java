@@ -15,22 +15,20 @@ public class CustomerMypageRes extends DataResponseBody {
     @NoArgsConstructor
     static class Response {
         private Long idx;
-        private String id;
         private String name;
         private String phoneNumber;
         private LocalDateTime birth;
         private String cardNumber;
-        private String profileImage;
 
         public Response(Customer customer) {
             this.idx = customer.getIdx();
-            this.id = customer.getId();
             this.name = customer.getName();
             this.phoneNumber = customer.getPhoneNumber();
             this.birth = customer.getBirthDay();
             this.cardNumber = customer.getCardNumber();
         }
     }
+
     public static CustomerMypageRes of(Integer statusCode, String message, Customer profile) {
         CustomerMypageRes res = new CustomerMypageRes();
         res.setStatusCode(statusCode);
