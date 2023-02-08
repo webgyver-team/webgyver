@@ -125,6 +125,12 @@ export default function Reservation() {
         lng: location.longitude,
         date: date.replaceAll('-', ''),
       };
+      if (data.categoryIdx === null) {
+        // eslint-disable-next-line
+        alert('상담할 카테고리를 선택하세요.');
+        navigate('/');
+        return;
+      }
       // eslint-disable-next-line
       const response = await customer.get.stores(type, data);
       setStoreList(response.data.storeList);
@@ -132,7 +138,7 @@ export default function Reservation() {
     // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
     // eslint-disable-next-line
     loadStoreList();
-  }, [location, date, category, type]);
+  }, [location, date, category, type, navigate]);
 
   return (
     <Main>

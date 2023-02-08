@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { async } from 'q';
 import Send from './send';
 
 const customerURL = '/api/v1/customer';
@@ -20,6 +19,14 @@ export const customer = {
       const response = await Send.get(
         `${customerURL}/reservation/completed/list/${idx}`,
       );
+      return response;
+    },
+    myInfo: async (idx) => {
+      const response = await Send.get(`${customerURL}/mypage/profile/${idx}`);
+      return response;
+    },
+    myReview: async (idx) => {
+      const response = await Send.get(`${customerURL}/mypage/review/${idx}`);
       return response;
     },
   },

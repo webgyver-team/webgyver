@@ -27,6 +27,9 @@ export default function ReservationHistory() {
       {histories.map((history) => (
         <CardView key={history} history={history} />
       ))}
+      {histories.length > 0 ? null : (
+        <NoHistoryMessage>예약 내역이 없습니다.</NoHistoryMessage>
+      )}
     </Main>
   );
 }
@@ -54,10 +57,11 @@ function CardView({ history }) {
 
   const currentState = [
     '',
-    '수락대기중',
-    '예약취소',
-    '예약확정',
-    '화상상담하기',
+    '수락 대기중',
+    '예약 확정',
+    '예약 취소',
+    '화상 상담하기',
+    '상담 완료',
   ];
   const date = history.reservationTime.split(' ')[0].split('-');
   const time = history.reservationTime.split(' ')[1].split(':');
@@ -71,7 +75,7 @@ function CardView({ history }) {
       <ContentBox>
         <div className="contentdiv">
           <p className="date">{`일시: ${date[0]}년 ${date[1]}월 ${date[2]}일 ${time[0]}시 ${time[1]}분`}</p>
-          <p className="company">{`업체: ${history.storeName}`}</p>
+          <p className="company">{`업체: ${history.companyName}`}</p>
           <span className="content">
             {contentOverLimit && !isShowMore ? shortComment : history.content}
           </span>
@@ -96,9 +100,13 @@ function CardView({ history }) {
           </SliderBox>
           <BtnBox>
             <StateBtn>
-              <span onClick={routeVideoService}>
-                {currentState[history.state]}
-              </span>
+              {history.state === 4 ? (
+                <span onClick={routeVideoService}>
+                  {currentState[history.state]}
+                </span>
+              ) : (
+                <span>{currentState[history.state]}</span>
+              )}
             </StateBtn>
           </BtnBox>
         </div>
@@ -208,4 +216,13 @@ const StateBtn = styled.div`
     cursor: pointer;
     background-color: ${(props) => props.theme.color.dafaultBorder};
   }
+`;
+
+const NoHistoryMessage = styled.p`
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: 18px;
 `;
