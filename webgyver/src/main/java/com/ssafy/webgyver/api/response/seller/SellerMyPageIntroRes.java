@@ -21,7 +21,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         private String companyNumber;
         private String companyDescription;
         private List<CompanyTimeDTO> companyTime;
-        private List<CategoryDTO> category;
+        private List<CategoryDTO> categoryList;
         private String profileImage;
         private String backgroundImage;
         private String ratingAvg;
@@ -36,7 +36,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
             this.companyNumber = entity.getCompanyNumber();
             this.companyDescription = entity.getCompanyDescription();
             this.companyTime = companyTimeDTOList;
-            this.category = categoryDTOList;
+            this.categoryList = categoryDTOList;
             this.profileImage = entity.getProfileImage();
             this.backgroundImage = entity.getCompanyImage();
             this.ratingAvg = String.valueOf(Math.round(((double) entity.getStarTotal() / entity.getReviewCount()) * 100.0) / 100.0);
@@ -46,9 +46,15 @@ public class SellerMyPageIntroRes extends DataResponseBody {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
-    public static class CategoryDTO{
+    public static class Category{
         private Long idx;
         private String categoryName;
+    }
+    @Getter
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class CategoryDTO{
+        private Category category;
         private Integer price;
 
     }
