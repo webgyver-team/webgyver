@@ -120,7 +120,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         List<SellerCategory> categories = seller.getSellerCategories();
         List<SellerMyPageIntroRes.CategoryDTO> categoryDTOList = new ArrayList<>();
         for (SellerCategory temp : categories) {
-            categoryDTOList.add(new SellerMyPageIntroRes.CategoryDTO(temp.getIdx(), temp.getCategory().getCategoryName(), temp.getPrice()));
+            categoryDTOList.add(new SellerMyPageIntroRes.CategoryDTO(new SellerMyPageIntroRes.Category(temp.getCategory().getIdx(), temp.getCategory().getCategoryName()), temp.getPrice()));
         }
         ///// 끝
         SellerMyPageIntroRes result = SellerMyPageIntroRes.of(200, "Success", seller, companyTimeDTOList, categoryDTOList);
@@ -142,9 +142,13 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     public BaseResponseBody updateSellerTime(SellerIdxReq req, SellerTimeUpdateReq timeReq) {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         String timeString = "";
-        for (int i = 0; i < 8; i++) {
-            System.out.println(timeReq.getCompanyTime().get(i));
-            timeString += timeReq.getCompanyTime().get(i).getDay() + "$" + timeReq.getCompanyTime().get(i).getTime() + "%";
+        for (int i = 0; i < 8; i++){
+            if (timeReq.getCompanyTime().get(i).getHoliday()){
+                timeString += timeReq.getCompanyTime().get(i).getDay() + "$휴일%";
+            } else {
+                timeString += timeReq.getCompanyTime().get(i).getDay() + "$"
+                        + timeReq.getCompanyTime().get(i).getOpen() + "~" + timeReq.getCompanyTime().get(i).getClose() + "%";
+            }
         }
         seller.updateSellerTime(timeString);
         sellerRepository.save(seller);

@@ -52,6 +52,8 @@ public class SellerServiceImpl implements SellerService {
                 .lng(sellerRegisterInfo.getLng())
                 .point(0)
                 .sellerCategories(sellerRegisterInfo.getCategoryList())
+                .companyImage("defaultBgImage.png")
+                .profileImage("defaultProfileImage.png")
                 .build();
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
         Seller sellerRes = sellerRepository.save(seller);

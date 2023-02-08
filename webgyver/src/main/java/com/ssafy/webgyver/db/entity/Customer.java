@@ -51,4 +51,9 @@ public class Customer extends BaseEntity {
     @Column(name = "phone_number")
     private String phoneNumber;
 
+    @Column(name = "customer_key")
+    private String customerKey;
+
+    @Column(name = "billing_key")
+    private String billingKey;
 }

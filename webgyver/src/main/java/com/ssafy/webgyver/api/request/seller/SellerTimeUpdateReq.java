@@ -15,7 +15,9 @@ public class SellerTimeUpdateReq {
     @Getter
     public static class CompanyTime{
         String day;
-        String time;
+        String open;
+        String close;
+        Boolean holiday;
     }
     private List<CompanyTime> companyTime = new ArrayList<>();
 }
