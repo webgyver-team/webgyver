@@ -46,6 +46,7 @@ public class HistoryListRes extends DataResponseBody {
     public static HistoryListRes of(Integer statusCode, String message, List<Article> articleList, Map<Long, List<Picture>> pictureMap) {
         HistoryListRes res = new HistoryListRes();
 
+
         List<History> historyList = articleList.stream().map(History::new).collect(Collectors.toList());
         for (History history : historyList) {
             List<PictureRes> temp = new ArrayList<>();
