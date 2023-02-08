@@ -1,29 +1,35 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import ReviewImg1 from '../../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../../assets/image/review3.jpg';
+import { customer } from '../../../../api/customerService';
+import { userIdx } from '../../../../atom';
+import WhiteImage from '../../../../assets/image/white.png';
 
 export default function CompleteHistory() {
-  const [historys] = useState([
-    {
-      title: '뜨거운 물이 나오지 않는 건에 대하여',
-      content:
-        '수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!',
-      date: '01월 28일 09:00',
-      images: [ReviewImg1, ReviewImg2, ReviewImg3],
-      company: '수리Ssap고수Shop',
-    },
-  ]);
-
+  const [histories, setHistories] = useState([]);
+  const customerIdx = useRecoilValue(userIdx);
+  useEffect(() => {
+    const getHistory = async () => {
+      const response = await customer.get.completeHistory(customerIdx);
+      if (response.statusCode === 200) {
+        setHistories(response.data.reservationList);
+      }
+    };
+    getHistory();
+    // disable-eslint-next-line
+  }, [customerIdx]);
   return (
     <Main>
-      <CardView history={historys[0]} />
-      <CardView history={historys[0]} />
+      {histories.map((history) => (
+        <CardView key={history.reservationIdx} history={history} />
+      ))}
+      {histories.length > 0 ? null : (
+        <NoHistoryMessage>완료 내역이 없습니다.</NoHistoryMessage>
+      )}
     </Main>
   );
 }
@@ -41,40 +47,64 @@ function CardView({ history }) {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-
+  const [contentOverLimit] = useState(history.content.length > 50);
   const [isShowMore, setIsShowMore] = useState(false);
   const shortComment = history.content.slice(0, 50);
   const onChangeShowMore = () => {
     setIsShowMore(!isShowMore);
   };
 
-  const currentState = ['예약상담', '바로상담', '방문예약'];
-
+  const currentType = ['예약상담', '바로상담', '방문예약'];
+  const currentState = [
+    '',
+    '수락 대기중',
+    '예약 확정',
+    '예약 취소',
+    '화상 상담하기',
+    '상담 완료',
+  ];
+  const date = history.reservationTime.split(' ')[0].split('-');
+  const time = history.reservationTime.split(' ')[1].split(':');
   return (
     <Card>
       <p className="title">{history.title}</p>
       <ContentBox>
         <div className="contentdiv">
-          <p className="date">{`상담유형: ${currentState[1]}`}</p>
-          <p className="date">{`일시: ${history.date}`}</p>
-          <p className="company">{`업체: ${history.company}`}</p>
+          <p className="date">{`상담유형: ${currentType[history.type]}`}</p>
+          <p className="date">{`일시: ${date[0]}년 ${date[1]}월 ${date[2]}일 ${time[0]}시 ${time[1]}분`}</p>
+          <p className="company">{`업체: ${history.companyName}`}</p>
           <span className="content">
-            {isShowMore ? history.content : shortComment}
+            {contentOverLimit && !isShowMore ? shortComment : history.content}
           </span>
-          <MoreBtn type="button" onClick={onChangeShowMore}>
-            {isShowMore ? '[닫기]' : '[더보기]'}
-          </MoreBtn>
+          {contentOverLimit ? (
+            <MoreBtn type="button" onClick={onChangeShowMore}>
+              {isShowMore ? '[닫기]' : '[더보기]'}
+            </MoreBtn>
+          ) : null}
         </div>
         <div>
           <SliderBox>
             <Slider {...slickSettings}>
-              {history.images.map((el) => (
+              {history.imageList.length === 0 ? (
                 <ImgBox>
-                  <img src={el} alt="" />
+                  <NoImage src={WhiteImage} alt="" />
+                </ImgBox>
+              ) : null}
+              {history.imageList.map((image) => (
+                <ImgBox key={image}>
+                  <img
+                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${image.saveName}`}
+                    alt=""
+                  />
                 </ImgBox>
               ))}
             </Slider>
           </SliderBox>
+          <BtnBox>
+            <StateBtn>
+              <span>{currentState[history.state]}</span>
+            </StateBtn>
+          </BtnBox>
         </div>
       </ContentBox>
     </Card>
@@ -115,7 +145,6 @@ const Card = styled.div`
 const ImgBox = styled.div`
   position: relative;
   height: 120px;
-
   img {
     position: absolute;
     top: 0;
@@ -155,4 +184,37 @@ const MoreBtn = styled.button`
   :hover {
     cursor: pointer;
   }
+`;
+const BtnBox = styled.div`
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 8px;
+`;
+
+const StateBtn = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  padding: 0 16px 0 16px;
+  height: 40px;
+  width: 126px;
+  box-shadow: 1px 1px 4px 0px ${(props) => props.theme.color.dafaultBorder};
+  background-color: ${(props) => props.theme.color.defaultBgColor};
+`;
+const NoHistoryMessage = styled.p`
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: 18px;
+`;
+
+const NoImage = styled.img`
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
 `;

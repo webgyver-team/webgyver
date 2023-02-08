@@ -43,7 +43,6 @@ export default function Reservation() {
 
   // 날짜 선택했을 때 실행되는 함수
   const handleDate = (value) => {
-    console.log(value);
     if (date !== value) {
       // 이전과 다른날짜를 선택했을 때
       if (clickedTimeButton !== null) {
@@ -126,6 +125,12 @@ export default function Reservation() {
         lng: location.longitude,
         date: date.replaceAll('-', ''),
       };
+      if (data.categoryIdx === null) {
+        // eslint-disable-next-line
+        alert('상담할 카테고리를 선택하세요.');
+        navigate('/');
+        return;
+      }
       // eslint-disable-next-line
       const response = await customer.get.stores(type, data);
       setStoreList(response.data.storeList);
@@ -133,7 +138,7 @@ export default function Reservation() {
     // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
     // eslint-disable-next-line
     loadStoreList();
-  }, [location, date, category, type]);
+  }, [location, date, category, type, navigate]);
 
   return (
     <Main>

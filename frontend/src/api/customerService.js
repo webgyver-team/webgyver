@@ -11,6 +11,24 @@ export const customer = {
       );
       return response;
     },
+    reservationHistory: async (idx) => {
+      const response = await Send.get(`${customerURL}/reservation/list/${idx}`);
+      return response;
+    },
+    completeHistory: async (idx) => {
+      const response = await Send.get(
+        `${customerURL}/reservation/completed/list/${idx}`,
+      );
+      return response;
+    },
+    myInfo: async (idx) => {
+      const response = await Send.get(`${customerURL}/mypage/profile/${idx}`);
+      return response;
+    },
+    myReview: async (idx) => {
+      const response = await Send.get(`${customerURL}/mypage/review/${idx}`);
+      return response;
+    },
   },
   post: {
     reviews: async (data) => {
