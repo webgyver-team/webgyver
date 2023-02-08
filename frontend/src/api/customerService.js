@@ -43,4 +43,13 @@ export const customer = {
       return response;
     },
   },
+  put: {
+    profile: async (data, idx) => {
+      const response = await Send.put(
+        `${masterURL}/mypage/profile/${idx}`,
+        data,
+      );
+      return response;
+    },
+  },
 };
