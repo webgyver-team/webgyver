@@ -3,12 +3,12 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable array-callback-return */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
-import LimHS from '../../../assets/image/LimHS.png';
-import Background from '../../../assets/image/MasterBackground.jpg';
+// import LimHS from '../../../assets/image/LimHS.png';
+// import Background from '../../../assets/image/MasterBackground.jpg';
 import Info from './elements/Info';
 import TimePicker from './elements/TimePicker';
 import { master } from '../../../api/masterService';
@@ -19,7 +19,7 @@ export default function Mypage() {
   const [idx] = useRecoilState(userIdx);
   const [myPageData, setMyPageData] = useState(null);
   const [businessHoursOpen, setBusinessHoursOpen] = useState(false);
-  useEffect(() => {
+  useLayoutEffect(() => {
     const getMyPageData = async () => {
       const response = await master.get.myPage(idx);
       setMyPageData(response.data.profile);
@@ -79,12 +79,12 @@ export default function Mypage() {
           <Money>₩ 1,000원</Money>
         </BtnBox>
       </div>
-      <MasterInfoBox>
+      <MasterInfoBox backgroundImage={myPageData && `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.backgroundImage}`}>
         <EditBox2>
           <MoreBtn2 onClick={routeMyPageUpdate}>개인정보 수정</MoreBtn2>
         </EditBox2>
         <MasterImgBox>
-          <img src={LimHS} alt="마스터얼굴" />
+          <img src={myPageData && `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.profileImage}`} alt="마스터얼굴" />
         </MasterImgBox>
         <InfoBox>
           <InfoTextBox>
@@ -118,7 +118,7 @@ export default function Mypage() {
         </div>
         <div>
           <DetailTitle>상호명</DetailTitle>
-          <DetailContent>{myPageData && myPageData.storeName}</DetailContent>
+          <DetailContent>{myPageData && myPageData.companyName}</DetailContent>
         </div>
         <div>
           <DetailTitle>사업자주소</DetailTitle>
@@ -142,7 +142,7 @@ export default function Mypage() {
               <div key={`hour-${i}`}>
                 <DetailTitle key={`title-${i}`}>{el.day}</DetailTitle>
                 <DetailContent key={`content-${i}`}>
-                  {`${el.open} - ${el.close}`}
+                  {el.holiday ? '휴무' : `${el.open} - ${el.close}`}
                 </DetailContent>
               </div>
             ))}
@@ -156,9 +156,9 @@ export default function Mypage() {
         </BusinessBox>
         <BusinessHoursBox>
           {myPageData
-            && myPageData.category.map((item, i) => (
+            && myPageData.categoryList.map((item, i) => (
               <div key={i}>
-                <DetailTitle>{item.categoryName}</DetailTitle>
+                <DetailTitle>{item.category.categoryName}</DetailTitle>
                 <DetailContent>{`${item.price}원`}</DetailContent>
               </div>
             ))}
@@ -216,7 +216,7 @@ const MasterInfoBox = styled.div`
   height: 152px;
   padding: 16px;
   background-image: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)),
-    url(${Background});
+    url(${(props) => props.backgroundImage});
   background-size: cover;
   background-position center center;
 `;

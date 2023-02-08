@@ -94,7 +94,7 @@ export default function MasterVideoService() {
   };
 
   useEffect(() => {
-    getUserCameraMain();
+    getUserCameraSub();
   }, [myMainScreen, mySubScreen]);
 
   const changeScreen = () => {
