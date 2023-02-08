@@ -2,6 +2,8 @@ package com.ssafy.webgyver.db.repository.common;
 
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.db.entity.Seller;
+import java.time.LocalDate;
+import java.util.Date;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDateTime;
@@ -17,6 +19,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
     List<Reservation> findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(Long idx, String type);
     List<Reservation> findReservationsByCustomerIdxAndReservationStateIsInOrderByReservationTimeDesc(Long idx, String[] reservationState);
     List<Reservation> findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(Long idx, String type);
-//    List<Reservation> findReservationsBySellerIdxAndReservationTime
+    List<Reservation> findReservationsBySellerIdxAndReservationTimeBeforeAndReservationState(Long idx, LocalDateTime today, String state);
 
 }
