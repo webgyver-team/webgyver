@@ -16,7 +16,7 @@ public class SellerProfileUpdateReq {
     private String backgroundImage;
     private String password;
     private String phoneNumber;
-    private String storeName;
+    private String companyName;
     private String partnerName;
     private String companyNumber;
     private String address;
