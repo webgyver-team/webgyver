@@ -1,10 +1,10 @@
 package com.ssafy.webgyver.api.controller.seller;
 
-import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
+import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
-import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
 import com.ssafy.webgyver.api.service.Seller.SellerReservationService;
+import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +22,11 @@ public class SellerReservationController {
         SellerReservationListRes res = sellerReservationService.getSellerReservationList(idxReq);
         return ResponseEntity.ok(res);
     }
-//    @PutMapping("/accept/{reservationIdx}")
+    @PutMapping("/accept/{reservationIdx}/{acceptFlag}")
+    public ResponseEntity<?> updateReservationState(@PathVariable Long reservationIdx, @PathVariable boolean acceptFlag){
+        SellerAcceptReservationReq req = new SellerAcceptReservationReq(reservationIdx, acceptFlag);
+        BaseResponseBody res = sellerReservationService.updateAcceptReservation(req);
+        return ResponseEntity.ok().body(res);
+    }
 
 }

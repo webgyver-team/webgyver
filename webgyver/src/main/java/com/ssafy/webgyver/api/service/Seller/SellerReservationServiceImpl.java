@@ -1,8 +1,10 @@
 package com.ssafy.webgyver.api.service.Seller;
 
+import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
+import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
 import com.ssafy.webgyver.db.entity.Reservation;
@@ -48,6 +50,47 @@ public class SellerReservationServiceImpl implements SellerReservationService{
         SellerReservationListRes res = SellerReservationListRes.of(200, "Success", proceedingList, waitingList, todayList);
         return res;
     }
+
+    @Override
+    public BaseResponseBody updateAcceptReservation(SellerAcceptReservationReq req) {
+        LocalDateTime now = LocalDateTime.now();
+        BaseResponseBody res;
+        Reservation reservation = reservationRepository.findById(req.getIdx()).get();
+        if (!reservation.getReservationState().equals("1")) {
+            res = BaseResponseBody.of(200, "이미 상태가 변경됐습니다.");
+            return res;
+        }
+        if (reservation.getUpdatedAt().plusMinutes(5).isAfter(now)){
+            reservation.updateReservationState("3");
+            reservationRepository.save(reservation);
+            res = BaseResponseBody.of(200, "승낙 가능한 시간이 지났습니다.");
+            return res;
+        }else {
+            // 승낙
+            if (req.isAcceptFlag()) {
+                reservation.updateReservationState("2");
+                res = BaseResponseBody.of(200, "승낙 성공");
+                List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(reservation.getSeller().getIdx(), "1");
+                for (Reservation tempReservation : reservationList) {
+                    if (tempReservation.getIdx() == reservation.getIdx()) continue;
+                    // 예약 시간이 같은데 하나 승낙 했으면 나머지 state 3으로 변경
+                    if (tempReservation.getReservationTime().isEqual(reservation.getReservationTime())){
+                        tempReservation.updateReservationState("3");
+                        reservationRepository.save(tempReservation);
+                    }
+                }
+                return res;
+            }
+            // 거절
+            else {
+                reservation.updateReservationState("3");
+                reservationRepository.save(reservation);
+                res = BaseResponseBody.of(200, "거절 성공");
+                return res;
+            }
+        }
+    }
+
     public void reservationState4ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
