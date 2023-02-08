@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 // eslint-disable-next-line object-curly-newline
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import styled from 'styled-components';
@@ -8,7 +9,7 @@ import './Match.scss';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { locateValueState } from '../../../atom';
+import { locateValueState, categoryState } from '../../../atom';
 
 // kakao 가져오기
 const { kakao } = window;
@@ -16,11 +17,67 @@ const { kakao } = window;
 export default function Matching() {
   const navigate = useNavigate();
   const routeMatchForm = () => navigate('/match/form');
+  const categoryIdx = useRecoilValue(categoryState);
   const locateValue = useRecoilValue(locateValueState);
+  const webSocketAddress = 'ws://localhost:9000/realtime/customer/1';
 
   // map resizer
   const MainScreenRef = useRef(null);
   const [mainScreenWidth, setMainScreenWidth] = useState('100%');
+  useLayoutEffect(() => {
+    const gWebSocket = new WebSocket(webSocketAddress);
+    gWebSocket.onopen = () => {
+      // 첫 접속
+      const socketData = JSON.stringify({
+        method: 'INIT',
+        categoryIdx,
+        lng: Math.random(),
+        lat: Math.random(),
+        address: '대전 서구 청사로 253',
+        detailAddress: '111-2222',
+        title: '물이 안나와요',
+        content:
+          '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n손이 너무 더러운디 씻을수가 없어유\n',
+        images: [
+          {
+            saveName: 'test123',
+            originName: 'test123',
+          },
+          {
+            saveName: 'asdf123',
+            originName: 'asdf123',
+          },
+        ],
+        price: 500,
+        viewDistance: 2,
+      });
+      gWebSocket.send(socketData);
+    };
+    /**
+     * 웹소켓 메시지(From Server) 수신하는 경우 호출
+     */
+    gWebSocket.onmessage = (message) => {
+      const socketData = JSON.parse(message.data);
+      console.log(socketData);
+      // addLineToChatBox(JSON.stringify(data));
+      // addLineToChatBox('-----------------------------');
+    };
+
+    /**
+     * 웹소켓 사용자 연결 해제하는 경우 호출
+     */
+    gWebSocket.onclose = function () {
+      // addLineToChatBox('Server is disconnected.');
+    };
+
+    /**
+     * 웹소켓 에러 발생하는 경우 호출
+     */
+    gWebSocket.onerror = function () {
+      // addLineToChatBox('Error!');
+    };
+  }, []);
+
   useLayoutEffect(() => {
     const handleResize = () => {
       setMainScreenWidth(MainScreenRef.current.offsetWidth);
@@ -116,13 +173,7 @@ export default function Matching() {
     </Main>
   );
 }
-
-const Main = styled.div`
-  position: relative;
-  width: 100%;
-  height: 100%;
-`;
-
+const Main = styled.div``;
 const MapBox = styled.div`
   position: relative;
   z-index: 10;

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import ReviewImg1 from '../../../assets/image/review1.jpg';
 import ReviewImg2 from '../../../assets/image/review2.jpg';
@@ -15,6 +15,43 @@ export default function MasterSchedule() {
       images: [ReviewImg1, ReviewImg2, ReviewImg3],
     },
   ]);
+  const [gWebSocket, setgWebSocket] = useState(null);
+  const webSocketAddress = 'ws://localhost:9000/realtime/customer/1';
+  useLayoutEffect(() => {
+    setgWebSocket(new WebSocket(webSocketAddress));
+    gWebSocket.onopen = () => {
+      // 첫 접속
+      const socketData = JSON.stringify({
+        method: 'INIT',
+        lng: Math.random(),
+        lat: Math.random(),
+      });
+      gWebSocket.send(socketData);
+    };
+    /**
+     * 웹소켓 메시지(From Server) 수신하는 경우 호출
+     */
+    gWebSocket.onmessage = (message) => {
+      const socketData = JSON.parse(message.data);
+      console.log(socketData);
+      // addLineToChatBox(JSON.stringify(data));
+      // addLineToChatBox('-----------------------------');
+    };
+
+    /**
+     * 웹소켓 사용자 연결 해제하는 경우 호출
+     */
+    gWebSocket.onclose = () => {
+      // addLineToChatBox('Server is disconnected.');
+    };
+
+    /**
+     * 웹소켓 에러 발생하는 경우 호출
+     */
+    gWebSocket.onerror = () => {
+      // addLineToChatBox('Error!');
+    };
+  }, [gWebSocket]);
 
   return (
     <Main>
