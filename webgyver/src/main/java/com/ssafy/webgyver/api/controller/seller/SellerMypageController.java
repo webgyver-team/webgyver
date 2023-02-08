@@ -51,7 +51,7 @@ public class SellerMypageController {
 //            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
     ) {
         ArticleAllReq articleAllReq = new ArticleAllReq();
-        articleAllReq.setType(new Long((int)request.get("type")));
+        articleAllReq.setType(new Long((int) request.get("type")));
         articleAllReq.setContent((String) request.get("content"));
 
         PictureListReq pictureListReq = new PictureListReq();
@@ -92,14 +92,12 @@ public class SellerMypageController {
     }
 
     @DeleteMapping("/history/{articleIdx}")
-    public ResponseEntity<BaseResponseBody> deleteHistory(@PathVariable("articleIdx") Long articleIdx, ArticleIdxReq req) {
-        log.info("{}", req);
-        try {
-            sellerMypageService.deleteHistory(req);
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
-        }
+    public ResponseEntity<BaseResponseBody> deleteHistory(@PathVariable("articleIdx") long articleIdx) {
+        ArticleIdxReq req = new ArticleIdxReq();
+        req.setArticleIdx(articleIdx);
+        log.info("!!!!!!!!!!!!!!!!!!!!!{}", req);
+        sellerMypageService.deleteHistory(req);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
     @GetMapping("/intro/{sellerIdx}")

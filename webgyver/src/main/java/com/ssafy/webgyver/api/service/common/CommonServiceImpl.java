@@ -9,6 +9,7 @@ import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.CategoryRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
+import com.ssafy.webgyver.db.repository.customer.CustomerRepository;
 import com.ssafy.webgyver.util.CommonUtil;
 import com.ssafy.webgyver.util.TimeUtil;
 import com.ssafy.webgyver.websocket.dto.RefreshSellerMessage;
@@ -26,6 +27,7 @@ public class CommonServiceImpl implements CommonService {
     final ReservationRepository reservationRepository;
     final ArticleRepository articleRepository;
     final PictureRepository pictureRepository;
+    final CustomerRepository customerRepository;
 
     @Override
     public CategoryListRes getCategoryList() {
@@ -68,4 +70,11 @@ public class CommonServiceImpl implements CommonService {
         }
         return reservation;
     }
+
+    @Override
+    public Customer getCustomer(long customerIdx) {
+        return customerRepository.findByIdx(customerIdx).get();
+    }
+
+
 }

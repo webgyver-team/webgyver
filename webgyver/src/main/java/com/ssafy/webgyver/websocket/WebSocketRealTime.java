@@ -4,7 +4,9 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.service.common.CommonService;
+import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.config.WebSocketConfig;
+import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.util.CommonUtil;
 import com.ssafy.webgyver.websocket.dto.Message;
@@ -13,6 +15,7 @@ import com.ssafy.webgyver.websocket.dto.RefreshCustomerMessage;
 import com.ssafy.webgyver.websocket.dto.RefreshSellerMessage;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.websocket.*;
@@ -27,6 +30,9 @@ import java.util.*;
 @RequiredArgsConstructor
 public class WebSocketRealTime {
     private final CommonService commonService;
+
+    @Value("${properties.file.toss.secret}")
+    String tossKey;
 
     // MAP으로 리팩토링 필요함~
     private static final Set<Session> customerSession = Collections.synchronizedSet(new HashSet<>());
@@ -90,6 +96,8 @@ public class WebSocketRealTime {
     public void METHOD_MAKE_RESERVATION(Session seller, Map<String, Object> info) throws IOException {
         long sellerIdx = (long) seller.getUserProperties().get("idx");
         long customerIdx = Math.round((double) info.get("customerIdx"));
+
+
         Session customer = null;
         for (Session session : customerSession) {
             if (customerIdx == (long) session.getUserProperties().get("idx")) {
@@ -97,6 +105,7 @@ public class WebSocketRealTime {
                 break;
             }
         }
+        // 결제부터 하고, 예약, 아티클, 이미지 넣기
         RefreshSellerMessage reservationInfo = null;
         for (RefreshSellerMessage cur : refreshSellerMessageList) {
             if (cur.getIdx() == customerIdx) {
@@ -104,6 +113,11 @@ public class WebSocketRealTime {
                 break;
             }
         }
+
+        Customer customerForPay = commonService.getCustomer(customerIdx);
+        BaseResponseBody responseBody = CommonUtil.requestPay(tossKey, customerForPay.getCustomerKey(), customerForPay.getBillingKey(), reservationInfo.getTitle(), reservationInfo.getPrice());
+        System.out.println(responseBody.getStatusCode());
+        System.out.println(responseBody.getMessage());
 
 
         // 실시간 상담 reservation 테이블에 등록!!!!!!!
@@ -115,7 +129,6 @@ public class WebSocketRealTime {
         data.put("sellerIdx", sellerIdx);
         data.put("reservationIdx", reservationIdx);
         message.setData(data);
-
         Gson gson = new Gson();
         String messageString = gson.toJson(message);
 
