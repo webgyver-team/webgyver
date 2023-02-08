@@ -47,7 +47,7 @@ export default function MyPageUpdate() {
       alert('이름을 입력하세요.');
       return;
     }
-    if (data.birthday === null) {
+    if (data.birthDay === null) {
       // eslint-disable-next-line
       alert('주민등록번호 앞 7자리를 입력하세요.');
       return;
@@ -98,14 +98,8 @@ export default function MyPageUpdate() {
             <PasswordInput updateData={updateData} />
             <ResidentNumberInput
               updateData={updateData}
-              initialValue1={`${data.birth
-                .split(' ')[0]
-                .replaceAll('-', '')
-                .slice(0, 6)}`}
-              initialValue2={`${data.birth
-                .split(' ')[0]
-                .replaceAll('-', '')
-                .slice(6, 7)}******`}
+              initialValue1={`${data.birthDay.slice(0, 6)}`}
+              initialValue2={`${data.birthDay.slice(6, 7)}******`}
             />
             <PhoneNumberInput
               updateData={updateData}
