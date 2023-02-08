@@ -5,7 +5,6 @@ import { useRecoilState } from 'recoil';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import CloseIcon from '@mui/icons-material/Close';
@@ -42,7 +41,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 0 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -141,6 +140,8 @@ const CloseBtn = styled(CloseIcon)`
 `;
 
 const CustomBox = styled(Box)`
+  max-height: 90vh;
+
   // 넘치면 스크롤
   overflow-y: scroll;
 
