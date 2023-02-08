@@ -22,6 +22,7 @@ instance.interceptors.request.use(
     } else {
       config.headers.Authorization = storage.accessToken;
     }
+    console.log(config);
     return config;
   },
   (error) => {

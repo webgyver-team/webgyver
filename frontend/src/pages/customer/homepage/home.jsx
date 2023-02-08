@@ -10,7 +10,6 @@ import MainImage from '../../../assets/image/MainImage.png';
 export default function Home() {
   const navigate = useNavigate();
   const [loadding, setLodding] = useState(true);
-  // const category = useRecoilState(categoryState);
   useEffect(() => {
     setTimeout(() => {
       setLodding(false);

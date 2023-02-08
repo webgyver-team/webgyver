@@ -9,9 +9,13 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+import { useRecoilState } from 'recoil';
+import { userIdx } from '../../../../atom';
+import { master } from '../../../../api/masterService';
 
 // eslint-disable-next-line object-curly-newline
 export default function AlertDialog({ open, setOpen, hour, setHour }) {
+  const [masterIdx] = useRecoilState(userIdx);
   const [formContent, setFormContent] = useState([]);
   useEffect(() => {
     setFormContent(JSON.parse(JSON.stringify(hour)));
@@ -22,13 +26,19 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
     setOpen(false);
   };
 
-  const registInfo = () => {
+  const registInfo = async () => {
     const data = {
-      partenrIdx: null,
-      businessHour: formContent,
+      companyTime: formContent,
     };
     // eslint-disable-next-line
     console.log(data);
+    const response = await master.put.businessHour(data, masterIdx);
+    if (response.statusCode === 200) {
+      alert('변경되었습니다.');
+    } else {
+      alert('오류가 발생했습니다.');
+    }
+
     handleClose();
   };
 
@@ -61,6 +71,7 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
       return temp;
     });
     setFormContent([...formContent]);
+    console.log(formContent);
   };
 
   const update = () => {
