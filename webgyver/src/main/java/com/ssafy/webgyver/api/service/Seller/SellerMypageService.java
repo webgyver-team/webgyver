@@ -9,6 +9,7 @@ import com.ssafy.webgyver.api.request.seller.SellerProfileUpdateReq;
 import com.ssafy.webgyver.api.request.seller.SellerTimeUpdateReq;
 import com.ssafy.webgyver.api.response.common.picture.PictureListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
+import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
@@ -41,4 +42,5 @@ public interface SellerMypageService {
 
     BaseResponseBody updateSellerProfile(SellerIdxReq req, SellerProfileUpdateReq timeReq);
 
+    SellerMypageReviewListRes getReviewList(SellerIdxReq req);
 }

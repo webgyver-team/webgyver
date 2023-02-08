@@ -7,6 +7,8 @@ import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
+import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
+import com.ssafy.webgyver.api.service.common.ReservationService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.*;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
@@ -177,5 +179,30 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         return res;
     }
 
+    @Override
+    public SellerMypageReviewListRes getReviewList(SellerIdxReq req) {
+        List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdx(req.getSellerIdx());
 
+        List<Map<String, Object>> reviews = new ArrayList<>();
+        for (Reservation reservation : reservationList) {
+            Map<String, Object> review = new HashMap<>();
+            Article article = articleRepository.findArticleByReservationIdxAndTypeLessThan(reservation.getIdx(), -2);
+
+            if(article != null) {
+                Article comment = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -2);
+
+                review.put("review", article);
+                review.put("customer", reservation.getCustomer());
+                review.put("comment", comment);
+                Object images = pictureRepository.findPicturesByArticleIdx(article.getIdx());
+
+                if(images != null)
+                    review.put("images", images);
+
+                reviews.add(review);
+            }
+        }
+
+        return SellerMypageReviewListRes.of(200, "OK", reviews);
+    }
 }

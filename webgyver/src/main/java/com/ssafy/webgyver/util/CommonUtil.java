@@ -46,7 +46,7 @@ public class CommonUtil {
             HttpURLConnection connection = (HttpURLConnection)url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Authorization", "Basic dGVzdF9za19CRTkyTEFhNVBWYjFFWmFSS0dZMzdZbXBYeUpqOg==");
+            connection.setRequestProperty("Authorization", tossKey);
             connection.setDoOutput(true);
 
             JSONObject jsonObject = new JSONObject();

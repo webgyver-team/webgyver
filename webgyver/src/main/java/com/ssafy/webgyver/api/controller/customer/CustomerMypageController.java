@@ -1,6 +1,8 @@
 package com.ssafy.webgyver.api.controller.customer;
 
+import com.ssafy.webgyver.api.request.customer.CustomerModifyReviewReq;
 import com.ssafy.webgyver.api.request.customer.CustomerMypageReq;
+import com.ssafy.webgyver.api.request.customer.CustomerRegisterReviewReq;
 import com.ssafy.webgyver.api.response.article.CustomerReviewListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerMypageRes;
 import com.ssafy.webgyver.api.service.customer.CustomerMypageService;
@@ -61,5 +63,26 @@ public class CustomerMypageController {
         } else {
             return ResponseEntity.ok().body(BaseResponseBody.of(500, "목록을 가져올 수 없습니다. 잠시 후 다시 시도해 주세요."));
         }
+    }
+
+    @PostMapping("/review")
+    public ResponseEntity<?> registerReview(@RequestBody CustomerRegisterReviewReq req) {
+        BaseResponseBody result = customerMypageService.regiterReview(req);
+
+        return ResponseEntity.ok().body(result);
+    }
+
+    @PutMapping("/review/{a_idx}")
+    public ResponseEntity<?> modifyReview(@PathVariable(name = "a_idx") Long reviewIdx, @RequestBody CustomerModifyReviewReq req) {
+        BaseResponseBody result = customerMypageService.modifyReview(req);
+
+        return ResponseEntity.ok().body(result);
+    }
+
+    @DeleteMapping("/review/{a_idx}")
+    public ResponseEntity<?> deleteReview(@PathVariable(name = "a_idx") Long reviewIdx) {
+        BaseResponseBody result = customerMypageService.deleteReview(reviewIdx);
+
+        return ResponseEntity.ok().body(result);
     }
 }
