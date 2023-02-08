@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-export default function ImageInput({ sendImageList, awsImages }) {
+export default function ImageInput({ sendImageList, awsImages = [] }) {
   const [imageList, setImageList] = useState([]); // 이미지 파일 객체
   const [imagePreviewList, setImagePreviewList] = useState([]); // 이미지 파일 src for 미리보기
   // 이미지 변경 이벤트 함수
@@ -76,44 +76,19 @@ export default function ImageInput({ sendImageList, awsImages }) {
     sendImageList([...resultSet]);
   };
 
-  // image url -> file object
-  function getDataUri(url, callback) {
-    const image = new Image();
-
-    image.onload = function () {
-      const canvas = document.createElement('canvas');
-      canvas.width = this.naturalWidth; // or 'width' if you want a special/scaled size
-      canvas.height = this.naturalHeight; // or 'height' if you want a special/scaled size
-
-      canvas.getContext('2d').drawImage(this, 0, 0);
-
-      // Get raw image data
-      callback(
-        canvas
-          .toDataURL('image/png')
-          .replace(/^data:image\/(png|jpg);base64,/, ''),
-      );
-
-      // ... or get as Data URI
-      callback(canvas.toDataURL('image/png'));
-    };
-
-    image.src = url;
-  }
-
   // 기존 이미지 로드
   useEffect(() => {
+    console.log('기존이미지 url', awsImages);
     if (awsImages.length !== 0) {
+      const tmpList = [];
       // eslint-disable-next-line array-callback-return
-      const images = awsImages.map((el) => {
+      awsImages.map((el) => {
         const imgUrl = `https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`;
-        console.log(imgUrl);
-        getDataUri('local_location_to_image.extension', (dataUri) => {
-          // Do whatever you'd like with the Data URI!
-          return changeImageList(dataUri);
-        });
+        const image = { url: imgUrl, image: { name: el.originName } };
+        tmpList.push(image);
       });
-      console.log(images);
+      console.log('기존 이미지 업로드', tmpList);
+      setImagePreviewList(tmpList);
     }
   }, []);
 

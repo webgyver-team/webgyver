@@ -18,7 +18,6 @@ export default function Example({ example, setReload }) {
   // 사례 수정 데이터 보관
   const setExampleDataOpen = useSetRecoilState(exampleDataState);
   const editModalOpen = () => {
-    console.log('hi');
     setExampleDataOpen(example);
     setExampleEditOpen(true);
   };

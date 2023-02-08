@@ -18,7 +18,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 380,
-  height: 430,
+  // height: 430,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -101,15 +101,7 @@ export default function Edit({ setReload }) {
       type: useId,
       images: imageData, // 이미지 파일의 hash 이름, 원래 이름
     };
-    // 이미지 업로드한거 있으면
-    // AWS S3에 보내고 저장한 경로명을 data에 담아라
-    // eslint-disable-next-line
-    console.log(imageList);
-    // eslint-disable-next-line
-    console.log(data);
-    // data로 axios POST하고
-    // 결과로 나온 idx를 가지고
-    // 이미지 axios POST해야 함
+
     if (data.content.trim().length === 0) {
       // 내용 입력 유효하지 않음
       // eslint-disable-next-line
@@ -122,13 +114,14 @@ export default function Edit({ setReload }) {
     sendImageListToS3().then(async () => {
       // eslint-disable-next-line
       console.log(data); // POST로 수정 예정
+      const { articleIdx } = exampleData;
       // post 로직
-      const response = await master.post.example(data);
+      const response = await master.put.example(data, articleIdx);
       // eslint-disable-next-line
       if (response.statusCode === 200) {
         setReload(true);
         // eslint-disable-next-line
-        alert('사례가 등록되었습니다.');
+        alert('사례가 수정되었습니다.');
         modalClose();
         setFormContent('');
       } else {
@@ -150,7 +143,7 @@ export default function Edit({ setReload }) {
       >
         <Box sx={style}>
           <CloseBtn onClick={modalClose} />
-          <Header>사례 작성</Header>
+          <Header>사례 수정</Header>
           <Body>
             <TextField
               label="내용"
@@ -170,7 +163,7 @@ export default function Edit({ setReload }) {
             />
             <NullBox />
             <Button variant="contained" onClick={registReview}>
-              사례 등록
+              사례 수정
             </Button>
             <ErrorMessage>{msgForContent}</ErrorMessage>
           </Body>

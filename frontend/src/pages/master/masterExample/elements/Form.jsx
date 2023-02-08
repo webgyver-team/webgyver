@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
 import Box from '@mui/material/Box';
@@ -18,7 +18,7 @@ const style = {
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 380,
-  height: 430,
+  // height: 430,
   bgcolor: 'background.paper',
   boxShadow: 24,
   p: 4,
@@ -39,6 +39,11 @@ export default function Form({ setReload }) {
 
   // 유저 아이디
   const useId = useRecoilValue(userIdx);
+
+  // 모달 상태 변화에 따른 imageList 비우기
+  useEffect(() => {
+    setImageList([]);
+  }, [modalOpen]);
 
   // 내용 검증 함수
   const changeFormContent = (event) => {
