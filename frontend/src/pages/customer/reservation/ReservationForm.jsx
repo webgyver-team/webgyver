@@ -147,8 +147,7 @@ export default function ReservationForm() {
       } else {
         // eslint-disable-next-line
         console.log(response);
-        // eslint-disable-next-line
-        alert('예약상담 등록에 실패하였습니다.');
+        alert('예약 내용을 다시 확인바랍니다.');
       }
     });
   };

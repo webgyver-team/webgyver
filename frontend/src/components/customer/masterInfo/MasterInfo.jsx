@@ -1,11 +1,10 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import CloseIcon from '@mui/icons-material/Close';
@@ -42,7 +41,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 0 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -67,8 +66,7 @@ export default function MasterInfo() {
   const [modalState, setmodalState] = useRecoilState(masterInfoModalState);
   const closeMasterInfoState = () => setmodalState(false);
 
-  const [value, setValue] = React.useState(0);
-
+  const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
@@ -141,6 +139,8 @@ const CloseBtn = styled(CloseIcon)`
 `;
 
 const CustomBox = styled(Box)`
+  max-height: 90vh;
+
   // 넘치면 스크롤
   overflow-y: scroll;
 
