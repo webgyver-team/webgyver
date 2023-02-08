@@ -99,3 +99,17 @@ export const exampleFormState = atom({
   key: 'exampleFormState',
   default: false,
 });
+
+// 상담 마치고 리뷰 등록하러 넘어갈 때... 어떤 예약인지 필요함
+export const reservationToReview = atom({
+  key: 'reservationIdx',
+  default: null,
+  effects_UNSTABLE: [persistAtom],
+});
+
+// 리뷰 수정하러 넘어갈 때... 어떤 예약인지 필요함
+export const reviewToEdit = atom({
+  key: 'reviewIdx',
+  default: null,
+  effects_UNSTABLE: [persistAtom],
+});

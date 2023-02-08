@@ -1,13 +1,13 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { customer } from '../../../../api/customerService';
-import { userIdx } from '../../../../atom';
+import { userIdx, reservationToReview } from '../../../../atom';
 
 export default function ReservationHistory() {
   const [histories, setHistories] = useState([]);
@@ -20,7 +20,6 @@ export default function ReservationHistory() {
       }
     };
     getHistory();
-    // disable-eslint-next-line
   }, [customerIdx]);
   return (
     <Main>
@@ -40,6 +39,7 @@ const Main = styled.div`
 
 function CardView({ history }) {
   const navigate = useNavigate();
+  const setReservationToReview = useSetRecoilState(reservationToReview);
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -66,6 +66,7 @@ function CardView({ history }) {
   const date = history.reservationTime.split(' ')[0].split('-');
   const time = history.reservationTime.split(' ')[1].split(':');
   const routeVideoService = () => {
+    setReservationToReview(history);
     navigate('/videoservice');
   };
 
@@ -101,7 +102,7 @@ function CardView({ history }) {
           <BtnBox>
             <StateBtn>
               {history.state === 4 ? (
-                <span onClick={routeVideoService}>
+                <span onClick={() => routeVideoService(history)}>
                   {currentState[history.state]}
                 </span>
               ) : (

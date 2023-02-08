@@ -8,7 +8,8 @@ export default function ImageInput({ sendImageList }) {
   const [imagePreviewList, setImagePreviewList] = useState([]); // 이미지 파일 src for 미리보기
   // 이미지 변경 이벤트 함수
   const changeImageList = async (data) => {
-    const images = data.target.files; // 입력받은 이미지 파일
+    const images = data.target.files; // 추가로 입력받은 이미지 파일
+    console.log(images);
     const removeDupl = [...imageList, ...images]; // 이미지 파일 중복 제거용 배열
 
     // 이미지 파일 정보는 객체 배열이므로 -> 파일 이름 속성으로 객체 중복 제거
@@ -51,11 +52,13 @@ export default function ImageInput({ sendImageList }) {
       setImagePreviewList([]);
       return;
     }
-
+    console.log(imageList);
     imageList.forEach((image) => {
       const reader = new FileReader(); // 이미지 파일 읽어줄 친구
-      reader.readAsDataURL(image); // 이미지 URL 변환
 
+      reader.readAsDataURL(image); // 이미지 URL 변환
+      console.log(reader);
+      console.log(image);
       // onload : 읽기 성공 시, onloadend : 읽기 성공 실패 여부 상관 없음
       reader.onload = () => {
         imagePreview = [...imagePreview, { image, url: reader.result }]; // 데이터 담아줌

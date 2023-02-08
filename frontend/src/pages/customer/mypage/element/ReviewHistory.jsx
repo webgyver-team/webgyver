@@ -1,14 +1,15 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
-import { useRecoilValue } from 'recoil';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { customer } from '../../../../api/customerService';
-import { userIdx } from '../../../../atom';
+import { userIdx, reviewToEdit } from '../../../../atom';
 
 export default function ReviewHistory() {
   const customerIdx = useRecoilValue(userIdx);
@@ -26,17 +27,6 @@ export default function ReviewHistory() {
     };
     getMyReview();
   }, [customerIdx]);
-  // const [reviews] = useState([
-  //   {
-  //     title: '뜨거운 물이 나오지 않는 건에 대하여',
-  //     content:
-  // '물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다! 물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다!',
-  //     date: '01월 28일 09:00',
-  //     images: [ReviewImg1, ReviewImg2, ReviewImg3],
-  //     score: 3.0,
-  //   },
-  // ]);
-
   return (
     <Main>
       {reviews.map((review) => (
@@ -62,12 +52,32 @@ export function CardView({ review }) {
     slidesToShow: 2,
     slidesToScroll: 1,
   };
-
+  const navigate = useNavigate();
+  const setReviewToEdit = useSetRecoilState(reviewToEdit);
+  const deleteReview = () => {
+    // eslint-disable-next-line
+    if (confirm('리뷰를 삭제하시겠습니까?')) {
+      console.log(`${review.reviewIdx}번째 리뷰 삭제 DELETE 요청`);
+    }
+  };
+  const editReview = (r) => {
+    setReviewToEdit(r);
+    navigate('/reviewForm');
+  };
   return (
     <Card>
       <TitleBox>
         <p className="title">{review.title}</p>
-        <EditIcon />
+        <div
+          style={{
+            width: '60px',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <EditIcon onClick={() => editReview(review)} />
+          <DeleteIcon onClick={deleteReview} />
+        </div>
       </TitleBox>
       <p className="score">{`평점 : ${review.rating}`}</p>
       <Slider {...slickSettings}>
