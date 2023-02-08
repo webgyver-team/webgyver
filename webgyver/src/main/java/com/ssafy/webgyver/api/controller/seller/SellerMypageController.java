@@ -50,7 +50,7 @@ public class SellerMypageController {
 //            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
     ) {
         ArticleAllReq articleAllReq = new ArticleAllReq();
-        articleAllReq.setType(Long.valueOf((String) request.get("type")));
+        articleAllReq.setType(new Long((int)request.get("type")));
         articleAllReq.setContent((String) request.get("content"));
 
         PictureListReq pictureListReq = new PictureListReq();

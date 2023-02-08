@@ -40,7 +40,10 @@
             };
 
             accept_meet = function () {
-                data = {'method': 'ACCEPT_MEET'}
+                data = {
+                    'method': 'ACCEPT_MEET',
+                    'time': '20230227-1030'
+                }
                 g_webSocket.send(JSON.stringify(data));
             }
         }
