@@ -1,14 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { customer } from '../../../../api/customerService';
 import { userIdx } from '../../../../atom';
 
 export default function MyInfo() {
+  const navigate = useNavigate();
   const customerIdx = useRecoilValue(userIdx);
   const [myInfo, setMyInfo] = useState({
-    name: '',
+    idx: '',
     phoneNumber: '',
     birth: '',
     cardNumber: '',
@@ -66,7 +67,7 @@ export default function MyInfo() {
         </div>
       </InfoBox>
       <BtnBox>
-        <Btn>수정하기</Btn>
+        <Btn onClick={() => navigate('/mypage/update')}>수정하기</Btn>
       </BtnBox>
     </Main>
   );

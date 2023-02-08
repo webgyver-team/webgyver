@@ -28,11 +28,7 @@ export default function CardNumberInput({
     return true;
   };
   const handleCardNumber = (val) => {
-    if (val.trim().length === 16) {
-      updateData({ cardNumber: val });
-    } else {
-      updateData({ cardNumber: null });
-    }
+    updateData({ cardNumber: val });
   };
 
   const changeCardNumber = (event, order) => {
@@ -61,11 +57,7 @@ export default function CardNumberInput({
   };
 
   const handleCardValid = (val) => {
-    if (val.trim().length === 4) {
-      updateData({ cardValidity: val });
-    } else {
-      updateData({ cardValidity: null });
-    }
+    updateData({ cardValidity: val });
   };
   const changeCardValid = (event, order) => {
     if (!onlyNumber(event)) {
@@ -141,19 +133,18 @@ export default function CardNumberInput({
           required
           placeholder="MM"
           margin="normal"
-          style={{ width: '25%' }}
           inputProps={{ maxLength: 2 }}
+          style={{ marginRight: '16px', width: '30%' }}
           onChange={(event) => changeCardValid(event, 1)}
         />
-        <p>-</p>
         <TextField
           variant="outlined"
           value={cardValidYY}
           required
-          placeholder="YY`"
+          placeholder="YY"
           margin="normal"
-          style={{ width: '25%' }}
           inputProps={{ maxLength: 2 }}
+          style={{ marginRight: '16px', width: '30%' }}
           onChange={(event) => changeCardValid(event, 2)}
         />
       </CardValidityForm>
