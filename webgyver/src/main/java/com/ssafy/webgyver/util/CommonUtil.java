@@ -34,19 +34,19 @@ public class CommonUtil {
 
     /**
      * @param customerKey customerKey in Customer Entity
-     * @param billingKey billingKey in Customer Entity
-     * @param orderName reservation title
-     * @param price solution pay price
+     * @param billingKey  billingKey in Customer Entity
+     * @param orderName   reservation title
+     * @param price       solution pay price
      * @return 200 - ok, 500 - fail, 204 - billing error, please check message
      */
     public static BaseResponseBody requestPay(String tossKey, String customerKey, String billingKey, String orderName, int price) {
         try {
             URL url = new URL("https://api.tosspayments.com/v1/billing/" + billingKey);
 
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("POST");
             connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Authorization", "Basic dGVzdF9za19CRTkyTEFhNVBWYjFFWmFSS0dZMzdZbXBYeUpqOg==");
+            connection.setRequestProperty("Authorization", tossKey);
             connection.setDoOutput(true);
 
             JSONObject jsonObject = new JSONObject();

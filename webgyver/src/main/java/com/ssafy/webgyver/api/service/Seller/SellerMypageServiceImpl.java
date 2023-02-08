@@ -99,12 +99,12 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         if (companyTime != null) {
             String[] list = companyTime.split("%");
             companyTimeDTOList = new ArrayList<>();
-            for (int i = 0; i < list.length; i++){
+            for (int i = 0; i < list.length; i++) {
                 boolean isHoliday;
                 String open = "";
                 String close = "";
                 // 공휴일 여부 추가
-                if (list[i].substring(4).equals("휴일")){
+                if (list[i].substring(4).equals("휴일")) {
                     isHoliday = true;
                 } else {
                     String[] listTime = list[i].substring(4).split("~");
@@ -112,7 +112,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
                     close = listTime[1];
                     isHoliday = false;
                 }
-                companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0,3), open, close, isHoliday));
+                companyTimeDTOList.add(new SellerMyPageIntroRes.CompanyTimeDTO(list[i].substring(0, 3), open, close, isHoliday));
             }
         }
         ///// 끝
@@ -142,8 +142,8 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     public BaseResponseBody updateSellerTime(SellerIdxReq req, SellerTimeUpdateReq timeReq) {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         String timeString = "";
-        for (int i = 0; i < 8; i++){
-            if (timeReq.getCompanyTime().get(i).getHoliday()){
+        for (int i = 0; i < 8; i++) {
+            if (timeReq.getCompanyTime().get(i).getHoliday()) {
                 timeString += timeReq.getCompanyTime().get(i).getDay() + "$휴일%";
             } else {
                 timeString += timeReq.getCompanyTime().get(i).getDay() + "$"

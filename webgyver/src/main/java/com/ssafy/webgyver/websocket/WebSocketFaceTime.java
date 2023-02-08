@@ -7,6 +7,7 @@ import com.ssafy.webgyver.api.service.common.ReservationService;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.util.MessageParsingUtil;
+import com.ssafy.webgyver.util.TimeUtil;
 import com.ssafy.webgyver.websocket.dto.Message;
 import com.ssafy.webgyver.websocket.dto.MethodType;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -30,8 +32,7 @@ public class WebSocketFaceTime {
     private static final Map<Long, Room> rooms = Collections.synchronizedMap(new HashMap<Long, Room>());
     private final ReservationService reservationService;
 
-    @Value("${properties.file.toss.secret}")
-    String tossKey;
+
 
     @OnOpen
     public void onOpen(Session session, @PathParam("type") String type, @PathParam("idx") Long idx, @PathParam("reservationIdx") Long reservationIdx) throws IOException {
@@ -120,7 +121,7 @@ public class WebSocketFaceTime {
             return;
         }
 //        room.sendMessageOther(jsonMessage, session);
-        Map<String, MethodType> reply = new HashMap<>();
+        Map<String, Object> reply = new HashMap<>();
         switch (method) {
             case WANT_MEET:
                 reply.put("method", MethodType.WANT_MEET);
@@ -128,11 +129,21 @@ public class WebSocketFaceTime {
             case ACCEPT_MEET:
                 // 판매자의 방문요청 수락.
                 // 예약테이블에서 정보 꺼내와서 time, state 바꿔야함.
+                String stringTime = (String) info.get("time");
+                LocalDateTime time = TimeUtil.string2Time(stringTime);
+                ACCEPT_MEET(room, time);
                 reply.put("method", MethodType.ACCEPT_MEET);
+                reply.put("time", stringTime);
                 break;
         }
         System.out.println(reply);
         room.sendMessageOther(gson.toJson(reply), session);
+    }
+
+    public void ACCEPT_MEET(Room room, LocalDateTime time) {
+        long reservationIdx = room.getReservation().getIdx();
+        reservationService.updateReservation2Meet(reservationIdx, time);
+
     }
 
     @OnError
