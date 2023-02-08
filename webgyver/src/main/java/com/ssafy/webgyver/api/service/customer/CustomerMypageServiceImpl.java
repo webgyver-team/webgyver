@@ -84,9 +84,10 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
         if(isCheck(req.getPhoneNumber()))
             customer.setPhoneNumber(req.getPhoneNumber());
 
-        if(isCheck(req.getBirth())) {
+        if(isCheck(req.getBirthDay())) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            customer.setBirthDay(LocalDate.parse(req.getBirth(), formatter).atStartOfDay());
+            customer.setBirthDay(LocalDate.parse(req.getBirthDay().substring(0, 8), formatter).atStartOfDay());
+            customer.setGender(req.getBirthDay().substring(8));
         }
 
         if(isCheck(req.getCardNumber()))
@@ -132,7 +133,7 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
             jsonObject.put("cardNumber", req.getCardNumber());
             jsonObject.put("cardExpirationYear", req.getCardValidity().substring(2, 4));
             jsonObject.put("cardExpirationMonth", req.getCardValidity().substring(0, 2));
-            jsonObject.put("customerIdentityNumber", req.getBirth().substring(2, 8));
+            jsonObject.put("customerIdentityNumber", req.getBirthDay().substring(2, 8));
             jsonObject.put("customerKey", customerKey); //고객 ID, 무작위값 설정하여 사용
 
             DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
