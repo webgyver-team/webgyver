@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
@@ -9,7 +10,10 @@ export default function VideoService() {
   const navigate = useNavigate();
   const myMainScreen = useRef(null);
   const mySubScreen = useRef(null);
-  const peerFace = useRef(null);
+  const peerMainScreen = useRef(null);
+  const peerSubScreen = useRef(null);
+  const customerIdx = 1;
+  const reservationIdx = 1;
   const [mainScreenState, setMainScreenState] = useState('myScreen');
 
   // 화면 너비 가져오는 로직들
@@ -57,7 +61,7 @@ export default function VideoService() {
     navigator.mediaDevices
       .getUserMedia({
         video: {
-          facingMode: 'environment',
+          facingMode: 'user',
         },
         audio: true,
       })
@@ -109,17 +113,72 @@ export default function VideoService() {
     }
   };
 
-  // const configuration = {
-  //   iceServers: [
-  //     {
-  //       urls: 'stun:stun.l.google.com:19302',
-  //     },
-  //   ],
-  // };
-  // const myConnection = new RTCPeerConnection(configuration);
-  // myConnection.addEventListener('track', (data) => {
-  //   peerFace.srcObject = new MediaStream([data.track]);
-  // });
+  const conn = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`);
+  const configuration = {
+    iceServers: [
+      {
+        urls: 'stun:stun.l.google.com:19302',
+      },
+    ],
+  };
+
+  const myConnection = new RTCPeerConnection(configuration);
+  const send = async (message) => {
+    // 소켓으로 메세지 보내기
+    conn.send(JSON.stringify(message));
+  };
+  const sendCandidate = (event) => {
+    send({
+      event: 'candidate',
+      data: event.candidate,
+    });
+  };
+  const myPeerConnection = new RTCPeerConnection(configuration);
+  myConnection.addEventListener('track', (data) => {
+    let video = peerMainScreen.current;
+    video.srcObject = new MediaStream([data.track]);
+    video.play();
+
+    video = peerSubScreen.current;
+    video.srcObject = new MediaStream([data.track]);
+    video.play();
+  });
+  useLayoutEffect(() => {
+    myPeerConnection.onicecandidate = sendCandidate();
+    conn.onmessage = async (message) => {
+      const content = JSON.parse(message.data);
+      if (content.event === 'offer') {
+        // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
+        const offer = content.data;
+        myPeerConnection.setRemoteDescription(offer);
+
+        // 내 미디어
+        navigator.mediaDevices
+          .getUserMedia({
+            audio: true,
+            video: true,
+          })
+          .then((stream) => {
+            stream
+              .getTracks()
+              .forEach((track) => myPeerConnection.addTrack(track, stream));
+          });
+        const answer = await myPeerConnection.createAnswer();
+        myPeerConnection.setLocalDescription(answer);
+        send({
+          event: 'answer',
+          data: answer,
+        });
+      } else if (content.event === 'answer') {
+        const answer = content.data;
+        myPeerConnection.setRemoteDescription(answer);
+      } else if (content.event === 'candidate') {
+        // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정
+        myPeerConnection.addIceCandidate(content.data);
+      }
+    };
+  });
+
   return (
     <Main>
       <BoxBox>
@@ -134,7 +193,7 @@ export default function VideoService() {
               ref={SubScreenRef}
               width={subScreenWidth}
             >
-              <video playsInline autoPlay width="100%" ref={peerFace} />
+              <video playsInline autoPlay width="100%" ref={peerSubScreen} />
             </SubScreen>
           </VideoBox>
         )}
@@ -142,7 +201,7 @@ export default function VideoService() {
         {mainScreenState === 'peerScreen' && (
           <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
             <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
-              <video playsInline autoPlay width="100%" ref={peerFace} />
+              <video playsInline autoPlay width="100%" ref={peerMainScreen} />
             </MainScreen>
 
             <SubScreen

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react-hooks/exhaustive-deps */
 // eslint-disable-next-line object-curly-newline
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
@@ -9,7 +10,7 @@ import './Match.scss';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { locateValueState, categoryState } from '../../../atom';
+import { locateValueState, categoryState, userIdx } from '../../../atom';
 
 // kakao 가져오기
 const { kakao } = window;
@@ -18,8 +19,9 @@ export default function Matching() {
   const navigate = useNavigate();
   const routeMatchForm = () => navigate('/match/form');
   const categoryIdx = useRecoilValue(categoryState);
+  const idx = useRecoilValue(userIdx);
   const locateValue = useRecoilValue(locateValueState);
-  const webSocketAddress = 'ws://localhost:9000/realtime/customer/1';
+  const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/customer/${idx}`;
 
   // map resizer
   const MainScreenRef = useRef(null);
@@ -31,11 +33,11 @@ export default function Matching() {
       const socketData = JSON.stringify({
         method: 'INIT',
         categoryIdx,
-        lng: Math.random(),
-        lat: Math.random(),
-        address: '대전 서구 청사로 253',
+        lng: 0,
+        lat: 0,
+        address: 'asdfasdf',
         detailAddress: '111-2222',
-        title: '물이 안나와요',
+        title: 'asdfasdf',
         content:
           '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n손이 너무 더러운디 씻을수가 없어유\n',
         images: [
@@ -175,6 +177,8 @@ export default function Matching() {
 }
 const Main = styled.div`
   position: relative;
+  width: 100%;
+  height: 100%;
 `;
 const MapBox = styled.div`
   position: relative;
