@@ -5,7 +5,7 @@ import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import { sha256 } from 'js-sha256';
 import AWS from 'aws-sdk';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useRecoilState } from 'recoil';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
@@ -18,13 +18,13 @@ import { master } from '../../../api/masterService';
 import { userIdx } from '../../../atom';
 
 export default function MyPageUpdate() {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [idx] = useRecoilState(userIdx);
   const [myPageData, setMyPageData] = useState(null);
   const [data, setData] = useState({});
   const [newProfileImage, setNewProfileImage] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
-  // let ready = true;
+  const [ready, setReady] = useState([false, false]);
 
   // eslint-disable-next-line
   const [newBackgroundImage, setNewBackgroundImage] = useState(null);
@@ -38,6 +38,16 @@ export default function MyPageUpdate() {
   };
   const changeProfileImage = (event) => {
     setNewProfileImage(event.target.files[0]);
+  };
+  const sendRequest = async () => {
+    const response = await master.put.profile(data, idx);
+    if (response.statusCode === 200) {
+      alert('수정이 완료되었습니다.');
+      navigate('/master/mypage');
+    } else {
+      // eslint-disable-next-line
+      alert('다시 시도해주세요.');
+    }
   };
   useLayoutEffect(() => {
     const getMyPageData = async () => {
@@ -79,21 +89,15 @@ export default function MyPageUpdate() {
       };
     }
   }, [newBackgroundImage]);
+  useEffect(() => {
+    if (ready[0] && ready[1]) {
+      sendRequest();
+    }
+  }, [ready]);
 
   const changeBackgroundImage = (event) => {
     setNewBackgroundImage(event.target.files[0]);
   };
-
-  // const sendRequest = async () => {
-  //   const response = await master.put.profile(data, idx);
-  //   if (response.statusCode === 200) {
-  //     alert('수정이 완료되었습니다.');
-  //     navigate('/master/mypage');
-  //   } else {
-  //     // eslint-disable-next-line
-  //     alert('다시 시도해주세요.');
-  //   }
-  // };
 
   // 이미지 S3 전송 함수
   const sendImageToS3 = async (image, mode) => {
@@ -134,10 +138,13 @@ export default function MyPageUpdate() {
     if (mode === 1) {
       // 프로필 이미지
       updateData({ profileImage: newData.saveName });
+      setReady([true, ready[1]]);
     } else {
       // 배경 이미지
       updateData({ backgroundImage: newData.saveName });
+      setReady([ready[0], true]);
     }
+    console.log(data, ready);
   };
 
   const updateMasterInfo = async () => {
@@ -198,10 +205,14 @@ export default function MyPageUpdate() {
     if (newProfileImage !== null) {
       // S3 전송함수에 적용
       sendImageToS3(newProfileImage, 1);
+    } else {
+      setReady([true, ready[1]]);
     }
     if (newBackgroundImage !== null) {
       // S3 전송함수에 적용
       sendImageToS3(newBackgroundImage, 2);
+    } else {
+      setReady([ready[0], true]);
     }
   };
     // 데이터 POST
