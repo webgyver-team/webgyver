@@ -173,7 +173,9 @@ export default function Matching() {
     </Main>
   );
 }
-const Main = styled.div``;
+const Main = styled.div`
+  position: relative;
+`;
 const MapBox = styled.div`
   position: relative;
   z-index: 10;
