@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';

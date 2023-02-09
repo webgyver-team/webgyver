@@ -94,6 +94,7 @@ const Card = styled.div`
   border-radius: 5px;
   margin: 8px;
   position: relative;
+  width: 70vw;
 
   .slick-list {
     marign-right: -8px;

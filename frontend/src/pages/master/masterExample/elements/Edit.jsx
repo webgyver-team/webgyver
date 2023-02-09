@@ -45,6 +45,10 @@ export default function Edit({ setReload }) {
   // 기존 이미지 데이터
   const [savedImg, setSavedImg] = useState([]);
 
+  // 전체 이미지 데이터
+  // const [totalImg, setTotalImg] = useState([]);
+  let totalImg = [];
+
   // 유저 아이디
   const useId = useRecoilValue(userIdx);
 
@@ -80,6 +84,8 @@ export default function Edit({ setReload }) {
   useEffect(() => {
     console.log('imageData', imageData);
     console.log('existImg', existImg);
+    // setTotalImg((origin) => [...origin, ...imageData, ...savedImg]);
+    totalImg = [...imageData, ...savedImg];
   }, [existImg, imageData]);
 
   // 이미지 S3 전송 함수
@@ -118,7 +124,7 @@ export default function Edit({ setReload }) {
         originName: imageList[i].name,
       };
       imageData.push(newData);
-      setImageData((originalData) => [...originalData, newData]);
+      // setImageData((originalData) => [...originalData, newData]);
     }
   };
 
@@ -126,7 +132,7 @@ export default function Edit({ setReload }) {
     const data = {
       content: formContent,
       type: useId,
-      images: [...imageData, ...savedImg], // 이미지 파일의 hash 이름, 원래 이름
+      images: totalImg, // 이미지 파일의 hash 이름, 원래 이름
     };
 
     if (data.content.trim().length === 0) {
@@ -162,6 +168,7 @@ export default function Edit({ setReload }) {
       setImageData([]);
       setSavedImg([]);
       setExistImg([]);
+      // setTotalImg([]);
     });
   };
 

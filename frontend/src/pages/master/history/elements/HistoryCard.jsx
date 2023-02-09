@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -5,7 +6,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-export default function RealTime({ data }) {
+export default function HistoryCard({ history }) {
   // 더보기 on/off
   const [isDetail, setIsDetail] = useState(false);
   const handleIsDetail = () => {
@@ -26,8 +27,8 @@ export default function RealTime({ data }) {
       <ContentBox>
         <div className="header">
           <div className="contentdiv">
-            <p className="title">{data.title}</p>
-            <p className="price">{`가격: ${data.price}`}</p>
+            <p className="title">{history.title}</p>
+            <p className="price">{`가격: ${history.price}`}</p>
           </div>
           <NullBox />
           <BtnBox>
@@ -39,18 +40,22 @@ export default function RealTime({ data }) {
         {isDetail && (
           <DetailBox>
             <div>
+              {!history.pictureList.length && <NoImgBox />}
               <SliderBox>
                 <Slider {...slickSettings}>
-                  {data.images.map((el) => (
-                    <ImgBox key={el}>
-                      <img src={el} alt="" />
+                  {history.pictureList.map((el, i) => (
+                    <ImgBox key={i}>
+                      <img
+                        src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                        alt=""
+                      />
                     </ImgBox>
                   ))}
                 </Slider>
               </SliderBox>
             </div>
             <div className="contentdiv">
-              <span className="content">{data.content}</span>
+              <span className="content">{history.content}</span>
             </div>
           </DetailBox>
         )}
@@ -164,4 +169,11 @@ const StateBtn = styled.div`
     cursor: pointer;
     // background-color: ${(props) => props.theme.color.dafaultBorder};
   }
+`;
+
+const NoImgBox = styled.div`
+  width: 128px;
+  height: 120px;
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  margin: 0 4px 8px 4px;
 `;

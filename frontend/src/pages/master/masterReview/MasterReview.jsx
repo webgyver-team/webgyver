@@ -1,28 +1,37 @@
-import React, { useState } from 'react';
+/* eslint-disable operator-linebreak */
+/* eslint-disable react/no-array-index-key */
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import ReviewImg1 from '../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../assets/image/review3.jpg';
+import { useRecoilValue } from 'recoil';
 import Review from './elements/Review';
+import { userIdx } from '../../../atom';
+import { master } from '../../../api/masterService';
 
 export default function MasterReview() {
-  const [data] = useState([
-    {
-      content:
-        '물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다! 물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다!',
-      images: [ReviewImg1, ReviewImg2, ReviewImg3],
-      reply: '고객님 저희 업체를 이용해주셔서 감사합니다.',
-    },
-  ]);
+  const [reviewList, setReviewList] = useState([]);
+  const userId = useRecoilValue(userIdx);
+  const [reload, setReload] = useState(false);
+  useEffect(() => {
+    const loadReviewList = async () => {
+      const response = await master.get.review(userId);
+      setReviewList(response.data.reviews);
+      console.log('hi', response.data);
+      setReload(false);
+    };
+    loadReviewList();
+  }, [userId, reload]);
+
+  const NoData = <NoDataBox>아직 리뷰가 없습니다.</NoDataBox>;
 
   return (
     <Main>
       <Text>리뷰</Text>
       <TableBox>
-        <Review review={data[0]} />
-      </TableBox>
-      <TableBox>
-        <Review review={data[0]} />
+        {!reviewList.length && NoData}
+        {reviewList &&
+          reviewList.map((el, i) => (
+            <Review key={i} review={el} setReload={setReload} />
+          ))}
       </TableBox>
     </Main>
   );
@@ -40,4 +49,10 @@ const Text = styled.p`
 
 const TableBox = styled.div`
   width: 100%;
+`;
+
+const NoDataBox = styled.div`
+  text-align: center;
+  font-size: 24px;
+  min-width: 70vw;
 `;

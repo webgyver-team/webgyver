@@ -40,11 +40,14 @@ export default function MasterExample() {
     <Main>
       <Edit setReload={setReload} />
       <Form setReload={setReload} />
-      <BtnBox>
-        <StateBtn onClick={formModalOpen}>
-          <span>작성하기</span>
-        </StateBtn>
-      </BtnBox>
+      <Titlebox>
+        <Text>수리 사례</Text>
+        <BtnBox>
+          <StateBtn onClick={formModalOpen}>
+            <span>작성하기</span>
+          </StateBtn>
+        </BtnBox>
+      </Titlebox>
       <TableBox>
         {!exampleList.length && NoData}
         {exampleList &&
@@ -61,6 +64,16 @@ export default function MasterExample() {
 const Main = styled.div`
   witdh: 100%;
   margin: 16px;
+`;
+
+const Titlebox = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Text = styled.p`
+  font-size: 16px;
+  font-weight: bold;
 `;
 
 const TableBox = styled.div`
@@ -94,4 +107,5 @@ const NoDataBox = styled.div`
   text-align: center;
   font-size: 24px;
   min-width: 70vw;
+  margin: 16px;
 `;
