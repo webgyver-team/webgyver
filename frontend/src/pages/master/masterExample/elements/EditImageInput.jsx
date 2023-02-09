@@ -1,9 +1,15 @@
+/* eslint-disable react/no-this-in-sfc */
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CancelIcon from '@mui/icons-material/Cancel';
 
-export default function ImageInput({ sendImageList }) {
+export default function ImageInput({
+  sendImageList,
+  awsImages = [],
+  setSavedImg = [],
+}) {
   const [imageList, setImageList] = useState([]); // 이미지 파일 객체
   const [imagePreviewList, setImagePreviewList] = useState([]); // 이미지 파일 src for 미리보기
   // 이미지 변경 이벤트 함수
@@ -74,6 +80,34 @@ export default function ImageInput({ sendImageList }) {
     sendImageList([...resultSet]);
   };
 
+  // 기존 이미지 로드
+  const [existImg, setExistImg] = useState([]);
+  useEffect(() => {
+    console.log('기존이미지 url', awsImages);
+    if (awsImages.length !== 0) {
+      const tmpList = [];
+      // eslint-disable-next-line array-callback-return
+      awsImages.map((el) => {
+        const imgUrl = `https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`;
+        const image = { url: imgUrl, image: { name: el.originName } };
+        tmpList.push(image);
+      });
+      console.log('기존 이미지 업로드', tmpList);
+      setExistImg(tmpList);
+      setSavedImg(tmpList);
+    }
+  }, []);
+
+  // 기존 이미지 제거용 함수
+  const removeExistImage = (targetName) => {
+    const resultSet = imageList.filter((image) => {
+      return image.name !== targetName;
+    });
+
+    setImageList([...resultSet]);
+    sendImageList([...resultSet]);
+  };
+
   return (
     <div>
       <ImageInputTitle>
@@ -104,7 +138,7 @@ export default function ImageInput({ sendImageList }) {
             style={{ display: 'none' }}
           />
         </div>
-        {imagePreviewList.length > 0 ? (
+        {imagePreviewList.length > 0 || existImg.length > 0 ? (
           <div
             id="img__box"
             style={{
@@ -115,7 +149,7 @@ export default function ImageInput({ sendImageList }) {
               minWidth: '120px',
             }}
           >
-            {imagePreviewList.map((data) => {
+            {imagePreviewList?.map((data) => {
               const { image } = data;
               const imageUrl = data.url;
               return (
@@ -129,6 +163,39 @@ export default function ImageInput({ sendImageList }) {
                   />
                   <CancelIcon
                     onClick={() => removeImage(image.name)}
+                    fontSize="small"
+                    style={{
+                      position: 'absolute',
+                      top: '0px',
+                      right: '-8px',
+                      color: '#EB4D4D',
+                    }}
+                    sx={[
+                      {
+                        '&:hover': {
+                          opacity: 0.7,
+                          cursor: 'pointer',
+                        },
+                      },
+                    ]}
+                  />
+                </ImageBox>
+              );
+            })}
+            {existImg?.map((data) => {
+              const { image } = data;
+              const imageUrl = data.url;
+              return (
+                <ImageBox key={image.name} style={{ position: 'relative' }}>
+                  <img
+                    src={imageUrl}
+                    alt={image.name}
+                    width="80px"
+                    height="80px"
+                    style={{ borderRadius: '10%' }}
+                  />
+                  <CancelIcon
+                    onClick={() => removeExistImage(image.name)}
                     fontSize="small"
                     style={{
                       position: 'absolute',

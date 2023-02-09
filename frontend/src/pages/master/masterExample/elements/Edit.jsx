@@ -9,7 +9,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import { exampleEditState, userIdx, exampleDataState } from '../../../../atom';
-import ImageInput from '../../../customer/reservation/elements/ImageInput';
+import ImageInput from './EditImageInput';
 import { master } from '../../../../api/masterService';
 
 const style = {
@@ -39,6 +39,9 @@ export default function Edit({ setReload }) {
 
   // 기존 데이터
   const exampleData = useRecoilValue(exampleDataState);
+
+  // 기존 이미지 데이터
+  const [savedImg, setSavedImg] = useState([]);
 
   // 유저 아이디
   const useId = useRecoilValue(userIdx);
@@ -133,6 +136,8 @@ export default function Edit({ setReload }) {
     });
   };
 
+  console.log(savedImg);
+
   return (
     <div>
       <Modal
@@ -160,6 +165,7 @@ export default function Edit({ setReload }) {
             <ImageInput
               sendImageList={setImageList}
               awsImages={exampleData.images}
+              setSavedImg={setSavedImg}
             />
             <NullBox />
             <Button variant="contained" onClick={registReview}>
