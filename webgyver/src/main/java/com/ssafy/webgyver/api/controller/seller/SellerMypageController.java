@@ -8,6 +8,7 @@ import com.ssafy.webgyver.api.request.common.picture.PictureListReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
+import com.ssafy.webgyver.api.response.seller.SellerGetBookTimeRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
@@ -141,5 +142,15 @@ public class SellerMypageController {
     @DeleteMapping("/comment/{a_idx}")
     public ResponseEntity<?> deleteComment(@PathVariable(name = "a_idx") Long commentIdx) {
         return ResponseEntity.ok().body(sellerMypageService.deleteComment(commentIdx));
+    }
+    @GetMapping("/booktime/{sellerIdx}")
+    public ResponseEntity<?> getSellerBookTime(@PathVariable(name = "sellerIdx") Long sellerIdx, SellerIdxReq idxReq){
+        SellerGetBookTimeRes res = sellerMypageService.getSellerBookTime(idxReq);
+        return ResponseEntity.ok(res);
+    }
+    @PutMapping("/booktime/{sellerIdx}")
+    public ResponseEntity<?> updateSellerBookTime(@PathVariable(name = "sellerIdx") Long sellerIdx, SellerIdxReq idxReq, @RequestBody SellerUpdateBookTimeReq timeReq){
+        BaseResponseBody res = sellerMypageService.updateSellerBookTime(idxReq, timeReq);
+        return ResponseEntity.ok(res);
     }
 }

@@ -5,6 +5,7 @@ import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureListReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.seller.*;
+import com.ssafy.webgyver.api.response.seller.SellerGetBookTimeRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
 import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
@@ -253,5 +254,59 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         }
 
         return BaseResponseBody.of(500, "Fail");
+    }
+
+    @Override
+    public SellerGetBookTimeRes getSellerBookTime(SellerIdxReq req) {
+        System.out.println("셀러 아이디 : " + req.getSellerIdx());
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        List<SellerGetBookTimeRes.BookTimeDTO> bookTimeDTOList = new ArrayList<>();
+        System.out.println("셀러 예약 시간" + seller.getBookTime());
+        String companyTime = seller.getBookTime();
+        SellerGetBookTimeRes res;
+        if (companyTime != null) {
+            String[] list = companyTime.split("%");
+            bookTimeDTOList = new ArrayList<>();
+            for (int i = 0; i < list.length; i++) {
+                boolean isHoliday;
+                String open = "";
+                String close = "";
+                // 공휴일 여부 추가
+                if (list[i].substring(4).equals("휴일")) {
+                    isHoliday = true;
+                } else {
+                    String[] listTime = list[i].substring(4).split("~");
+                    open = listTime[0];
+                    close = listTime[1];
+                    isHoliday = false;
+                }
+                bookTimeDTOList.add(new SellerGetBookTimeRes.BookTimeDTO(list[i].substring(0, 3), open, close, isHoliday));
+            }
+            res = SellerGetBookTimeRes.of(200, "예약 가능 시간이 있습니다.", bookTimeDTOList);
+            return res;
+        } else {
+            res = SellerGetBookTimeRes.of(200, "예약 가능 시간이 없습니다.", null);
+            return  res;
+        }
+    }
+
+    @Override
+    @Transactional
+    public BaseResponseBody updateSellerBookTime(SellerIdxReq req, SellerUpdateBookTimeReq timeReq) {
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        String timeString = "";
+        for (int i = 0; i < 8; i++) {
+
+            if (timeReq.getBookTimeList().get(i).getHoliday()) {
+                timeString += timeReq.getBookTimeList().get(i).getDay() + "$휴일%";
+            } else {
+                timeString += timeReq.getBookTimeList().get(i).getDay() + "$"
+                        + timeReq.getBookTimeList().get(i).getOpen() + "~" + timeReq.getBookTimeList().get(i).getClose() + "%";
+            }
+        }
+        seller.updateSellerBookTime(timeString);
+        sellerRepository.save(seller);
+        BaseResponseBody res = BaseResponseBody.of(200, "Success");
+        return res;
     }
 }
