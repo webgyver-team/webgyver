@@ -3,18 +3,13 @@ package com.ssafy.webgyver.api.service.Seller;
 import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
 import com.ssafy.webgyver.api.request.seller.SellerCalendarReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
-import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
-import com.ssafy.webgyver.api.response.seller.SellerReservationListRes.ReservationDTO;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
 import com.ssafy.webgyver.db.entity.Reservation;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
-import java.time.LocalDate;
-import java.util.Date;
-
 import com.ssafy.webgyver.util.CommonUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -142,6 +137,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
                     reservation.getReservationTime(),
                     content,
                     reservation.getSeller().getCompanyName(),
+                    reservation.getReservationPrice(),
                     pictureDTOS,
                     reservation.getReservationState(),
                     reservation.getReservationType()
@@ -186,6 +182,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
                         reservation.getReservationTime(),
                         content,
                         reservation.getSeller().getCompanyName(),
+                        reservation.getReservationPrice(),
                         pictureDTOS,
                         reservation.getReservationState(),
                         reservation.getReservationType()
@@ -226,6 +223,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
                         reservation.getReservationTime(),
                         content,
                         reservation.getSeller().getCompanyName(),
+                        reservation.getReservationPrice(),
                         pictureDTOS,
                         reservation.getReservationState(),
                         reservation.getReservationType()
@@ -279,6 +277,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
                     reservation.getReservationTime(),
                     content,
                     reservation.getSeller().getCompanyName(),
+                    reservation.getReservationPrice(),
                     pictureDTOS,
                     reservation.getReservationState(),
                     reservation.getReservationType()
