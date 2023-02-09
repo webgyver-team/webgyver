@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "customer")
-public class Customer extends BaseEntity{
+public class Customer extends BaseEntity {
     @Column(unique = true)
     private String id;
 
@@ -44,15 +44,16 @@ public class Customer extends BaseEntity{
     private String cardCvc;
 
     @Column(name = "card_validity")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime cardValidity;
+    private String cardValidity;
 
     private String name;
 
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "profile_image")
-    private String profileImage;
+    @Column(name = "customer_key")
+    private String customerKey;
 
+    @Column(name = "billing_key")
+    private String billingKey;
 }

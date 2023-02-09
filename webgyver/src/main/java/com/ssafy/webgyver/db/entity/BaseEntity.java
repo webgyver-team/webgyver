@@ -1,5 +1,6 @@
 package com.ssafy.webgyver.db.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -21,9 +22,9 @@ public class BaseEntity {
     Long idx;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDateTime createdAt;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
-    private LocalDateTime updatedAt;
+    private LocalDateTime updatedAt = LocalDateTime.now();
 }

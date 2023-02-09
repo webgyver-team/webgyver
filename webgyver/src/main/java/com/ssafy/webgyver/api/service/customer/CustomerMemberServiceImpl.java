@@ -8,25 +8,44 @@ import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.repository.customer.CustomerMemberRepository;
-import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.Base64;
+import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class CustomerMemberServiceImpl implements CustomerMemberService{
     final CustomerMemberRepository customerMemberRepository;
     final PasswordEncoder passwordEncoder;
+
+    @Value("${properties.file.toss.secret}")
+    String tossKey;
     @Override
     public BaseResponseBody SignUpCustomer(CustomerSignUpPostReq customerRegisterInfo) {
         String customerBirth = customerRegisterInfo.getBirthDay();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
+
+        //userid + cardnum으로 base64 써서 customerkey 만들기
+        String customerKey = new String(Base64.getEncoder().encode((customerRegisterInfo.getId() + customerRegisterInfo.getCardNumber()).getBytes()));
+        BaseResponseBody resultBilling = registerCard(customerKey, customerRegisterInfo);
+
+        if(resultBilling.getStatusCode() != 200)
+            return resultBilling;
 
         Customer customer = Customer.builder()
                 .id(customerRegisterInfo.getId())
@@ -36,13 +55,62 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
                 .gender(customerBirth.substring(8))
                 .phoneNumber(customerRegisterInfo.getPhoneNumber())
                 .cardNumber(customerRegisterInfo.getCardNumber())
-                .cardCvc(customerRegisterInfo.getCardCvc())
-                .cardValidity(LocalDate.parse(customerRegisterInfo.getCardValidity(), formatter).atStartOfDay())
+                .cardValidity(customerRegisterInfo.getCardValidity())
+                .customerKey(customerKey)
+                .billingKey(resultBilling.getMessage())
                 .build();
+
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
         customerMemberRepository.save(customer);
-        BaseResponseBody result = BaseResponseBody.of(200, "Success");
-        return result;
+
+        return BaseResponseBody.of(200, "Success");
+    }
+
+    private BaseResponseBody registerCard(String customerKey, CustomerSignUpPostReq req) {
+        try {
+            URL url = new URL("https://api.tosspayments.com/v1/billing/authorizations/card");
+
+            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
+            connection.setRequestMethod("POST");
+            connection.setRequestProperty("Content-Type", "application/json");
+            connection.setRequestProperty("Authorization", tossKey);
+            connection.setDoOutput(true);
+
+            JSONObject jsonObject = new JSONObject();
+            jsonObject.put("cardNumber", req.getCardNumber());
+            jsonObject.put("cardExpirationYear", req.getCardValidity().substring(2, 4));
+            jsonObject.put("cardExpirationMonth", req.getCardValidity().substring(0, 2));
+            jsonObject.put("customerIdentityNumber", req.getBirthDay().substring(2, 8));
+            jsonObject.put("customerKey", customerKey); //고객 ID, 무작위값 설정하여 사용
+
+            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+            outputStream.writeBytes(jsonObject.toString());
+            outputStream.flush();
+            outputStream.close();
+
+            int respCode = connection.getResponseCode(); // New items get NOT_FOUND on PUT
+
+            if (respCode == HttpURLConnection.HTTP_OK) {
+                // Read input data stream.
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                JSONParser parser = new JSONParser();
+                JSONObject resObject = (JSONObject) parser.parse(reader.readLine());
+
+                reader.close();
+
+                return BaseResponseBody.of(200, resObject.get("billingKey").toString());
+
+            } else {
+                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
+                JSONParser parser = new JSONParser();
+                JSONObject resObject = (JSONObject) parser.parse(reader.readLine());
+
+                return BaseResponseBody.of(204, resObject.get("message").toString());
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            return BaseResponseBody.of(500, "Fail");
+        }
     }
 
     @Override
@@ -65,9 +133,9 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
         if (passwordEncoder.matches(password, customer.getPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             return CustomerLoginRes.of(200, "Success", JwtTokenUtil.getToken(
-                    String.valueOf(customer.getIdx())));
+                    String.valueOf(customer.getIdx())),customer.getIdx());
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
-        return CustomerLoginRes.of(401, "Invalid Password", null);
+        return CustomerLoginRes.of(401, "Invalid Password", null, null);
     }
 }

@@ -3,21 +3,24 @@ package com.ssafy.webgyver.db.entity;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Builder
 @Getter
+@Setter
 @Entity
-@ToString
 @AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name="article")
+@ToString
 public class Article extends BaseEntity{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "idx")
     private Long idx;
 
-    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "reservation_idx", nullable = true)
     private Reservation reservation;
 
@@ -35,5 +38,4 @@ public class Article extends BaseEntity{
     // -6 -> 리뷰, 별점 4개
     // -7 -> 리뷰, 별점 5개
     private Long type;
-
 }

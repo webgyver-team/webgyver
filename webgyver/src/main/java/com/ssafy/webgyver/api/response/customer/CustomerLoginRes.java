@@ -7,11 +7,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CustomerLoginRes extends DataResponseBody {
-    public static CustomerLoginRes of(Integer statusCode, String message, String accessToken) {
+    public static CustomerLoginRes of(Integer statusCode, String message, String accessToken, Long idx) {
         CustomerLoginRes res = new CustomerLoginRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
         res.getData().put("access-token", accessToken);
+        res.getData().put("customerIdx", idx);
         return res;
     }
 }

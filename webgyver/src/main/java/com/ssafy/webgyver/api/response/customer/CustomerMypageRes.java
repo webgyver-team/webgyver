@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Getter
 @Setter
@@ -15,23 +15,24 @@ public class CustomerMypageRes extends DataResponseBody {
     @NoArgsConstructor
     static class Response {
         private Long idx;
-        private String id;
         private String name;
         private String phoneNumber;
-        private LocalDateTime birth;
+        private String birthDay;
         private String cardNumber;
-        private String profileImage;
+        private String cardValidity;
 
         public Response(Customer customer) {
             this.idx = customer.getIdx();
-            this.id = customer.getId();
             this.name = customer.getName();
             this.phoneNumber = customer.getPhoneNumber();
-            this.birth = customer.getBirthDay();
             this.cardNumber = customer.getCardNumber();
-            this.profileImage = customer.getProfileImage();
+            this.cardValidity = customer.getCardValidity();
+
+            String birth = customer.getBirthDay().format(DateTimeFormatter.ofPattern("yyMMdd"));
+            this.birthDay = birth + customer.getGender();
         }
     }
+
     public static CustomerMypageRes of(Integer statusCode, String message, Customer profile) {
         CustomerMypageRes res = new CustomerMypageRes();
         res.setStatusCode(statusCode);

@@ -1,20 +1,28 @@
 package com.ssafy.webgyver.api.controller.seller;
 
+import com.google.common.reflect.TypeToken;
+import com.google.gson.Gson;
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
-import com.ssafy.webgyver.api.request.seller.SellerDescriptionUpdateReq;
+import com.ssafy.webgyver.api.request.common.picture.PictureListReq;
+import com.ssafy.webgyver.api.request.common.picture.PictureReq;
+import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
+import com.ssafy.webgyver.api.response.seller.SellerGetBookTimeRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
+import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
 import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
+import com.ssafy.webgyver.db.entity.Picture;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -29,57 +37,127 @@ public class SellerMypageController {
     public ResponseEntity<HistoryListRes> getAllHistory(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req) {
         log.info("{}", req);
         List<Article> articleList = sellerMypageService.getAllHistory(req);
-        for (Article article :
-                articleList) {
-        }
+        Map<Long, List<Picture>> pictureMap = sellerMypageService.getAllPictureMap(articleList);
         return ResponseEntity.ok(
-                HistoryListRes.of(200, "Success", articleList)
+                HistoryListRes.of(200, "Success", articleList, pictureMap)
         );
     }
 
     @PostMapping("/history")
-    public ResponseEntity<BaseResponseBody> insertHistory(@RequestBody ArticleAllReq req) {
-        Article result = sellerMypageService.insertHistory(req);
-        if (result != null) {
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-        } else {
-            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
-        }
+    public ResponseEntity<BaseResponseBody> insertHistory(
+            @RequestBody Map<String, Object> request
+//            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
+    ) {
+        ArticleAllReq articleAllReq = new ArticleAllReq();
+        articleAllReq.setType(new Long((int) request.get("type")));
+        articleAllReq.setContent((String) request.get("content"));
+
+        PictureListReq pictureListReq = new PictureListReq();
+        Gson gson = new Gson();
+        pictureListReq.setImages(gson.fromJson(gson.toJson(request.get("images")), new TypeToken<List<PictureReq>>() {
+        }.getType()));
+
+
+        Article result = sellerMypageService.insertHistory(articleAllReq);
+        sellerMypageService.insertPictures(result, pictureListReq);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
     @PutMapping("/history/{articleIdx}")
-    public ResponseEntity<BaseResponseBody> updateHistory(@PathVariable Long articleIdx, @RequestBody ArticleAllReq req) {
-        log.info("updateHistory : {}", req);
-        Article result = sellerMypageService.updateHistory(req);
+    public ResponseEntity<BaseResponseBody> updateHistory(
+            @PathVariable Long articleIdx,
+            @RequestBody Map<String, Object> request
+//            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
+    ) {
+        System.out.println("~~~~~~~~~~~~~~~~");
+        System.out.println("PUTMAPPING!!!!!!!!!!");
+        // 1. 아티클과 연관단 사진 모두 삭제
+        sellerMypageService.deleteAllPicture(articleIdx);
+        // 2. 아티클 업데이트
+        // 3. 사진 일괄등록
 
-        if (result != null) {
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-        } else {
-            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
-        }
+        ArticleAllReq articleAllReq = new ArticleAllReq();
+        articleAllReq.setType(Long.valueOf(String.valueOf(request.get("type"))));
+        articleAllReq.setContent((String) request.get("content"));
+        articleAllReq.setIdx(articleIdx);
+
+        PictureListReq pictureListReq = new PictureListReq();
+        Gson gson = new Gson();
+        pictureListReq.setImages(gson.fromJson(gson.toJson(request.get("images")), new TypeToken<List<PictureReq>>() {
+        }.getType()));
+        System.out.println("------------------------------------");
+        System.out.println(articleIdx);
+        System.out.println(articleAllReq);
+        System.out.println(pictureListReq);
+        System.out.println("------------------------------------");
+
+        Article result = sellerMypageService.updateHistory(articleAllReq);
+        sellerMypageService.insertPictures(result, pictureListReq);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
 
     @DeleteMapping("/history/{articleIdx}")
-    public ResponseEntity<BaseResponseBody> deleteHistory(@PathVariable("articleIdx") Long articleIdx, ArticleIdxReq req) {
-        log.info("{}", req);
-        try {
-            sellerMypageService.deleteHistory(req);
-            return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
-        } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(500).body(BaseResponseBody.of(500, "Fail"));
-        }
+    public ResponseEntity<BaseResponseBody> deleteHistory(@PathVariable("articleIdx") long articleIdx) {
+        ArticleIdxReq req = new ArticleIdxReq();
+        req.setArticleIdx(articleIdx);
+        log.info("!!!!!!!!!!!!!!!!!!!!!{}", req);
+        sellerMypageService.deleteHistory(req);
+        return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
+
     @GetMapping("/intro/{sellerIdx}")
-    public ResponseEntity<?> getPartnerIntro(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req){
+    public ResponseEntity<?> getPartnerIntro(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req) {
         log.info("intro Controller 들어옴 , {}", sellerIdx);
         SellerMyPageIntroRes result = sellerMypageService.getSellerMyPageIntro(req);
 
         return ResponseEntity.status(200).body(result);
     }
-    @PutMapping("intro/description/{sellerIdx}")
-    public ResponseEntity<?> updatePartnerDescription(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, SellerDescriptionUpdateReq descriptionReq){
-        sellerMypageService.updateSellerDescription(req,descriptionReq);
-        return null;
 
+    @PutMapping("intro/description/{sellerIdx}")
+    public ResponseEntity<?> updatePartnerDescription(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, @RequestBody SellerDescriptionUpdateReq descriptionReq) {
+        BaseResponseBody res = sellerMypageService.updateSellerDescription(req, descriptionReq);
+        return ResponseEntity.status(200).body(res);
+    }
+
+    @PutMapping("/intro/time/{sellerIdx}")
+    public ResponseEntity<?> updatePartnerTime(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, @RequestBody SellerTimeUpdateReq timeReq) {
+        BaseResponseBody res = sellerMypageService.updateSellerTime(req, timeReq);
+        return ResponseEntity.ok().body(res);
+    }
+
+    @PutMapping("/profile/{sellerIdx}")
+    public ResponseEntity<?> updatePartnerProfile(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq req, @RequestBody SellerProfileUpdateReq profileReq) {
+        BaseResponseBody res = sellerMypageService.updateSellerProfile(req, profileReq);
+        return ResponseEntity.ok().body(res);
+    }
+
+    @GetMapping("/review/{sellerIdx}")
+    public ResponseEntity<?> getReviewList(@PathVariable Long sellerIdx, SellerIdxReq req) {
+        return ResponseEntity.ok().body(sellerMypageService.getReviewList(req));
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<?> registerComment(@RequestBody SellerCommentRegisterReq req) {
+        return ResponseEntity.ok().body(sellerMypageService.registerComment(req));
+    }
+
+    @PutMapping("/comment/{a_idx}")
+    public ResponseEntity<?> modifyComment(@RequestBody SellerCommentModifyReq req) {
+        return ResponseEntity.ok().body(sellerMypageService.modifyComment(req));
+    }
+
+    @DeleteMapping("/comment/{a_idx}")
+    public ResponseEntity<?> deleteComment(@PathVariable(name = "a_idx") Long commentIdx) {
+        return ResponseEntity.ok().body(sellerMypageService.deleteComment(commentIdx));
+    }
+    @GetMapping("/booktime/{sellerIdx}")
+    public ResponseEntity<?> getSellerBookTime(@PathVariable(name = "sellerIdx") Long sellerIdx, SellerIdxReq idxReq){
+        SellerGetBookTimeRes res = sellerMypageService.getSellerBookTime(idxReq);
+        return ResponseEntity.ok(res);
+    }
+    @PutMapping("/booktime/{sellerIdx}")
+    public ResponseEntity<?> updateSellerBookTime(@PathVariable(name = "sellerIdx") Long sellerIdx, SellerIdxReq idxReq, @RequestBody SellerUpdateBookTimeReq timeReq){
+        BaseResponseBody res = sellerMypageService.updateSellerBookTime(idxReq, timeReq);
+        return ResponseEntity.ok(res);
     }
 }

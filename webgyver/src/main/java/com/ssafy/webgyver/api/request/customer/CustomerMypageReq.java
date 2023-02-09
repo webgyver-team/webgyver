@@ -11,6 +11,8 @@ public class CustomerMypageReq {
     Long idx;
     String name;
     String phoneNumber;
-    String birth;
+    String birthDay;
     String cardNumber;
+    String cardValidity;
+    String password;
 }

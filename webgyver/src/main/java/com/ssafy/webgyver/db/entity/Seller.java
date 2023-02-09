@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "seller")
 @DynamicInsert
+@ToString
 public class Seller extends BaseEntity {
 
     @Column(unique = true, length = 50)
@@ -80,9 +81,25 @@ public class Seller extends BaseEntity {
     private Long starTotal;
     private Double lat;
     private Double lng;
+    private Integer point;
 
     public void updateSellerDescription(String companyDescription){
         this.companyDescription = companyDescription;
     }
+    public void updateSellerTime(String companyTime){
+        this.companyTime = companyTime;
+    }
+    public void updateSellerBookTime(String bookTime){
+        this.bookTime = bookTime;
+    }
 
+    public void updateSellerProfile(String profileImage, String companyImage, String password, String phoneNumber, String companyName, String address, String detailAddress){
+        this.profileImage = profileImage;
+        this.companyImage = companyImage;
+        this.password = password;
+        this.phoneNumber = phoneNumber;
+        this. companyName = companyName;
+        this.address = address;
+        this.detailAddress = detailAddress;
+    }
 }

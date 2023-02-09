@@ -1,17 +1,18 @@
 package com.ssafy.webgyver.db.entity;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Builder
 @Getter
 @Setter
 @Entity
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(name = "reservation")
 public class Reservation extends BaseEntity {
     @ManyToOne
@@ -47,4 +48,9 @@ public class Reservation extends BaseEntity {
 
     @OneToMany(mappedBy = "reservation")
     private List<Article> articleList;
+
+    public void updateReservationState(String state){
+        this.reservationState = state;
+    }
+
 }
