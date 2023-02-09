@@ -1,0 +1,14 @@
+{
+  // 디폴트 포매터를 prettier로 설정
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  // 저장시 자동 포맷팅
+  "editor.codeActionsOnSave": {
+    "source.fixAll": true,
+    "source.fixAll.eslint": true
+  },
+
+  // eslint 상태 보여줌
+  "eslint.alwaysShowStatus": true,
+  // eslint 검사 범위
+  "eslint.validate": ["javascript", "javascriptreact", "html", "json"]
+}

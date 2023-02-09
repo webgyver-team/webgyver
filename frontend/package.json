@@ -1,0 +1,88 @@
+{
+  "name": "frontend",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "@emotion/react": "^11.10.5",
+    "@emotion/styled": "^11.10.5",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/material": "^5.11.4",
+    "@mui/styled-engine-sc": "^5.11.0",
+    "@testing-library/jest-dom": "^5.16.5",
+    "@testing-library/react": "^13.4.0",
+    "@testing-library/user-event": "^13.5.0",
+    "aws-sdk": "^2.1306.0",
+    "axios": "^1.3.1",
+    "dart-sass": "^1.25.0",
+    "date-fns": "^2.29.3",
+    "js-sha256": "^0.9.0",
+    "prop-types": "^15.8.1",
+    "react": "^18.2.0",
+    "react-daum-postcode": "^3.1.1",
+    "react-dom": "^18.2.0",
+    "react-responsive": "^9.0.2",
+    "react-router-dom": "^6.6.1",
+    "react-scripts": "5.0.1",
+    "react-slick": "^0.29.0",
+    "recoil": "^0.7.6",
+    "recoil-persist": "^4.2.0",
+    "slick-carousel": "^1.8.1",
+    "styled-components": "^5.3.6",
+    "web-vitals": "^2.1.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "//lint": "해당 파일에 lint가 적용된다.",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx --fix src/",
+    "//fix": "해당 파일을 prettier가 수정한다.",
+    "fix": "prettier --write src/**/*.{js,jsx,ts,tsx,css,scss,md}",
+    "//prepare": "해당 프로젝트는 .git이 상위 폴더에 존재 하기 때문에, prepare가 .git이 있는 폴더까지 도달했다가 하위로 내려와 인스톨 되어야 한다.",
+    "prepare": "cd ../ && husky install ./frontend/.husky"
+  },
+  "eslintConfig": {
+    "extends": [
+      "react-app",
+      "react-app/jest"
+    ]
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "eslint": "^8.31.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-config-standard": "^17.0.0",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-n": "^15.6.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-react": "^7.31.11",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.1.0",
+    "prettier": "^2.8.1"
+  },
+  "//lint-staged": "lint-staged가 사용할 lint 규칙을 명시해줘야 한다. prettier와 eslint를 가지고 lint한다.",
+  "lint-staged": {
+    "//**/*{js,ts}": "모든 경로 모든 js, ts 파일에 대해 린드를 실행한다.",
+    "**/*.{js,ts}": [
+      "prettier . --write",
+      "eslint --ext .js,.jsx,.ts,.tsx --fix src/"
+    ],
+    "*.{js,css,scss}": "prettier --write"
+  }
+}
