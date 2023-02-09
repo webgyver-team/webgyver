@@ -25,7 +25,7 @@ export default function ReservationForm() {
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
   const [imageList, setImageList] = useState([]);
-  const [imageData, setImageData] = useState([]);
+  const imageData = [];
   const customerIdx = useRecoilValue(userIdx);
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
@@ -53,7 +53,7 @@ export default function ReservationForm() {
       const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
       const hashImageName = sha256(
-        `${date.toString()}${customerIdx}${imageList[i].name}`,
+        `${date.toString()}${customerIdx}${originName}`,
       ); // [날짜 객체 + 회원 idx + 기존 파일명]을 조합하여 해시 처리
       const upload = new AWS.S3.ManagedUpload({
         params: {
@@ -76,7 +76,7 @@ export default function ReservationForm() {
         originName: imageList[i].name,
       };
       imageData.push(newData);
-      setImageData((originalData) => [...originalData, newData]);
+      // setImageData((originalData) => [...originalData, newData]);
     }
   };
 
@@ -147,6 +147,7 @@ export default function ReservationForm() {
       } else {
         // eslint-disable-next-line
         console.log(response);
+        // eslint-disable-next-line
         alert('예약 내용을 다시 확인바랍니다.');
       }
     });

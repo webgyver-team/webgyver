@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { async } from 'q';
 import Send from './send';
 
 const customerURL = '/api/v1/customer';
@@ -25,14 +26,20 @@ export const customer = {
       const response = await Send.get(`${customerURL}/mypage/profile/${idx}`);
       return response;
     },
-    myReview: async (idx) => {
-      const response = await Send.get(`${customerURL}/mypage/review/${idx}`);
+    reviews: async (cIdx) => {
+      const response = await Send.get(`${customerURL}/mypage/review/${cIdx}`);
+      return response;
+    },
+    review: async (rIdx) => {
+      const response = await Send.get(
+        `${customerURL}/mypage/review/detail/${rIdx}`,
+      );
       return response;
     },
   },
   post: {
-    reviews: async (data) => {
-      const response = await Send.post(`${customerURL}/review`, data);
+    review: async (data) => {
+      const response = await Send.post(`${customerURL}/mypage/review`, data);
       return response;
     },
     reservation: async (data) => {
@@ -46,9 +53,22 @@ export const customer = {
   put: {
     profile: async (data, idx) => {
       const response = await Send.put(
-        `${masterURL}/mypage/profile/${idx}`,
+        `${customerURL}/mypage/profile/${idx}`,
         data,
       );
+      return response;
+    },
+    review: async (data, idx) => {
+      const response = await Send.put(
+        `${customerURL}/mypage/review/${idx}`,
+        data,
+      );
+      return response;
+    },
+  },
+  delete: {
+    review: async (idx) => {
+      const response = await Send.delete(`${customerURL}/mypage/review/${idx}`);
       return response;
     },
   },

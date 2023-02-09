@@ -13,6 +13,7 @@ export default function CategoryInput({ updateData, initialList }) {
   );
   useEffect(() => {
     for (let i = 0; i < categoryItemList.length; i += 1) {
+      categoryItemList[i].index = i + 1;
       categorySelected[categoryItemList[i].category.idx] = true;
     }
   }, [categoryItemList, categorySelected]);

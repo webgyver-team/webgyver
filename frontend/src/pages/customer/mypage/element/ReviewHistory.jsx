@@ -1,11 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-
+import { useNavigate } from 'react-router-dom';
 import { useRecoilValue } from 'recoil';
 import { customer } from '../../../../api/customerService';
 import { userIdx } from '../../../../atom';
@@ -13,10 +14,11 @@ import { userIdx } from '../../../../atom';
 export default function ReviewHistory() {
   const customerIdx = useRecoilValue(userIdx);
   const [reviews, setReviews] = useState([]);
+  const [reload, setReload] = useState(false);
   useEffect(() => {
-    const getMyReview = async () => {
-      const response = await customer.get.myReview(customerIdx);
-
+    if (!reload) return;
+    const getReviews = async () => {
+      const response = await customer.get.reviews(customerIdx);
       if (response.statusCode === 200) {
         setReviews(response.data.reviews);
       } else {
@@ -24,23 +26,17 @@ export default function ReviewHistory() {
         alert(response.message);
       }
     };
-    getMyReview();
-  }, [customerIdx]);
-  // const [reviews] = useState([
-  //   {
-  //     title: '뜨거운 물이 나오지 않는 건에 대하여',
-  //     content:
-  // '물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다! 물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다!',
-  //     date: '01월 28일 09:00',
-  //     images: [ReviewImg1, ReviewImg2, ReviewImg3],
-  //     score: 3.0,
-  //   },
-  // ]);
-
+    getReviews();
+    setReload(false);
+  }, [customerIdx, reload]);
   return (
     <Main>
       {reviews.map((review) => (
-        <CardView key={review.reviewIdx} review={review} />
+        <CardView
+          key={review.reviewIdx}
+          review={review}
+          setReload={setReload}
+        />
       ))}
       {reviews.length === 0 ? (
         <NoReviewMessage>리뷰 내역이 없습니다.</NoReviewMessage>
@@ -53,27 +49,57 @@ const Main = styled.div`
   width: 100%;
 `;
 
-export function CardView({ review }) {
+export function CardView({ review, setReload }) {
   const slickSettings = {
     dots: false,
     arrows: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
+  };
+  const navigate = useNavigate();
+  const deleteReview = async () => {
+    // eslint-disable-next-line
+    if (confirm('리뷰를 삭제하시겠습니까?')) {
+      const response = await customer.delete.review(review.reviewIdx);
+      if (response.statusCode === 200) {
+        // eslint-disable-next-line
+        alert('리뷰가 삭제되었습니다.');
+        setReload(true);
+      } else {
+        // eslint-disable-next-line
+        alert(response.message);
+      }
+    }
+  };
+  const editReview = (rIdx) => {
+    navigate(`/reviewForm/${rIdx}`);
   };
 
   return (
     <Card>
       <TitleBox>
         <p className="title">{review.title}</p>
-        <EditIcon />
+        <div
+          style={{
+            width: '60px',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <EditIcon onClick={() => editReview(review.reviewIdx)} />
+          <DeleteIcon onClick={deleteReview} />
+        </div>
       </TitleBox>
       <p className="score">{`평점 : ${review.rating}`}</p>
       <Slider {...slickSettings}>
         {review.images.map((image) => (
           <ImgBox key={image.saveName}>
-            <img src={image.saveName} alt="" />
+            <img
+              src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${image.saveName}`}
+              alt=""
+            />
           </ImgBox>
         ))}
       </Slider>
