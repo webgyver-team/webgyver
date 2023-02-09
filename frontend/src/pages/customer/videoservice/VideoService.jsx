@@ -109,16 +109,16 @@ export default function VideoService() {
     }
   };
 
-  const conn = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`);
-  const configuration = {
-    iceServers: [
-      {
-        urls: 'stun:stun.l.google.com:19302',
-      },
-    ],
-  };
-
+  const conn = useRef(null);
   useLayoutEffect(() => {
+    conn.current = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`);
+    const configuration = {
+      iceServers: [
+        {
+          urls: 'stun:stun.l.google.com:19302',
+        },
+      ],
+    };
     const send = async (message) => {
       // 소켓으로 메세지 보내기
       conn.send(JSON.stringify(message));

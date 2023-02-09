@@ -10,7 +10,7 @@ import './Match.scss';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { locateValueState, categoryState, userIdx } from '../../../atom';
+import { locateValueState, userIdx } from '../../../atom';
 
 // kakao 가져오기
 const { kakao } = window;
@@ -18,26 +18,29 @@ const { kakao } = window;
 export default function Matching() {
   const navigate = useNavigate();
   const routeMatchForm = () => navigate('/match/form');
-  const categoryIdx = useRecoilValue(categoryState);
+  // const categoryIdx = useRecoilValue(categoryState);
   const idx = useRecoilValue(userIdx);
   const locateValue = useRecoilValue(locateValueState);
+  const [watching, setWatching] = useState(0);
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/customer/${idx}`;
+  const gWebSocket = useRef(null);
 
   // map resizer
   const MainScreenRef = useRef(null);
   const [mainScreenWidth, setMainScreenWidth] = useState('100%');
   useLayoutEffect(() => {
-    const gWebSocket = new WebSocket(webSocketAddress);
-    gWebSocket.onopen = () => {
+    gWebSocket.current = new WebSocket(webSocketAddress);
+    gWebSocket.current.onopen = () => {
+      console.log(11, gWebSocket);
       // 첫 접속
       const socketData = JSON.stringify({
         method: 'INIT',
-        categoryIdx,
+        categoryIdx: 2,
         lng: 0,
         lat: 0,
-        address: 'asdfasdf',
+        address: '대전 어딘가',
         detailAddress: '111-2222',
-        title: 'asdfasdf',
+        title: '마늘도 까주나요',
         content:
           '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n손이 너무 더러운디 씻을수가 없어유\n',
         images: [
@@ -51,16 +54,18 @@ export default function Matching() {
           },
         ],
         price: 500,
-        viewDistance: 2,
+        viewDistance: 1,
       });
-      gWebSocket.send(socketData);
+      gWebSocket.current.send(socketData);
+      console.log(socketData);
     };
     /**
      * 웹소켓 메시지(From Server) 수신하는 경우 호출
      */
-    gWebSocket.onmessage = (message) => {
+    gWebSocket.current.onmessage = (message) => {
       const socketData = JSON.parse(message.data);
       console.log(socketData);
+      setWatching(socketData.sellerCnt);
       // addLineToChatBox(JSON.stringify(data));
       // addLineToChatBox('-----------------------------');
     };
@@ -68,18 +73,17 @@ export default function Matching() {
     /**
      * 웹소켓 사용자 연결 해제하는 경우 호출
      */
-    gWebSocket.onclose = function () {
+    gWebSocket.current.onclose = () => {
       // addLineToChatBox('Server is disconnected.');
     };
 
     /**
      * 웹소켓 에러 발생하는 경우 호출
      */
-    gWebSocket.onerror = function () {
+    gWebSocket.current.onerror = () => {
       // addLineToChatBox('Error!');
     };
   }, []);
-
   useLayoutEffect(() => {
     const handleResize = () => {
       setMainScreenWidth(MainScreenRef.current.offsetWidth);
@@ -87,16 +91,27 @@ export default function Matching() {
     window.addEventListener('resize', handleResize);
   }, [MainScreenRef]);
 
-  const [distance, setDistance] = useState('5km 이내');
+  const [distance, setDistance] = useState('1km 이내');
 
   const handleChange = (event) => {
     setDistance(event.target.value);
+  };
+  const changeDistance = (value) => {
+    console.log(gWebSocket.current);
+    const data = JSON.stringify(
+      {
+        method: 'CHANGE_DISTANCE',
+        viewDistance: value,
+      },
+    );
+    console.log(data);
+    gWebSocket.current.send(data);
   };
 
   const backCount = 3;
   // eslint-disable-next-line react/jsx-one-expression-per-line
   const alertText = <p>{backCount}분 뒤, 이전 페이지로 돌아갑니다.</p>;
-  const lowerText = '지금 9명의 전문가가\n고객님의 문의를 보고 있습니다.';
+  const lowerText = `지금 ${watching}명의 전문가가\n고객님의 문의를 보고 있습니다.`;
 
   const marker = (
     <div className="dot">
@@ -153,16 +168,16 @@ export default function Matching() {
               label="distance"
               sx={{ fontSize: 12 }}
             >
-              <MenuItem sx={{ fontSize: 12 }} value="거리무관">
+              <MenuItem sx={{ fontSize: 12 }} value="거리무관" onClick={() => changeDistance('-1')}>
                 거리무관
               </MenuItem>
-              <MenuItem sx={{ fontSize: 12 }} value="1km 이내">
+              <MenuItem sx={{ fontSize: 12 }} value="1km 이내" onClick={() => changeDistance('1')}>
                 1km 이내
               </MenuItem>
-              <MenuItem sx={{ fontSize: 12 }} value="5km 이내">
+              <MenuItem sx={{ fontSize: 12 }} value="5km 이내" onClick={() => changeDistance('5')}>
                 5km 이내
               </MenuItem>
-              <MenuItem sx={{ fontSize: 12 }} value="10km 이내">
+              <MenuItem sx={{ fontSize: 12 }} value="10km 이내" onClick={() => changeDistance('10')}>
                 10km 이내
               </MenuItem>
             </Select>

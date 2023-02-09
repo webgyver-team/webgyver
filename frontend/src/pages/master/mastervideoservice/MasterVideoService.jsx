@@ -184,9 +184,9 @@ export default function MasterVideoService() {
         myPeerConnection.addIceCandidate(content.data);
       }
     };
-    conn.onclose = () => console.log('끝');
-    setTimeout(() => createOffer(), 50);
+    conn.onopen = () => createOffer();
   });
+  conn.onclose = () => console.log('끝');
 
   return (
     <Main>

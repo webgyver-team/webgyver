@@ -21,8 +21,9 @@ export default function MasterSchedule() {
     },
   ]);
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/seller/${idx}`;
+  let gWebSocket = null;
   useLayoutEffect(() => {
-    const gWebSocket = new WebSocket(webSocketAddress);
+    gWebSocket = new WebSocket(webSocketAddress);
     gWebSocket.onopen = () => {
       // 첫 접속
       const socketData = JSON.stringify({
@@ -36,6 +37,7 @@ export default function MasterSchedule() {
      * 웹소켓 메시지(From Server) 수신하는 경우 호출
      */
     gWebSocket.onmessage = (message) => {
+      console.log(message);
       const socketData = JSON.parse(message.data);
       console.log(socketData);
       setData(socketData);
@@ -47,6 +49,7 @@ export default function MasterSchedule() {
      * 웹소켓 사용자 연결 해제하는 경우 호출
      */
     gWebSocket.onclose = () => {
+      console.log('끝');
       // addLineToChatBox('Server is disconnected.');
     };
 
