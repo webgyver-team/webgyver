@@ -1,21 +1,28 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageInput from '../reservation/elements/ImageInput';
-import { locateValueState, categoryState } from '../../../atom';
+import {
+  locateValueState,
+  categoryState,
+  matchFormState,
+  userIdx,
+} from '../../../atom';
 
 export default function ReservationForm() {
   const navigate = useNavigate();
   const location = useRecoilValue(locateValueState);
   const categoryIdx = useRecoilValue(categoryState);
-  const [formTitle, setFormTitle] = useState('');
-  const [formContent, setFormContent] = useState('');
-  const [cost, setCost] = useState(0);
+  const customerIdx = useRecoilValue(userIdx);
+  const [matchForm, setMatchForm] = useRecoilState(matchFormState);
+  const [formTitle, setFormTitle] = useState(matchForm.title);
+  const [formContent, setFormContent] = useState(matchForm.content);
+  const [cost, setCost] = useState(matchForm.cost);
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
   const [msgForCost, setMsgForCost] = useState('');
@@ -74,13 +81,14 @@ export default function ReservationForm() {
   };
   const registReservation = () => {
     const data = {
-      customerIdx: 100,
+      customerIdx,
       address: location.address,
       detailAddress: location.detail,
       categoryIdx,
       title: formTitle,
       content: formContent,
       cost,
+      images: imageData,
     };
     // data에 대한 유효성 검사 필요!!
     if (data.customerIdx === null) {
@@ -123,6 +131,7 @@ export default function ReservationForm() {
     sendImageListToS3()
       .then(() => {
         // eslint-disable-next-line
+        setMatchForm(data);
         console.log(data); // POST로 수정 예정
       })
       .then(() => {

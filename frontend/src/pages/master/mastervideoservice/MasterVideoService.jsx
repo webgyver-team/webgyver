@@ -118,7 +118,9 @@ export default function MasterVideoService() {
   const conn = useRef(null);
   const myPeerConnection = useRef(null);
   useLayoutEffect(() => {
-    conn.current = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`);
+    conn.current = new WebSocket(
+      `ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`,
+    );
     const configuration = {
       iceServers: [
         {

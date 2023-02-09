@@ -4,7 +4,7 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { TextField } from '@mui/material';
 import { locateModalState, locateValueState } from '../../../../atom';
 
-export default function AddressInput() {
+export default function AddressInput({ updateData }) {
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const location = useRecoilValue(locateValueState);
   const openLocateModal = () => setLocateModalOpen(true);
@@ -19,6 +19,7 @@ export default function AddressInput() {
         fullWidth
         value={location.address}
         onClick={openLocateModal}
+        updateData={updateData}
         disabled
       />
       <TextField
@@ -28,6 +29,7 @@ export default function AddressInput() {
         margin="normal"
         fullWidth
         onClick={openLocateModal}
+        updateData={updateData}
         disabled
         value={location.detail}
       />

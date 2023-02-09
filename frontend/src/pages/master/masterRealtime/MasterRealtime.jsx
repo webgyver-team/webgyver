@@ -8,12 +8,13 @@ import ReviewImg1 from '../../../assets/image/review1.jpg';
 import ReviewImg2 from '../../../assets/image/review2.jpg';
 import ReviewImg3 from '../../../assets/image/review3.jpg';
 import RealTime from './elements/RealTime';
-import { userIdx, reservationIdxState } from '../../../atom';
+import { userIdx, reservationIdxState, locateValueState } from '../../../atom';
 
 export default function MasterSchedule() {
   const navigate = useNavigate();
   const idx = useRecoilValue(userIdx);
   const setReservationIdx = useSetRecoilState(reservationIdxState);
+  const locationValue = useRecoilValue(locateValueState);
   const [data, setData] = useState([
     {
       title: '뜨거운 물이 나오지 않는 건에 대하여',
@@ -31,10 +32,11 @@ export default function MasterSchedule() {
       // 첫 접속
       const socketData = JSON.stringify({
         method: 'INIT',
-        lng: 0,
-        lat: 0,
+        lng: locationValue.longitude,
+        lat: locationValue.latitude,
       });
       gWebSocket.current.send(socketData);
+      console.log(socketData);
     };
     /**
      * 웹소켓 메시지(From Server) 수신하는 경우 호출
