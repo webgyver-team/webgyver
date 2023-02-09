@@ -57,7 +57,7 @@ public class SellerMypageController {
         }.getType()));
 
 
-        Article result = sellerMypageService.updateHistory(articleAllReq);
+        Article result = sellerMypageService.insertHistory(articleAllReq);
         sellerMypageService.insertPictures(result, pictureListReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -68,6 +68,8 @@ public class SellerMypageController {
             @RequestBody Map<String, Object> request
 //            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
     ) {
+        System.out.println("~~~~~~~~~~~~~~~~");
+        System.out.println("PUTMAPPING!!!!!!!!!!");
         // 1. 아티클과 연관단 사진 모두 삭제
         sellerMypageService.deleteAllPicture(articleIdx);
         // 2. 아티클 업데이트
@@ -76,14 +78,19 @@ public class SellerMypageController {
         ArticleAllReq articleAllReq = new ArticleAllReq();
         articleAllReq.setType(Long.valueOf(String.valueOf(request.get("type"))));
         articleAllReq.setContent((String) request.get("content"));
+        articleAllReq.setIdx(articleIdx);
 
         PictureListReq pictureListReq = new PictureListReq();
         Gson gson = new Gson();
         pictureListReq.setImages(gson.fromJson(gson.toJson(request.get("images")), new TypeToken<List<PictureReq>>() {
         }.getType()));
+        System.out.println("------------------------------------");
+        System.out.println(articleIdx);
+        System.out.println(articleAllReq);
+        System.out.println(pictureListReq);
+        System.out.println("------------------------------------");
 
-
-        Article result = sellerMypageService.insertHistory(articleAllReq);
+        Article result = sellerMypageService.updateHistory(articleAllReq);
         sellerMypageService.insertPictures(result, pictureListReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }

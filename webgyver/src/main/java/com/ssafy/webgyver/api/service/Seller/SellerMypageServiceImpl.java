@@ -64,13 +64,15 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public Article updateHistory(ArticleAllReq req) {
-        Article article = Article.builder().idx(req.getIdx())
-                .title(req.getTitle())
-                .content(req.getContent())
-                .type(req.getType())
-                .build();
-        return articleRepository.save(article);
+        Article article = articleRepository.findByIdx(req.getIdx());
+        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!");
+        System.out.println(article.getIdx());
+        article.setContent(req.getContent());
+        article.setType(req.getType());
+        article.setTitle(req.getTitle());
+        return article;
     }
 
     @Override
@@ -187,7 +189,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
             Map<String, Object> review = new HashMap<>();
             Article article = articleRepository.findArticleByReservationIdxAndTypeLessThan(reservation.getIdx(), -2);
 
-            if(article != null) {
+            if (article != null) {
                 Article comment = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -2);
 
                 review.put("review", article);
@@ -195,7 +197,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
                 review.put("comment", comment);
                 Object images = pictureRepository.findPicturesByArticleIdx(article.getIdx());
 
-                if(images != null)
+                if (images != null)
                     review.put("images", images);
 
                 reviews.add(review);
@@ -209,10 +211,10 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     public BaseResponseBody registerComment(SellerCommentRegisterReq req) {
         Article article = articleRepository.findArticleByReservationIdxAndType(req.getReservationIdx(), -2);
 
-        if(article == null) {
+        if (article == null) {
             Reservation reservation = reservationRepository.findByIdx(req.getReservationIdx());
 
-            if(reservation.getSeller().getIdx() != req.getSellerIdx())
+            if (reservation.getSeller().getIdx() != req.getSellerIdx())
                 return BaseResponseBody.of(500, "Fail");
 
             Article comment = Article.builder()
@@ -234,7 +236,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     public BaseResponseBody modifyComment(SellerCommentModifyReq req) {
         Article article = articleRepository.findByIdx(req.getCommentIdx());
 
-        if(article.getReservation().getSeller().getIdx() == req.getSellerIdx()) {
+        if (article.getReservation().getSeller().getIdx() == req.getSellerIdx()) {
             article.setContent(req.getCommentContent());
 
             return BaseResponseBody.of(200, "OK");
@@ -247,7 +249,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     public BaseResponseBody deleteComment(Long commentIdx) {
         Article article = articleRepository.findByIdx(commentIdx);
 
-        if(article != null && article.getType() == -2) {
+        if (article != null && article.getType() == -2) {
             articleRepository.delete(article);
             return BaseResponseBody.of(200, "OK");
         }
