@@ -64,7 +64,6 @@ public class CommonUtil {
             int respCode = connection.getResponseCode(); // New items get NOT_FOUND on PUT
             if (respCode == HttpURLConnection.HTTP_OK) {
                 return BaseResponseBody.of(200, "Success");
-
             } else {
                 System.out.println(connection.getResponseCode());
                 System.out.println(connection.getResponseMessage());

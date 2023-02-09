@@ -46,7 +46,7 @@ public class WebSocketFaceTime {
     @OnOpen
     public void onOpen(Session session, @PathParam("type") String type, @PathParam("idx") Long idx, @PathParam("reservationIdx") Long reservationIdx) throws IOException {
         // 폭발머신 출동!!!!!
-        startExplosionMachine();
+//        startExplosionMachine();
 
         if (!rooms.containsKey(reservationIdx)) {
             System.out.println("noReservationIdx");
