@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
-import AddCardIcon from '@mui/icons-material/AddCard';
 import { useNavigate } from 'react-router-dom';
 import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
@@ -10,23 +9,24 @@ import NameInput from '../../common/signup/elements/NameInput';
 import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
 import PhoneNumberInput from '../../common/signup/elements/PhoneNumberInput';
 import Agreement from '../../common/signup/elements/AgreementToTerms';
+import CardNumberInput from './elements/CardNumberInput';
 import { customer } from '../../../api/accountsApi';
-import { authState, accessToken } from '../../../atom';
+import { authState, accessToken, userIdx } from '../../../atom';
 
 export default function CustomerSignUp() {
   // const [cardNumber, setCardNumber] = useState(null);
   const navigate = useNavigate();
   const setAuth = useSetRecoilState(authState);
   const setAccessToken = useSetRecoilState(accessToken);
+  const setCustomerIdx = useSetRecoilState(userIdx);
   const [data, setData] = useState({
     id: null,
     password: null,
     birthDay: null,
     name: null,
     phoneNumber: null,
-    cardNumber: '1111222233334444',
-    cardCvc: '123',
-    cardValidity: '0526',
+    cardNumber: null,
+    cardValidity: null,
     useCheck: false,
   });
 
@@ -35,11 +35,6 @@ export default function CustomerSignUp() {
       ...original,
       ...updateValue,
     }));
-  };
-
-  const registCard = async () => {
-    // eslint-disable-next-line
-    alert('카드 등록 API 호출 예정..');
   };
 
   const registCustomer = async () => {
@@ -78,9 +73,15 @@ export default function CustomerSignUp() {
       // 다 통과되면 해당 property 빼야 함
     }
     // eslint-disable-next-line
-    if (data.cardNumber === null) {
+    if (data.cardNumber.trim().length !== 16) {
       // eslint-disable-next-line
       alert('카드정보를 입력하세요.');
+      return;
+    }
+    // eslint-disable-next-line
+    if (data.cardValidity.trim().length !== 4) {
+      // eslint-disable-next-line
+      alert('카드 유효기간을 입력하세요.');
       return;
     }
     // eslint-disable-next-line
@@ -96,10 +97,11 @@ export default function CustomerSignUp() {
       });
       setAccessToken(loginResponse.data['access-token']); // 자동로그인
       setAuth('customer');
+      setCustomerIdx(loginResponse.data.customerIdx);
       navigate('/');
     } else {
       // eslint-disable-next-line
-      alert('다시 시도해주세요.');
+      alert(response.message);
     }
   };
   return (
@@ -124,21 +126,16 @@ export default function CustomerSignUp() {
           initialValue2=""
           initialValue3=""
         />
-        <div>
-          <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>카드 등록</h2>
-          <div style={{ textAlign: 'center' }}>
-            <AddCardIcon
-              onClick={registCard}
-              sx={{
-                fontSize: '80px',
-                '&:hover': {
-                  color: '#6A7EFC',
-                  cursor: 'pointer',
-                },
-              }}
-            />
-          </div>
-        </div>
+        <CardNumberInput
+          updateData={updateData}
+          initialValue1=""
+          initialValue2=""
+          initialValue3=""
+          initialValue4=""
+          initialValueMM=""
+          initialValueYY=""
+        />
+
         <Agreement updateData={updateData} />
       </SignUpForm>
       <div style={{ textAlign: 'center' }}>

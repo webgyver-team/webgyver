@@ -19,7 +19,7 @@ export default function ResidentNumberInput({
   const [msg, setMsg] = useState('');
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {
-      setMsg(() => '주민등록번호는 숫자만 입력할 수 있습니다.');
+      setMsg(() => '주민번호는 숫자만 입력할 수 있습니다.');
       return false;
     }
     setMsg(() => '');
@@ -37,7 +37,7 @@ export default function ResidentNumberInput({
       event.target.value.trim().length > 0 &&
       event.target.value.trim().length < 6
     ) {
-      setMsg(() => '주민등록번호 앞자리 6자리를 입력해주세요.');
+      setMsg(() => '주민번호 앞자리 6자리를 입력해주세요.');
     }
     setResidentNumber1(() => event.target.value);
     if (
@@ -64,7 +64,7 @@ export default function ResidentNumberInput({
     if (actualInput.trim().length !== 0) {
       const value = Number(actualInput.trim());
       if (value < 1 || value > 4) {
-        setMsg(() => '주민등록번호 뒷자리는 1부터 4까지 가능합니다.');
+        setMsg(() => '주민번호 뒷자리는 1부터 4까지 가능합니다.');
         return;
       }
     }
@@ -79,7 +79,7 @@ export default function ResidentNumberInput({
       <InputDiv style={{ width: '100%' }}>
         <TextField
           style={{ width: '48%' }}
-          label="주민등록번호 앞 6자리"
+          label="주민번호 앞 6자"
           variant="outlined"
           value={residentNumber1}
           inputProps={{ maxLength: 6 }}
@@ -89,7 +89,7 @@ export default function ResidentNumberInput({
         <p>-</p>
         <TextField
           style={{ width: '48%' }}
-          label="주민등록번호 뒷 1자리"
+          label="주민번호 뒷 1자"
           variant="outlined"
           value={residentNumber2.length === 7 || focus ? residentNumber2 : ''}
           required

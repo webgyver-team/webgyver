@@ -11,6 +11,24 @@ export const customer = {
       );
       return response;
     },
+    reservationHistory: async (idx) => {
+      const response = await Send.get(`${customerURL}/reservation/list/${idx}`);
+      return response;
+    },
+    completeHistory: async (idx) => {
+      const response = await Send.get(
+        `${customerURL}/reservation/completed/list/${idx}`,
+      );
+      return response;
+    },
+    myInfo: async (idx) => {
+      const response = await Send.get(`${customerURL}/mypage/profile/${idx}`);
+      return response;
+    },
+    myReview: async (idx) => {
+      const response = await Send.get(`${customerURL}/mypage/review/${idx}`);
+      return response;
+    },
   },
   post: {
     reviews: async (data) => {
@@ -20,6 +38,15 @@ export const customer = {
     reservation: async (data) => {
       const response = await Send.post(
         `${customerURL}/reservation/normal/regist`,
+        data,
+      );
+      return response;
+    },
+  },
+  put: {
+    profile: async (data, idx) => {
+      const response = await Send.put(
+        `${masterURL}/mypage/profile/${idx}`,
         data,
       );
       return response;

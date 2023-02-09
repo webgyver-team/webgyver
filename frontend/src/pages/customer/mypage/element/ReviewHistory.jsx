@@ -1,30 +1,50 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import EditIcon from '@mui/icons-material/Edit';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import ReviewImg1 from '../../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../../assets/image/review3.jpg';
+
+import { useRecoilValue } from 'recoil';
+import { customer } from '../../../../api/customerService';
+import { userIdx } from '../../../../atom';
 
 export default function ReviewHistory() {
-  const [reviews] = useState([
-    {
-      title: '뜨거운 물이 나오지 않는 건에 대하여',
-      content:
-        '물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다! 물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다!',
-      date: '01월 28일 09:00',
-      images: [ReviewImg1, ReviewImg2, ReviewImg3],
-      score: 3.0,
-    },
-  ]);
+  const customerIdx = useRecoilValue(userIdx);
+  const [reviews, setReviews] = useState([]);
+  useEffect(() => {
+    const getMyReview = async () => {
+      const response = await customer.get.myReview(customerIdx);
+
+      if (response.statusCode === 200) {
+        setReviews(response.data.reviews);
+      } else {
+        // eslint-disable-next-line
+        alert(response.message);
+      }
+    };
+    getMyReview();
+  }, [customerIdx]);
+  // const [reviews] = useState([
+  //   {
+  //     title: '뜨거운 물이 나오지 않는 건에 대하여',
+  //     content:
+  // '물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다! 물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다!',
+  //     date: '01월 28일 09:00',
+  //     images: [ReviewImg1, ReviewImg2, ReviewImg3],
+  //     score: 3.0,
+  //   },
+  // ]);
 
   return (
     <Main>
-      <CardView review={reviews[0]} />
-      <CardView review={reviews[0]} />
+      {reviews.map((review) => (
+        <CardView key={review.reviewIdx} review={review} />
+      ))}
+      {reviews.length === 0 ? (
+        <NoReviewMessage>리뷰 내역이 없습니다.</NoReviewMessage>
+      ) : null}
     </Main>
   );
 }
@@ -49,11 +69,11 @@ export function CardView({ review }) {
         <p className="title">{review.title}</p>
         <EditIcon />
       </TitleBox>
-      <p className="score">{`평점 : ${review.score}`}</p>
+      <p className="score">{`평점 : ${review.rating}`}</p>
       <Slider {...slickSettings}>
-        {review.images.map((el) => (
-          <ImgBox>
-            <img src={el} alt="" />
+        {review.images.map((image) => (
+          <ImgBox key={image.saveName}>
+            <img src={image.saveName} alt="" />
           </ImgBox>
         ))}
       </Slider>
@@ -117,4 +137,13 @@ const ImgBox = styled.div`
     object-fit: cover;
     border-radius: 5px;
   }
+`;
+
+const NoReviewMessage = styled.p`
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: 18px;
 `;
