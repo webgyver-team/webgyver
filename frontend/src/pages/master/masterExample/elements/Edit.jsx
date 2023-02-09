@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -8,8 +10,8 @@ import Modal from '@mui/material/Modal';
 import CloseIcon from '@mui/icons-material/Close';
 import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
-import { exampleFormState, userIdx } from '../../../../atom';
-import ImageInput from '../../../customer/reservation/elements/ImageInput';
+import { exampleEditState, userIdx, exampleDataState } from '../../../../atom';
+import ImageInput from './EditImageInput';
 import { master } from '../../../../api/masterService';
 
 const style = {
@@ -24,9 +26,9 @@ const style = {
   p: 4,
 };
 
-export default function Form({ setReload }) {
+export default function Edit({ setReload }) {
   // 폼 모달 ON/OFF 함수
-  const [modalOpen, setModalOpen] = useRecoilState(exampleFormState);
+  const [modalOpen, setModalOpen] = useRecoilState(exampleEditState);
   const modalClose = () => setModalOpen(false);
 
   // 내용 관련 데이터
@@ -37,13 +39,35 @@ export default function Form({ setReload }) {
   const [imageList, setImageList] = useState([]);
   const [imageData, setImageData] = useState([]);
 
+  // 기존 데이터
+  const exampleData = useRecoilValue(exampleDataState);
+
+  // 기존 이미지 데이터
+  const [savedImg, setSavedImg] = useState([]);
+
   // 유저 아이디
   const useId = useRecoilValue(userIdx);
 
-  // 모달 상태 변화에 따른 imageList 비우기
   useEffect(() => {
-    setImageList([]);
-  }, [modalOpen]);
+    setFormContent(exampleData.content);
+  }, [exampleData]);
+
+  // 기존 이미지 재보관함수
+  const [existImg, setExistImg] = useState([]);
+  const existSave = () => {
+    const defaultImg = savedImg.map((el) => {
+      const newData = {
+        saveName: el.url,
+        originName: el.image.name,
+      };
+      return newData;
+    });
+    console.log('defaultImg', defaultImg);
+    setExistImg(defaultImg);
+  };
+  useEffect(() => {
+    existSave();
+  }, []);
 
   // 내용 검증 함수
   const changeFormContent = (event) => {
@@ -52,6 +76,11 @@ export default function Form({ setReload }) {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForContent('');
   };
+
+  useEffect(() => {
+    console.log('imageData', imageData);
+    console.log('existImg', existImg);
+  }, [existImg, imageData]);
 
   // 이미지 S3 전송 함수
   const sendImageListToS3 = async () => {
@@ -97,17 +126,9 @@ export default function Form({ setReload }) {
     const data = {
       content: formContent,
       type: useId,
-      images: [...imageData], // 이미지 파일의 hash 이름, 원래 이름
+      images: [...imageData, ...savedImg], // 이미지 파일의 hash 이름, 원래 이름
     };
-    // 이미지 업로드한거 있으면
-    // AWS S3에 보내고 저장한 경로명을 data에 담아라
-    // eslint-disable-next-line
-    console.log('console', imageList);
-    // eslint-disable-next-line
-    console.log('data', data);
-    // data로 axios POST하고
-    // 결과로 나온 idx를 가지고
-    // 이미지 axios POST해야 함
+
     if (data.content.trim().length === 0) {
       // 내용 입력 유효하지 않음
       // eslint-disable-next-line
@@ -119,14 +140,16 @@ export default function Form({ setReload }) {
     // 잘 보내졌으면 data를 POST
     sendImageListToS3().then(async () => {
       // eslint-disable-next-line
-      console.log(data); // POST로 수정 예정
+      console.log('보내기 전 데이터', data); // POST로 수정 예정
+      const { articleIdx } = exampleData;
+      console.log('게시글id', articleIdx);
       // post 로직
-      const response = await master.post.example(data);
+      const response = await master.put.example(data, articleIdx);
       // eslint-disable-next-line
       if (response.statusCode === 200) {
         setReload(true);
         // eslint-disable-next-line
-        alert('사례가 등록되었습니다.');
+        alert('사례가 수정되었습니다.');
         modalClose();
         setFormContent('');
       } else {
@@ -135,9 +158,11 @@ export default function Form({ setReload }) {
         // eslint-disable-next-line no-alert
         alert('내용을 다시 확인바랍니다.');
       }
+      // imageData reset
+      setImageData([]);
+      setSavedImg([]);
+      setExistImg([]);
     });
-    // imageData reset
-    setImageData([]);
   };
 
   return (
@@ -150,7 +175,7 @@ export default function Form({ setReload }) {
       >
         <Box sx={style}>
           <CloseBtn onClick={modalClose} />
-          <Header>사례 작성</Header>
+          <Header>사례 수정</Header>
           <Body>
             <TextField
               label="내용"
@@ -164,10 +189,14 @@ export default function Form({ setReload }) {
               value={formContent}
             />
             <NullBox />
-            <ImageInput sendImageList={setImageList} />
+            <ImageInput
+              sendImageList={setImageList}
+              awsImages={exampleData.images}
+              setSavedImg={setSavedImg}
+            />
             <NullBox />
             <Button variant="contained" onClick={registReview}>
-              사례 등록
+              사례 수정
             </Button>
             <ErrorMessage>{msgForContent}</ErrorMessage>
           </Body>

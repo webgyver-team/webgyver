@@ -1,17 +1,25 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable no-undef */
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+// import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 // import Button from '@mui/material/Button';
 import SideBar from './elements/SideBar';
 import Order from './elements/Order';
+import { userIdx, reservationIdxState } from '../../../atom';
 
 export default function MasterVideoService() {
   const navigate = useNavigate();
   const myMainScreen = useRef(null);
   const mySubScreen = useRef(null);
-  const peerFace = useRef(null);
+  const masterIdx = useRecoilValue(userIdx);
+  const reservationIdx = useRecoilValue(reservationIdxState);
+  const peerMainScreen = useRef(null);
+  const peerSubScreen = useRef(null);
   const [mainScreenState, setMainScreenState] = useState('peerScreen');
 
   // 화면 너비 가져오는 로직들
@@ -52,7 +60,6 @@ export default function MasterVideoService() {
   const routeEndService = () => {
     navigate('/master/endservice');
   };
-  // const conn = new WebSocket('wss://webgyver.site:9000/socket');
 
   // 내 미디어 가져오기
   const getUserCameraSub = async () => {
@@ -107,19 +114,82 @@ export default function MasterVideoService() {
     }
   };
 
-  // const configuration = {
-  //   iceServers: [
-  //     {
-  //       urls: 'stun:stun.l.google.com:19302',
-  //     },
-  //   ],
-  // };
-  // const myConnection = new RTCPeerConnection(configuration);
-  // myConnection.addEventListener('track', (data) => {
-  //   peerFace.srcObject = new MediaStream([data.track]);
-  // });
-
   const [visitOrderOpen, setVisitOrderOpen] = useState(true);
+  const conn = useRef(null);
+  const myPeerConnection = useRef(null);
+  useLayoutEffect(() => {
+    conn.current = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`);
+    const configuration = {
+      iceServers: [
+        {
+          urls: 'stun:stun.l.google.com:19302',
+        },
+      ],
+    };
+    conn.current.onopen = () => console.log('시작');
+    const send = async (message) => {
+      console.log('보냄: ', message);
+      conn.current.send(JSON.stringify(message));
+    };
+    const sendCandidate = (event) => {
+      send({
+        event: 'candidate',
+        data: event.candidate,
+      });
+    };
+    myPeerConnection.current = new RTCPeerConnection(configuration);
+    myPeerConnection.current.onicecandidate = sendCandidate;
+    myPeerConnection.current.addEventListener('track', (data) => {
+      const video = peerMainScreen.current;
+      video.srcObject = new MediaStream([data.track]);
+      video.play();
+
+      // video = peerSubScreen.current;
+      // video.srcObject = new MediaStream([data.track]);
+      // video.play();
+    });
+    navigator.mediaDevices
+      .getUserMedia({
+        audio: true,
+        video: true,
+      })
+      .then((stream) => {
+        stream
+          .getTracks()
+          .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+      });
+    const createOffer = async () => {
+      const offer = myPeerConnection.current.createOffer();
+      await send({
+        event: 'offer',
+        data: offer,
+      });
+    };
+
+    conn.current.onmessage = async (message) => {
+      const content = JSON.parse(message.data);
+      console.log('받음: ', message);
+      if (content.event === 'offer') {
+        // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
+        const offer = content.data;
+        myPeerConnection.current.setRemoteDescription(offer);
+
+        const answer = await myPeerConnection.current.createAnswer();
+        myPeerConnection.current.setLocalDescription(answer);
+        send({
+          event: 'answer',
+          data: answer,
+        });
+      } else if (content.event === 'answer') {
+        const answer = content.data;
+        myPeerConnection.current.setRemoteDescription(answer);
+      } else if (content.event === 'candidate') {
+        myPeerConnection.current.addIceCandidate(content.data);
+      } else if (content.method === 'TOGETHER') {
+        createOffer();
+      }
+    };
+  });
 
   return (
     <Main>
@@ -139,7 +209,7 @@ export default function MasterVideoService() {
               ref={SubScreenRef}
               width={subScreenWidth}
             >
-              <video playsInline autoPlay width="100%" ref={peerFace} />
+              <video playsInline autoPlay width="100%" ref={peerSubScreen} />
             </SubScreen>
           </VideoBox>
         )}
@@ -147,7 +217,7 @@ export default function MasterVideoService() {
         {mainScreenState === 'peerScreen' && (
           <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
             <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
-              <video playsInline autoPlay width="100%" ref={peerFace} />
+              <video playsInline autoPlay width="100%" ref={peerMainScreen} />
             </MainScreen>
 
             <SubScreen

@@ -95,6 +95,7 @@ export const chosenReservation = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+// 사례페이지 등록 모달 ON/OFF
 export const exampleFormState = atom({
   key: 'exampleFormState',
   default: false,
@@ -103,6 +104,22 @@ export const exampleFormState = atom({
 // 상담 마치고 리뷰 등록하러 넘어갈 때... 어떤 예약인지 필요함
 export const reservationIdxToReview = atom({
   key: 'reservationIdxToReview',
-  default: 58,
+  default: null,
+
+// 사례페이지 수정 모달 ON/OFF
+export const exampleEditState = atom({
+  key: 'exampleEditState',
+  default: false,
+});
+
+// 사례 수정용 데이터 전송
+export const exampleDataState = atom({
+  key: 'exampleDataState',
+  default: [],
+});
+
+export const reservationIdxState = atom({
+  key: 'reservationIdx',
+  default: null,
   effects_UNSTABLE: [persistAtom],
 });
