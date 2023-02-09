@@ -39,7 +39,7 @@ public class Room {
         Map<String, Object> res = new HashMap<>();
         for (Session session : sessions) {
             String key1 = (String) session.getUserProperties().get("type");
-            String key2 = String.valueOf((long)session.getUserProperties().get("idx"));
+            String key2 = String.valueOf((long) session.getUserProperties().get("idx"));
             res.put(key1 + "-" + key2, "");
         }
 //        res.put("sellerName", reservation.getSeller().getName());
@@ -52,7 +52,7 @@ public class Room {
     public synchronized void join(Session session) throws IOException {
         // 이미 접속한 다른 세션이 있으면 강제 종료함.
         Set<Session> willDie = new HashSet<>();
-        System.out.println("나의 세션 : "+ session.getUserProperties().get("type") + " " + session.getUserProperties().get("idx"));
+        System.out.println("나의 세션 : " + session.getUserProperties().get("type") + " " + session.getUserProperties().get("idx"));
         for (Session other : sessions) {
             if (other.getUserProperties().get("type").equals(session.getUserProperties().get("type"))) {
                 if (other.getUserProperties().get("idx").equals(session.getUserProperties().get("idx"))) {

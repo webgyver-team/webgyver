@@ -6,8 +6,8 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         var g_webSocket = null;
-        // var websocket_address = "ws://localhost:9000/realtime/customer/1";
-        var websocket_address = "ws://i8b101.p.ssafy.io:9000/realtime/customer/1";
+        var websocket_address = "ws://localhost:9000/realtime/customer/1";
+        // var websocket_address = "ws://i8b101.p.ssafy.io:9000/realtime/customer/1";
         var categoryIdx = 1;
         var price = 99999;
         window.onload = async function () {
@@ -17,7 +17,7 @@
                 const data = JSON.stringify(
                     {
                         'method': 'INIT',
-                        'categoryIdx': categoryIdx,
+                        'categoryIdx': "1",
                         'lng': Math.random(),
                         'lat': Math.random(),
                         'address': '대전 서구 청사로 253',

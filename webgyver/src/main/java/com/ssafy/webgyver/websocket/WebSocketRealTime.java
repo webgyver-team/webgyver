@@ -208,7 +208,7 @@ public class WebSocketRealTime {
                     .images(gson.fromJson(gson.toJson(customerProperties.get("images")), new TypeToken<List<PictureReq>>() {
                     }.getType()))
                     .idx((long) customerProperties.get("idx"))
-                    .categoryIdx(Math.round((double) customerProperties.get("categoryIdx")))
+                    .categoryIdx(Math.round(Double.valueOf((String) customerProperties.get("categoryIdx"))))
                     .build();
 
             refreshSellerMessageList.add(refreshSellerMessage);
