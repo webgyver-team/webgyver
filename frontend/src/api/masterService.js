@@ -60,4 +60,10 @@ export const master = {
       return response;
     },
   },
+  delete: {
+    example: async (idx) => {
+      const response = await Send.delete(`${masterURL}/mypage/history/${idx}`);
+      return response;
+    },
+  },
 };

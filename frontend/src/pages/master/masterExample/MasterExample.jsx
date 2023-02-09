@@ -6,12 +6,14 @@ import { useSetRecoilState, useRecoilValue } from 'recoil';
 import { exampleFormState, userIdx } from '../../../atom';
 import Example from './elements/Example';
 import Form from './elements/Form';
+import Edit from './elements/Edit';
 import { master } from '../../../api/masterService';
 
 export default function MasterExample() {
-  const setModalOpen = useSetRecoilState(exampleFormState);
-  const modalOpen = () => {
-    setModalOpen(true);
+  // 사례 작성 모달창 켜기
+  const setexampleFormOpen = useSetRecoilState(exampleFormState);
+  const formModalOpen = () => {
+    setexampleFormOpen(true);
   };
 
   // 새 글 작성시 리로드
@@ -21,23 +23,25 @@ export default function MasterExample() {
 
   // 로드데이타
   const [exampleList, setExampleList] = useState([]);
-  const useId = useRecoilValue(userIdx);
+  const userId = useRecoilValue(userIdx);
+  // console.log('id', userId);
   useEffect(() => {
     const loadExampleList = async () => {
-      const response = await master.get.example(useId);
+      const response = await master.get.example(userId);
       setExampleList(response.data.historyList);
     };
     // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
     // eslint-disable-next-line
     loadExampleList();
     setReload(false);
-  }, [useId, reload]);
+  }, [userId, reload]);
 
   return (
     <Main>
+      <Edit setReload={setReload} />
       <Form setReload={setReload} />
       <BtnBox>
-        <StateBtn onClick={modalOpen}>
+        <StateBtn onClick={formModalOpen}>
           <span>작성하기</span>
         </StateBtn>
       </BtnBox>
@@ -46,7 +50,9 @@ export default function MasterExample() {
         {exampleList &&
           exampleList
             .reverse()
-            .map((el, i) => <Example key={i} example={el} />)}
+            .map((el, i) => (
+              <Example key={i} example={el} setReload={setReload} />
+            ))}
       </TableBox>
     </Main>
   );

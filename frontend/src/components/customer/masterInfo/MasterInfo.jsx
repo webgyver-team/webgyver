@@ -139,7 +139,7 @@ const CloseBtn = styled(CloseIcon)`
 `;
 
 const CustomBox = styled(Box)`
-  max-height: 90vh;
+  max-height: 85vh;
 
   // 넘치면 스크롤
   overflow-y: scroll;
