@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
@@ -6,8 +7,11 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import { useRecoilValue } from 'recoil';
+import { userIdx } from '../../../../atom';
+import { master } from '../../../../api/masterService';
 
-export default function Review({ review }) {
+export default function Review({ review, setReload }) {
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -16,9 +20,17 @@ export default function Review({ review }) {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+  const userId = useRecoilValue(userIdx);
 
-  const [formContent, setFormContent] = useState('');
+  const [formContent, setFormContent] = useState(
+    review.comment?.commentContent ? review.comment.commentContent : '',
+  );
   const [msgForContent, setMsgForContent] = useState('');
+
+  const [edit, setEdit] = useState(false);
+  const openEdit = () => {
+    setEdit(true);
+  };
 
   const changeFormContent = (event) => {
     setFormContent(event.target.value);
@@ -26,18 +38,50 @@ export default function Review({ review }) {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForContent('');
   };
-  const registReview = () => {
+  const registComment = () => {
     const data = {
-      customerIdx: null,
-      partenrIdx: null,
-      categoryIdx: null,
-      content: formContent,
+      sellerIdx: userId,
+      reservationIdx: review.reservationIdx,
+      comment: formContent,
     };
     // eslint-disable-next-line
     console.log(data);
     // data로 axios POST하고
-    // 결과로 나온 idx를 가지고
-    // 이미지 axios POST해야 함
+    const postComment = async () => {
+      const response = await master.post.review(data);
+      if (response.statusCode === 200) {
+        // eslint-disable-next-line
+        alert('댓글이 등록되었습니다.');
+        setFormContent('');
+        setReload(true);
+      } else {
+        // eslint-disable-next-line
+        console.log(response);
+        // eslint-disable-next-line no-alert
+        alert('댓글 등록에 실패했습니다.');
+      }
+    };
+    const putData = {
+      sellerIdx: userId,
+      commentIdx: review.comment.commentIdx,
+      comment: formContent,
+    };
+    const putComment = async () => {
+      const response = await master.put.review(putData, review.reviewIdx);
+      if (response.statusCode === 200) {
+        // eslint-disable-next-line
+        alert('댓글이 수정되었습니다.');
+        // setFormContent('');
+        setReload(true);
+      } else {
+        // eslint-disable-next-line
+        console.log(response);
+        // eslint-disable-next-line no-alert
+        alert('댓글 수정에 실패했습니다.');
+      }
+    };
+    // eslint-disable-next-line no-unused-expressions
+    review.comment === null ? postComment() : putComment();
   };
 
   return (
@@ -47,38 +91,54 @@ export default function Review({ review }) {
           <Slider {...slickSettings}>
             {review.images.map((el) => (
               <ImgBox key={el}>
-                <img src={el} alt="" />
+                <img
+                  src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                  alt=""
+                />
               </ImgBox>
             ))}
           </Slider>
         </SliderBox>
         <div className="contentdiv">
+          <div>
+            <span className="name">{`작성자 : ${review.customerName}`}</span>
+            <span className="name">{`평점 : ${review.rating}`}</span>
+          </div>
           <p className="content">{review.content}</p>
         </div>
       </ContentBox>
-      <ReplyBox>
-        <p>{review.reply}</p>
-      </ReplyBox>
-      <div style={{ marginTop: '4px' }}>
-        <NullBox />
+      {review.comment !== null && !edit && (
         <ReviewBox>
-          <TextField
-            label="내용"
-            variant="outlined"
-            required
-            fullWidth
-            multiline
-            maxRows={4}
-            style={{ maxWidth: '700px' }}
-            onChange={changeFormContent}
-            value={formContent}
-          />
-          <Button variant="contained" onClick={registReview}>
-            리뷰 등록
+          <ReplyBox>
+            <div>{review.comment.commentContent}</div>
+          </ReplyBox>
+          <Button variant="contained" onClick={openEdit}>
+            댓글 수정
           </Button>
         </ReviewBox>
-        <ErrorMessage>{msgForContent}</ErrorMessage>
-      </div>
+      )}
+      {(review.comment === null || edit) && (
+        <div style={{ marginTop: '4px' }}>
+          <NullBox />
+          <ReviewBox>
+            <TextField
+              label="내용"
+              variant="outlined"
+              required
+              fullWidth
+              multiline
+              maxRows={4}
+              style={{ maxWidth: '700px' }}
+              onChange={changeFormContent}
+              value={formContent}
+            />
+            <Button variant="contained" onClick={registComment}>
+              댓글 등록
+            </Button>
+          </ReviewBox>
+          <ErrorMessage>{msgForContent}</ErrorMessage>
+        </div>
+      )}
     </Card>
   );
 }
@@ -107,6 +167,12 @@ const Card = styled.div`
     margin-right: 8px;
     margin-left: 8px;
     line-height: 16px;
+  }
+
+  .name {
+    font-size: 14px;
+    margin-right: 8px;
+    line-height: 30px;
   }
 
   .content {
@@ -168,13 +234,12 @@ const ErrorMessage = styled.div`
 `;
 
 const ReplyBox = styled.div`
-  margin-top: 16px;
   padding: 16px;
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 10px;
   width: 700px;
 
-  p {
+  div {
     font-size: 14px;
   }
 `;

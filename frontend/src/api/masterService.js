@@ -4,6 +4,10 @@ const masterURL = '/api/v1/seller';
 
 export const master = {
   get: {
+    schedule: async (id) => {
+      const response = await Send.get(`${masterURL}/reservation/list/${id}`);
+      return response;
+    },
     myPage: async (id) => {
       const response = await Send.get(`${masterURL}/mypage/intro/${id}`);
       return response;
@@ -12,10 +16,14 @@ export const master = {
       const response = await Send.get(`${masterURL}/mypage/history/${id}`);
       return response;
     },
+    review: async (id) => {
+      const response = await Send.get(`${masterURL}/mypage/review/${id}`);
+      return response;
+    },
   },
   post: {
-    reviews: async (data) => {
-      const response = await Send.post(`${masterURL}/review`, data);
+    review: async (data) => {
+      const response = await Send.post(`${masterURL}/mypage/comment`, data);
       return response;
     },
     reservation: async (data) => {
@@ -55,6 +63,13 @@ export const master = {
     businessHour: async (data, idx) => {
       const response = await Send.put(
         `${masterURL}/mypage/intro/time/${idx}`,
+        data,
+      );
+      return response;
+    },
+    review: async (data, idx) => {
+      const response = await Send.put(
+        `${masterURL}/mypage/comment/${idx}`,
         data,
       );
       return response;

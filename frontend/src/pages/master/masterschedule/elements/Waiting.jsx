@@ -5,7 +5,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-export default function Waiting({ history }) {
+export default function Waiting({ waiting }) {
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -16,7 +16,7 @@ export default function Waiting({ history }) {
   };
 
   const [isShowMore, setIsShowMore] = useState(false);
-  const shortComment = history.content.slice(0, 60);
+  const shortComment = waiting.content.slice(0, 60);
   const onChangeShowMore = () => {
     setIsShowMore(!isShowMore);
   };
@@ -29,7 +29,7 @@ export default function Waiting({ history }) {
         <div>
           <SliderBox>
             <Slider {...slickSettings}>
-              {history.images.map((el) => (
+              {waiting.pictureList.map((el) => (
                 <ImgBox key={el}>
                   <img src={el} alt="" />
                 </ImgBox>
@@ -38,11 +38,11 @@ export default function Waiting({ history }) {
           </SliderBox>
         </div>
         <div className="contentdiv">
-          <p className="title">{history.title}</p>
-          <p className="date">{`일시: ${history.date}`}</p>
-          <p className="price">{`가격: ${history.price}`}</p>
+          <p className="title">{waiting.title}</p>
+          <p className="date">{`일시: ${waiting.reservationTime}`}</p>
+          <p className="price">{`가격: ${waiting.price}`}</p>
           <span className="content">
-            {isShowMore ? history.content : shortComment}
+            {isShowMore ? waiting.content : shortComment}
           </span>
           <MoreBtn type="button" onClick={onChangeShowMore}>
             {isShowMore ? '[닫기]' : '[더보기]'}

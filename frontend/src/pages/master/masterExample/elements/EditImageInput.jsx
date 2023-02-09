@@ -1,3 +1,4 @@
+/* eslint-disable react/no-array-index-key */
 /* eslint-disable react/no-this-in-sfc */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
@@ -142,11 +143,11 @@ export default function ImageInput({ sendImageList, awsImages, setSavedImg }) {
               minWidth: '120px',
             }}
           >
-            {existImg?.map((data) => {
+            {existImg?.map((data, i) => {
               const { image } = data;
               const imageUrl = data.url;
               return (
-                <ImageBox key={image.name} style={{ position: 'relative' }}>
+                <ImageBox key={i} style={{ position: 'relative' }}>
                   <img
                     src={imageUrl}
                     alt={image.name}
@@ -175,11 +176,11 @@ export default function ImageInput({ sendImageList, awsImages, setSavedImg }) {
                 </ImageBox>
               );
             })}
-            {imagePreviewList?.map((data) => {
+            {imagePreviewList?.map((data, i) => {
               const { image } = data;
               const imageUrl = data.url;
               return (
-                <ImageBox key={image.name} style={{ position: 'relative' }}>
+                <ImageBox key={i} style={{ position: 'relative' }}>
                   <img
                     src={imageUrl}
                     alt={image.name}
