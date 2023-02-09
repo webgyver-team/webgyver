@@ -74,7 +74,7 @@ public class SellerMypageController {
         // 3. 사진 일괄등록
 
         ArticleAllReq articleAllReq = new ArticleAllReq();
-        articleAllReq.setType(Long.valueOf((String) request.get("type")));
+        articleAllReq.setType(Long.valueOf(String.valueOf(request.get("type"))));
         articleAllReq.setContent((String) request.get("content"));
 
         PictureListReq pictureListReq = new PictureListReq();

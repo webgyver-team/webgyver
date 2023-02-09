@@ -49,6 +49,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     }
 
     @Override
+    @org.springframework.transaction.annotation.Transactional
     public void deleteAllPicture(long articleIdx) {
         pictureRepository.deleteAllByArticleIdx(articleIdx);
     }
@@ -86,7 +87,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
 
     @Override
     public void deleteHistory(ArticleIdxReq req) {
-
+        pictureRepository.findPicturesByArticleIdx(req.getArticleIdx()).stream().forEach(picture -> pictureRepository.delete(picture));
         articleRepository.deleteById(req.getArticleIdx());
     }
 

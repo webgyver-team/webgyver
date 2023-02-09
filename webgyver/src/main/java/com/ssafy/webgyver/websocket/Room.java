@@ -95,6 +95,14 @@ public class Room {
         }
     }
 
+    public void explore() throws IOException {
+        Set<Session> copySessions = new HashSet<>(sessions);
+        for(Session session:copySessions){
+            leave(session);
+            session.close();
+        }
+    }
+
 //    static String makeEnterCode(String cIdx, String sIdx) {
 //        return cIdx + sep + sIdx;
 //    }
