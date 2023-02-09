@@ -211,9 +211,11 @@ export default function Matching() {
           </FormControl>
         </UpperInfo>
         <LowerInfo>
-          {watching !== 0
-            ? <p>{`지금 ${watching}명의 전문가가\n고객님의 문의를 보고 있습니다.`}</p>
-            : <p>현재 대기중인 전문가가 없습니다.</p>}
+          {watching !== 0 ? (
+            <p>{`지금 ${watching}명의 전문가가\n고객님의 문의를 보고 있습니다.`}</p>
+          ) : (
+            <p>현재 대기중인 전문가가 없습니다.</p>
+          )}
         </LowerInfo>
       </InfoBox>
     </Main>
