@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable array-callback-return */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState, useRecoilValue } from 'recoil';
@@ -50,6 +52,23 @@ export default function Edit({ setReload }) {
     setFormContent(exampleData.content);
   }, [exampleData]);
 
+  // 기존 이미지 재보관함수
+  const [existImg, setExistImg] = useState([]);
+  const existSave = () => {
+    const defaultImg = savedImg.map((el) => {
+      const newData = {
+        saveName: el.url,
+        originName: el.image.name,
+      };
+      return newData;
+    });
+    console.log('defaultImg', defaultImg);
+    setExistImg(defaultImg);
+  };
+  useEffect(() => {
+    existSave();
+  }, []);
+
   // 내용 검증 함수
   const changeFormContent = (event) => {
     setFormContent(event.target.value);
@@ -57,6 +76,11 @@ export default function Edit({ setReload }) {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForContent('');
   };
+
+  useEffect(() => {
+    console.log('imageData', imageData);
+    console.log('existImg', existImg);
+  }, [existImg, imageData]);
 
   // 이미지 S3 전송 함수
   const sendImageListToS3 = async () => {
@@ -102,7 +126,7 @@ export default function Edit({ setReload }) {
     const data = {
       content: formContent,
       type: useId,
-      images: imageData, // 이미지 파일의 hash 이름, 원래 이름
+      images: [...imageData, ...savedImg], // 이미지 파일의 hash 이름, 원래 이름
     };
 
     if (data.content.trim().length === 0) {
@@ -116,8 +140,9 @@ export default function Edit({ setReload }) {
     // 잘 보내졌으면 data를 POST
     sendImageListToS3().then(async () => {
       // eslint-disable-next-line
-      console.log(data); // POST로 수정 예정
+      console.log('보내기 전 데이터', data); // POST로 수정 예정
       const { articleIdx } = exampleData;
+      console.log('게시글id', articleIdx);
       // post 로직
       const response = await master.put.example(data, articleIdx);
       // eslint-disable-next-line
@@ -133,10 +158,12 @@ export default function Edit({ setReload }) {
         // eslint-disable-next-line no-alert
         alert('내용을 다시 확인바랍니다.');
       }
+      // imageData reset
+      setImageData([]);
+      setSavedImg([]);
+      setExistImg([]);
     });
   };
-
-  console.log(savedImg);
 
   return (
     <div>

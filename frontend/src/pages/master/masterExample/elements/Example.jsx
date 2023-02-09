@@ -50,7 +50,6 @@ export default function Example({ example, setReload }) {
     };
     deleteExampleItem();
   };
-
   return (
     <Card>
       <ContentBox>

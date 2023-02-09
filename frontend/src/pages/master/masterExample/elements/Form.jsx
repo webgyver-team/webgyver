@@ -102,9 +102,9 @@ export default function Form({ setReload }) {
     // 이미지 업로드한거 있으면
     // AWS S3에 보내고 저장한 경로명을 data에 담아라
     // eslint-disable-next-line
-    console.log(imageList);
+    console.log('console', imageList);
     // eslint-disable-next-line
-    console.log(data);
+    console.log('data', data);
     // data로 axios POST하고
     // 결과로 나온 idx를 가지고
     // 이미지 axios POST해야 함
@@ -136,6 +136,8 @@ export default function Form({ setReload }) {
         alert('내용을 다시 확인바랍니다.');
       }
     });
+    // imageData reset
+    setImageData([]);
   };
 
   return (
