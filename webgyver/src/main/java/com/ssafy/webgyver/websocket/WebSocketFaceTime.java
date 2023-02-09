@@ -219,7 +219,7 @@ public class WebSocketFaceTime {
             Date first = Date.from(now.withMinute((now.getMinute() / Integer.valueOf(startFlag) + 1) * Integer.valueOf(startFlag)).withSecond(0).atZone(ZoneId.systemDefault()).toInstant());
             System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
             System.out.println(first);
-            timer.schedule(task, first, Integer.valueOf(freshSecond) * 1000);
+//            timer.schedule(task, first, Integer.valueOf(freshSecond) * 1000);
         }
     }
 }
