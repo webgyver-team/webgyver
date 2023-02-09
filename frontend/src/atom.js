@@ -105,7 +105,7 @@ export const exampleFormState = atom({
 export const reservationIdxToReview = atom({
   key: 'reservationIdxToReview',
   default: null,
-
+});
 // 사례페이지 수정 모달 ON/OFF
 export const exampleEditState = atom({
   key: 'exampleEditState',
