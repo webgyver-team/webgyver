@@ -186,6 +186,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                     reservation.getReservationTime(),
                     content,
                     reservation.getSeller().getCompanyName(),
+                    reservation.getReservationPrice(),
                     pictureDTOS,
                     reservation.getReservationState(),
                     reservation.getReservationType()
@@ -227,6 +228,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                         reservation.getReservationTime(),
                         content,
                         reservation.getSeller().getCompanyName(),
+                        reservation.getReservationPrice(),
                         pictureDTOS,
                         reservation.getReservationState(),
                         reservation.getReservationType()
@@ -268,6 +270,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                         reservation.getReservationTime(),
                         content,
                         reservation.getSeller().getCompanyName(),
+                        reservation.getReservationPrice(),
                         pictureDTOS,
                         reservation.getReservationState(),
                         reservation.getReservationType()
@@ -323,6 +326,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                     reservation.getReservationTime(),
                     content,
                     reservation.getSeller().getCompanyName(),
+                    reservation.getReservationPrice(),
                     pictureDTOS,
                     reservation.getReservationState(),
                     reservation.getReservationType()

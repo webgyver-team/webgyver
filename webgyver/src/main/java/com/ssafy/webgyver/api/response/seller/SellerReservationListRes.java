@@ -4,6 +4,7 @@ import com.ssafy.webgyver.common.model.response.DataResponseBody;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.springframework.data.relational.core.sql.In;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,13 +30,15 @@ public class SellerReservationListRes extends DataResponseBody {
         private List<PictureDTO> pictureList;
         private String state;
         private String type;
+        private int price;
 
-        public ReservationDTO(Long reservationIdx, String title, LocalDateTime time, String content, String storeName, List<PictureDTO> pictureList, String state, String type) {
+        public ReservationDTO(Long reservationIdx, String title, LocalDateTime time, String content, String storeName, Integer price, List<PictureDTO> pictureList, String state, String type) {
             this.reservationIdx = reservationIdx;
             this.title = title;
             this.reservationTime = time;
             this.content = content;
             this.companyName = storeName;
+            this.price = price;
             this.pictureList = pictureList;
             this.state = state;
             this.type = type;
