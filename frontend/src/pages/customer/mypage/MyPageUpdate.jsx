@@ -75,7 +75,7 @@ export default function MyPageUpdate() {
     const response = await customer.put.profile(data, customerIdx);
     if (response.statusCode === 200) {
       // eslint-disable-next-line
-      alert("회원정보가 수정되었습니다.");
+      alert('회원정보가 수정되었습니다.');
       navigate('/mypage');
     } else {
       alert(response.message);
