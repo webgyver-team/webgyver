@@ -92,7 +92,7 @@ export default function Form({ setReload }) {
     const data = {
       content: formContent,
       type: useId,
-      images: imageData, // 이미지 파일의 hash 이름, 원래 이름
+      images: [...imageData], // 이미지 파일의 hash 이름, 원래 이름
     };
     // 이미지 업로드한거 있으면
     // AWS S3에 보내고 저장한 경로명을 data에 담아라

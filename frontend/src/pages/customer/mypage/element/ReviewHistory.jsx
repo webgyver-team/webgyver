@@ -7,17 +7,16 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import { customer } from '../../../../api/customerService';
-import { userIdx, reviewToEdit } from '../../../../atom';
+import { userIdx } from '../../../../atom';
 
 export default function ReviewHistory() {
   const customerIdx = useRecoilValue(userIdx);
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
-    const getMyReview = async () => {
-      const response = await customer.get.myReview(customerIdx);
-
+    const getReviews = async () => {
+      const response = await customer.get.reviews(customerIdx);
       if (response.statusCode === 200) {
         setReviews(response.data.reviews);
       } else {
@@ -25,7 +24,7 @@ export default function ReviewHistory() {
         alert(response.message);
       }
     };
-    getMyReview();
+    getReviews();
   }, [customerIdx]);
   return (
     <Main>
@@ -47,23 +46,22 @@ export function CardView({ review }) {
   const slickSettings = {
     dots: false,
     arrows: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
   };
   const navigate = useNavigate();
-  const setReviewToEdit = useSetRecoilState(reviewToEdit);
   const deleteReview = () => {
     // eslint-disable-next-line
     if (confirm('리뷰를 삭제하시겠습니까?')) {
       console.log(`${review.reviewIdx}번째 리뷰 삭제 DELETE 요청`);
     }
   };
-  const editReview = (r) => {
-    setReviewToEdit(r);
-    navigate('/reviewForm');
+  const editReview = (rIdx) => {
+    navigate(`/reviewForm/${rIdx}`);
   };
+
   return (
     <Card>
       <TitleBox>
@@ -75,7 +73,7 @@ export function CardView({ review }) {
             justifyContent: 'space-between',
           }}
         >
-          <EditIcon onClick={() => editReview(review)} />
+          <EditIcon onClick={() => editReview(review.reviewIdx)} />
           <DeleteIcon onClick={deleteReview} />
         </div>
       </TitleBox>
@@ -83,7 +81,10 @@ export function CardView({ review }) {
       <Slider {...slickSettings}>
         {review.images.map((image) => (
           <ImgBox key={image.saveName}>
-            <img src={image.saveName} alt="" />
+            <img
+              src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${image.saveName}`}
+              alt=""
+            />
           </ImgBox>
         ))}
       </Slider>

@@ -1,23 +1,38 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useState, useEffect } from 'react';
-// import FormControl from '@mui/material/FormControl';
 import styled from 'styled-components';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import CancelIcon from '@mui/icons-material/Cancel';
-// import ClearIcon from '@mui/icons-material/Clear';
-// import IconButton from '@mui/material/IconButton';
 
-export default function ImageInput() {
-  const [imageList, setImageList] = useState([]); // 매물 이미지 파일
-  const [imagePreviewList, setImagePreviewList] = useState([]); // 매물 이미지 미리보기
-
+export default function ImageInput({
+  sendImageList,
+  existImages,
+  sendExistImages,
+}) {
+  const [imageListFromReview, setImageListFromReview] = useState(existImages);
+  const [imageList, setImageList] = useState([]); // 이미지 파일 객체
+  const [imagePreviewList, setImagePreviewList] = useState([]); // 이미지 파일 src for 미리보기
+  useEffect(() => {
+    existImages.forEach((img) => {
+      const imageUrl = `https://webgyver.s3.ap-northeast-2.amazonaws.com/${img.saveName}`;
+      console.log(imageUrl);
+    });
+  }, []);
+  const removeImageFromReview = (val) => {
+    console.log(val);
+    const newArray = imageListFromReview.filter(
+      (image) => image.saveName !== val,
+    );
+    console.log(newArray.length);
+    console.log(newArray);
+    setImageListFromReview(newArray);
+    sendExistImages(newArray);
+    // setImageListFromReview((original) => [...original]);
+  };
   // 이미지 변경 이벤트 함수
   const changeImageList = async (data) => {
-    const images = data.target.files; // 입력받은 이미지 파일
-
+    const images = data.target.files; // 추가로 입력받은 이미지 파일
     const removeDupl = [...imageList, ...images]; // 이미지 파일 중복 제거용 배열
-
-    // eslint-disable-next-line
-    // data.target.value = ''; // 다음 이미지 선택을 고려해 input 값 초기화
 
     // 이미지 파일 정보는 객체 배열이므로 -> 파일 이름 속성으로 객체 중복 제거
     const nonDuplImages = removeDupl.filter((item) => {
@@ -30,20 +45,21 @@ export default function ImageInput() {
           break;
         }
       }
-
       // 찾은 인덱스(idx)와 일치하는 가장 가까운 이미지 객체들을 필터함수로 배열 형태로 반환
       return idx === removeDupl.indexOf(item);
     });
 
-    // 이미지 파일 수 유효성 검사 ( 10개 이하 ), 5개 이상은 등록, 수정 버튼 클릭 시 활성화
-    if (nonDuplImages.length > 10) {
+    // 이미지 파일 개수 유효성 검사 (10개 이하)
+    if (nonDuplImages.length > 10 - imageListFromReview.length) {
       // eslint-disable-next-line
       alert('이미지 등록은 최대 10개까지만 가능합니다.');
       return;
     }
 
-    // 유효성 검사를 통과 시 imageState에 중복제거된 배열 복사
+    // 유효성 검사를 통과 시 imageList에 중복제거된 배열 복사
     await setImageList([...nonDuplImages]);
+    // 부모로 해당 배열 전송
+    await sendImageList([...nonDuplImages]);
 
     // 이건 Set으로 중복제거해보려 했는데, 객체 배열은 중복제거가 안되더라..
     // await setImageState([...new Set([...imageState, ...images])]);
@@ -58,15 +74,13 @@ export default function ImageInput() {
       setImagePreviewList([]);
       return;
     }
-
     imageList.forEach((image) => {
       const reader = new FileReader(); // 이미지 파일 읽어줄 친구
-      reader.readAsDataURL(image); // 이미지 URL 변환
 
+      reader.readAsDataURL(image); // 이미지 URL 변환
       // onload : 읽기 성공 시, onloadend : 읽기 성공 실패 여부 상관 없음
       reader.onload = () => {
         imagePreview = [...imagePreview, { image, url: reader.result }]; // 데이터 담아줌
-
         setImagePreviewList([...imagePreview]); // previewImageState에 넣어줌
       };
     });
@@ -79,23 +93,28 @@ export default function ImageInput() {
     });
 
     setImageList([...resultSet]);
+    sendImageList([...resultSet]);
   };
 
   return (
     <div>
-      <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>사진 등록</h2>
-      <div
-        style={{
-          display: 'flex',
-          overflowX: 'hidden',
-          marginTop: '8px',
-          maxWidth: '400px',
-        }}
-      >
+      <ImageInputTitle>
+        사진 등록
+        {imageListFromReview.length + imageList.length > 0
+          ? `(${imageListFromReview.length + imageList.length})`
+          : null}
+      </ImageInputTitle>
+      <ImageInputBox>
         <div>
           <label htmlFor="image-input">
             <ImageBox
-              style={{ border: '1px solid black', borderRadius: '10%' }}
+              style={{
+                width: '80px',
+                height: '80px',
+                marginTop: '8px',
+                border: '1px solid black',
+                borderRadius: '10%',
+              }}
             >
               <AddPhotoAlternateIcon style={{ fontSize: '48px' }} />
             </ImageBox>
@@ -109,48 +128,107 @@ export default function ImageInput() {
             style={{ display: 'none' }}
           />
         </div>
-
-        <div
-          id="img__box"
-          style={{
-            display: 'flex',
-            overflowX: 'scroll',
-            overflowY: 'unset',
-            height: '96px',
-          }}
-        >
-          {imagePreviewList.map((data) => {
-            const { image } = data;
-            const imageUrl = data.url;
-            return (
-              <ImageBox
-                key={image.name}
-                style={{ marginTop: '0px', position: 'relative' }}
-              >
-                <img
-                  src={imageUrl}
-                  alt={image.name}
-                  width="80px"
-                  height="80px"
-                />
-                <CancelIcon
-                  onClick={() => removeImage(image.name)}
-                  fontSize="small"
-                  style={{
-                    position: 'absolute',
-                    top: '0px',
-                    right: '-8px',
-                    color: '#EB4D4D',
-                  }}
-                />
-              </ImageBox>
-            );
-          })}
-        </div>
-      </div>
+        {imageListFromReview.length + imagePreviewList.length > 0 ? (
+          <div
+            id="img__box"
+            style={{
+              display: 'flex',
+              overflowX: 'scroll',
+              overflowY: 'hidden',
+              height: '96px',
+              minWidth: '120px',
+            }}
+          >
+            {imageListFromReview.map((image, index) => {
+              return (
+                <ImageBox
+                  // eslint-disable-next-line
+              key={image.saveName + index}
+                  style={{ position: 'relative', border: '2px solid orange' }}
+                >
+                  <img
+                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${image.saveName}`}
+                    alt={image.originName}
+                    width="80px"
+                    height="80px"
+                    style={{ borderRadius: '10%' }}
+                  />
+                  <CancelIcon
+                    onClick={() => removeImageFromReview(image.saveName)}
+                    fontSize="small"
+                    style={{
+                      position: 'absolute',
+                      top: '0px',
+                      right: '-8px',
+                      color: '#EB4D4D',
+                    }}
+                    sx={[
+                      {
+                        '&:hover': {
+                          opacity: 0.7,
+                          cursor: 'pointer',
+                        },
+                      },
+                    ]}
+                  />
+                </ImageBox>
+              );
+            })}
+            {imagePreviewList.map((data) => {
+              const { image } = data;
+              const imageUrl = data.url;
+              return (
+                <ImageBox
+                  key={image.name}
+                  style={{ position: 'relative', border: '2px solid blue' }}
+                >
+                  <img
+                    src={imageUrl}
+                    alt={image.name}
+                    width="80px"
+                    height="80px"
+                    style={{ borderRadius: '10%' }}
+                  />
+                  <CancelIcon
+                    onClick={() => removeImage(image.name)}
+                    fontSize="small"
+                    style={{
+                      position: 'absolute',
+                      top: '0px',
+                      right: '-8px',
+                      color: '#EB4D4D',
+                    }}
+                    sx={[
+                      {
+                        '&:hover': {
+                          opacity: 0.7,
+                          cursor: 'pointer',
+                        },
+                      },
+                    ]}
+                  />
+                </ImageBox>
+              );
+            })}
+          </div>
+        ) : null}
+      </ImageInputBox>
     </div>
   );
 }
+
+const ImageInputTitle = styled.h2`
+  font-size: 16px;
+  font-weight: bold;
+`;
+
+const ImageInputBox = styled.div`
+  display: flex;
+  overflow-x: hidden;
+  margin-top: 8px;
+  max-width: 400px;
+`;
+
 const ImageBox = styled.div`
   height: 96px;
   width: 96px;

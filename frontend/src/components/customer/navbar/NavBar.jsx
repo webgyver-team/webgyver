@@ -17,7 +17,8 @@ import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import Webgyver from '../../../assets/icon/webgyver_white.png';
-import { authState, accessToken, loginOpenState } from '../../../atom';
+// eslint-disable-next-line
+import { authState, accessToken, loginOpenState, userIdx } from '../../../atom';
 
 const drawerWidth = 240;
 
@@ -29,11 +30,13 @@ export default function NavBar(props) {
     : ['로그인', '회원가입'];
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const setAccessToken = useSetRecoilState(accessToken);
+  const setCustomerIdx = useSetRecoilState(userIdx);
   const openLoginModal = () => setLoginOpenState(true);
 
   const doLogOut = () => {
     setAuth(null);
     setAccessToken('');
+    setCustomerIdx(null);
     navigate('/');
   };
 

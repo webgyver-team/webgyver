@@ -113,6 +113,7 @@ function App() {
                   element={<MasterEndService />}
                 />
                 <Route path="/reviewform" element={<ReviewForm />} />
+                <Route path="/reviewform/:rIdx" element={<ReviewForm />} />
                 <Route path="/master/login" element={<MasterLogin />} />
                 <Route path="/master/schedule" element={<MasterSchedule />} />
                 <Route path="/master/realtime" element={<MasterRealtime />} />

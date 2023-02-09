@@ -53,7 +53,7 @@ export default function ReservationForm() {
       const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
       const hashImageName = sha256(
-        `${date.toString()}${customerIdx}${imageList[i].name}`,
+        `${date.toString()}${customerIdx}${originName}`,
       ); // [날짜 객체 + 회원 idx + 기존 파일명]을 조합하여 해시 처리
       const upload = new AWS.S3.ManagedUpload({
         params: {

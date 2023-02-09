@@ -13,6 +13,7 @@ export default function CategoryInput({ updateData, initialList }) {
   );
   useEffect(() => {
     for (let i = 0; i < categoryItemList.length; i += 1) {
+      categoryItemList[i].index = i + 1;
       categorySelected[categoryItemList[i].category.idx] = true;
     }
   }, [categoryItemList, categorySelected]);
@@ -32,6 +33,7 @@ export default function CategoryInput({ updateData, initialList }) {
         price: '', // 헤당 카테고리 가격
       }, // 기본 카테고리 리스트
     ]);
+    console.log(categoryItemList);
     setMsg('');
   };
 
