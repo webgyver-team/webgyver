@@ -25,7 +25,7 @@ export default function ReservationForm() {
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
   const [imageList, setImageList] = useState([]);
-  const [imageData, setImageData] = useState([]);
+  const imageData = [];
   const customerIdx = useRecoilValue(userIdx);
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
@@ -76,7 +76,7 @@ export default function ReservationForm() {
         originName: imageList[i].name,
       };
       imageData.push(newData);
-      setImageData((originalData) => [...originalData, newData]);
+      // setImageData((originalData) => [...originalData, newData]);
     }
   };
 
@@ -147,6 +147,7 @@ export default function ReservationForm() {
       } else {
         // eslint-disable-next-line
         console.log(response);
+        // eslint-disable-next-line
         alert('예약 내용을 다시 확인바랍니다.');
       }
     });

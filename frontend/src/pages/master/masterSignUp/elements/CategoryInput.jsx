@@ -33,7 +33,6 @@ export default function CategoryInput({ updateData, initialList }) {
         price: '', // 헤당 카테고리 가격
       }, // 기본 카테고리 리스트
     ]);
-    console.log(categoryItemList);
     setMsg('');
   };
 

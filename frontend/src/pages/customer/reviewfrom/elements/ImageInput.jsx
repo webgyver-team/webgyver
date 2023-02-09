@@ -9,26 +9,10 @@ export default function ImageInput({
   existImages,
   sendExistImages,
 }) {
-  const [imageListFromReview, setImageListFromReview] = useState(existImages);
   const [imageList, setImageList] = useState([]); // 이미지 파일 객체
+  const [imageListFromReview, setImageListFromReview] = useState(existImages); // 부모가 보내준 기존 이미지 파일
   const [imagePreviewList, setImagePreviewList] = useState([]); // 이미지 파일 src for 미리보기
-  useEffect(() => {
-    existImages.forEach((img) => {
-      const imageUrl = `https://webgyver.s3.ap-northeast-2.amazonaws.com/${img.saveName}`;
-      console.log(imageUrl);
-    });
-  }, []);
-  const removeImageFromReview = (val) => {
-    console.log(val);
-    const newArray = imageListFromReview.filter(
-      (image) => image.saveName !== val,
-    );
-    console.log(newArray.length);
-    console.log(newArray);
-    setImageListFromReview(newArray);
-    sendExistImages(newArray);
-    // setImageListFromReview((original) => [...original]);
-  };
+
   // 이미지 변경 이벤트 함수
   const changeImageList = async (data) => {
     const images = data.target.files; // 추가로 입력받은 이미지 파일
@@ -37,7 +21,6 @@ export default function ImageInput({
     // 이미지 파일 정보는 객체 배열이므로 -> 파일 이름 속성으로 객체 중복 제거
     const nonDuplImages = removeDupl.filter((item) => {
       let idx; // 중복되는 객체의 인덱스 정보를 담을 변수
-
       for (let i = 0; i < removeDupl.length; i += 1) {
         // 반복문을 통해 중복 객체의 인덱스 정보를 찾음
         if (item.name === removeDupl[i].name) {
@@ -56,19 +39,13 @@ export default function ImageInput({
       return;
     }
 
-    // 유효성 검사를 통과 시 imageList에 중복제거된 배열 복사
-    await setImageList([...nonDuplImages]);
-    // 부모로 해당 배열 전송
-    await sendImageList([...nonDuplImages]);
-
-    // 이건 Set으로 중복제거해보려 했는데, 객체 배열은 중복제거가 안되더라..
-    // await setImageState([...new Set([...imageState, ...images])]);
+    await setImageList([...nonDuplImages]); // 유효성 검사를 통과 시 imageList에 중복제거된 배열 복사
+    await sendImageList([...nonDuplImages]); // 부모로 해당 배열 전송
   };
 
   //  이미지 미리보기 처리 ( imageState 변경 시 실행 )
   useEffect(() => {
     let imagePreview = []; // 미리보기 데이터 담을 임시 변수
-
     if (imageList.length === 0) {
       // imageState 길이가 0 이면 previewState를 빈 배열로하고 리턴(삭제 시 마지막 남는 값 제거용)
       setImagePreviewList([]);
@@ -76,7 +53,6 @@ export default function ImageInput({
     }
     imageList.forEach((image) => {
       const reader = new FileReader(); // 이미지 파일 읽어줄 친구
-
       reader.readAsDataURL(image); // 이미지 URL 변환
       // onload : 읽기 성공 시, onloadend : 읽기 성공 실패 여부 상관 없음
       reader.onload = () => {
@@ -91,11 +67,17 @@ export default function ImageInput({
     const resultSet = imageList.filter((image) => {
       return image.name !== targetName;
     });
-
     setImageList([...resultSet]);
-    sendImageList([...resultSet]);
+    sendImageList([...resultSet]); // 부모로 보내줌
   };
-
+  // 기존 이미지 제거
+  const removeImageFromReview = (val) => {
+    const newArray = imageListFromReview.filter(
+      (image) => image.saveName !== val,
+    );
+    setImageListFromReview(newArray);
+    sendExistImages(newArray); // 부모로 보내줌
+  };
   return (
     <div>
       <ImageInputTitle>
@@ -143,7 +125,7 @@ export default function ImageInput({
               return (
                 <ImageBox
                   // eslint-disable-next-line
-              key={image.saveName + index}
+                  key={image.saveName + index}
                   style={{ position: 'relative', border: '2px solid orange' }}
                 >
                   <img

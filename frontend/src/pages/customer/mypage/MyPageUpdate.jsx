@@ -3,7 +3,7 @@ import React, { useState, useLayoutEffect } from 'react';
 import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
-// import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import NameInput from '../../common/signup/elements/NameInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
 import ResidentNumberInput from '../../common/signup/elements/ResidentNumberInput';
@@ -15,13 +15,13 @@ import LoadingSpinner from '../../common/LoadingSpinner';
 
 export default function MyPageUpdate() {
   const customerIdx = useRecoilValue(userIdx);
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   useLayoutEffect(() => {
     const getMyProfile = async () => {
       const response = await customer.get.myInfo(customerIdx);
-      setData(response.data.customer);
+      setData({ ...response.data.customer, ...{ password: null } });
       // console.log(response.data.customer);
       setLoading(false);
     };
@@ -72,12 +72,14 @@ export default function MyPageUpdate() {
     }
     // eslint-disable-next-line
     console.log(data);
-    // const response = await customer.put.profile(data, customerIdx);
-    // if (response.statusCode === 200) {
-    //   // eslint-disable-next-line
-    //   alert("회원정보가 수정되었습니다.");
-    //   navigate('/mypage');
-    // }
+    const response = await customer.put.profile(data, customerIdx);
+    if (response.statusCode === 200) {
+      // eslint-disable-next-line
+      alert("회원정보가 수정되었습니다.");
+      navigate('/mypage');
+    } else {
+      alert(response.message);
+    }
   };
   return (
     <div

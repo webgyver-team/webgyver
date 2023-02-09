@@ -29,11 +29,11 @@ export default function ReviewForm() {
     images: [],
   });
   useLayoutEffect(() => {
-    // 뒤에 idx가 달려오면 수정임
     if (Object.keys(params).length === 0) {
       // 얘는 등록 모드 -> idx를 reviewIdx로 덮어 써야 함
       setNewForm(true);
       if (reservationIdx === null) {
+        // eslint-disable-next-line
         alert('잘못된 접근입니다.');
         navigate('/');
       }
@@ -43,20 +43,17 @@ export default function ReviewForm() {
       const getReview = async () => {
         const response = await customer.get.review(params.rIdx);
         if (response.statusCode === 200) {
+          setReservationIdx(response.data.review.reviewIdx);
           setData(() => ({
             ...response.data.review,
             ...{ images: [] },
           }));
-          // delete data.idx;
-          // imageListFromReview.push(response.data.review.images);
-
           response.data.review.images.forEach((image) => {
             imageListFromReview.push(image);
           });
-          // setImageListFromReview(response.data.review.images);
         } else {
           // eslint-disable-next-line
-          alert("해당 리뷰를 수정할 수 없습니다.");
+          alert('해당 리뷰를 수정할 수 없습니다.');
           navigate('/mypage');
         }
       };
@@ -69,7 +66,6 @@ export default function ReviewForm() {
 
   const [imageList, setImageList] = useState([]);
   const [imageData, setImageData] = useState([]);
-
   const changeTitle = (event) => {
     setData((original) => ({
       ...original,
@@ -92,7 +88,7 @@ export default function ReviewForm() {
   // 이미지 전송함수
   const sendImageListToS3 = async () => {
     if (imageListFromReview.length > 0) {
-      setImageData(imageListFromReview);
+      data.images = [...data.images, ...imageListFromReview]; // 이미지 데이터에 기존 이미지 추가
     }
     AWS.config.update({
       region: process.env.REACT_APP_AWS_REGION,
@@ -100,7 +96,6 @@ export default function ReviewForm() {
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     });
     for (let i = 0; i < imageList.length; i += 1) {
-      // console.log(`${imageList[i].name} 업로드 시도 중..`);
       const originName = imageList[i].name;
       const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
@@ -115,71 +110,62 @@ export default function ReviewForm() {
         },
       });
       const promise = upload.promise();
-      promise.then(() => {
+      // promise.then((res) => {
+      //   // eslint-disable-next-line
+      //   console.log(res.Location+" 추가");
+      // });
+      promise.catch((err) => {
         // eslint-disable-next-line
-        const newData = {
-          saveName: hashImageName + extensionName,
-          originName: imageList[i].name,
-        };
-        // imageData.push(newData);
-        setImageData((originalData) => [...originalData, newData]);
+        console.log(err);
       });
+      const newData = {
+        saveName: hashImageName + extensionName,
+        originName: imageList[i].name,
+      };
+      imageData.push(newData);
+      setImageData((original) => [...original, newData]);
     }
   };
-  const registReview = () => {
-    if (newForm) {
-      // 신규 폼 등록
-      console.log(data);
-      sendImageListToS3()
-        .then(() => {
-          setData((original) => ({
-            ...original,
-            ...{ images: imageData },
-          }));
-        })
-        .then(async () => {
-          data.reservationIdx = data.idx;
-          delete data.idx;
-          const response = await customer.post.review(data);
-          if (response.statusCode === 200) {
-            alert('리뷰가 등록되었습니다.');
-            setReservationIdx(null); // 등록할 예약 idx를 해제
-            navigate('/mypage');
-          } else {
-            console.log(response);
-          }
-        });
-    } else if (!newForm) {
-      // 기존 폼 수정
-      console.log(data);
-      sendImageListToS3();
-    } else {
-      sendImageListToS3()
-        .then(() => {
-          console.log(imageData);
-          setData((original) => ({
-            ...original,
-            ...{ images: imageData },
-          }));
-        })
-        .then(async () => {
+  const registReview = async () => {
+    // 신규 폼 등록
+    sendImageListToS3().then(async () => {
+      if (newForm) {
+        data.reservationIdx = data.idx;
+        delete data.idx;
+        const response = await customer.post.review(data);
+        if (response.statusCode === 200) {
           // eslint-disable-next-line
-          console.log(data);
-          const response = await customer.put.review(data, data.reviewIdx);
-          if (response.statusCode === 200) {
-            alert('수정이 완료되었습니다.');
-            navigate('/mypage');
-          } else {
-            console.log(response);
-          }
-        });
-    }
-
-    // data로 axios POST하고
-    // 결과로 나온 idx를 가지고
-    // 이미지 axios POST해야 함
-    // navigate('/');
+          alert('리뷰가 등록되었습니다.');
+        } else {
+          // eslint-disable-next-line
+          console.log(response);
+        }
+      } else {
+        delete data.idx;
+        const response = await customer.put.review(
+          {
+            ...data,
+            ...{ images: data.images.concat(imageData) },
+          },
+          data.reviewIdx,
+        );
+        if (response.statusCode === 200) {
+          // eslint-disable-next-line
+          alert('리뷰가 수정되었습니다.');
+        } else {
+          // eslint-disable-next-line
+          console.log(response);
+        }
+      }
+      setReservationIdx(null); // 등록할 예약 idx를 해제
+      navigate('/mypage');
+    });
   };
+
+  // data로 axios POST하고
+  // 결과로 나온 idx를 가지고
+  // 이미지 axios POST해야 함
+  // navigate('/');
   return (
     <Main>
       <div>

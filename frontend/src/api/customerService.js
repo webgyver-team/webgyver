@@ -1,4 +1,5 @@
 /* eslint-disable */
+import { async } from 'q';
 import Send from './send';
 
 const customerURL = '/api/v1/customer';
@@ -62,6 +63,12 @@ export const customer = {
         `${customerURL}/mypage/review/${idx}`,
         data,
       );
+      return response;
+    },
+  },
+  delete: {
+    review: async (idx) => {
+      const response = await Send.delete(`${customerURL}/mypage/review/${idx}`);
       return response;
     },
   },

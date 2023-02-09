@@ -14,7 +14,9 @@ import { userIdx } from '../../../../atom';
 export default function ReviewHistory() {
   const customerIdx = useRecoilValue(userIdx);
   const [reviews, setReviews] = useState([]);
+  const [reload, setReload] = useState(false);
   useEffect(() => {
+    if (!reload) return;
     const getReviews = async () => {
       const response = await customer.get.reviews(customerIdx);
       if (response.statusCode === 200) {
@@ -25,11 +27,16 @@ export default function ReviewHistory() {
       }
     };
     getReviews();
-  }, [customerIdx]);
+    setReload(false);
+  }, [customerIdx, reload]);
   return (
     <Main>
       {reviews.map((review) => (
-        <CardView key={review.reviewIdx} review={review} />
+        <CardView
+          key={review.reviewIdx}
+          review={review}
+          setReload={setReload}
+        />
       ))}
       {reviews.length === 0 ? (
         <NoReviewMessage>리뷰 내역이 없습니다.</NoReviewMessage>
@@ -42,7 +49,7 @@ const Main = styled.div`
   width: 100%;
 `;
 
-export function CardView({ review }) {
+export function CardView({ review, setReload }) {
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -52,10 +59,18 @@ export function CardView({ review }) {
     slidesToScroll: 1,
   };
   const navigate = useNavigate();
-  const deleteReview = () => {
+  const deleteReview = async () => {
     // eslint-disable-next-line
     if (confirm('리뷰를 삭제하시겠습니까?')) {
-      console.log(`${review.reviewIdx}번째 리뷰 삭제 DELETE 요청`);
+      const response = await customer.delete.review(review.reviewIdx);
+      if (response.statusCode === 200) {
+        // eslint-disable-next-line
+        alert('리뷰가 삭제되었습니다.');
+        setReload(true);
+      } else {
+        // eslint-disable-next-line
+        alert(response.message);
+      }
     }
   };
   const editReview = (rIdx) => {

@@ -66,7 +66,6 @@ function CardView({ history }) {
   const date = history.reservationTime.split(' ')[0].split('-');
   const time = history.reservationTime.split(' ')[1].split(':');
   const routeVideoService = () => {
-    console.log(history.reservationIdx);
     setReservationIdxToReview(history.reservationIdx);
     navigate('/videoservice');
   };
