@@ -57,7 +57,7 @@ public class SellerMypageController {
         }.getType()));
 
 
-        Article result = sellerMypageService.insertHistory(articleAllReq);
+        Article result = sellerMypageService.updateHistory(articleAllReq);
         sellerMypageService.insertPictures(result, pictureListReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }

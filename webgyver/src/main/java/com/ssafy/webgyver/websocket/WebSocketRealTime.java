@@ -105,7 +105,7 @@ public class WebSocketRealTime {
                 break;
             }
         }
-        // 결제부터 하고, 예약, 아티클, 이미지 넣기
+        // 결제부터 하고, 예약, 아티클, 이미지 넣기, MAP으로 다시 고쳐야함.
         RefreshSellerMessage reservationInfo = null;
         for (RefreshSellerMessage cur : refreshSellerMessageList) {
             if (cur.getIdx() == customerIdx) {

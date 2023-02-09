@@ -6,7 +6,7 @@
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script type="text/javascript">
         var g_webSocket = null;
-        var websocket_address = "ws://localhost:9000/facetime/seller/1/1";
+        var websocket_address = "ws://i8b101.p.ssafy.io:9000/facetime/seller/1/1";
         window.onload = async function () {
             g_webSocket = new WebSocket(websocket_address);
             g_webSocket.onopen = function (message) {
