@@ -246,7 +246,7 @@ public class WebSocketRealTime {
     }
 
     public void METHOD_CHANGE_DISTANCE(Session session, Map<String, Object> info) throws IOException {
-        session.getUserProperties().put("viewDistance", Double.valueOf((String) info.get("viewDistance")));
+        session.getUserProperties().put("viewDistance", Double.valueOf(String.valueOf(info.get("viewDistance"))));
         refreshCustomerAllCustomer();
     }
 }
