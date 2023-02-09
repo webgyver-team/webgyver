@@ -23,6 +23,7 @@ export default function ReservationForm() {
   const [formTitle, setFormTitle] = useState(matchForm.title);
   const [formContent, setFormContent] = useState(matchForm.content);
   const [cost, setCost] = useState(matchForm.cost);
+  const [costDisplay, setCostDisplay] = useState(0);
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
   const [msgForCost, setMsgForCost] = useState('');
@@ -160,8 +161,9 @@ export default function ReservationForm() {
       setMsgForCost('상담가격은 10만원 미만으로 설정할 수 있습니다.');
       return;
     }
-    value = `${value.toLocaleString('ko-KR')}`;
     setCost(value);
+    value = `${value.toLocaleString('ko-KR')}`;
+    setCostDisplay(value);
   };
 
   return (
@@ -216,7 +218,7 @@ export default function ReservationForm() {
               multiline
               margin="normal"
               fullWidth
-              value={cost}
+              value={costDisplay}
               onChange={handleCost}
             />
             <ErrorMessage>{msgForCost}</ErrorMessage>

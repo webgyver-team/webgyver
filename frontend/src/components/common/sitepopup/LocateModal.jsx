@@ -31,7 +31,7 @@ const postCodeStyle = {
 // kakao 가져오기
 const { kakao } = window;
 
-export default function BasicModal({ updateData }) {
+export default function BasicModal() {
   // const [open, setOpen] = useState(false);
   const [postOpen, setpostOpen] = useState(false);
   const [coordinateValue, setCoordinateValue] = useState({ x: null, y: null });
@@ -80,12 +80,6 @@ export default function BasicModal({ updateData }) {
 
   // 확인 클릭 시, recoil Location 업데이트
   const updateLocationValueState = () => {
-    updateData({
-      address: addressValue.address,
-      detail: addressValue.detail,
-      longitude: coordinateValue.x,
-      latitude: coordinateValue.y,
-    });
     setLocationValue({
       address: addressValue.address,
       detail: addressValue.detail,
@@ -105,6 +99,7 @@ export default function BasicModal({ updateData }) {
       if (status === kakao.maps.services.Status.OK) {
         // console.log(result[0]);
         setCoordinateValue({ x: result[0].x, y: result[0].y });
+        console.log(result[0]);
       }
     });
   }, [addressValue.address]);

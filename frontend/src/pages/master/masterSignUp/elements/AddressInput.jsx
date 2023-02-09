@@ -1,4 +1,4 @@
-import React from 'react';
+import { React, useEffect } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 // import LocateModal from '../../../../components/common/sitepopup/LocateModal';
 import { TextField } from '@mui/material';
@@ -8,6 +8,14 @@ export default function AddressInput({ updateData }) {
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const location = useRecoilValue(locateValueState);
   const openLocateModal = () => setLocateModalOpen(true);
+  useEffect(() => {
+    updateData({
+      address: location.address,
+      detailAddress: location.detail,
+      lat: location.latitude,
+      lng: location.longitude,
+    });
+  }, [location, updateData]);
   return (
     <div>
       <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>주소 등록</h2>
@@ -19,7 +27,6 @@ export default function AddressInput({ updateData }) {
         fullWidth
         value={location.address}
         onClick={openLocateModal}
-        updateData={updateData}
         disabled
       />
       <TextField
@@ -29,7 +36,6 @@ export default function AddressInput({ updateData }) {
         margin="normal"
         fullWidth
         onClick={openLocateModal}
-        updateData={updateData}
         disabled
         value={location.detail}
       />

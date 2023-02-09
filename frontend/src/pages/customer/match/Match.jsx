@@ -58,10 +58,11 @@ export default function Matching() {
         content: matchForm.content,
         images: matchForm.images,
         price: matchForm.cost,
-        viewDistance: '1',
+        viewDistance: 1,
       });
-      gWebSocket.current.send(socketData);
       console.log(socketData);
+      console.log(gWebSocket.current);
+      gWebSocket.current.send(socketData);
     };
     /**
      * 웹소켓 메시지(From Server) 수신하는 경우 호출
@@ -82,6 +83,7 @@ export default function Matching() {
      * 웹소켓 사용자 연결 해제하는 경우 호출
      */
     gWebSocket.current.onclose = () => {
+      console.log('끝');
       // addLineToChatBox('Server is disconnected.');
     };
 
