@@ -1,14 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-export default function RealTime({ data }) {
-  const navigate = useNavigate();
-  const routeVideoService = () => navigate('/master/videoservice');
+export default function RealTime({ data, acceptReservation }) {
   // 더보기 on/off
   const [isDetail, setIsDetail] = useState(false);
   const handleIsDetail = () => {
@@ -58,7 +55,7 @@ export default function RealTime({ data }) {
               <span className="content">{data.content}</span>
             </div>
             <BtnBox>
-              <AcceptBtn onClick={routeVideoService}>
+              <AcceptBtn onClick={() => acceptReservation(data.idx)}>
                 <span>{currentState[0]}</span>
               </AcceptBtn>
             </BtnBox>

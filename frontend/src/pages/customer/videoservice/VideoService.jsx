@@ -2,8 +2,10 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { userIdx, reservationIdxState } from '../../../atom';
 // import Button from '@mui/material/Button';
 
 export default function VideoService() {
@@ -12,8 +14,8 @@ export default function VideoService() {
   const mySubScreen = useRef(null);
   const peerMainScreen = useRef(null);
   const peerSubScreen = useRef(null);
-  const customerIdx = 1;
-  const reservationIdx = 1;
+  const customerIdx = useRecoilValue(userIdx);
+  const reservationIdx = useRecoilValue(reservationIdxState);
   const [mainScreenState, setMainScreenState] = useState('myScreen');
 
   // 화면 너비 가져오는 로직들
@@ -110,8 +112,10 @@ export default function VideoService() {
   };
 
   const conn = useRef(null);
+  const myPeerConnection = useRef(null);
   useLayoutEffect(() => {
     conn.current = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`);
+    console.log(conn.current);
     const configuration = {
       iceServers: [
         {
@@ -121,10 +125,11 @@ export default function VideoService() {
     };
     const send = async (message) => {
       // 소켓으로 메세지 보내기
-      conn.send(JSON.stringify(message));
+      console.log('보냄: ', message);
+      conn.current.send(JSON.stringify(message));
     };
-    const myPeerConnection = new RTCPeerConnection(configuration);
-    myPeerConnection.addEventListener('track', (data) => {
+    myPeerConnection.current = new RTCPeerConnection(configuration);
+    myPeerConnection.current.addEventListener('track', (data) => {
       const video = peerMainScreen.current;
       video.srcObject = new MediaStream([data.track]);
       video.play();
@@ -133,19 +138,27 @@ export default function VideoService() {
       // video.srcObject = new MediaStream([data.track]);
       // video.play();
     });
-    myPeerConnection.onicecandidate = (event) => {
+    myPeerConnection.current.onicecandidate = (event) => {
       send({
         event: 'candidate',
         data: event.candidate,
       });
     };
-    conn.onmessage = async (message) => {
+
+    const createOffer = async () => {
+      const offer = myPeerConnection.current.createOffer();
+      await send({
+        event: 'offer',
+        data: offer,
+      });
+    };
+    conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log(message);
+      console.log('받음: ', message);
       if (content.event === 'offer') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
-        myPeerConnection.setRemoteDescription(offer);
+        myPeerConnection.current.setRemoteDescription(offer);
 
         // 내 미디어
         navigator.mediaDevices
@@ -156,23 +169,25 @@ export default function VideoService() {
           .then((stream) => {
             stream
               .getTracks()
-              .forEach((track) => myPeerConnection.addTrack(track, stream));
+              .forEach((track) => myPeerConnection.current.addTrack(track, stream));
           });
-        const answer = await myPeerConnection.createAnswer();
-        myPeerConnection.setLocalDescription(answer);
+        const answer = await myPeerConnection.current.createAnswer();
+        myPeerConnection.current.setLocalDescription(answer);
         send({
           event: 'answer',
           data: answer,
         });
       } else if (content.event === 'answer') {
         const answer = content.data;
-        myPeerConnection.setRemoteDescription(answer);
+        myPeerConnection.current.setRemoteDescription(answer);
       } else if (content.event === 'candidate') {
         // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정
-        myPeerConnection.addIceCandidate(content.data);
+        myPeerConnection.current.addIceCandidate(content.data);
+      } else if (content.method === 'TOGETHER') {
+        createOffer();
       }
     };
-    conn.onclose = () => console.log('끝');
+    conn.current.onclose = () => console.log('끝');
   });
 
   return (

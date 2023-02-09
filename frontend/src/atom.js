@@ -112,3 +112,9 @@ export const exampleDataState = atom({
   key: 'exampleDataState',
   default: [],
 });
+
+export const reservationIdxState = atom({
+  key: 'reservationIdx',
+  default: null,
+  effects_UNSTABLE: [persistAtom],
+});

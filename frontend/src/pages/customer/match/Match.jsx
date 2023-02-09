@@ -3,14 +3,16 @@
 // eslint-disable-next-line object-curly-newline
 import React, { useState, useEffect, useRef, useLayoutEffect } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import { useNavigate } from 'react-router-dom';
 import './Match.scss';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import { locateValueState, userIdx } from '../../../atom';
+import {
+  locateValueState, userIdx, categoryState, reservationIdxState,
+} from '../../../atom';
 
 // kakao 가져오기
 const { kakao } = window;
@@ -18,12 +20,20 @@ const { kakao } = window;
 export default function Matching() {
   const navigate = useNavigate();
   const routeMatchForm = () => navigate('/match/form');
-  // const categoryIdx = useRecoilValue(categoryState);
+  const setReservationIdx = useSetRecoilState(reservationIdxState);
+  const categoryIdx = useRecoilValue(categoryState);
   const idx = useRecoilValue(userIdx);
   const locateValue = useRecoilValue(locateValueState);
   const [watching, setWatching] = useState(0);
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
+  const [counter, setCounter] = useState(180);
+  useEffect(() => {
+    if (counter === 0) {
+      navigate('/match/form');
+    }
+    setTimeout(() => setCounter(counter - 1), 1000);
+  }, [counter]);
 
   // map resizer
   const MainScreenRef = useRef(null);
@@ -31,11 +41,10 @@ export default function Matching() {
   useLayoutEffect(() => {
     gWebSocket.current = new WebSocket(webSocketAddress);
     gWebSocket.current.onopen = () => {
-      console.log(11, gWebSocket);
       // 첫 접속
       const socketData = JSON.stringify({
         method: 'INIT',
-        categoryIdx: 2,
+        categoryIdx,
         lng: 0,
         lat: 0,
         address: '대전 어딘가',
@@ -65,6 +74,10 @@ export default function Matching() {
     gWebSocket.current.onmessage = (message) => {
       const socketData = JSON.parse(message.data);
       console.log(socketData);
+      if (socketData.method === 'GO_FACE_TIME') {
+        setReservationIdx(socketData.data.reservationIdx);
+        navigate('/videoservice');
+      }
       setWatching(socketData.sellerCnt);
       // addLineToChatBox(JSON.stringify(data));
       // addLineToChatBox('-----------------------------');
@@ -108,9 +121,8 @@ export default function Matching() {
     gWebSocket.current.send(data);
   };
 
-  const backCount = 3;
   // eslint-disable-next-line react/jsx-one-expression-per-line
-  const alertText = <p>{backCount}분 뒤, 이전 페이지로 돌아갑니다.</p>;
+  const alertText = <p>{Math.floor(counter / 60)}분 {(counter % 60)}초 뒤, 이전 페이지로 돌아갑니다.</p>;
   const lowerText = `지금 ${watching}명의 전문가가\n고객님의 문의를 보고 있습니다.`;
 
   const marker = (
