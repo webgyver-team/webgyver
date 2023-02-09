@@ -7,6 +7,7 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { useRecoilValue } from 'recoil';
 import { userIdx } from '../../../../atom';
 import { master } from '../../../../api/masterService';
@@ -44,10 +45,10 @@ export default function Review({ review, setReload }) {
       reservationIdx: review.reservationIdx,
       comment: formContent,
     };
-    // eslint-disable-next-line
-    console.log(data);
     // data로 axios POST하고
     const postComment = async () => {
+      // eslint-disable-next-line
+      console.log('postdata', data);
       const response = await master.post.review(data);
       if (response.statusCode === 200) {
         // eslint-disable-next-line
@@ -63,16 +64,19 @@ export default function Review({ review, setReload }) {
     };
     const putData = {
       sellerIdx: userId,
-      commentIdx: review.comment.commentIdx,
-      comment: formContent,
+      commentIdx: review.comment?.commentIdx,
+      commentContent: formContent,
     };
     const putComment = async () => {
+      // eslint-disable-next-line no-console
+      console.log('putdata', putData);
       const response = await master.put.review(putData, review.reviewIdx);
       if (response.statusCode === 200) {
         // eslint-disable-next-line
         alert('댓글이 수정되었습니다.');
         // setFormContent('');
         setReload(true);
+        setEdit(false);
       } else {
         // eslint-disable-next-line
         console.log(response);
@@ -84,9 +88,30 @@ export default function Review({ review, setReload }) {
     review.comment === null ? postComment() : putComment();
   };
 
+  const removeComment = () => {
+    const deleteComment = async () => {
+      const response = await master.delete.review(review.comment.commentIdx);
+      if (response.statusCode === 200) {
+        // eslint-disable-next-line
+        alert('댓글이 삭제되었습니다.');
+        // setFormContent('');
+        setReload(true);
+        setEdit(false);
+        setFormContent('');
+      } else {
+        // eslint-disable-next-line
+        console.log(response);
+        // eslint-disable-next-line no-alert
+        alert('댓글 삭제에 실패했습니다.');
+      }
+    };
+    deleteComment();
+  };
+
   return (
     <Card>
       <ContentBox>
+        {!review.images.length && <NoImgBox />}
         <SliderBox>
           <Slider {...slickSettings}>
             {review.images.map((el) => (
@@ -112,6 +137,10 @@ export default function Review({ review, setReload }) {
           <ReplyBox>
             <div>{review.comment.commentContent}</div>
           </ReplyBox>
+          <Btn color="#FF4444" onClick={removeComment}>
+            <DeleteIcon fontSize="small" style={{ color: '#FF4444' }} />
+            <BtnText style={{ color: '#FF4444' }}>삭제</BtnText>
+          </Btn>
           <Button variant="contained" onClick={openEdit}>
             댓글 수정
           </Button>
@@ -242,4 +271,26 @@ const ReplyBox = styled.div`
   div {
     font-size: 14px;
   }
+`;
+
+const NoImgBox = styled.div`
+  width: 128px;
+  height: 120px;
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  margin: 0 4px 8px 4px;
+`;
+
+const Btn = styled.div`
+  display: flex;
+  align-items: center;
+  border: 1px solid ${(props) => props.color};
+  border-radius: 5px;
+  margin: 0 4px 0 4px;
+  padding: 6px 8px 6px 8px;
+  cursor: pointer;
+`;
+
+const BtnText = styled.span`
+  font-size: 14px;
+  padding: 2px;
 `;

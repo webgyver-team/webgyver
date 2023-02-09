@@ -20,12 +20,14 @@ export const master = {
       const response = await Send.get(`${masterURL}/mypage/review/${id}`);
       return response;
     },
-  },
-  post: {
-    review: async (data) => {
-      const response = await Send.post(`${masterURL}/mypage/comment`, data);
+    history: async (id, day) => {
+      const response = await Send.get(
+        `${masterURL}/reservation/calendar/${id}/${day}`,
+      );
       return response;
     },
+  },
+  post: {
     reservation: async (data) => {
       const response = await Send.post(
         `${masterURL}/reservation/normal/regist`,
@@ -35,6 +37,10 @@ export const master = {
     },
     example: async (data) => {
       const response = await Send.post(`${masterURL}/mypage/history/`, data);
+      return response;
+    },
+    review: async (data) => {
+      const response = await Send.post(`${masterURL}/mypage/comment`, data);
       return response;
     },
   },
@@ -77,6 +83,10 @@ export const master = {
   },
   delete: {
     example: async (idx) => {
+      const response = await Send.delete(`${masterURL}/mypage/history/${idx}`);
+      return response;
+    },
+    review: async (idx) => {
       const response = await Send.delete(`${masterURL}/mypage/history/${idx}`);
       return response;
     },

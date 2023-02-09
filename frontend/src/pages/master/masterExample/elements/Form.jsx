@@ -9,8 +9,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import { exampleFormState, userIdx } from '../../../../atom';
-import ImageInput from '../../../customer/reservation/elements/ImageInput';
 import { master } from '../../../../api/masterService';
+import ImageInput from '../../../customer/reservation/elements/ImageInput';
 
 const style = {
   position: 'absolute',
