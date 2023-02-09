@@ -24,7 +24,7 @@ export default function MyPageUpdate() {
   const [data, setData] = useState({});
   const [newProfileImage, setNewProfileImage] = useState(null);
   const [profileImagePreview, setProfileImagePreview] = useState(null);
-  const [ready, setReady] = useState([false, false]);
+  const [ready, setReady] = useState([true, true]);
 
   // eslint-disable-next-line
   const [newBackgroundImage, setNewBackgroundImage] = useState(null);
@@ -204,12 +204,14 @@ export default function MyPageUpdate() {
     // 프로필, 대표 이미지 새로 추가된 부분 S3에 보내줌 + 데이터 경로 setData
     if (newProfileImage !== null) {
       // S3 전송함수에 적용
+      setReady([false, ready[1]]);
       sendImageToS3(newProfileImage, 1);
     } else {
       setReady([true, ready[1]]);
     }
     if (newBackgroundImage !== null) {
       // S3 전송함수에 적용
+      setReady([ready[0], false]);
       sendImageToS3(newBackgroundImage, 2);
     } else {
       setReady([ready[0], true]);

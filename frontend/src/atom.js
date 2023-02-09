@@ -99,3 +99,9 @@ export const exampleFormState = atom({
   key: 'exampleFormState',
   default: false,
 });
+
+export const reservationIdxState = atom({
+  key: 'reservationIdx',
+  default: null,
+  effects_UNSTABLE: [persistAtom],
+});

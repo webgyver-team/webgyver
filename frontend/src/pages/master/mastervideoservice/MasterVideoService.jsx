@@ -6,17 +6,18 @@ import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
 // import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
 // import Button from '@mui/material/Button';
 import SideBar from './elements/SideBar';
 import Order from './elements/Order';
-// import { userIdx } from '../../../atom';
+import { userIdx, reservationIdxState } from '../../../atom';
 
 export default function MasterVideoService() {
   const navigate = useNavigate();
   const myMainScreen = useRef(null);
   const mySubScreen = useRef(null);
-  const masterIdx = 1;
-  const reservationIdx = 1;
+  const masterIdx = useRecoilValue(userIdx);
+  const reservationIdx = useRecoilValue(reservationIdxState);
   const peerMainScreen = useRef(null);
   const peerSubScreen = useRef(null);
   const [mainScreenState, setMainScreenState] = useState('peerScreen');
@@ -114,19 +115,21 @@ export default function MasterVideoService() {
   };
 
   const [visitOrderOpen, setVisitOrderOpen] = useState(true);
-  const conn = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`);
-  const configuration = {
-    iceServers: [
-      {
-        urls: 'stun:stun.l.google.com:19302',
-      },
-    ],
-  };
+  const conn = useRef(null);
+  const myPeerConnection = useRef(null);
   useLayoutEffect(() => {
-    conn.onopen = () => console.log('시작');
+    conn.current = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`);
+    const configuration = {
+      iceServers: [
+        {
+          urls: 'stun:stun.l.google.com:19302',
+        },
+      ],
+    };
+    conn.current.onopen = () => console.log('시작');
     const send = async (message) => {
-      console.log(message);
-      conn.send(JSON.stringify(message));
+      console.log('보냄: ', message);
+      conn.current.send(JSON.stringify(message));
     };
     const sendCandidate = (event) => {
       send({
@@ -134,9 +137,9 @@ export default function MasterVideoService() {
         data: event.candidate,
       });
     };
-    const myPeerConnection = new RTCPeerConnection(configuration);
-    myPeerConnection.onicecandidate = sendCandidate;
-    myPeerConnection.addEventListener('track', (data) => {
+    myPeerConnection.current = new RTCPeerConnection(configuration);
+    myPeerConnection.current.onicecandidate = sendCandidate;
+    myPeerConnection.current.addEventListener('track', (data) => {
       const video = peerMainScreen.current;
       video.srcObject = new MediaStream([data.track]);
       video.play();
@@ -153,40 +156,40 @@ export default function MasterVideoService() {
       .then((stream) => {
         stream
           .getTracks()
-          .forEach((track) => myPeerConnection.addTrack(track, stream));
+          .forEach((track) => myPeerConnection.current.addTrack(track, stream));
       });
     const createOffer = async () => {
-      const offer = myPeerConnection.createOffer();
+      const offer = myPeerConnection.current.createOffer();
       await send({
         event: 'offer',
         data: offer,
       });
     };
 
-    conn.onmessage = async (message) => {
+    conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log(message);
+      console.log('받음: ', message);
       if (content.event === 'offer') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
-        myPeerConnection.setRemoteDescription(offer);
+        myPeerConnection.current.setRemoteDescription(offer);
 
-        const answer = await myPeerConnection.createAnswer();
-        myPeerConnection.setLocalDescription(answer);
+        const answer = await myPeerConnection.current.createAnswer();
+        myPeerConnection.current.setLocalDescription(answer);
         send({
           event: 'answer',
           data: answer,
         });
       } else if (content.event === 'answer') {
         const answer = content.data;
-        myPeerConnection.setRemoteDescription(answer);
+        myPeerConnection.current.setRemoteDescription(answer);
       } else if (content.event === 'candidate') {
-        myPeerConnection.addIceCandidate(content.data);
+        myPeerConnection.current.addIceCandidate(content.data);
+      } else if (content.method === 'TOGETHER') {
+        createOffer();
       }
     };
-    conn.onopen = () => createOffer();
   });
-  conn.onclose = () => console.log('끝');
 
   return (
     <Main>
