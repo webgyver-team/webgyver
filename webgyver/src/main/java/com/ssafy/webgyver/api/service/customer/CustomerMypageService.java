@@ -17,6 +17,8 @@ public interface CustomerMypageService {
 
     List<Map<String, Object>> getReviewList(CustomerMypageReq req);
 
+    BaseResponseBody getDetailReview(Long reviewIdx);
+
     BaseResponseBody regiterReview(CustomerRegisterReviewReq req);
 
     BaseResponseBody modifyReview(CustomerModifyReviewReq req);

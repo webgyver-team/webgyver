@@ -34,6 +34,24 @@ public class CustomerReviewListRes extends DataResponseBody {
 
     @Getter
     @NoArgsConstructor
+    static class DetailReview {
+        Long reviewIdx;
+        String title;
+        String content;
+        Long rating;
+        List<ReviewImage> images;
+
+        public DetailReview(Article article, List<ReviewImage> images) {
+            this.reviewIdx = article.getIdx();
+            this.title = article.getTitle();
+            this.content = article.getContent();
+            this.rating = Math.abs(article.getType()) - 2;
+            this.images = images;
+        }
+    }
+
+    @Getter
+    @NoArgsConstructor
     static class ReviewImage {
         String originName;
         String saveName;
@@ -63,4 +81,18 @@ public class CustomerReviewListRes extends DataResponseBody {
         return res;
     }
 
+    public static CustomerReviewListRes getDetailCustomerArticle(Integer statusCode, String message, Map<String, Object> review) {
+        CustomerReviewListRes res = new CustomerReviewListRes();
+        res.setStatusCode(statusCode);
+        res.setMessage(message);
+
+        Article article = (Article) review.get("review");
+        List<Picture> pictures = (List<Picture>) review.get("images");
+
+        DetailReview detailReview = new DetailReview(article, pictures.stream().map(ReviewImage::new).collect(Collectors.toList()));
+
+        res.getData().put("review", detailReview);
+
+        return res;
+    }
 }
