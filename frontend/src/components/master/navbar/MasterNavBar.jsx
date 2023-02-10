@@ -1,4 +1,5 @@
-import * as React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState } from 'react';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
@@ -17,13 +18,21 @@ import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import Webgyver from '../../../assets/icon/webgyver_white.png';
-import { authState, accessToken } from '../../../atom';
+import {
+  authState,
+  accessToken,
+  resTimePopupState,
+  // userIdx,
+} from '../../../atom';
+// import { master } from '../../../api/masterService';
 
 const drawerWidth = 240;
 
 export default function MasterNavBar(props) {
   const [auth, setAuth] = useRecoilState(authState);
   const setAccessToken = useSetRecoilState(accessToken);
+  const setResTimePopup = useSetRecoilState(resTimePopupState);
+  // const [sellerIdx] = useRecoilState(userIdx);
   const navigate = useNavigate();
   const masterNavItems = ['일정', '내역', '리뷰', '사례', '실시간'];
   const doLogOut = () => {
@@ -51,11 +60,27 @@ export default function MasterNavBar(props) {
 
   // eslint-disable-next-line react/prop-types
   const { window } = props;
-  const [mobileOpen, setMobileOpen] = React.useState(false);
+  const [mobileOpen, setMobileOpen] = useState(false);
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
+
+  const openResTimePopup = () => {
+    setResTimePopup(true);
+  };
+
+  // useEffect(() => {
+  //   const loadReviewList = async () => {
+  //     const response = await master.get.booktime(sellerIdx);
+  //     if (response.data.bookTimeList === null) {
+  //       setResTimePopup(true);
+  //       // eslint-disable-next-line no-alert
+  //       alert('설정된 상담가능 시간이 없습니다.');
+  //     }
+  //   };
+  //   loadReviewList();
+  // }, []);
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
@@ -138,6 +163,9 @@ export default function MasterNavBar(props) {
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Button color="inherit" onClick={openResTimePopup}>
+                  상담시간변경
+                </Button>
                 <Button color="inherit" onClick={doLogOut}>
                   로그아웃
                 </Button>

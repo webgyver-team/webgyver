@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable array-callback-return */
 import React, { useState, useEffect } from 'react';
@@ -10,29 +11,61 @@ import TextField from '@mui/material/TextField';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import { useRecoilState } from 'recoil';
-import { userIdx } from '../../../../atom';
-import { master } from '../../../../api/masterService';
+import { userIdx, resTimePopupState } from '../../../atom';
+import { master } from '../../../api/masterService';
 
 // eslint-disable-next-line object-curly-newline
-export default function AlertDialog({ open, setOpen, hour, setHour }) {
-  const [masterIdx] = useRecoilState(userIdx);
+export default function TimePicker() {
+  const [hour, setHour] = useState([
+    { day: '월요일', open: '', close: '', holiday: false },
+    { day: '화요일', open: '', close: '', holiday: false },
+    { day: '수요일', open: '', close: '', holiday: false },
+    { day: '목요일', open: '', close: '', holiday: false },
+    { day: '금요일', open: '', close: '', holiday: false },
+    { day: '토요일', open: '', close: '', holiday: false },
+    { day: '일요일', open: '', close: '', holiday: false },
+    { day: '공휴일', open: '', close: '', holiday: true },
+  ]);
+
+  const [sellerIdx] = useRecoilState(userIdx);
+  // eslint-disable-next-line prettier/prettier
+  const [resTimePopup, setResTimePopup] = useRecoilState(resTimePopupState);
   const [formContent, setFormContent] = useState([]);
-  useEffect(() => {
-    setFormContent(JSON.parse(JSON.stringify(hour)));
-  }, [hour]);
+  // useEffect(() => {
+  //   setFormContent(JSON.parse(JSON.stringify(hour)));
+  // }, [hour]);
 
   const handleClose = () => {
     setFormContent(hour);
-    setOpen(false);
+    setResTimePopup(false);
   };
+
+  useEffect(() => {
+    const loadReviewList = async () => {
+      const response = await master.get.booktime(sellerIdx);
+      // console.log('hi', response.data);
+      if (response.data.bookTimeList === null) {
+        // eslint-disable-next-line no-alert
+        setFormContent(JSON.parse(JSON.stringify(hour)));
+        setResTimePopup(true);
+        // eslint-disable-next-line no-alert
+        alert('설정된 상담가능 시간이 없습니다.');
+      } else {
+        // eslint-disable-next-line
+        // console.log('response', response.data.bookTimeList);
+        setFormContent(response.data.bookTimeList);
+      }
+    };
+    loadReviewList();
+  }, [hour, sellerIdx, resTimePopup, setResTimePopup]);
 
   const registInfo = async () => {
     const data = {
-      companyTime: formContent,
+      bookTimeList: formContent,
     };
     // eslint-disable-next-line
     console.log(data);
-    const response = await master.put.businessHour(data, masterIdx);
+    const response = await master.put.booktime(data, sellerIdx);
     if (response.statusCode === 200) {
       // eslint-disable-next-line no-alert
       alert('변경되었습니다.');
@@ -73,7 +106,6 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
       return temp;
     });
     setFormContent([...formContent]);
-    // console.log(formContent);
   };
 
   const update = () => {
@@ -84,12 +116,12 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
   return (
     <div>
       <Dialog
-        open={open}
+        open={resTimePopup}
         onClose={handleClose}
         aria-labelledby="alert-dialog-title"
         aria-describedby="alert-dialog-description"
       >
-        <DialogTitle id="alert-dialog-title">영업시간 변경하기</DialogTitle>
+        <DialogTitle id="alert-dialog-title">상담시간 변경하기</DialogTitle>
         <InfoBox>
           {formContent.map((el, i) => (
             <div key={i}>

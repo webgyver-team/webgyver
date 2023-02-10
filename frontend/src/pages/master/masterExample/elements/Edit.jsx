@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import { exampleEditState, userIdx, exampleDataState } from '../../../../atom';
-import ImageInput from './EditImageInput';
+import ImageInput from '../../../customer/reviewfrom/elements/ImageInput';
 import { master } from '../../../../api/masterService';
 
 const style = {
@@ -38,40 +38,18 @@ export default function Edit({ setReload }) {
   // 이미지 변수
   const [imageList, setImageList] = useState([]);
   const [imageData, setImageData] = useState([]);
+  const [imageListFromReview, setImageListFromReview] = useState([]);
 
   // 기존 데이터
   const exampleData = useRecoilValue(exampleDataState);
-
-  // 기존 이미지 데이터
-  const [savedImg, setSavedImg] = useState([]);
-
-  // 전체 이미지 데이터
-  // const [totalImg, setTotalImg] = useState([]);
-  let totalImg = [];
 
   // 유저 아이디
   const useId = useRecoilValue(userIdx);
 
   useEffect(() => {
     setFormContent(exampleData.content);
-  }, [exampleData]);
-
-  // 기존 이미지 재보관함수
-  const [existImg, setExistImg] = useState([]);
-  const existSave = () => {
-    const defaultImg = savedImg.map((el) => {
-      const newData = {
-        saveName: el.url,
-        originName: el.image.name,
-      };
-      return newData;
-    });
-    console.log('defaultImg', defaultImg);
-    setExistImg(defaultImg);
-  };
-  useEffect(() => {
-    existSave();
-  }, []);
+    setImageListFromReview(exampleData.images);
+  }, [exampleData.articleIdx]);
 
   // 내용 검증 함수
   const changeFormContent = (event) => {
@@ -80,13 +58,6 @@ export default function Edit({ setReload }) {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForContent('');
   };
-
-  useEffect(() => {
-    console.log('imageData', imageData);
-    console.log('existImg', existImg);
-    // setTotalImg((origin) => [...origin, ...imageData, ...savedImg]);
-    totalImg = [...imageData, ...savedImg];
-  }, [existImg, imageData]);
 
   // 이미지 S3 전송 함수
   const sendImageListToS3 = async () => {
@@ -132,8 +103,12 @@ export default function Edit({ setReload }) {
     const data = {
       content: formContent,
       type: useId,
-      images: totalImg, // 이미지 파일의 hash 이름, 원래 이름
+      images: [], // 이미지 파일의 hash 이름, 원래 이름
     };
+
+    if (imageListFromReview.length > 0) {
+      data.images = [...data.images, ...imageListFromReview]; // 이미지 데이터에 기존 이미지 추가
+    }
 
     if (data.content.trim().length === 0) {
       // 내용 입력 유효하지 않음
@@ -148,7 +123,6 @@ export default function Edit({ setReload }) {
       // eslint-disable-next-line
       console.log('보내기 전 데이터', data); // POST로 수정 예정
       const { articleIdx } = exampleData;
-      console.log('게시글id', articleIdx);
       // post 로직
       const response = await master.put.example(data, articleIdx);
       // eslint-disable-next-line
@@ -166,8 +140,8 @@ export default function Edit({ setReload }) {
       }
       // imageData reset
       setImageData([]);
-      setSavedImg([]);
-      setExistImg([]);
+      // setSavedImg([]);
+      // setExistImg([]);
       // setTotalImg([]);
     });
   };
@@ -198,8 +172,8 @@ export default function Edit({ setReload }) {
             <NullBox />
             <ImageInput
               sendImageList={setImageList}
-              awsImages={exampleData.images}
-              setSavedImg={setSavedImg}
+              existImages={imageListFromReview}
+              sendExistImages={setImageListFromReview}
             />
             <NullBox />
             <Button variant="contained" onClick={registReview}>

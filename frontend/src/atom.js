@@ -136,3 +136,8 @@ export const matchFormState = atom({
   },
   effects_UNSTABLE: [persistAtom],
 });
+
+export const resTimePopupState = atom({
+  key: 'resTimePopupState',
+  default: false,
+});
