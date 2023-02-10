@@ -133,7 +133,7 @@ public class WebSocketFaceTime {
         Map<String, Object> info = gson.fromJson(jsonMessage, new TypeToken<Map<String, Object>>() {
         }.getType());
 //        System.out.println(info);
-        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+jsonMessage);
+        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + jsonMessage);
         Room room = extractRoom(session);
 //        room.sendMessage(jsonMessage);
         MethodType method = MethodType.valueOf((String) info.remove("method"));
@@ -158,11 +158,14 @@ public class WebSocketFaceTime {
                 reply.put("method", MethodType.ACCEPT_MEET);
                 reply.put("time", stringTime);
                 break;
-            default:
+            //
+            case OFFER:
+            case CANDIDATE:
+            case ANSWER:
                 reply.put("method", method);
                 reply.put("data", info.get(("data")));
+                break;
         }
-        System.out.println(reply);
         room.sendMessageOther(gson.toJson(reply), session);
     }
 

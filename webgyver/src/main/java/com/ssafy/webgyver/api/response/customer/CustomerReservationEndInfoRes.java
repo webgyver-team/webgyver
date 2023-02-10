@@ -17,7 +17,7 @@ public class CustomerReservationEndInfoRes extends DataResponseBody {
     public static class Response {
         private String companyName;
         private String sellerName;
-        private String content;
+        private String title;
         private Integer price;
 
     }
@@ -39,7 +39,7 @@ public class CustomerReservationEndInfoRes extends DataResponseBody {
                 .builder()
                 .companyName((String) response.get("companyName"))
                 .sellerName((String) response.get("sellerName"))
-                .content((String) response.get("content"))
+                .title((String) response.get("title"))
                 .price(((int) response.get("price")))
                 .build()
         );
