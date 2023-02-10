@@ -118,7 +118,9 @@ export default function MasterVideoService() {
   const conn = useRef(null);
   const myPeerConnection = useRef(null);
   useLayoutEffect(() => {
-    conn.current = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`);
+    conn.current = new WebSocket(
+      `ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`,
+    );
     const configuration = {
       iceServers: [
         {
@@ -138,6 +140,7 @@ export default function MasterVideoService() {
       });
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
+    console.log(myPeerConnection.current);
     myPeerConnection.current.onicecandidate = sendCandidate;
     myPeerConnection.current.addEventListener('track', (data) => {
       const video = peerMainScreen.current;
@@ -159,12 +162,14 @@ export default function MasterVideoService() {
           .forEach((track) => myPeerConnection.current.addTrack(track, stream));
       });
     const createOffer = async () => {
-      const offer = myPeerConnection.current.createOffer();
+      const offer = await myPeerConnection.current.createOffer();
       await send({
         event: 'offer',
         data: offer,
       });
     };
+
+    conn.current.onclose = () => console.log('끝');
 
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);

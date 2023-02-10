@@ -11,7 +11,11 @@ import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
 import {
-  locateValueState, userIdx, categoryState, reservationIdxState,
+  locateValueState,
+  userIdx,
+  categoryState,
+  reservationIdxState,
+  matchFormState,
 } from '../../../atom';
 
 // kakao 가져오기
@@ -21,10 +25,11 @@ export default function Matching() {
   const navigate = useNavigate();
   const routeMatchForm = () => navigate('/match/form');
   const setReservationIdx = useSetRecoilState(reservationIdxState);
-  const categoryIdx = useRecoilValue(categoryState);
+  const categoryIdx = String(useRecoilValue(categoryState));
   const idx = useRecoilValue(userIdx);
   const locateValue = useRecoilValue(locateValueState);
   const [watching, setWatching] = useState(0);
+  const matchForm = useRecoilValue(matchFormState);
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
   const [counter, setCounter] = useState(180);
@@ -45,28 +50,19 @@ export default function Matching() {
       const socketData = JSON.stringify({
         method: 'INIT',
         categoryIdx,
-        lng: 0,
-        lat: 0,
-        address: '대전 어딘가',
-        detailAddress: '111-2222',
-        title: '마늘도 까주나요',
-        content:
-          '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n손이 너무 더러운디 씻을수가 없어유\n',
-        images: [
-          {
-            saveName: 'test123',
-            originName: 'test123',
-          },
-          {
-            saveName: 'asdf123',
-            originName: 'asdf123',
-          },
-        ],
-        price: 500,
+        lng: locateValue.longitude,
+        lat: locateValue.latitude,
+        address: matchForm.address,
+        detailAddress: matchForm.detailAddress,
+        title: matchForm.title,
+        content: matchForm.content,
+        images: matchForm.images,
+        price: matchForm.cost,
         viewDistance: 1,
       });
-      gWebSocket.current.send(socketData);
       console.log(socketData);
+      console.log(gWebSocket.current);
+      gWebSocket.current.send(socketData);
     };
     /**
      * 웹소켓 메시지(From Server) 수신하는 경우 호출
@@ -87,6 +83,7 @@ export default function Matching() {
      * 웹소켓 사용자 연결 해제하는 경우 호출
      */
     gWebSocket.current.onclose = () => {
+      console.log('끝');
       // addLineToChatBox('Server is disconnected.');
     };
 
@@ -111,19 +108,23 @@ export default function Matching() {
   };
   const changeDistance = (value) => {
     console.log(gWebSocket.current);
-    const data = JSON.stringify(
-      {
-        method: 'CHANGE_DISTANCE',
-        viewDistance: value,
-      },
-    );
+    const data = JSON.stringify({
+      method: 'CHANGE_DISTANCE',
+      viewDistance: value,
+    });
     console.log(data);
     gWebSocket.current.send(data);
   };
 
   // eslint-disable-next-line react/jsx-one-expression-per-line
-  const alertText = <p>{Math.floor(counter / 60)}분 {(counter % 60)}초 뒤, 이전 페이지로 돌아갑니다.</p>;
-  const lowerText = `지금 ${watching}명의 전문가가\n고객님의 문의를 보고 있습니다.`;
+  const alertText = (
+    <p>
+      {Math.floor(counter / 60)}
+      분
+      {counter % 60}
+      초 뒤, 이전 페이지로 돌아갑니다.
+    </p>
+  );
 
   const marker = (
     <div className="dot">
@@ -180,23 +181,43 @@ export default function Matching() {
               label="distance"
               sx={{ fontSize: 12 }}
             >
-              <MenuItem sx={{ fontSize: 12 }} value="거리무관" onClick={() => changeDistance('-1')}>
+              <MenuItem
+                sx={{ fontSize: 12 }}
+                value="거리무관"
+                onClick={() => changeDistance('-1')}
+              >
                 거리무관
               </MenuItem>
-              <MenuItem sx={{ fontSize: 12 }} value="1km 이내" onClick={() => changeDistance('1')}>
+              <MenuItem
+                sx={{ fontSize: 12 }}
+                value="1km 이내"
+                onClick={() => changeDistance('1')}
+              >
                 1km 이내
               </MenuItem>
-              <MenuItem sx={{ fontSize: 12 }} value="5km 이내" onClick={() => changeDistance('5')}>
+              <MenuItem
+                sx={{ fontSize: 12 }}
+                value="5km 이내"
+                onClick={() => changeDistance('5')}
+              >
                 5km 이내
               </MenuItem>
-              <MenuItem sx={{ fontSize: 12 }} value="10km 이내" onClick={() => changeDistance('10')}>
+              <MenuItem
+                sx={{ fontSize: 12 }}
+                value="10km 이내"
+                onClick={() => changeDistance('10')}
+              >
                 10km 이내
               </MenuItem>
             </Select>
           </FormControl>
         </UpperInfo>
         <LowerInfo>
-          <p>{lowerText}</p>
+          {watching !== 0 ? (
+            <p>{`지금 ${watching}명의 전문가가\n고객님의 문의를 보고 있습니다.`}</p>
+          ) : (
+            <p>현재 대기중인 전문가가 없습니다.</p>
+          )}
         </LowerInfo>
       </InfoBox>
     </Main>

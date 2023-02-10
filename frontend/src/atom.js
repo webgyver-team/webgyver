@@ -123,3 +123,16 @@ export const reservationIdxState = atom({
   default: null,
   effects_UNSTABLE: [persistAtom],
 });
+
+export const matchFormState = atom({
+  key: 'matchFormState',
+  default: {
+    address: '',
+    detailAddress: '',
+    title: '',
+    content: '',
+    cost: 0,
+    images: [],
+  },
+  effects_UNSTABLE: [persistAtom],
+});

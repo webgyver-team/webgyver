@@ -114,7 +114,9 @@ export default function VideoService() {
   const conn = useRef(null);
   const myPeerConnection = useRef(null);
   useLayoutEffect(() => {
-    conn.current = new WebSocket(`ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`);
+    conn.current = new WebSocket(
+      `ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
+    );
     console.log(conn.current);
     const configuration = {
       iceServers: [
@@ -130,13 +132,13 @@ export default function VideoService() {
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.addEventListener('track', (data) => {
-      const video = peerMainScreen.current;
-      video.srcObject = new MediaStream([data.track]);
-      video.play();
-
-      // video = peerSubScreen.current;
+      // const video = peerMainScreen.current;
       // video.srcObject = new MediaStream([data.track]);
       // video.play();
+
+      const video = peerSubScreen.current;
+      video.srcObject = new MediaStream([data.track]);
+      video.play();
     });
     myPeerConnection.current.onicecandidate = (event) => {
       send({
@@ -146,7 +148,7 @@ export default function VideoService() {
     };
 
     const createOffer = async () => {
-      const offer = myPeerConnection.current.createOffer();
+      const offer = await myPeerConnection.current.createOffer();
       await send({
         event: 'offer',
         data: offer,
@@ -187,7 +189,6 @@ export default function VideoService() {
         createOffer();
       }
     };
-    conn.current.onclose = () => console.log('끝');
   });
 
   return (

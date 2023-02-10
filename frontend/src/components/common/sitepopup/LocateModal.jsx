@@ -44,6 +44,8 @@ export default function BasicModal() {
       ? locationValue.address
       : '여기를 눌러주세요.',
     detail: locationValue.detail ? locationValue.detail : '',
+    lat: locationValue.latitude ? locationValue.latitude : null,
+    lng: locationValue.longitude ? locationValue.longitude : null,
   });
   // 기본주소 변경 함수
   const setAddress = (ans) => {
@@ -97,6 +99,7 @@ export default function BasicModal() {
       if (status === kakao.maps.services.Status.OK) {
         // console.log(result[0]);
         setCoordinateValue({ x: result[0].x, y: result[0].y });
+        console.log(result[0]);
       }
     });
   }, [addressValue.address]);
