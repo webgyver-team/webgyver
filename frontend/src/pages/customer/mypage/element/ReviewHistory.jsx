@@ -7,16 +7,23 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { customer } from '../../../../api/customerService';
-import { userIdx } from '../../../../atom';
+import { userIdx, loginOpenState } from '../../../../atom';
+import LoadingSpinner from '../../../common/LoadingSpinner';
 
 export default function ReviewHistory() {
   const customerIdx = useRecoilValue(userIdx);
-  const [reviews, setReviews] = useState([]);
+  const setLoginOpenState = useSetRecoilState(loginOpenState);
+  const [reviews, setReviews] = useState(null);
   const [reload, setReload] = useState(true);
   useEffect(() => {
     if (!reload) return;
+    if (customerIdx === null) {
+      alert('로그인이 필요합니다.');
+      setLoginOpenState(true);
+      return;
+    }
     const getReviews = async () => {
       const response = await customer.get.reviews(customerIdx);
       console.log(response);
@@ -29,17 +36,20 @@ export default function ReviewHistory() {
     };
     getReviews();
     setReload(false);
-  }, [customerIdx, reload]);
+  }, [customerIdx, reload, setLoginOpenState]);
   return (
     <Main>
-      {reviews.map((review) => (
-        <CardView
-          key={review.reviewIdx}
-          review={review}
-          setReload={setReload}
-        />
-      ))}
-      {reviews.length === 0 ? (
+      {reviews === null ? <LoadingSpinner /> : null}
+      {/* eslint-disable-next-line */}
+      {reviews &&
+        reviews.map((review) => (
+          <CardView
+            key={review.reviewIdx}
+            review={review}
+            setReload={setReload}
+          />
+        ))}
+      {reviews && reviews.length === 0 ? (
         <NoReviewMessage>리뷰 내역이 없습니다.</NoReviewMessage>
       ) : null}
     </Main>

@@ -12,6 +12,9 @@ import WhiteImage from '../../../../assets/image/white.png';
 export default function CompleteHistory() {
   const [histories, setHistories] = useState([]);
   const customerIdx = useRecoilValue(userIdx);
+  if (customerIdx === null) {
+    alert('로그인이 필요합니다.');
+  }
   useEffect(() => {
     const getHistory = async () => {
       const response = await customer.get.completeHistory(customerIdx);
