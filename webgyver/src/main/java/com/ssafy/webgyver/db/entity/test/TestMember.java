@@ -1,10 +1,9 @@
 package com.ssafy.webgyver.db.entity.test;
 
-import lombok.Builder;
+import com.ssafy.webgyver.db.entity.RoleType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.format.annotation.DateTimeFormat;

@@ -1,6 +1,6 @@
 package com.ssafy.webgyver.api.request.test;
 
-import com.ssafy.webgyver.db.entity.test.RoleType;
+import com.ssafy.webgyver.db.entity.RoleType;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
