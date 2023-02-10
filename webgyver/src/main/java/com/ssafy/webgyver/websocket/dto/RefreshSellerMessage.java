@@ -14,8 +14,8 @@ import java.util.List;
 public class RefreshSellerMessage {
     // 커스터머의 인덱스
     private long idx;
-    private double lat;
-    private double lng;
+    private String lat;
+    private String lng;
     private String address;
     private String detailAddress;
     private String title;
