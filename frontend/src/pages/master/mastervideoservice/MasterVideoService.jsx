@@ -117,6 +117,13 @@ export default function MasterVideoService() {
   const [visitOrderOpen, setVisitOrderOpen] = useState(true);
   const conn = useRef(null);
   const myPeerConnection = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      conn.current.close();
+    };
+  }, []);
+
   useLayoutEffect(() => {
     conn.current = new WebSocket(
       `ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`,
@@ -135,7 +142,7 @@ export default function MasterVideoService() {
     };
     const sendCandidate = (event) => {
       send({
-        event: 'candidate',
+        method: 'CANDIDATE',
         data: event.candidate,
       });
     };
@@ -164,7 +171,7 @@ export default function MasterVideoService() {
     const createOffer = async () => {
       const offer = await myPeerConnection.current.createOffer();
       send({
-        event: 'offer',
+        method: 'OFFER',
         data: offer,
       });
     };
@@ -174,7 +181,8 @@ export default function MasterVideoService() {
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
       console.log('받음: ', message);
-      if (content.event === 'offer') {
+      console.log('받고 해체: ', content);
+      if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
         myPeerConnection.current.setRemoteDescription(offer);
@@ -182,13 +190,13 @@ export default function MasterVideoService() {
         const answer = await myPeerConnection.current.createAnswer();
         myPeerConnection.current.setLocalDescription(answer);
         send({
-          event: 'answer',
+          method: 'ANSWER',
           data: answer,
         });
-      } else if (content.event === 'answer') {
+      } else if (content.method === 'ANSWER') {
         const answer = content.data;
         myPeerConnection.current.setRemoteDescription(answer);
-      } else if (content.event === 'candidate') {
+      } else if (content.method === 'CANDIDATE') {
         myPeerConnection.current.addIceCandidate(content.data);
       } else if (content.method === 'TOGETHER') {
         createOffer();

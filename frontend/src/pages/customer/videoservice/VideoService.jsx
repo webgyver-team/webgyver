@@ -57,7 +57,6 @@ export default function VideoService() {
   }, []);
 
   const routeEndService = () => {
-    console.log(conn.current);
     navigate('/endservice');
   };
   const sendRequest = () => {
@@ -65,6 +64,12 @@ export default function VideoService() {
     conn.current.send(JSON.stringify({ data: 'ㅎㅇㅎㅇ' }));
   };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
+
+  useEffect(() => {
+    return () => {
+      conn.current.close();
+    };
+  }, []);
 
   // 내 미디어 가져오기
   const getUserCameraMain = async () => {
@@ -153,6 +158,8 @@ export default function VideoService() {
       });
     };
 
+    conn.current.onclose = () => console.log('끝');
+
     const createOffer = async () => {
       const offer = await myPeerConnection.current.createOffer();
       send({
@@ -163,6 +170,7 @@ export default function VideoService() {
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
       console.log('받음: ', message);
+      console.log('받고 해체: ', content);
       if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
