@@ -33,6 +33,13 @@ export default function Matching() {
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
   const [counter, setCounter] = useState(180);
+
+  useEffect(() => {
+    return () => {
+      gWebSocket.current.close();
+    };
+  }, []);
+
   useEffect(() => {
     if (counter === 0) {
       navigate('/match/form');

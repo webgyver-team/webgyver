@@ -1,6 +1,8 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
-import React, { useState, useLayoutEffect, useRef } from 'react';
+import React, {
+  useState, useLayoutEffect, useEffect, useRef,
+} from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
@@ -26,6 +28,13 @@ export default function MasterSchedule() {
   ]);
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/seller/${idx}`;
   const gWebSocket = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      gWebSocket.current.close();
+    };
+  }, []);
+
   useLayoutEffect(() => {
     gWebSocket.current = new WebSocket(webSocketAddress);
     gWebSocket.current.onopen = () => {
