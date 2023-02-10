@@ -3,7 +3,12 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { locateValueState, authState, accessToken } from '../../../atom';
+import {
+  locateValueState,
+  authState,
+  accessToken,
+  userIdx,
+} from '../../../atom';
 import { master } from '../../../api/accountsApi';
 import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
@@ -28,6 +33,7 @@ export default function MasterSignUp() {
     }, // 기본 카테고리 리스트
   ];
   const setAuth = useSetRecoilState(authState);
+  const setUserIdx = useSetRecoilState(userIdx);
   const setAccessToken = useSetRecoilState(accessToken);
   const [data, setData] = useState({
     id: null,
@@ -132,6 +138,7 @@ export default function MasterSignUp() {
       });
       setAccessToken(loginResponse.data['access-token']);
       setAuth('master');
+      setUserIdx(response.data.sellerIdx);
       navigate('/master/schedule');
     } else {
       // eslint-disable-next-line

@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
@@ -110,6 +111,11 @@ export default function VideoService() {
     // });
   };
 
+  useLayoutEffect(() => {
+    getUserCameraMain();
+    getUserCameraSub();
+  });
+
   useEffect(() => {
     getUserCameraMain();
   }, [myMainScreen, mySubScreen]);
@@ -117,10 +123,8 @@ export default function VideoService() {
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
       setMainScreenState('peerScreen');
-      getUserCameraSub();
     } else {
       setMainScreenState('myScreen');
-      getUserCameraMain();
     }
   };
 
@@ -149,7 +153,8 @@ export default function VideoService() {
 
       const video = peerSubScreen.current;
       video.srcObject = new MediaStream([data.track]);
-      video.play();
+      const playPromise = video.play();
+      if (playPromise !== undefined) { playPromise.then((e) => { console.log(e); }).catch(); }
     });
     myPeerConnection.current.onicecandidate = (event) => {
       send({
@@ -161,6 +166,17 @@ export default function VideoService() {
     conn.current.onclose = () => console.log('끝');
 
     const createOffer = async () => {
+      // 내 미디어
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: true,
+        })
+        .then((stream) => {
+          stream
+            .getTracks()
+            .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+        });
       const offer = await myPeerConnection.current.createOffer();
       send({
         method: 'OFFER',
@@ -169,14 +185,11 @@ export default function VideoService() {
     };
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log('받음: ', message);
       console.log('받고 해체: ', content);
       if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
         myPeerConnection.current.setRemoteDescription(offer);
-
-        // 내 미디어
         navigator.mediaDevices
           .getUserMedia({
             audio: true,
@@ -187,6 +200,7 @@ export default function VideoService() {
               .getTracks()
               .forEach((track) => myPeerConnection.current.addTrack(track, stream));
           });
+
         const answer = await myPeerConnection.current.createAnswer();
         myPeerConnection.current.setLocalDescription(answer);
         send({
@@ -195,6 +209,7 @@ export default function VideoService() {
         });
       } else if (content.method === 'ANSWER') {
         const answer = content.data;
+        console.log(myPeerConnection.current);
         myPeerConnection.current.setRemoteDescription(answer);
       } else if (content.method === 'CANDIDATE') {
         // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정
@@ -203,7 +218,7 @@ export default function VideoService() {
         createOffer();
       }
     };
-  });
+  }, []);
 
   return (
     <Main>

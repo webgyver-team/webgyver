@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-undef */
 /* eslint-disable jsx-a11y/media-has-caption */
@@ -100,6 +101,11 @@ export default function MasterVideoService() {
     // });
   };
 
+  useLayoutEffect(() => {
+    getUserCameraMain();
+    getUserCameraSub();
+  });
+
   useEffect(() => {
     getUserCameraSub();
   }, [myMainScreen, mySubScreen]);
@@ -107,10 +113,8 @@ export default function MasterVideoService() {
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
       setMainScreenState('peerScreen');
-      getUserCameraSub();
     } else {
       setMainScreenState('myScreen');
-      getUserCameraMain();
     }
   };
 
@@ -152,25 +156,26 @@ export default function MasterVideoService() {
     myPeerConnection.current.addEventListener('track', (data) => {
       const video = peerMainScreen.current;
       video.srcObject = new MediaStream([data.track]);
-      video.play();
+      const playPromise = video.play();
+      if (playPromise !== undefined) { playPromise.then((e) => { console.log(e); }).catch(); }
 
       // video = peerSubScreen.current;
       // video.srcObject = new MediaStream([data.track]);
       // video.play();
     });
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: true,
-        video: true,
-      })
-      .then((stream) => {
-        stream
-          .getTracks()
-          .forEach((track) => myPeerConnection.current.addTrack(track, stream));
-      });
     const createOffer = async () => {
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: true,
+        })
+        .then((stream) => {
+          stream
+            .getTracks()
+            .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+        });
       const offer = await myPeerConnection.current.createOffer();
-      send({
+      await send({
         method: 'OFFER',
         data: offer,
       });
@@ -180,12 +185,21 @@ export default function MasterVideoService() {
 
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log('받음: ', message);
       console.log('받고 해체: ', content);
       if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
         myPeerConnection.current.setRemoteDescription(offer);
+        navigator.mediaDevices
+          .getUserMedia({
+            audio: true,
+            video: true,
+          })
+          .then((stream) => {
+            stream
+              .getTracks()
+              .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+          });
 
         const answer = await myPeerConnection.current.createAnswer();
         myPeerConnection.current.setLocalDescription(answer);
@@ -194,6 +208,7 @@ export default function MasterVideoService() {
           data: answer,
         });
       } else if (content.method === 'ANSWER') {
+        console.log(myPeerConnection.current);
         const answer = content.data;
         myPeerConnection.current.setRemoteDescription(answer);
       } else if (content.method === 'CANDIDATE') {
@@ -202,7 +217,7 @@ export default function MasterVideoService() {
         createOffer();
       }
     };
-  });
+  }, []);
 
   return (
     <Main>
