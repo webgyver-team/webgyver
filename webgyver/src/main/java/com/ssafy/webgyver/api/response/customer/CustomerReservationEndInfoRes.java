@@ -1,5 +1,6 @@
 package com.ssafy.webgyver.api.response.customer;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
 import com.ssafy.webgyver.db.entity.Reservation;
 import lombok.AllArgsConstructor;
@@ -32,16 +33,17 @@ public class CustomerReservationEndInfoRes extends DataResponseBody {
 
     public static CustomerReservationEndInfoRes of(Integer statusCode, String message, Map<String, Object> response) {
         CustomerReservationEndInfoRes res = new CustomerReservationEndInfoRes();
-
+        ObjectMapper objectMapper = new ObjectMapper();
         res.setStatusCode(statusCode);
         res.setMessage(message);
-        res.getData().put("data", Response
-                .builder()
-                .companyName((String) response.get("companyName"))
-                .sellerName((String) response.get("sellerName"))
-                .title((String) response.get("title"))
-                .price(((int) response.get("price")))
-                .build()
+        res.setData(objectMapper.convertValue(Response
+                        .builder()
+                        .companyName((String) response.get("companyName"))
+                        .sellerName((String) response.get("sellerName"))
+                        .title((String) response.get("title"))
+                        .price(((int) response.get("price")))
+                        .build()
+                , Map.class)
         );
 
         return res;
