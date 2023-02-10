@@ -45,14 +45,11 @@ public class SellerReservationEndInfoRes extends DataResponseBody {
         res.setStatusCode(statusCode);
         res.setMessage(message);
 
-        Meet meet = new Meet();
-        if (response.containsKey("date")) {
+        Meet meet = null;
+        if ((boolean) response.get("hasMeet")) {
+            meet = new Meet();
             meet.setDate((String) response.get("date"));
-        }
-        if (response.containsKey("address")) {
             meet.setAddress((String) response.get("address"));
-        }
-        if (response.containsKey("detailAddress")) {
             meet.setDetailAddress((String) response.get("detailAddress"));
         }
         ObjectMapper objectMapper = new ObjectMapper();

@@ -174,6 +174,9 @@ public class SellerReservationServiceImpl implements SellerReservationService {
             response.put("date", TimeUtil.time2String(reservation.getReservationTime(), "yyyyMMdd-HHmm"));
             response.put("address", reservation.getCustomer().getAddress());
             response.put("detailAddress", reservation.getCustomer().getDetailAddress());
+            response.put("hasMeet", true);
+        } else {
+            response.put("hasMeet", false);
         }
 
         return SellerReservationEndInfoRes.of(200, "Success", response);
