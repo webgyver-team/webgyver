@@ -1,5 +1,4 @@
 /* eslint-disable */
-import { async } from 'q';
 import Send from './send';
 
 const customerURL = '/api/v1/customer';
@@ -14,6 +13,10 @@ export const customer = {
     },
     reservationHistory: async (idx) => {
       const response = await Send.get(`${customerURL}/reservation/list/${idx}`);
+      return response;
+    },
+    endService: async (idx) => {
+      const response = await Send.get(`${customerURL}/reservation/end/${idx}`);
       return response;
     },
     completeHistory: async (idx) => {

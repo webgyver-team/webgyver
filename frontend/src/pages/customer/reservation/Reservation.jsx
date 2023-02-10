@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from './elements/DatePicker';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import {
   authState,
   loginOpenState,
@@ -40,7 +41,8 @@ export default function Reservation() {
   const [clickedReservation, setClickedReservation] = useState(reservationNull); // 클릭한 예약 정보
   const [clickedTimeButton, setClickedTimeButton] = useState(null); // 클릭한 시간 버튼(HTML Element)
   const [reservationButton, setReservationButton] = useState(false); // 예약하기 버튼 on off(boolean)
-
+  const [searchingToday, setSearchingToday] = useState(true);
+  const [loading, setLoading] = useState(true);
   // 날짜 선택했을 때 실행되는 함수
   const handleDate = (value) => {
     if (date !== value) {
@@ -118,6 +120,17 @@ export default function Reservation() {
   const location = useRecoilValue(locateValueState); // 주소 정보
 
   useEffect(() => {
+    setLoading(true);
+    const todayObj = new Date(); // 오늘 날짜에 대해...
+    const today = `${todayObj.getFullYear()}${
+      (todayObj.getMonth() + 1).toString().length < 2
+        ? `0${todayObj.getMonth() + 1}`
+        : `${todayObj.getMonth() + 1}`
+    }${
+      todayObj.getDate().toString().length < 2
+        ? `0${todayObj.getDate()}`
+        : `${todayObj.getDate()}`
+    }`;
     const loadStoreList = async () => {
       const data = {
         categoryIdx: category, // 현재 String으로 되어있는데 이거 idx로 바꿔야 함
@@ -133,7 +146,14 @@ export default function Reservation() {
       }
       // eslint-disable-next-line
       const response = await customer.get.stores(type, data);
+      if (today === data.date) {
+        // 이미 지난 시간 제거하고 넣어줄 것.
+        setSearchingToday(true);
+      } else {
+        setSearchingToday(false);
+      }
       setStoreList(response.data.storeList);
+      setLoading(false);
     };
     // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
     // eslint-disable-next-line
@@ -177,22 +197,27 @@ export default function Reservation() {
         <span onClick={() => setType(3)}>가격순</span>
       </FilterBox>
       <div>
-        {storeList.map((store) => (
-          <StoreInfo
-            key={store.sellerIdx}
-            idx={store.sellerIdx}
-            storeName={store.storeName}
-            personName={store.personName}
-            address={store.address}
-            detailAddress={store.detailAddress}
-            distance={store.distance}
-            star={store.star}
-            picture={store.picture}
-            allTime={store.allTime}
-            noTime={store.noTime}
-            handleClickedTimeButton={handleClickedTimeButton}
-          />
-        ))}
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          storeList.map((store) => (
+            <StoreInfo
+              key={store.sellerIdx}
+              idx={store.sellerIdx}
+              storeName={store.storeName}
+              personName={store.personName}
+              address={store.address}
+              detailAddress={store.detailAddress}
+              distance={store.distance}
+              star={store.star}
+              picture={store.picture}
+              allTime={store.allTime}
+              noTime={store.noTime}
+              handleClickedTimeButton={handleClickedTimeButton}
+              isToday={searchingToday}
+            />
+          ))
+        )}
       </div>
       <NullBox />
       <div

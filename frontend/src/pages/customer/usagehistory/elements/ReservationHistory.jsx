@@ -7,7 +7,7 @@ import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { customer } from '../../../../api/customerService';
-import { userIdx, reservationIdxToReview } from '../../../../atom';
+import { userIdx, reservationIdxState } from '../../../../atom';
 
 export default function ReservationHistory() {
   const [histories, setHistories] = useState([]);
@@ -24,7 +24,7 @@ export default function ReservationHistory() {
   return (
     <Main>
       {histories.map((history) => (
-        <CardView key={history} history={history} />
+        <CardView key={history.reservationIdx} history={history} />
       ))}
       {histories.length > 0 ? null : (
         <NoHistoryMessage>예약 내역이 없습니다.</NoHistoryMessage>
@@ -39,7 +39,7 @@ const Main = styled.div`
 
 function CardView({ history }) {
   const navigate = useNavigate();
-  const setReservationIdxToReview = useSetRecoilState(reservationIdxToReview);
+  const setReservationIdxState = useSetRecoilState(reservationIdxState);
   const slickSettings = {
     dots: false,
     arrows: false,
@@ -66,7 +66,7 @@ function CardView({ history }) {
   const date = history.reservationTime.split(' ')[0].split('-');
   const time = history.reservationTime.split(' ')[1].split(':');
   const routeVideoService = () => {
-    setReservationIdxToReview(history.reservationIdx);
+    setReservationIdxState(history.reservationIdx);
     navigate('/videoservice');
   };
 

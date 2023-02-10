@@ -38,6 +38,11 @@ export default function CategoryLine(props) {
     navigate('/select');
   };
   const setRightCategory = () => {
+    if (props.right + 1 === 10) {
+      // eslint-disable-next-line
+      alert('서비스 준비 중입니다.');
+      return;
+    }
     setCategory(props.right + 1);
     navigate('/select');
   };
