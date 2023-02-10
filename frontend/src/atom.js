@@ -44,9 +44,10 @@ export const locateValueState = atom({
   default: {
     address: '대전 유성구 덕명동 124',
     detail: 'B102호',
-    longitude: 127.298666015874,
-    latitude: 36.3551691100904,
+    longitude: '127.298666015874',
+    latitude: '36.3551691100904',
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 // 가게 정보 모달 on/off

@@ -58,7 +58,7 @@ export default function Matching() {
         content: matchForm.content,
         images: matchForm.images,
         price: matchForm.cost,
-        viewDistance: 1,
+        viewDistance: '1',
       });
       console.log(socketData);
       console.log(gWebSocket.current);
