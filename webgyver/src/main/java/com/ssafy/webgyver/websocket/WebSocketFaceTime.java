@@ -132,7 +132,8 @@ public class WebSocketFaceTime {
         System.out.println(jsonMessage);
         Map<String, Object> info = gson.fromJson(jsonMessage, new TypeToken<Map<String, Object>>() {
         }.getType());
-        System.out.println(info);
+//        System.out.println(info);
+        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!"+jsonMessage);
         Room room = extractRoom(session);
 //        room.sendMessage(jsonMessage);
         MethodType method = MethodType.valueOf((String) info.remove("method"));
@@ -173,6 +174,7 @@ public class WebSocketFaceTime {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
+
         throwable.printStackTrace();
     }
 
