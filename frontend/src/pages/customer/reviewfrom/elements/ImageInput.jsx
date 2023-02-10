@@ -126,7 +126,7 @@ export default function ImageInput({
                 <ImageBox
                   // eslint-disable-next-line
                   key={image.saveName + index}
-                  style={{ position: 'relative', border: '2px solid orange' }}
+                  style={{ position: 'relative' }}
                 >
                   <img
                     src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${image.saveName}`}
@@ -160,10 +160,7 @@ export default function ImageInput({
               const { image } = data;
               const imageUrl = data.url;
               return (
-                <ImageBox
-                  key={image.name}
-                  style={{ position: 'relative', border: '2px solid blue' }}
-                >
+                <ImageBox key={image.name} style={{ position: 'relative' }}>
                   <img
                     src={imageUrl}
                     alt={image.name}
