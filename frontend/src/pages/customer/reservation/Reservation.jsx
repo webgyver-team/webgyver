@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from './elements/DatePicker';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import {
   authState,
   loginOpenState,
@@ -28,7 +29,6 @@ export default function Reservation() {
   const [type, setType] = useState(1);
   const [storeList, setStoreList] = useState([]);
   const category = useRecoilValue(categoryState);
-  // 예약 정보 {idx, storeName, date, time}
   const reservationNull = {
     idx: null,
     storeName: null,
@@ -40,7 +40,8 @@ export default function Reservation() {
   const [clickedReservation, setClickedReservation] = useState(reservationNull); // 클릭한 예약 정보
   const [clickedTimeButton, setClickedTimeButton] = useState(null); // 클릭한 시간 버튼(HTML Element)
   const [reservationButton, setReservationButton] = useState(false); // 예약하기 버튼 on off(boolean)
-
+  const [searchingToday, setSearchingToday] = useState(true);
+  const [loading, setLoading] = useState(true);
   // 날짜 선택했을 때 실행되는 함수
   const handleDate = (value) => {
     if (date !== value) {
@@ -118,9 +119,21 @@ export default function Reservation() {
   const location = useRecoilValue(locateValueState); // 주소 정보
 
   useEffect(() => {
+    setLoading(true);
+    const todayObj = new Date();
+    // 오늘 (YYYYMMDD)
+    const today = `${todayObj.getFullYear()}${
+      (todayObj.getMonth() + 1).toString().length < 2
+        ? `0${todayObj.getMonth() + 1}`
+        : `${todayObj.getMonth() + 1}`
+    }${
+      todayObj.getDate().toString().length < 2
+        ? `0${todayObj.getDate()}`
+        : `${todayObj.getDate()}`
+    }`;
     const loadStoreList = async () => {
       const data = {
-        categoryIdx: category, // 현재 String으로 되어있는데 이거 idx로 바꿔야 함
+        categoryIdx: category,
         lat: location.latitude,
         lng: location.longitude,
         date: date.replaceAll('-', ''),
@@ -131,31 +144,27 @@ export default function Reservation() {
         navigate('/');
         return;
       }
-      // eslint-disable-next-line
       const response = await customer.get.stores(type, data);
+      if (today === data.date) {
+        setSearchingToday(true); // 오늘 적용해서 현재 시간 고려
+      } else {
+        setSearchingToday(false);
+      }
       setStoreList(response.data.storeList);
+      setLoading(false);
     };
-    // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
-    // eslint-disable-next-line
     loadStoreList();
   }, [location, date, category, type, navigate]);
 
   return (
     <Main>
       <DateDiv>
-        <h2
-          style={{
-            fontSize: '18px',
-            fontWeight: 'bold',
-            marginTop: '8px',
-            marginBottom: '8px',
-          }}
-        >
+        <DateTitle>
           날짜 선택
           {` [ ${date.split('-')[0]}-${date.split('-')[1]}-${
             date.split('-')[2]
           } ] `}
-        </h2>
+        </DateTitle>
         <CustomDatePickerDiv>
           <DatePicker handleDate={handleDate} />
         </CustomDatePickerDiv>
@@ -177,22 +186,27 @@ export default function Reservation() {
         <span onClick={() => setType(3)}>가격순</span>
       </FilterBox>
       <div>
-        {storeList.map((store) => (
-          <StoreInfo
-            key={store.sellerIdx}
-            idx={store.sellerIdx}
-            storeName={store.storeName}
-            personName={store.personName}
-            address={store.address}
-            detailAddress={store.detailAddress}
-            distance={store.distance}
-            star={store.star}
-            picture={store.picture}
-            allTime={store.allTime}
-            noTime={store.noTime}
-            handleClickedTimeButton={handleClickedTimeButton}
-          />
-        ))}
+        {loading ? (
+          <LoadingSpinner />
+        ) : (
+          storeList.map((store) => (
+            <StoreInfo
+              key={store.sellerIdx}
+              idx={store.sellerIdx}
+              storeName={store.storeName}
+              personName={store.personName}
+              address={store.address}
+              detailAddress={store.detailAddress}
+              distance={store.distance}
+              star={store.star}
+              picture={store.picture}
+              allTime={store.allTime}
+              noTime={store.noTime}
+              handleClickedTimeButton={handleClickedTimeButton}
+              isToday={searchingToday}
+            />
+          ))
+        )}
       </div>
       <NullBox />
       <div
@@ -237,7 +251,11 @@ const DateDiv = styled.div`
   padding: 8px;
   margin-bottom: 12px;
 `;
-
+const DateTitle = styled.h2`
+  font-size: 18px;
+  font-weight: bold;
+  margin: 8px 0px;
+`;
 const LocateDiv = styled.div`
   border-top: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};

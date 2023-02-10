@@ -35,7 +35,9 @@ export default function BasicModal() {
   // const [open, setOpen] = useState(false);
   const [postOpen, setpostOpen] = useState(false);
   const [coordinateValue, setCoordinateValue] = useState({ x: null, y: null });
-  const [locateModalOpen, setLocateModalOpen] = useRecoilState(locateModalState);
+  // eslint-disable-next-line
+  const [locateModalOpen, setLocateModalOpen] =
+    useRecoilState(locateModalState);
   const [locationValue, setLocationValue] = useRecoilState(locateValueState);
 
   // 컴포넌트 내 주소 관리 State
@@ -117,7 +119,7 @@ export default function BasicModal() {
           <CloseBtn onClick={handleClose} />
           {!postOpen && (
             <>
-              <Header>주소설정</Header>
+              <Header>주소 설정</Header>
               <Body>
                 <LocaInput
                   label="주소"

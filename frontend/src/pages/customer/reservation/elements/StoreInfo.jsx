@@ -17,11 +17,14 @@ export default function StoreInfo({
   allTime,
   noTime,
   handleClickedTimeButton,
+  isToday,
 }) {
   const setMasterInfoModal = useSetRecoilState(masterInfoModalState);
   const openMasterInfoModal = () => {
     setMasterInfoModal(true);
   };
+  const todayHour = new Date().getHours();
+  const todayMinute = new Date().getMinutes();
   const chooseTimeButton = (event) => {
     const data = {
       idx,
@@ -81,6 +84,17 @@ export default function StoreInfo({
         }}
       >
         {allTime.map((time) => {
+          if (
+            // eslint-disable-next-line
+            isToday &&
+            // eslint-disable-next-line
+            (Number(time.split(':')[0]) < todayHour ||
+              // eslint-disable-next-line
+              (Number(time.split(':')[0]) === todayHour &&
+                Number(time.split(':')[1] < todayMinute)))
+          ) {
+            return null;
+          } // 현재 시간 보다 작으면 그냥 return null
           if (!noTime.includes(time)) {
             return (
               <Button

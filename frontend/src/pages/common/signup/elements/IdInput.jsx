@@ -12,7 +12,6 @@ export default function IdInput({ updateData, initialValue, checkDuplicate }) {
   const [idDisabled, setIdDisabled] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
 
-  // props.setId(() => '자식에서 온 놈이다!!');
   const buttonStyle = {
     height: '56px',
     border: '1px solid black',

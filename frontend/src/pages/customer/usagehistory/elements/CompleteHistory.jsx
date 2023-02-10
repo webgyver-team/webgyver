@@ -12,11 +12,16 @@ import WhiteImage from '../../../../assets/image/white.png';
 export default function CompleteHistory() {
   const [histories, setHistories] = useState([]);
   const customerIdx = useRecoilValue(userIdx);
+  if (customerIdx === null) {
+    alert('로그인이 필요합니다.');
+  }
   useEffect(() => {
     const getHistory = async () => {
       const response = await customer.get.completeHistory(customerIdx);
       if (response.statusCode === 200) {
         setHistories(response.data.reservationList);
+      } else {
+        console.log('출력');
       }
     };
     getHistory();
@@ -24,10 +29,12 @@ export default function CompleteHistory() {
   }, [customerIdx]);
   return (
     <Main>
-      {histories.map((history) => (
-        <CardView key={history.reservationIdx} history={history} />
-      ))}
-      {histories.length > 0 ? null : (
+      {/* eslint-disable-next-line */}
+      {histories &&
+        histories.map((history) => (
+          <CardView key={history.reservationIdx} history={history} />
+        ))}
+      {histories && histories.length > 0 ? null : (
         <NoHistoryMessage>완료 내역이 없습니다.</NoHistoryMessage>
       )}
     </Main>
@@ -47,9 +54,10 @@ function CardView({ history }) {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-  const [contentOverLimit] = useState(history.content.length > 50);
+  const [contentOverLimit] = useState(
+    history.content !== null && history.content.length > 50,
+  );
   const [isShowMore, setIsShowMore] = useState(false);
-  const shortComment = history.content.slice(0, 50);
   const onChangeShowMore = () => {
     setIsShowMore(!isShowMore);
   };
@@ -74,7 +82,9 @@ function CardView({ history }) {
           <p className="date">{`일시: ${date[0]}년 ${date[1]}월 ${date[2]}일 ${time[0]}시 ${time[1]}분`}</p>
           <p className="company">{`업체: ${history.companyName}`}</p>
           <span className="content">
-            {contentOverLimit && !isShowMore ? shortComment : history.content}
+            {contentOverLimit && !isShowMore
+              ? history.content.slice(0, 50)
+              : history.content}
           </span>
           {contentOverLimit ? (
             <MoreBtn type="button" onClick={onChangeShowMore}>
