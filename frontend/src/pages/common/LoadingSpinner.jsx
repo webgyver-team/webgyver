@@ -11,7 +11,7 @@ export default function LoadingSpinner() {
 }
 
 const LoadingBox = styled.div`
-  height: 100vw;
+  // height: px;
   display: flex;
   justify-content: center;
   align-items: center;
