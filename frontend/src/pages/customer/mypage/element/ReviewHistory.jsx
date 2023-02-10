@@ -26,7 +26,6 @@ export default function ReviewHistory() {
     }
     const getReviews = async () => {
       const response = await customer.get.reviews(customerIdx);
-      console.log(response);
       if (response.statusCode === 200) {
         setReviews(response.data.reviews);
       } else {

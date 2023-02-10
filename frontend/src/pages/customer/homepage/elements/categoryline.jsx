@@ -1,7 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-// import Button from '@mui/material/Button';
 import BathtubOutlinedIcon from '@mui/icons-material/BathtubOutlined';
 import CountertopsOutlinedIcon from '@mui/icons-material/CountertopsOutlined';
 import BoltIcon from '@mui/icons-material/Bolt';
