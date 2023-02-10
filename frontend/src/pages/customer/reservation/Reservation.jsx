@@ -29,7 +29,6 @@ export default function Reservation() {
   const [type, setType] = useState(1);
   const [storeList, setStoreList] = useState([]);
   const category = useRecoilValue(categoryState);
-  // 예약 정보 {idx, storeName, date, time}
   const reservationNull = {
     idx: null,
     storeName: null,
@@ -121,7 +120,8 @@ export default function Reservation() {
 
   useEffect(() => {
     setLoading(true);
-    const todayObj = new Date(); // 오늘 날짜에 대해...
+    const todayObj = new Date();
+    // 오늘 (YYYYMMDD)
     const today = `${todayObj.getFullYear()}${
       (todayObj.getMonth() + 1).toString().length < 2
         ? `0${todayObj.getMonth() + 1}`
@@ -133,7 +133,7 @@ export default function Reservation() {
     }`;
     const loadStoreList = async () => {
       const data = {
-        categoryIdx: category, // 현재 String으로 되어있는데 이거 idx로 바꿔야 함
+        categoryIdx: category,
         lat: location.latitude,
         lng: location.longitude,
         date: date.replaceAll('-', ''),
@@ -144,38 +144,27 @@ export default function Reservation() {
         navigate('/');
         return;
       }
-      // eslint-disable-next-line
       const response = await customer.get.stores(type, data);
       if (today === data.date) {
-        // 이미 지난 시간 제거하고 넣어줄 것.
-        setSearchingToday(true);
+        setSearchingToday(true); // 오늘 적용해서 현재 시간 고려
       } else {
         setSearchingToday(false);
       }
       setStoreList(response.data.storeList);
       setLoading(false);
     };
-    // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
-    // eslint-disable-next-line
     loadStoreList();
   }, [location, date, category, type, navigate]);
 
   return (
     <Main>
       <DateDiv>
-        <h2
-          style={{
-            fontSize: '18px',
-            fontWeight: 'bold',
-            marginTop: '8px',
-            marginBottom: '8px',
-          }}
-        >
+        <DateTitle>
           날짜 선택
           {` [ ${date.split('-')[0]}-${date.split('-')[1]}-${
             date.split('-')[2]
           } ] `}
-        </h2>
+        </DateTitle>
         <CustomDatePickerDiv>
           <DatePicker handleDate={handleDate} />
         </CustomDatePickerDiv>
@@ -262,7 +251,11 @@ const DateDiv = styled.div`
   padding: 8px;
   margin-bottom: 12px;
 `;
-
+const DateTitle = styled.h2`
+  font-size: 18px;
+  font-weight: bold;
+  margin: 8px 0px;
+`;
 const LocateDiv = styled.div`
   border-top: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};
