@@ -1,3 +1,4 @@
+/* eslint-disable radix */
 /* eslint-disable object-curly-newline */
 /* eslint-disable react/no-array-index-key */
 /* eslint-disable array-callback-return */
@@ -77,12 +78,27 @@ export default function TimePicker() {
     handleClose();
   };
 
+  // 시간 15분 단위로 자르기
+  const timeCutting = (time) => {
+    // eslint-disable-next-line prefer-const
+    let temp = time.split(':');
+    // eslint-disable-next-line operator-linebreak
+    let result =
+      Number(temp[1]) % 15 === 0
+        ? String(parseInt(Number(temp[1]) / 15) * 15)
+        : String((parseInt(Number(temp[1]) / 15) + 1) * 15);
+    result = result === '60' ? '00' : result;
+    // console.log(`${temp[0]}:${result}`);
+    return `${temp[0]}:${result}`;
+  };
+
   // 시간 변경 함수
   const changeOpenTime = (idx, ans) => {
     // open
     setFormContent((prevState) => {
       const temp = prevState;
-      temp[idx].open = ans;
+      const res = timeCutting(ans);
+      temp[idx].open = res;
       return temp;
     });
     setFormContent([...formContent]);
@@ -92,7 +108,8 @@ export default function TimePicker() {
     // close
     setFormContent((prevState) => {
       const temp = prevState;
-      temp[idx].close = ans;
+      const res = timeCutting(ans);
+      temp[idx].close = res;
       return temp;
     });
     setFormContent([...formContent]);
@@ -133,6 +150,9 @@ export default function TimePicker() {
                   value={el.open}
                   InputLabelProps={{
                     shrink: true,
+                  }}
+                  inputProps={{
+                    step: 900, // 15 min
                   }}
                   sx={{ width: 150, marginRight: '8px' }}
                   onChange={(e) => changeOpenTime(i, e.target.value)}

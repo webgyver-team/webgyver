@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>실시간 매칭 테스트 페이지</title>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script type="text/javascript">
+        var g_webSocket = null;
+        var websocket_address = "ws://i8b101.p.ssafy.io:9000/facetime/seller/1/1";
+        window.onload = async function () {
+            g_webSocket = new WebSocket(websocket_address);
+            g_webSocket.onopen = function (message) {
+
+            }
+
+            g_webSocket.onmessage = function (message) {
+                const data = JSON.parse(message.data)
+                const method = data.method;
+                console.log("데이터 수신");
+                console.log(data);
+                console.log(data.method);
+
+                if (method == 'ALONE') {
+                    console.log("상대방 기다리는중")
+                }
+                if (method == 'TOGETHER') {
+                    console.log("둘다 왔다 드가자!!!!")
+                }
+                if (method == 'WANT_MEET') {
+                    console.log("출장요청 받음.")
+                    document.getElementById("meet_button").disabled = false
+                }
+
+            };
+
+            g_webSocket.onclose = function (message) {
+            };
+
+            g_webSocket.onerror = function (message) {
+            };
+
+            accept_meet = function () {
+                data = {
+                    'method': 'ACCEPT_MEET',
+                    'time': '20230227-1030'
+                }
+                g_webSocket.send(JSON.stringify(data));
+            }
+        }
+    </script>
+</head>
+<body>
+<h1>판매자 화상통화 페이지</h1>
+<br/>
+
+<button onclick="accept_meet()" disabled="true" id="meet_button">출장요청수락</button>
+
+</body>
+</html>

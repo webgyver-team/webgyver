@@ -79,10 +79,10 @@ function App() {
         <All>
           <Main>
             {isNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
-            <LoginModal />
-            <MasterInfo />
+            {isNav && !onMaster && <LoginModal />}
+            {isNav && !onMaster && <MasterInfo />}
             <LocateModal />
-            <TimePicker />
+            {isNav && onMaster && <TimePicker />}
             <Page isMaster={onMaster} isNav={isNav}>
               <Routes>
                 <Route path="/" element={<Home />} />
