@@ -33,13 +33,20 @@ export default function MasterNavBar(props) {
   const setAccessToken = useSetRecoilState(accessToken);
   const setResTimePopup = useSetRecoilState(resTimePopupState);
   // const [sellerIdx] = useRecoilState(userIdx);
+
   const navigate = useNavigate();
   const masterNavItems = ['일정', '내역', '리뷰', '사례', '실시간'];
+
   const doLogOut = () => {
     setAuth(null);
     setAccessToken('');
     navigate('/');
   };
+
+  const openResTimePopup = () => {
+    setResTimePopup(true);
+  };
+
   const chooseMenu = (item) => {
     // 아래 사이드바 메뉴 클릭 시 실행
     // item의 조건을 추가해 함수 로직 작성
@@ -64,10 +71,6 @@ export default function MasterNavBar(props) {
 
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
-  };
-
-  const openResTimePopup = () => {
-    setResTimePopup(true);
   };
 
   // useEffect(() => {
@@ -101,6 +104,24 @@ export default function MasterNavBar(props) {
             </ListItemButton>
           </ListItem>
         ))}
+        <ListItem disablePadding>
+          <ListItemButton
+            sx={{ textAlign: 'center' }}
+            onClick={openResTimePopup}
+          >
+            <ListItemText primary="상담시간변겅" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton sx={{ textAlign: 'center' }} onClick={routeMyPage}>
+            <ListItemText primary="마이페이지" />
+          </ListItemButton>
+        </ListItem>
+        <ListItem disablePadding>
+          <ListItemButton sx={{ textAlign: 'center' }} onClick={doLogOut}>
+            <ListItemText primary="로그아웃" />
+          </ListItemButton>
+        </ListItem>
       </List>
     </Box>
   );
