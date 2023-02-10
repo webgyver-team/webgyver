@@ -73,11 +73,10 @@ export default function LoginModal() {
         setUserIdx(response.data.customerIdx);
         setLoginState(false);
       } else {
-        setAuthState(null);
-        setAccessToken('');
+        // eslint-disable-next-line
+        alert('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
     }
-    // console.log(errors);
   };
   // 회원가입 링크
   const routeSignup = () => {
@@ -107,7 +106,7 @@ export default function LoginModal() {
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
             />
-            {errors.nullIdError && <ErrDiv>아이디를 입력하세요</ErrDiv>}
+            {errors.nullIdError && <ErrDiv>아이디를 입력하세요.</ErrDiv>}
             <NullBox />
             <TextField
               id="password"
@@ -120,17 +119,19 @@ export default function LoginModal() {
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
             />
-            {errors.nullPasswordError && <ErrDiv>비밀번호를 입력하세요</ErrDiv>}
+            {errors.nullPasswordError && (
+              <ErrDiv>비밀번호를 입력하세요.</ErrDiv>
+            )}
             {/* <NullBox /> */}
           </Body>
           {!(errors.nullIdError || errors.nullPasswordError) && <NullBox />}
-          <NullBox />
-          <Linkdiv onClick={routeSignup}>회원가입</Linkdiv>
           <BtnBox>
             <Button variant="contained" onClick={submit}>
               로그인
             </Button>
           </BtnBox>
+          <NullBox />
+          <Linkdiv onClick={routeSignup}>회원가입</Linkdiv>
         </Box>
       </Modal>
     </div>
@@ -174,7 +175,6 @@ const NullBox = styled.div`
 const BtnBox = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 8px;
 `;
 
 const ErrDiv = styled.div`
@@ -188,4 +188,5 @@ const Linkdiv = styled.div`
   cursor: pointer;
   color: gray;
   font-size: 16px;
+  margin-top: 8px;
 `;

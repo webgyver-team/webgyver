@@ -1,3 +1,4 @@
+/* eslint-disable object-curly-newline */
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useLayoutEffect, useState } from 'react';
 import styled from 'styled-components';
@@ -10,7 +11,7 @@ import TextField from '@mui/material/TextField';
 import { master } from '../../../../api/masterService';
 import { userIdx } from '../../../../atom';
 
-export default function AlertDialog({ open, setOpen, info }) {
+export default function AlertDialog({ open, setOpen, info, setReload }) {
   const handleClose = () => {
     setOpen(false);
   };
@@ -30,8 +31,10 @@ export default function AlertDialog({ open, setOpen, info }) {
     // eslint-disable-next-line
     const response = await master.put.description(data, idx);
     if (response.statusCode === 200) {
+      setReload(true);
       handleClose();
     } else {
+      // eslint-disable-next-line no-alert
       alert('오류가 발생했습니다.');
     }
   };

@@ -1,20 +1,43 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { master } from '../../../api/masterService';
+import { reservationIdxState } from '../../../atom';
 
 export default function MasterEndService() {
   const navigate = useNavigate();
-  const data = {
-    title: 'gd',
-    startTime: '14:30',
-    price: '5000',
-    currentPoint: '10000',
-    visitService: true,
-    location: '대전시 유성구 어쩌구',
-    visitTime: '2023-02-05 10:00',
-  };
   const routeVideoService = () => navigate('/master/videoservice');
   const routeHome = () => navigate('/master/schedule');
+
+  // 로드데이타
+  const [data, setData] = useState([]);
+  const reservationIdx = useRecoilValue(reservationIdxState);
+
+  useEffect(() => {
+    const loadExampleList = async () => {
+      // console.log(reservationIdx);
+      const response = await master.get.endservice(reservationIdx);
+      console.log('response', response);
+      setData(response.data);
+    };
+    // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
+    // eslint-disable-next-line
+    loadExampleList();
+  }, [reservationIdx]);
+
+  const priceToString = (price) => {
+    return String(price).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  };
+
+  const dateToString = (date) => {
+    const dayTimeList = date.split('-');
+    // eslint-disable-next-line
+    const day = dayTimeList[0].substring(0, 4) + '년 ' + dayTimeList[0].substring(5, 2) + '월 ' + dayTimeList[0].substring(7, 2)
+    // eslint-disable-next-line
+    const time = dayTimeList[1].substring(0, 2) + ':' + dayTimeList[1].substring(2, 2)
+    return `${day} ${time}`;
+  };
 
   return (
     <Main>
@@ -26,31 +49,26 @@ export default function MasterEndService() {
           <span className="last">{data.title}</span>
         </Line>
         <NullBox />
-        <Line>
-          <span className="first">시간 : </span>
-          <span className="last">{data.startTime}</span>
-        </Line>
-        <NullBox />
         <NullBox />
         <Line>
           <span className="first">결제 완료 : </span>
-          <span className="last">{`+${data.price}`}</span>
+          <span className="last">{`+${priceToString(data.price)}`}</span>
         </Line>
         <Line>
           <span className="first">보유 포인트 : </span>
-          <span className="last">{data.currentPoint}</span>
+          <span className="last">{priceToString(data.totalPoint)}</span>
         </Line>
       </InfoBox>
       <NullBox />
-      {data.visitService && (
+      {data.meet && (
         <TransparentBox>
           <Line>
             <span className="first">방문 일시</span>
-            <span className="last">{data.visitTime}</span>
+            <span className="last">{dateToString(data.meet.date)}</span>
           </Line>
           <Line>
             <span className="first">방문 위치</span>
-            <span className="last">{data.location}</span>
+            <span className="last">{`${data.meet.address} ${data.meet.deatilAddress}`}</span>
           </Line>
           <NullBox />
           <NullBox />

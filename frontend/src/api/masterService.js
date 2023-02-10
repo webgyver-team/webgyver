@@ -26,6 +26,14 @@ export const master = {
       );
       return response;
     },
+    booktime: async (id) => {
+      const response = await Send.get(`${masterURL}/mypage/booktime/${id}`);
+      return response;
+    },
+    endservice: async (id) => {
+      const response = await Send.get(`${masterURL}/reservation/end/${id}`);
+      return response;
+    },
   },
   post: {
     reservation: async (data) => {
@@ -45,6 +53,12 @@ export const master = {
     },
   },
   put: {
+    schedule: async (reservationIdx, acceptFlag) => {
+      const response = await Send.put(
+        `${masterURL}/reservation/accept/${reservationIdx}/${acceptFlag}`,
+      );
+      return response;
+    },
     profile: async (data, idx) => {
       const response = await Send.put(
         `${masterURL}/mypage/profile/${idx}`,
@@ -80,6 +94,13 @@ export const master = {
       );
       return response;
     },
+    booktime: async (data, id) => {
+      const response = await Send.put(
+        `${masterURL}/mypage/booktime/${id}`,
+        data,
+      );
+      return response;
+    },
   },
   delete: {
     example: async (idx) => {
@@ -87,7 +108,7 @@ export const master = {
       return response;
     },
     review: async (idx) => {
-      const response = await Send.delete(`${masterURL}/mypage/history/${idx}`);
+      const response = await Send.delete(`${masterURL}/mypage/reivew/${idx}`);
       return response;
     },
   },

@@ -1,7 +1,6 @@
 /* eslint-disable react/destructuring-assignment */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-// import Button from '@mui/material/Button';
 import BathtubOutlinedIcon from '@mui/icons-material/BathtubOutlined';
 import CountertopsOutlinedIcon from '@mui/icons-material/CountertopsOutlined';
 import BoltIcon from '@mui/icons-material/Bolt';
@@ -38,6 +37,11 @@ export default function CategoryLine(props) {
     navigate('/select');
   };
   const setRightCategory = () => {
+    if (props.right + 1 === 10) {
+      // eslint-disable-next-line
+      alert('서비스 준비 중입니다.');
+      return;
+    }
     setCategory(props.right + 1);
     navigate('/select');
   };

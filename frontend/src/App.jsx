@@ -36,6 +36,7 @@ import MasterReview from './pages/master/masterReview/MasterReview';
 import MasterExample from './pages/master/masterExample/MasterExample';
 import MasterMypage from './pages/master/mypage/Mypage';
 import MasterHistory from './pages/master/history/History';
+import TimePicker from './components/master/reservationTime/TimePicker';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
@@ -78,9 +79,10 @@ function App() {
         <All>
           <Main>
             {isNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
-            <LoginModal />
-            <MasterInfo />
+            {isNav && !onMaster && <LoginModal />}
+            {isNav && !onMaster && <MasterInfo />}
             <LocateModal />
+            {isNav && onMaster && <TimePicker />}
             <Page isMaster={onMaster} isNav={isNav}>
               <Routes>
                 <Route path="/" element={<Home />} />

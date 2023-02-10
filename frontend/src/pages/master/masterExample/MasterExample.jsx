@@ -28,7 +28,7 @@ export default function MasterExample() {
   useEffect(() => {
     const loadExampleList = async () => {
       const response = await master.get.example(userId);
-      setExampleList(response.data.historyList);
+      setExampleList(response.data.historyList.reverse());
     };
     // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
     // eslint-disable-next-line
@@ -51,11 +51,9 @@ export default function MasterExample() {
       <TableBox>
         {!exampleList.length && NoData}
         {exampleList &&
-          exampleList
-            .reverse()
-            .map((el, i) => (
-              <Example key={i} example={el} setReload={setReload} />
-            ))}
+          exampleList.map((el, i) => (
+            <Example key={i} example={el} setReload={setReload} />
+          ))}
       </TableBox>
     </Main>
   );

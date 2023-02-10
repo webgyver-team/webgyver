@@ -18,10 +18,16 @@ export default function MyPageUpdate() {
   const navigate = useNavigate();
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [initialResidentNumber1, setInitialResidentNumber1] = useState(null);
+  const [initialResidentNumber2, setInitialResidentNumber2] = useState(null);
   useLayoutEffect(() => {
     const getMyProfile = async () => {
       const response = await customer.get.myInfo(customerIdx);
       setData({ ...response.data.customer, ...{ password: null } });
+      setInitialResidentNumber1(response.data.customer.birthDay.slice(0, 6));
+      setInitialResidentNumber2(
+        `${response.data.customer.birthDay.slice(6, 7)}******`,
+      );
       // console.log(response.data.customer);
       setLoading(false);
     };
@@ -100,8 +106,12 @@ export default function MyPageUpdate() {
             <PasswordInput updateData={updateData} />
             <ResidentNumberInput
               updateData={updateData}
-              initialValue1={`${data.birthDay.slice(0, 6)}`}
-              initialValue2={`${data.birthDay.slice(6, 7)}******`}
+              initialValue1={
+                data.birthDay !== null ? initialResidentNumber1 : null
+              }
+              initialValue2={
+                data.birthDay !== null ? initialResidentNumber2 : null
+              }
             />
             <PhoneNumberInput
               updateData={updateData}

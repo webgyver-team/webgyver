@@ -19,7 +19,7 @@ export default function Direct() {
       <BtnBox>
         <div>
           <p>전문가를 살펴보고</p>
-          <p>시간을 정할 수 있어요.</p>
+          <p>시간을 정할 수 있어요</p>
         </div>
         <BtnPosition>
           <Btn onClick={routeReservation}>
@@ -90,5 +90,5 @@ const InfoBox = styled.div`
   display: flex;
   justify-content: center;
   border-radius: 20px;
-  padding: 48px;
+  padding: 40px;
 `;

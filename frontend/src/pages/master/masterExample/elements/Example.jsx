@@ -30,7 +30,6 @@ export default function Example({ example, setReload }) {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
-  // console.log(example);
 
   const deleteExample = () => {
     const deleteExampleItem = async () => {

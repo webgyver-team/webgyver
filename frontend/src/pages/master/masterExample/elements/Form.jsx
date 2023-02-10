@@ -61,12 +61,10 @@ export default function Form({ setReload }) {
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     });
     for (let i = 0; i < imageList.length; i += 1) {
-      // console.log(`${imageList[i].name} 업로드 시도 중..`);
       const originName = imageList[i].name;
-      const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
       const hashImageName = sha256(
-        `${date.toString()}${useId}${imageList[i].name}`,
+        `${new Date().toString()}${useId}${originName}`,
       ); // [날짜 객체 + 회원 idx + 기존 파일명]을 조합하여 해시 처리
       const upload = new AWS.S3.ManagedUpload({
         params: {
@@ -76,28 +74,24 @@ export default function Form({ setReload }) {
         },
       });
       const promise = upload.promise();
-      promise.then((res) => {
+      promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
+        console.log(err);
       });
-      // .catch((err) => {
-      //   // eslint-disable-next-line
-      //   console.log(err)
-      // });
       const newData = {
         saveName: hashImageName + extensionName,
-        originName: imageList[i].name,
+        originName,
       };
       imageData.push(newData);
-      setImageData((originalData) => [...originalData, newData]);
+      // setImageData((originalData) => [...originalData, newData]);
     }
   };
 
-  const registReview = () => {
+  const registExample = () => {
     const data = {
       content: formContent,
       type: useId,
-      images: [...imageData], // 이미지 파일의 hash 이름, 원래 이름
+      images: imageData, // 이미지 파일의 hash 이름, 원래 이름(배열 얕은 복사)
     };
     // 이미지 업로드한거 있으면
     // AWS S3에 보내고 저장한 경로명을 data에 담아라
@@ -133,11 +127,10 @@ export default function Form({ setReload }) {
         // eslint-disable-next-line
         console.log(response);
         // eslint-disable-next-line no-alert
-        alert('내용을 다시 확인바랍니다.');
+        alert('다시 시도하십시오.');
       }
     });
-    // imageData reset
-    setImageData([]);
+    setImageData([]); // imageData reset
   };
 
   return (
@@ -166,7 +159,7 @@ export default function Form({ setReload }) {
             <NullBox />
             <ImageInput sendImageList={setImageList} />
             <NullBox />
-            <Button variant="contained" onClick={registReview}>
+            <Button variant="contained" onClick={registExample}>
               사례 등록
             </Button>
             <ErrorMessage>{msgForContent}</ErrorMessage>
