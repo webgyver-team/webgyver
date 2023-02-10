@@ -56,7 +56,7 @@ public class TimeUtil {
             curInt += 15;
             if (curInt % 100 == 60)
                 curInt += 40;
-            result.add(String.format("%d:%02d", curInt / 100, curInt % 100));
+            result.add(String.format("%02d:%02d", curInt / 100, curInt % 100));
         }
         return result;
 

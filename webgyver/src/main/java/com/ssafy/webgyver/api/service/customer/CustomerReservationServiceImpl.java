@@ -5,6 +5,7 @@ import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
 import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
 import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
+import com.ssafy.webgyver.api.response.customer.CustomerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.db.entity.*;
@@ -24,7 +25,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -148,7 +151,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public CustomerAddressRes getCustomerAddress(CustomerIdxReq req) {
         Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
         CustomerAddressRes res;
-        if (customer.getAddress() == null){
+        if (customer.getAddress() == null) {
             res = CustomerAddressRes.of(200, "null address", null);
         } else {
             CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
@@ -337,5 +340,21 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                 reservationDTOList.add(reservationDTO);
             }
         }
+    }
+
+    public CustomerReservationEndInfoRes getReservationEndInfo(long reservationIdx) {
+        Reservation reservation = reservationRepository.findById(reservationIdx).get();
+        if (reservation == null || !reservation.getReservationState().equals("5")) {
+            return CustomerReservationEndInfoRes.of(403, "NoEnd");
+        }
+        Article article = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -1);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("sellerName", reservation.getSeller().getName());
+        response.put("companyName", reservation.getSeller().getCompanyName());
+        response.put("content", article.getContent());
+        response.put("price", reservation.getReservationPrice());
+
+        return CustomerReservationEndInfoRes.of(200, "Success", response);
     }
 }
