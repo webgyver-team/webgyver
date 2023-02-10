@@ -138,7 +138,7 @@ export default function MasterSignUp() {
       });
       setAccessToken(loginResponse.data['access-token']);
       setAuth('master');
-      setUserIdx(response.data.sellerIdx);
+      setUserIdx(loginResponse.data.sellerIdx);
       navigate('/master/schedule');
     } else {
       // eslint-disable-next-line

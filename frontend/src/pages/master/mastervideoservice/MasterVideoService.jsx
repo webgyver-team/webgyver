@@ -22,6 +22,8 @@ export default function MasterVideoService() {
   const peerMainScreen = useRef(null);
   const peerSubScreen = useRef(null);
   const [mainScreenState, setMainScreenState] = useState('peerScreen');
+  const conn = useRef(null);
+  const myPeerConnection = useRef(null);
 
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
@@ -102,29 +104,73 @@ export default function MasterVideoService() {
   };
 
   useLayoutEffect(() => {
-    getUserCameraMain();
     getUserCameraSub();
-  });
+  }, []);
 
   useEffect(() => {
-    getUserCameraSub();
-  }, [myMainScreen, mySubScreen]);
+    console.log(mainScreenState, myPeerConnection.current);
+    if (mainScreenState === 'peerScreen' && myPeerConnection) {
+      getUserCameraSub();
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      console.log(remoteStream);
+      if (remoteStream) {
+        const remoteVideoTrack = remoteStream.getVideoTracks()[0];
+        if (remoteVideoTrack) {
+          const video = peerMainScreen.current;
+          console.log(peerMainScreen, remoteVideoTrack);
+          if (video) {
+            video.srcObject = remoteVideoTrack;
+            video.play();
+          }
+        }
+      }
+    } else if (mainScreenState === 'myScreen') {
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      console.log(remoteStream);
+      if (remoteStream) {
+        const remoteVideoTrack = remoteStream.getVideoTracks()[0];
+        if (remoteVideoTrack) {
+          const video = peerSubScreen.current;
+          console.log(peerSubScreen, remoteVideoTrack);
+          if (video) {
+            video.srcObject = remoteVideoTrack;
+            video.play();
+          }
+        }
+      }
+    }
+  }, [mainScreenState]);
 
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
-      setMainScreenState('peerScreen');
+      setMainScreenState('peerScreen', () => {
+        getUserCameraSub();
+      });
     } else {
-      setMainScreenState('myScreen');
+      setMainScreenState('myScreen', () => {
+        getUserCameraMain();
+      });
     }
   };
 
   const [visitOrderOpen, setVisitOrderOpen] = useState(true);
-  const conn = useRef(null);
-  const myPeerConnection = useRef(null);
 
   useEffect(() => {
     return () => {
       conn.current.close();
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: false,
+        })
+        .then((stream) => {
+          const media = stream;
+          const tracks = media.getTracks();
+          tracks.forEach((track) => {
+            console.log(track);
+            track.stop();
+          });
+        });
     };
   }, []);
 
@@ -155,12 +201,7 @@ export default function MasterVideoService() {
     myPeerConnection.current.addEventListener('track', (data) => {
       const video = peerMainScreen.current;
       video.srcObject = new MediaStream([data.track]);
-      const playPromise = video.play();
-      if (playPromise !== undefined) { playPromise.then((e) => { console.log(e); }).catch(); }
-
-      // video = peerSubScreen.current;
-      // video.srcObject = new MediaStream([data.track]);
-      // video.play();
+      video.play();
     });
     const createOffer = async () => {
       navigator.mediaDevices
