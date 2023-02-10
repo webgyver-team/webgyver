@@ -16,6 +16,7 @@ export default function MasterEndService() {
 
   useEffect(() => {
     const loadExampleList = async () => {
+      console.log(reservationIdx);
       const response = await master.get.endservice(reservationIdx);
       console.log(response);
       setData(response.data);

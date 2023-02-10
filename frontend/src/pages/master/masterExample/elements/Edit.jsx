@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import { exampleEditState, userIdx, exampleDataState } from '../../../../atom';
-import ImageInput from '../../../customer/reviewfrom/elements/ImageInput';
+import ImageInput from '../../../customer/reservation/elements/ImageInput';
 import { master } from '../../../../api/masterService';
 
 const style = {
@@ -38,7 +38,6 @@ export default function Edit({ setReload }) {
   // 이미지 변수
   const [imageList, setImageList] = useState([]);
   const [imageData, setImageData] = useState([]);
-  const [imageListFromReview, setImageListFromReview] = useState([]);
 
   // 기존 데이터
   const exampleData = useRecoilValue(exampleDataState);
@@ -48,8 +47,7 @@ export default function Edit({ setReload }) {
 
   useEffect(() => {
     setFormContent(exampleData.content);
-    setImageListFromReview(exampleData.images);
-  }, [exampleData.articleIdx]);
+  }, [exampleData]);
 
   // 내용 검증 함수
   const changeFormContent = (event) => {
@@ -95,7 +93,7 @@ export default function Edit({ setReload }) {
         originName: imageList[i].name,
       };
       imageData.push(newData);
-      // setImageData((originalData) => [...originalData, newData]);
+      setImageData((originalData) => [...originalData, newData]);
     }
   };
 
@@ -103,12 +101,8 @@ export default function Edit({ setReload }) {
     const data = {
       content: formContent,
       type: useId,
-      images: [], // 이미지 파일의 hash 이름, 원래 이름
+      images: imageData, // 이미지 파일의 hash 이름, 원래 이름
     };
-
-    if (imageListFromReview.length > 0) {
-      data.images = [...data.images, ...imageListFromReview]; // 이미지 데이터에 기존 이미지 추가
-    }
 
     if (data.content.trim().length === 0) {
       // 내용 입력 유효하지 않음
@@ -170,11 +164,7 @@ export default function Edit({ setReload }) {
               value={formContent}
             />
             <NullBox />
-            <ImageInput
-              sendImageList={setImageList}
-              existImages={imageListFromReview}
-              sendExistImages={setImageListFromReview}
-            />
+            <ImageInput sendImageList={setImageList} />
             <NullBox />
             <Button variant="contained" onClick={registReview}>
               사례 수정

@@ -19,13 +19,15 @@ export default function Mypage() {
   const [idx] = useRecoilState(userIdx);
   const [myPageData, setMyPageData] = useState(null);
   const [businessHoursOpen, setBusinessHoursOpen] = useState(false);
+  const [reLoad, setReload] = useState(false);
   useLayoutEffect(() => {
     const getMyPageData = async () => {
       const response = await master.get.myPage(idx);
       setMyPageData(response.data.profile);
     };
     getMyPageData();
-  }, []);
+    setReload(false);
+  }, [reLoad]);
   const onChangeBusinessHoursOpen = () => {
     setBusinessHoursOpen(!businessHoursOpen);
   };
@@ -64,12 +66,14 @@ export default function Mypage() {
         open={openInfo}
         setOpen={setOpenInfo}
         info={myPageData && myPageData.companyDescription}
+        setReload={setReload}
       />
       <TimePicker
         open={openTime}
         setOpen={setOpenTime}
         hour={businessHour}
         setHour={setBusinessHour}
+        setReload={setReload}
       />
       <div>
         <BtnBox>

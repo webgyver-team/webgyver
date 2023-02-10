@@ -14,7 +14,13 @@ import { userIdx } from '../../../../atom';
 import { master } from '../../../../api/masterService';
 
 // eslint-disable-next-line object-curly-newline
-export default function AlertDialog({ open, setOpen, hour, setHour }) {
+export default function AlertDialog({
+  open,
+  setOpen,
+  hour,
+  setHour,
+  setReload,
+}) {
   const [masterIdx] = useRecoilState(userIdx);
   const [formContent, setFormContent] = useState([]);
   useEffect(() => {
@@ -30,17 +36,17 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
     const data = {
       companyTime: formContent,
     };
-    // eslint-disable-next-line
-    console.log(data);
+    // console.log(data);
     const response = await master.put.businessHour(data, masterIdx);
     if (response.statusCode === 200) {
+      // eslint-disable-next-line no-alert
+      setReload(true);
       // eslint-disable-next-line no-alert
       alert('변경되었습니다.');
     } else {
       // eslint-disable-next-line no-alert
       alert('오류가 발생했습니다.');
     }
-
     handleClose();
   };
 
