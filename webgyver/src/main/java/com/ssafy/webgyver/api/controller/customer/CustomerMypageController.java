@@ -8,7 +8,6 @@ import com.ssafy.webgyver.api.response.customer.CustomerMypageRes;
 import com.ssafy.webgyver.api.service.customer.CustomerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Customer;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
