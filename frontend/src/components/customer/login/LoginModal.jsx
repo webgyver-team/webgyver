@@ -73,11 +73,10 @@ export default function LoginModal() {
         setUserIdx(response.data.customerIdx);
         setLoginState(false);
       } else {
-        setAuthState(null);
-        setAccessToken('');
+        // eslint-disable-next-line
+        alert('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
     }
-    // console.log(errors);
   };
   // 회원가입 링크
   const routeSignup = () => {
