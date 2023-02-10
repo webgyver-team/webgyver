@@ -92,6 +92,7 @@ function App() {
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
                 <Route path="/master/login" element={<MasterLogin />} />
+                <Route path="/master/signup" element={<MasterSignUp />} />
                 {/* 아래부터 로그인 유저만 접근 가능 */}
                 {/* 일반 고객 URL */}
                 <Route
@@ -245,15 +246,6 @@ function App() {
                     <PrivateRouteMaster
                       authenticated={auth}
                       component={<MasterMypage />}
-                    />
-                  }
-                />
-                <Route
-                  path="/master/signup"
-                  element={
-                    <PrivateRouteMaster
-                      authenticated={auth}
-                      component={<MasterSignUp />}
                     />
                   }
                 />
