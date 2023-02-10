@@ -45,6 +45,12 @@ export const master = {
     },
   },
   put: {
+    schedule: async (reservationIdx, acceptFlag) => {
+      const response = await Send.put(
+        `${masterURL}/reservation/accept/${reservationIdx}/${acceptFlag}`,
+      );
+      return response;
+    },
     profile: async (data, idx) => {
       const response = await Send.put(
         `${masterURL}/mypage/profile/${idx}`,

@@ -39,30 +39,32 @@ export default function RealTime({ data, acceptReservation }) {
           </BtnBox>
         </div>
         {isDetail && (
-          <DetailBox>
-            <div>
-              <SliderBox>
-                <Slider {...slickSettings}>
-                  {data.images.map((el) => (
-                    <ImgBox key={el}>
-                      <img
-                        src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
-                        alt=""
-                      />
-                    </ImgBox>
-                  ))}
-                </Slider>
-              </SliderBox>
-            </div>
-            <div className="contentdiv">
-              <span className="content">{data.content}</span>
-            </div>
+          <div>
+            <DetailBox>
+              <div>
+                <SliderBox>
+                  <Slider {...slickSettings}>
+                    {data.images.map((el) => (
+                      <ImgBox key={el}>
+                        <img
+                          src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                          alt=""
+                        />
+                      </ImgBox>
+                    ))}
+                  </Slider>
+                </SliderBox>
+              </div>
+              <div className="contentdiv">
+                <span className="content">{data.content}</span>
+              </div>
+            </DetailBox>
             <BtnBox>
               <AcceptBtn onClick={() => acceptReservation(data.idx)}>
                 <span>{currentState[0]}</span>
               </AcceptBtn>
             </BtnBox>
-          </DetailBox>
+          </div>
         )}
       </ContentBox>
     </Card>
@@ -153,7 +155,7 @@ const SliderBox = styled.div`
 const BtnBox = styled.div`
   width: auto;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: row-reverse;
 `;
 
 const StateBtn = styled.div`
