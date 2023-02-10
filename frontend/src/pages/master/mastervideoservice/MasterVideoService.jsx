@@ -175,6 +175,7 @@ export default function MasterVideoService() {
             .forEach((track) => myPeerConnection.current.addTrack(track, stream));
         });
       const offer = await myPeerConnection.current.createOffer();
+      myPeerConnection.current.setLocalDescription(offer);
       await send({
         method: 'OFFER',
         data: offer,
