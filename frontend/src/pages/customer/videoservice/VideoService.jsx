@@ -18,6 +18,9 @@ export default function VideoService() {
   const reservationIdx = useRecoilValue(reservationIdxState);
   const [mainScreenState, setMainScreenState] = useState('myScreen');
 
+  const conn = useRef(null);
+  const myPeerConnection = useRef(null);
+
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
   const [mainScreenWidth, setMainScreenWidth] = useState('myScreen');
@@ -54,7 +57,12 @@ export default function VideoService() {
   }, []);
 
   const routeEndService = () => {
+    console.log(conn.current);
     navigate('/endservice');
+  };
+  const sendRequest = () => {
+    console.log(conn.current);
+    conn.current.send(JSON.stringify({ data: 'ㅎㅇㅎㅇ' }));
   };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
 
@@ -111,8 +119,6 @@ export default function VideoService() {
     }
   };
 
-  const conn = useRef(null);
-  const myPeerConnection = useRef(null);
   useLayoutEffect(() => {
     conn.current = new WebSocket(
       `ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
@@ -142,22 +148,22 @@ export default function VideoService() {
     });
     myPeerConnection.current.onicecandidate = (event) => {
       send({
-        event: 'candidate',
+        method: 'CANDIDATE',
         data: event.candidate,
       });
     };
 
     const createOffer = async () => {
       const offer = await myPeerConnection.current.createOffer();
-      await send({
-        event: 'offer',
+      send({
+        method: 'OFFER',
         data: offer,
       });
     };
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
       console.log('받음: ', message);
-      if (content.event === 'offer') {
+      if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
         myPeerConnection.current.setRemoteDescription(offer);
@@ -176,13 +182,13 @@ export default function VideoService() {
         const answer = await myPeerConnection.current.createAnswer();
         myPeerConnection.current.setLocalDescription(answer);
         send({
-          event: 'answer',
+          method: 'ANSWER',
           data: answer,
         });
-      } else if (content.event === 'answer') {
+      } else if (content.method === 'ANSWER') {
         const answer = content.data;
         myPeerConnection.current.setRemoteDescription(answer);
-      } else if (content.event === 'candidate') {
+      } else if (content.method === 'CANDIDATE') {
         // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정
         myPeerConnection.current.addIceCandidate(content.data);
       } else if (content.method === 'TOGETHER') {
@@ -228,7 +234,7 @@ export default function VideoService() {
       </BoxBox>
       <NullBox2 width={subScreenWidth} />
       <BoxBox>
-        <Btn>
+        <Btn onClick={sendRequest}>
           <span>출장요청</span>
         </Btn>
       </BoxBox>

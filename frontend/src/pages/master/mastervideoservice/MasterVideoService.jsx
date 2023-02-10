@@ -163,7 +163,7 @@ export default function MasterVideoService() {
       });
     const createOffer = async () => {
       const offer = await myPeerConnection.current.createOffer();
-      await send({
+      send({
         event: 'offer',
         data: offer,
       });
