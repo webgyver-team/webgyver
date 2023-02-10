@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-undef */
 /* eslint-disable jsx-a11y/media-has-caption */
@@ -21,6 +22,8 @@ export default function MasterVideoService() {
   const peerMainScreen = useRef(null);
   const peerSubScreen = useRef(null);
   const [mainScreenState, setMainScreenState] = useState('peerScreen');
+  const conn = useRef(null);
+  const myPeerConnection = useRef(null);
 
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
@@ -100,23 +103,77 @@ export default function MasterVideoService() {
     // });
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     getUserCameraSub();
-  }, [myMainScreen, mySubScreen]);
+  }, []);
+
+  useEffect(() => {
+    console.log(mainScreenState, myPeerConnection.current);
+    if (mainScreenState === 'peerScreen' && myPeerConnection) {
+      getUserCameraSub();
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      console.log(remoteStream);
+      if (remoteStream) {
+        const remoteVideoTrack = remoteStream.getVideoTracks()[0];
+        if (remoteVideoTrack) {
+          const video = peerMainScreen.current;
+          console.log(peerMainScreen, remoteVideoTrack);
+          if (video) {
+            video.srcObject = remoteVideoTrack;
+            video.play();
+          }
+        }
+      }
+    } else if (mainScreenState === 'myScreen') {
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      console.log(remoteStream);
+      if (remoteStream) {
+        const remoteVideoTrack = remoteStream.getVideoTracks()[0];
+        if (remoteVideoTrack) {
+          const video = peerSubScreen.current;
+          console.log(peerSubScreen, remoteVideoTrack);
+          if (video) {
+            video.srcObject = remoteVideoTrack;
+            video.play();
+          }
+        }
+      }
+    }
+  }, [mainScreenState]);
 
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
-      setMainScreenState('peerScreen');
-      getUserCameraSub();
+      setMainScreenState('peerScreen', () => {
+        getUserCameraSub();
+      });
     } else {
-      setMainScreenState('myScreen');
-      getUserCameraMain();
+      setMainScreenState('myScreen', () => {
+        getUserCameraMain();
+      });
     }
   };
 
   const [visitOrderOpen, setVisitOrderOpen] = useState(true);
-  const conn = useRef(null);
-  const myPeerConnection = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      conn.current.close();
+      navigator.mediaDevices
+        .getUserMedia({
+          video: true,
+          audio: false,
+        })
+        .then((stream) => {
+          const media = stream;
+          const tracks = media.getTracks();
+          tracks.forEach((track) => {
+            console.log(track);
+            track.stop();
+          });
+        });
+    };
+  }, []);
+
   useLayoutEffect(() => {
     conn.current = new WebSocket(
       `ws://i8b101.p.ssafy.io:9000/facetime/seller/${masterIdx}/${reservationIdx}`,
@@ -135,66 +192,76 @@ export default function MasterVideoService() {
     };
     const sendCandidate = (event) => {
       send({
-        event: 'candidate',
+        method: 'CANDIDATE',
         data: event.candidate,
       });
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
-    console.log(myPeerConnection.current);
-    myPeerConnection.current.onicecandidate = sendCandidate;
+    myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
     myPeerConnection.current.addEventListener('track', (data) => {
       const video = peerMainScreen.current;
       video.srcObject = new MediaStream([data.track]);
       video.play();
-
-      // video = peerSubScreen.current;
-      // video.srcObject = new MediaStream([data.track]);
-      // video.play();
     });
-    navigator.mediaDevices
-      .getUserMedia({
-        audio: true,
-        video: true,
-      })
-      .then((stream) => {
-        stream
-          .getTracks()
-          .forEach((track) => myPeerConnection.current.addTrack(track, stream));
-      });
     const createOffer = async () => {
-      const offer = await myPeerConnection.current.createOffer();
-      await send({
-        event: 'offer',
-        data: offer,
-      });
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: true,
+        })
+        .then((stream) => {
+          stream
+            .getTracks()
+            .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+        })
+        .then(async () => {
+          const offer = await myPeerConnection.current.createOffer();
+          await myPeerConnection.current.setLocalDescription(offer);
+          await send({
+            method: 'OFFER',
+            data: offer,
+          });
+        });
     };
 
     conn.current.onclose = () => console.log('끝');
 
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log('받음: ', message);
-      if (content.event === 'offer') {
+      console.log('받고 해체: ', content);
+      if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
         myPeerConnection.current.setRemoteDescription(offer);
-
-        const answer = await myPeerConnection.current.createAnswer();
-        myPeerConnection.current.setLocalDescription(answer);
-        send({
-          event: 'answer',
-          data: answer,
-        });
-      } else if (content.event === 'answer') {
+        navigator.mediaDevices
+          .getUserMedia({
+            audio: true,
+            video: true,
+          })
+          .then((stream) => {
+            stream
+              .getTracks()
+              .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+          })
+          .then(async () => {
+            const answer = await myPeerConnection.current.createAnswer();
+            await myPeerConnection.current.setLocalDescription(answer);
+            await send({
+              method: 'ANSWER',
+              data: answer,
+            });
+          });
+      } else if (content.method === 'ANSWER') {
+        console.log(myPeerConnection.current);
         const answer = content.data;
         myPeerConnection.current.setRemoteDescription(answer);
-      } else if (content.event === 'candidate') {
+      } else if (content.method === 'CANDIDATE') {
         myPeerConnection.current.addIceCandidate(content.data);
       } else if (content.method === 'TOGETHER') {
         createOffer();
       }
     };
-  });
+  }, []);
 
   return (
     <Main>

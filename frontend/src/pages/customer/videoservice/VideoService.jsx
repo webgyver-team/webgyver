@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
@@ -17,6 +18,9 @@ export default function VideoService() {
   const customerIdx = useRecoilValue(userIdx);
   const reservationIdx = useRecoilValue(reservationIdxState);
   const [mainScreenState, setMainScreenState] = useState('myScreen');
+
+  const conn = useRef(null);
+  const myPeerConnection = useRef(null);
 
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
@@ -56,7 +60,17 @@ export default function VideoService() {
   const routeEndService = () => {
     navigate('/endservice');
   };
+  const sendRequest = () => {
+    console.log(conn.current);
+    conn.current.send(JSON.stringify({ data: 'ㅎㅇㅎㅇ' }));
+  };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
+
+  useEffect(() => {
+    return () => {
+      conn.current.close();
+    };
+  }, []);
 
   // 내 미디어 가져오기
   const getUserCameraMain = async () => {
@@ -97,6 +111,11 @@ export default function VideoService() {
     // });
   };
 
+  useLayoutEffect(() => {
+    getUserCameraMain();
+    getUserCameraSub();
+  });
+
   useEffect(() => {
     getUserCameraMain();
   }, [myMainScreen, mySubScreen]);
@@ -104,15 +123,11 @@ export default function VideoService() {
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
       setMainScreenState('peerScreen');
-      getUserCameraSub();
     } else {
       setMainScreenState('myScreen');
-      getUserCameraMain();
     }
   };
 
-  const conn = useRef(null);
-  const myPeerConnection = useRef(null);
   useLayoutEffect(() => {
     conn.current = new WebSocket(
       `ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
@@ -130,7 +145,14 @@ export default function VideoService() {
       console.log('보냄: ', message);
       conn.current.send(JSON.stringify(message));
     };
+    const sendCandidate = (event) => {
+      send({
+        method: 'CANDIDATE',
+        data: event.candidate,
+      });
+    };
     myPeerConnection.current = new RTCPeerConnection(configuration);
+    myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
     myPeerConnection.current.addEventListener('track', (data) => {
       // const video = peerMainScreen.current;
       // video.srcObject = new MediaStream([data.track]);
@@ -138,31 +160,39 @@ export default function VideoService() {
 
       const video = peerSubScreen.current;
       video.srcObject = new MediaStream([data.track]);
-      video.play();
+      const playPromise = video.play();
+      if (playPromise !== undefined) { playPromise.then((e) => { console.log(e); }).catch(); }
     });
-    myPeerConnection.current.onicecandidate = (event) => {
-      send({
-        event: 'candidate',
-        data: event.candidate,
-      });
-    };
+
+    conn.current.onclose = () => console.log('끝');
 
     const createOffer = async () => {
-      const offer = await myPeerConnection.current.createOffer();
-      await send({
-        event: 'offer',
-        data: offer,
-      });
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: true,
+        })
+        .then((stream) => {
+          stream
+            .getTracks()
+            .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+        })
+        .then(async () => {
+          const offer = await myPeerConnection.current.createOffer();
+          await myPeerConnection.current.setLocalDescription(offer);
+          await send({
+            method: 'OFFER',
+            data: offer,
+          });
+        });
     };
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log('받음: ', message);
-      if (content.event === 'offer') {
+      console.log('받고 해체: ', content);
+      if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
         myPeerConnection.current.setRemoteDescription(offer);
-
-        // 내 미디어
         navigator.mediaDevices
           .getUserMedia({
             audio: true,
@@ -172,24 +202,27 @@ export default function VideoService() {
             stream
               .getTracks()
               .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+          })
+          .then(async () => {
+            const answer = await myPeerConnection.current.createAnswer();
+            await myPeerConnection.current.setLocalDescription(answer);
+            await send({
+              method: 'ANSWER',
+              data: answer,
+            });
           });
-        const answer = await myPeerConnection.current.createAnswer();
-        myPeerConnection.current.setLocalDescription(answer);
-        send({
-          event: 'answer',
-          data: answer,
-        });
-      } else if (content.event === 'answer') {
+      } else if (content.method === 'ANSWER') {
         const answer = content.data;
+        console.log(myPeerConnection.current);
         myPeerConnection.current.setRemoteDescription(answer);
-      } else if (content.event === 'candidate') {
+      } else if (content.method === 'CANDIDATE') {
         // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정
         myPeerConnection.current.addIceCandidate(content.data);
       } else if (content.method === 'TOGETHER') {
         createOffer();
       }
     };
-  });
+  }, []);
 
   return (
     <Main>
@@ -228,7 +261,7 @@ export default function VideoService() {
       </BoxBox>
       <NullBox2 width={subScreenWidth} />
       <BoxBox>
-        <Btn>
+        <Btn onClick={sendRequest}>
           <span>출장요청</span>
         </Btn>
       </BoxBox>
