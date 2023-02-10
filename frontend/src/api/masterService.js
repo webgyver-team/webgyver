@@ -30,6 +30,10 @@ export const master = {
       const response = await Send.get(`${masterURL}/mypage/booktime/${id}`);
       return response;
     },
+    endservice: async (id) => {
+      const response = await Send.get(`${masterURL}/reservation/end/${id}`);
+      return response;
+    },
   },
   post: {
     reservation: async (data) => {

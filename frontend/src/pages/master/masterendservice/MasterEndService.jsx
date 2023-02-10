@@ -1,20 +1,29 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { useRecoilValue } from 'recoil';
+import { master } from '../../../api/masterService';
+import { reservationIdxState } from '../../../atom';
 
 export default function MasterEndService() {
   const navigate = useNavigate();
-  const data = {
-    title: 'gd',
-    startTime: '14:30',
-    price: '5000',
-    currentPoint: '10000',
-    visitService: true,
-    location: '대전시 유성구 어쩌구',
-    visitTime: '2023-02-05 10:00',
-  };
   const routeVideoService = () => navigate('/master/videoservice');
   const routeHome = () => navigate('/master/schedule');
+
+  // 로드데이타
+  const [data, setData] = useState([]);
+  const reservationIdx = useRecoilValue(reservationIdxState);
+
+  useEffect(() => {
+    const loadExampleList = async () => {
+      const response = await master.get.endservice(reservationIdx);
+      console.log(response);
+      setData(response.data);
+    };
+    // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
+    // eslint-disable-next-line
+    loadExampleList();
+  }, [reservationIdx]);
 
   return (
     <Main>
@@ -50,7 +59,7 @@ export default function MasterEndService() {
           </Line>
           <Line>
             <span className="first">방문 위치</span>
-            <span className="last">{data.location}</span>
+            <span className="last">{`${data.visitAddress} ${data.visitDetailAddress}`}</span>
           </Line>
           <NullBox />
           <NullBox />
