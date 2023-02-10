@@ -11,7 +11,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import { exampleEditState, userIdx, exampleDataState } from '../../../../atom';
-import ImageInput from '../../../customer/reservation/elements/ImageInput';
+import ImageInput from '../../../customer/reviewfrom/elements/ImageInput';
 import { master } from '../../../../api/masterService';
 
 const style = {
@@ -41,6 +41,7 @@ export default function Edit({ setReload }) {
   // 이미지 변수
   const [imageList, setImageList] = useState([]);
   const [imageData, setImageData] = useState([]);
+  const [imageListFromReview, setImageListFromReview] = useState([]);
 
   // 기존 데이터
   // 유저 아이디
@@ -48,7 +49,8 @@ export default function Edit({ setReload }) {
 
   useEffect(() => {
     setFormContent(exampleData.content);
-  }, [exampleData]);
+    setImageListFromReview(exampleData.images);
+  }, [exampleData.articleIdx]);
 
   // 내용 검증 함수
   const changeFormContent = (event) => {
