@@ -145,7 +145,14 @@ export default function VideoService() {
       console.log('보냄: ', message);
       conn.current.send(JSON.stringify(message));
     };
+    const sendCandidate = (event) => {
+      send({
+        method: 'CANDIDATE',
+        data: event.candidate,
+      });
+    };
     myPeerConnection.current = new RTCPeerConnection(configuration);
+    myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
     myPeerConnection.current.addEventListener('track', (data) => {
       // const video = peerMainScreen.current;
       // video.srcObject = new MediaStream([data.track]);
@@ -156,17 +163,10 @@ export default function VideoService() {
       const playPromise = video.play();
       if (playPromise !== undefined) { playPromise.then((e) => { console.log(e); }).catch(); }
     });
-    myPeerConnection.current.onicecandidate = (event) => {
-      send({
-        method: 'CANDIDATE',
-        data: event.candidate,
-      });
-    };
 
     conn.current.onclose = () => console.log('끝');
 
     const createOffer = async () => {
-      // 내 미디어
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
@@ -176,13 +176,15 @@ export default function VideoService() {
           stream
             .getTracks()
             .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+        })
+        .then(async () => {
+          const offer = await myPeerConnection.current.createOffer();
+          await myPeerConnection.current.setLocalDescription(offer);
+          await send({
+            method: 'OFFER',
+            data: offer,
+          });
         });
-      const offer = await myPeerConnection.current.createOffer();
-      myPeerConnection.current.setLocalDescription(offer);
-      send({
-        method: 'OFFER',
-        data: offer,
-      });
     };
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
@@ -200,14 +202,15 @@ export default function VideoService() {
             stream
               .getTracks()
               .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+          })
+          .then(async () => {
+            const answer = await myPeerConnection.current.createAnswer();
+            await myPeerConnection.current.setLocalDescription(answer);
+            await send({
+              method: 'ANSWER',
+              data: answer,
+            });
           });
-
-        const answer = await myPeerConnection.current.createAnswer();
-        myPeerConnection.current.setLocalDescription(answer);
-        send({
-          method: 'ANSWER',
-          data: answer,
-        });
       } else if (content.method === 'ANSWER') {
         const answer = content.data;
         console.log(myPeerConnection.current);

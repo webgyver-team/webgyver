@@ -151,8 +151,7 @@ export default function MasterVideoService() {
       });
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
-    console.log(myPeerConnection.current);
-    myPeerConnection.current.onicecandidate = sendCandidate;
+    myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
     myPeerConnection.current.addEventListener('track', (data) => {
       const video = peerMainScreen.current;
       video.srcObject = new MediaStream([data.track]);
@@ -173,13 +172,15 @@ export default function MasterVideoService() {
           stream
             .getTracks()
             .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+        })
+        .then(async () => {
+          const offer = await myPeerConnection.current.createOffer();
+          await myPeerConnection.current.setLocalDescription(offer);
+          await send({
+            method: 'OFFER',
+            data: offer,
+          });
         });
-      const offer = await myPeerConnection.current.createOffer();
-      myPeerConnection.current.setLocalDescription(offer);
-      await send({
-        method: 'OFFER',
-        data: offer,
-      });
     };
 
     conn.current.onclose = () => console.log('끝');
@@ -200,14 +201,15 @@ export default function MasterVideoService() {
             stream
               .getTracks()
               .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+          })
+          .then(async () => {
+            const answer = await myPeerConnection.current.createAnswer();
+            await myPeerConnection.current.setLocalDescription(answer);
+            await send({
+              method: 'ANSWER',
+              data: answer,
+            });
           });
-
-        const answer = await myPeerConnection.current.createAnswer();
-        myPeerConnection.current.setLocalDescription(answer);
-        send({
-          method: 'ANSWER',
-          data: answer,
-        });
       } else if (content.method === 'ANSWER') {
         console.log(myPeerConnection.current);
         const answer = content.data;
