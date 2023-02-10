@@ -129,6 +129,7 @@ public class WebSocketFaceTime {
     @OnMessage
     public void onMessage(String jsonMessage, Session session) throws IOException {
         Gson gson = new Gson();
+        System.out.println(jsonMessage);
         Map<String, Object> info = gson.fromJson(jsonMessage, new TypeToken<Map<String, Object>>() {
         }.getType());
         System.out.println(info);
@@ -156,6 +157,9 @@ public class WebSocketFaceTime {
                 reply.put("method", MethodType.ACCEPT_MEET);
                 reply.put("time", stringTime);
                 break;
+            default:
+                reply.put("method", method);
+                reply.put("data", info.get(("data")));
         }
         System.out.println(reply);
         room.sendMessageOther(gson.toJson(reply), session);
@@ -169,7 +173,7 @@ public class WebSocketFaceTime {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        log.warning("onError:" + throwable.getMessage());
+        throwable.printStackTrace();
     }
 
     public Room extractRoom(Session session) {
