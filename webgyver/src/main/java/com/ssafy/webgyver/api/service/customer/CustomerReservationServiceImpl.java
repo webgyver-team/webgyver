@@ -352,7 +352,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         Map<String, Object> response = new HashMap<>();
         response.put("sellerName", reservation.getSeller().getName());
         response.put("companyName", reservation.getSeller().getCompanyName());
-        response.put("content", article.getContent());
+        response.put("title", article.getTitle());
         response.put("price", reservation.getReservationPrice());
 
         return CustomerReservationEndInfoRes.of(200, "Success", response);
