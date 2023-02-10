@@ -8,7 +8,6 @@
         var g_webSocket = null;
         var websocket_address = "ws://localhost:9000/realtime/customer/1";
         // var websocket_address = "ws://i8b101.p.ssafy.io:9000/realtime/customer/1";
-        var categoryIdx = 1;
         var price = 99999;
         window.onload = async function () {
             g_webSocket = new WebSocket(websocket_address);
@@ -18,22 +17,22 @@
                     {
                         'method': 'INIT',
                         'categoryIdx': "1",
-                        'lng': Math.random(),
-                        'lat': Math.random(),
+                        'lng': "123",
+                        'lat': "456",
                         'address': '대전 서구 청사로 253',
                         'detailAddress': '111-2222',
                         'title': '불이나와요',
                         'content': '아니 물이 나오다가 안나와요\n왜안나오는지는모르겠지만유\n손이 너무 더러운디 씻을수가 없어유\n',
                         'images': [{
-                            "saveName": "test123",
-                            "originName": "test123"
+                            "saveName": "0335339e365d7a27cd70e02b598df8f6d0dbe1ec3b4c5135072b86ca3c218235.gif",
+                            "originName": "0335339e365d7a27cd70e02b598df8f6d0dbe1ec3b4c5135072b86ca3c218235.gif"
                         },
                             {
-                                "saveName": "asdf123",
-                                "originName": "asdf123"
+                                "saveName": "0335339e365d7a27cd70e02b598df8f6d0dbe1ec3b4c5135072b86ca3c218235.gif",
+                                "originName": "0335339e365d7a27cd70e02b598df8f6d0dbe1ec3b4c5135072b86ca3c218235.gif"
                             }],
                         'price': price,
-                        'viewDistance': -1
+                        'viewDistance': "-1"
                     }
                 );
                 console.log(data)
@@ -84,7 +83,7 @@
                     'method': 'CHANGE_DISTANCE',
                     'viewDistance': document.getElementById("viewDistance").value
                 })
-            console.log(11+data)
+            console.log(11 + data)
             g_webSocket.send(data);
         }
 

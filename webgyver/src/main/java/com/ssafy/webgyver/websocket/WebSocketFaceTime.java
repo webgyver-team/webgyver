@@ -121,6 +121,7 @@ public class WebSocketFaceTime {
         room.leave(session);
         if (room.sessions.size() == 0) {
             rooms.remove(room.getReservation().getIdx());
+            explore(room);
             System.out.println("모든 유저가 나갔으므로 방 자체를 삭제합니다.");
         }
     }
@@ -197,6 +198,12 @@ public class WebSocketFaceTime {
         return rooms.get(reservationIdx).roomInfo();
     }
 
+    public void explore(Room room) throws IOException {
+        room.explore();
+        long reservationIdx = room.getReservation().getIdx();
+        reservationService.updateReservationFinished(reservationIdx);
+    }
+
     public void startExplosionMachine() {
         if (!runCheck) {
             TimerTask task = new TimerTask() {
@@ -214,7 +221,7 @@ public class WebSocketFaceTime {
                             reply.put("method", MethodType.TIME_OUT);
                             reply.put("msg", "시간종료!! 폭팔!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
                             room.sendMessage(gson.toJson(reply));
-                            room.explore();
+                            explore(room);
                             rooms.remove(key);
                         }
                     }
