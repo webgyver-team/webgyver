@@ -15,6 +15,7 @@ export default function Proceeding({ today }) {
     slidesToScroll: 1,
   };
 
+  const noMore = today.content.length > 60;
   const [isShowMore, setIsShowMore] = useState(false);
   const shortComment = today.content.slice(0, 60);
   const onChangeShowMore = () => {
@@ -25,6 +26,7 @@ export default function Proceeding({ today }) {
     <Card>
       <ContentBox>
         <div>
+          {!today.pictureList.length && <NoImgBox />}
           <SliderBox>
             <Slider {...slickSettings}>
               {today.pictureList.map((el) => (
@@ -37,12 +39,14 @@ export default function Proceeding({ today }) {
         </div>
         <div className="contentdiv">
           <p className="title">{today.title}</p>
-          <p className="date">{`일시: ${today.reservationTime}`}</p>
+          <p className="date">
+            {`일시: ${today.reservationTime.substr(0, 16)}`}
+          </p>
           <span className="content">
             {isShowMore ? today.content : shortComment}
           </span>
           <MoreBtn type="button" onClick={onChangeShowMore}>
-            {isShowMore ? '[닫기]' : '[더보기]'}
+            {noMore && (isShowMore ? '[닫기]' : '[더보기]')}
           </MoreBtn>
         </div>
       </ContentBox>
@@ -124,4 +128,11 @@ const MoreBtn = styled.button`
   :hover {
     cursor: pointer;
   }
+`;
+
+const NoImgBox = styled.div`
+  width: 128px;
+  height: 120px;
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  margin: 0 4px 8px 4px;
 `;

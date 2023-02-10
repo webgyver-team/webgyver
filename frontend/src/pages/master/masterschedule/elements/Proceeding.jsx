@@ -30,6 +30,7 @@ export default function Proceeding({ proceeding }) {
     <Card>
       <ContentBox>
         <div>
+          {!proceeding.pictureList.length && <NoImgBox />}
           <SliderBox>
             <Slider {...slickSettings}>
               {proceeding.pictureList.map((el) => (
@@ -42,7 +43,9 @@ export default function Proceeding({ proceeding }) {
         </div>
         <div className="contentdiv">
           <p className="title">{proceeding.title}</p>
-          <p className="date">{`일시: ${proceeding.reservationTime}`}</p>
+          <p className="date">
+            {`일시: ${proceeding.reservationTime.substr(0, 16)}`}
+          </p>
           <span className="content">
             {isShowMore ? proceeding.content : shortComment}
           </span>
@@ -158,4 +161,11 @@ const StateBtn = styled.div`
     cursor: pointer;
     background-color: ${(props) => props.theme.color.dafaultBorder};
   }
+`;
+
+const NoImgBox = styled.div`
+  width: 128px;
+  height: 120px;
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  margin: 0 4px 8px 4px;
 `;
