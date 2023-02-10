@@ -32,7 +32,10 @@ export default function Edit({ setReload }) {
   const modalClose = () => setModalOpen(false);
 
   // 내용 관련 데이터
-  const [formContent, setFormContent] = useState('');
+  const exampleData = useRecoilValue(exampleDataState);
+  const [formContent, setFormContent] = useState(
+    useRecoilValue(exampleDataState).content,
+  );
   const [msgForContent, setMsgForContent] = useState('');
 
   // 이미지 변수
@@ -40,8 +43,6 @@ export default function Edit({ setReload }) {
   const [imageData, setImageData] = useState([]);
 
   // 기존 데이터
-  const exampleData = useRecoilValue(exampleDataState);
-
   // 유저 아이디
   const useId = useRecoilValue(userIdx);
 
@@ -59,6 +60,11 @@ export default function Edit({ setReload }) {
 
   // 이미지 S3 전송 함수
   const sendImageListToS3 = async () => {
+    if (imageListFromReview.length > 0) {
+      imageListFromReview.forEach((original) => {
+        imageData.push(original);
+      }); // 이미지 데이터에 기존 이미지 추가
+    }
     AWS.config.update({
       region: process.env.REACT_APP_AWS_REGION,
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
@@ -80,20 +86,15 @@ export default function Edit({ setReload }) {
         },
       });
       const promise = upload.promise();
-      promise.then((res) => {
+      promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
+        console.log(err);
       });
-      // .catch((err) => {
-      //   // eslint-disable-next-line
-      //   console.log(err)
-      // });
       const newData = {
         saveName: hashImageName + extensionName,
         originName: imageList[i].name,
       };
       imageData.push(newData);
-      setImageData((originalData) => [...originalData, newData]);
     }
   };
 
@@ -125,7 +126,6 @@ export default function Edit({ setReload }) {
         // eslint-disable-next-line
         alert('사례가 수정되었습니다.');
         modalClose();
-        setFormContent('');
       } else {
         // eslint-disable-next-line
         console.log(response);
@@ -134,9 +134,6 @@ export default function Edit({ setReload }) {
       }
       // imageData reset
       setImageData([]);
-      // setSavedImg([]);
-      // setExistImg([]);
-      // setTotalImg([]);
     });
   };
 
@@ -164,7 +161,11 @@ export default function Edit({ setReload }) {
               value={formContent}
             />
             <NullBox />
-            <ImageInput sendImageList={setImageList} />
+            <ImageInput
+              sendImageList={setImageList}
+              existImages={exampleData.images}
+              sendExistImages={setImageListFromReview}
+            />
             <NullBox />
             <Button variant="contained" onClick={registReview}>
               사례 수정

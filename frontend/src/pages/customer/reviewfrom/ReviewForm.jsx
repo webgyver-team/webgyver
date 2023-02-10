@@ -9,15 +9,15 @@ import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
 import ImageInput from './elements/ImageInput';
-import { userIdx, reservationIdxToReview } from '../../../atom';
+import { userIdx, reservationIdxState } from '../../../atom';
 import { customer } from '../../../api/customerService';
 
 export default function ReviewForm() {
   const navigate = useNavigate();
   const params = useParams();
-  const [reservationIdx, setReservationIdx] = useRecoilState(
-    reservationIdxToReview,
-  );
+  // eslint-disable-next-line
+  const [reservationIdx, setReservationIdx] =
+    useRecoilState(reservationIdxState);
   const customerIdx = useRecoilValue(userIdx);
   const [newForm, setNewForm] = useState(null);
   const [imageListFromReview, setImageListFromReview] = useState([]);
@@ -110,10 +110,6 @@ export default function ReviewForm() {
         },
       });
       const promise = upload.promise();
-      // promise.then((res) => {
-      //   // eslint-disable-next-line
-      //   console.log(res.Location+" 추가");
-      // });
       promise.catch((err) => {
         // eslint-disable-next-line
         console.log(err);
@@ -138,7 +134,7 @@ export default function ReviewForm() {
           alert('리뷰가 등록되었습니다.');
         } else {
           // eslint-disable-next-line
-          console.log(response);
+          alert(response.message);
         }
       } else {
         delete data.idx;
@@ -152,20 +148,15 @@ export default function ReviewForm() {
         if (response.statusCode === 200) {
           // eslint-disable-next-line
           alert('리뷰가 수정되었습니다.');
+          setReservationIdx(null); // 등록할 예약 idx를 해제
+          navigate('/mypage');
         } else {
           // eslint-disable-next-line
-          console.log(response);
+          alert(response.message);
         }
       }
-      setReservationIdx(null); // 등록할 예약 idx를 해제
-      navigate('/mypage');
     });
   };
-
-  // data로 axios POST하고
-  // 결과로 나온 idx를 가지고
-  // 이미지 axios POST해야 함
-  // navigate('/');
   return (
     <Main>
       <div>

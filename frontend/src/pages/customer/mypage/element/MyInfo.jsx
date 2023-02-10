@@ -1,16 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { customer } from '../../../../api/customerService';
-import { userIdx } from '../../../../atom';
+import { userIdx, loginOpenState } from '../../../../atom';
 import LoadingSpinner from '../../../common/LoadingSpinner';
 
 export default function MyInfo() {
   const navigate = useNavigate();
   const customerIdx = useRecoilValue(userIdx);
+  const setLoginOpenState = useSetRecoilState(loginOpenState);
   const [myInfo, setMyInfo] = useState(null);
   useEffect(() => {
+    if (customerIdx === null) {
+      alert('로그인이 필요합니다.');
+      setLoginOpenState(true);
+      return;
+    }
     const getMyInfo = async () => {
       const response = await customer.get.myInfo(customerIdx);
       if (response.statusCode === 200) {
@@ -21,7 +27,7 @@ export default function MyInfo() {
       }
     };
     getMyInfo();
-  }, [customerIdx]);
+  }, [customerIdx, setLoginOpenState]);
   return (
     <Main>
       {myInfo === null ? (

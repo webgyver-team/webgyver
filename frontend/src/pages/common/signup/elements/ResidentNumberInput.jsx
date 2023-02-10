@@ -49,8 +49,9 @@ export default function ResidentNumberInput({
       residentNumberToBirthDay(
         `${event.target.value.trim()}${residentNumber2.replaceAll('*', '')}`,
       );
-      // updateData({ birthDay: submitNum });
-    } else updateData({ birthDay: null });
+    } else {
+      updateData({ birthDay: null });
+    }
   };
   const changeResidentNumber2 = (event) => {
     const actualInput = event.target.value.replaceAll('*', '');
@@ -71,8 +72,9 @@ export default function ResidentNumberInput({
     if (residentNumber1.trim().length === 6 && actualInput.length === 1) {
       // submit 문자열 업데이트
       residentNumberToBirthDay(`${residentNumber1.trim()}${actualInput}`);
-      // updateData({ birthDay: submitNum });
-    } else updateData({ birthDay: null });
+    } else {
+      updateData({ birthDay: null });
+    }
   };
   return (
     <div>
