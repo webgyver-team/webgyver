@@ -14,11 +14,12 @@ import { userIdx } from '../../../../atom';
 export default function ReviewHistory() {
   const customerIdx = useRecoilValue(userIdx);
   const [reviews, setReviews] = useState([]);
-  const [reload, setReload] = useState(false);
+  const [reload, setReload] = useState(true);
   useEffect(() => {
     if (!reload) return;
     const getReviews = async () => {
       const response = await customer.get.reviews(customerIdx);
+      console.log(response);
       if (response.statusCode === 200) {
         setReviews(response.data.reviews);
       } else {
