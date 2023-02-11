@@ -32,7 +32,7 @@ export default function Proceeding({ proceeding }) {
   const currentState = ['입장하기'];
   const routeVideoService = () => {
     setReservationIdxState(proceeding.reservationIdx);
-    navigate('/videoservice');
+    navigate('/master/videoservice');
   };
 
   return (
