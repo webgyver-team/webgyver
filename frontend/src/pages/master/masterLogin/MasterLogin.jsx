@@ -57,6 +57,8 @@ export default function MasterLogin() {
           setUserIdx(response.data.sellerIdx);
           setAuth('master');
           navigate('/master/schedule');
+        } else {
+          alert('아이디 또는 비밀번호가 일치하지 않습니다.');
         }
       } catch (error) {
         alert('아이디 또는 비밀번호가 일치하지 않습니다.');

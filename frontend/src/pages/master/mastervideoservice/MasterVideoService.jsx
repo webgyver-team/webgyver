@@ -119,7 +119,7 @@ export default function MasterVideoService() {
           setTimeout(() => {
             video.srcObject = remoteStream;
             video.play();
-          }, 500);
+          }, 100);
         }
       }
     } else if (mainScreenState === 'myScreen') {
@@ -131,7 +131,7 @@ export default function MasterVideoService() {
           setTimeout(() => {
             video.srcObject = remoteStream;
             video.play();
-          }, 500);
+          }, 100);
         }
       }
     }
@@ -190,9 +190,15 @@ export default function MasterVideoService() {
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
     myPeerConnection.current.addEventListener('track', (data) => {
-      const video = peerMainScreen.current;
-      video.srcObject = new MediaStream([data.track]);
-      video.play();
+      if (mainScreenState === 'peerScreen') {
+        const video = peerMainScreen.current;
+        video.srcObject = new MediaStream([data.track]);
+        video.play();
+      } else {
+        const video = peerSubScreen.current;
+        video.srcObject = new MediaStream([data.track]);
+        video.play();
+      }
     });
     const createOffer = async () => {
       navigator.mediaDevices
