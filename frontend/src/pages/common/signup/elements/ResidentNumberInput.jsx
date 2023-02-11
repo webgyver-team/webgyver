@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import Message from './Message';
+import DateValidation from './DateValidation';
 
 export default function ResidentNumberInput({
   updateData,
@@ -15,6 +16,12 @@ export default function ResidentNumberInput({
     const birthYearStart =
       input.slice(-1) === '1' || input.slice(-1) === '2' ? '19' : '20';
     updateData({ birthDay: `${birthYearStart}${input}` });
+  };
+  const SumDate = (input) => {
+    // eslint-disable-next-line
+    const birthYearStart =
+      input.slice(-1) === '1' || input.slice(-1) === '2' ? '19' : '20';
+    return `${birthYearStart}${input}`.slice(0, -1);
   };
   const [msg, setMsg] = useState('');
   const onlyNumber = (input) => {
@@ -45,11 +52,25 @@ export default function ResidentNumberInput({
       event.target.value.trim().length === 6 &&
       residentNumber2.trim().length === 7
     ) {
-      // submit 문자열 업데이트
-      residentNumberToBirthDay(
-        `${event.target.value.trim()}${residentNumber2.replaceAll('*', '')}`,
-      );
+      if (
+        DateValidation(
+          SumDate(
+            `${event.target.value.trim()}${residentNumber2.replaceAll(
+              '*',
+              '',
+            )}`,
+          ),
+        )
+      ) {
+        // submit 문자열 업데이트
+        residentNumberToBirthDay(
+          `${event.target.value.trim()}${residentNumber2.replaceAll('*', '')}`,
+        );
+      } else {
+        setMsg(() => '올바른 날짜를 입력해주세요.');
+      }
     } else {
+      setMsg(() => '');
       updateData({ birthDay: null });
     }
   };
