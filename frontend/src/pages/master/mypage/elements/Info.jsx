@@ -20,7 +20,7 @@ export default function AlertDialog({ open, setOpen, info, setReload }) {
   const [formContent, setFormContent] = useState('');
   useLayoutEffect(() => {
     setFormContent(info);
-  }, []);
+  }, [info]);
   const changeContent = (event) => {
     setFormContent(event.target.value);
   };

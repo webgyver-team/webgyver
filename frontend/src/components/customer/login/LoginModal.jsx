@@ -72,6 +72,8 @@ export default function LoginModal() {
           setAccessToken(response.data['access-token']);
           setUserIdx(response.data.customerIdx);
           setLoginState(false);
+        } else {
+          alert('아이디 또는 비밀번호가 일치하지 않습니다.');
         }
       } catch (error) {
         alert('아이디 또는 비밀번호가 일치하지 않습니다.');

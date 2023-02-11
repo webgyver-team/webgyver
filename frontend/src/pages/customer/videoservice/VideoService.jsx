@@ -120,7 +120,7 @@ export default function VideoService() {
           setTimeout(() => {
             video.srcObject = remoteStream;
             video.play();
-          }, 500);
+          }, 100);
         }
       }
     } else if (mainScreenState === 'myScreen') {
@@ -132,11 +132,11 @@ export default function VideoService() {
           setTimeout(() => {
             video.srcObject = remoteStream;
             video.play();
-          }, 500);
+          }, 100);
         }
       }
     }
-  }, [mainScreenState]);
+  }, [mainScreenState, myPeerConnection.current]);
 
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
@@ -190,14 +190,15 @@ export default function VideoService() {
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
     myPeerConnection.current.addEventListener('track', (data) => {
-      // const video = peerMainScreen.current;
-      // video.srcObject = new MediaStream([data.track]);
-      // video.play();
-
-      const video = peerSubScreen.current;
-      video.srcObject = new MediaStream([data.track]);
-      const playPromise = video.play();
-      if (playPromise !== undefined) { playPromise.then((e) => { console.log(e); }).catch(); }
+      if (mainScreenState === 'myScreen') {
+        const video = peerSubScreen.current;
+        video.srcObject = new MediaStream([data.track]);
+        video.play();
+      } else {
+        const video = peerMaimyScreen.current;
+        video.srcObject = new MediaStream([data.track]);
+        video.play();
+      }
     });
 
     conn.current.onclose = () => console.log('끝');

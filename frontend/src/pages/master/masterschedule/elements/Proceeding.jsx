@@ -2,13 +2,13 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 // import { useSetRecoilState } from 'recoil';
-import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useNavigate } from 'react-router-dom';
 // import { matchFormState } from '../../../../atom';
-import { reservationIdxState } from '../../../../atom';
+import { reservationIdxState, matchFormState } from '../../../../atom';
 
 export default function Proceeding({ proceeding }) {
   const navigate = useNavigate();
@@ -21,6 +21,7 @@ export default function Proceeding({ proceeding }) {
     slidesToScroll: 1,
   };
   const setReservationIdxState = useSetRecoilState(reservationIdxState);
+  const [ReservationData, setReservationData] = useRecoilState(matchFormState);
 
   const [isShowMore, setIsShowMore] = useState(false);
   const shortComment = proceeding.content.slice(0, 60);
@@ -32,6 +33,12 @@ export default function Proceeding({ proceeding }) {
   const currentState = ['입장하기'];
   const routeVideoService = () => {
     setReservationIdxState(proceeding.reservationIdx);
+    setReservationData((original) => ({
+      ...original,
+      title: ReservationData.title,
+      content: ReservationData.content,
+      images: ReservationData.images,
+    }));
     navigate('/master/videoservice');
   };
 
