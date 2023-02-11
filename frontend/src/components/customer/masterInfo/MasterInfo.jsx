@@ -87,10 +87,11 @@ export default function MasterInfo() {
       setInfo(responseInfo.data.profile);
 
       const responseExample = await customer.get.masterHistory(modalIdxState);
-      setExample(responseExample.data);
+      setExample(responseExample.data.historyList.reverse());
 
       const responseReview = await customer.get.masterReview(modalIdxState);
-      setReview(responseReview.data);
+      console.log(responseReview.data.reviews);
+      setReview(responseReview.data.reviews);
     };
     getMasterInfo();
   }, [modalIdxState]);
