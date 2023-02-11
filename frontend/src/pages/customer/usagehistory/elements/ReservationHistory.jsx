@@ -170,6 +170,7 @@ const ImgBox = styled.div`
 const ContentBox = styled.div`
   width: 100%;
   display: flex;
+  justify-content: space-between;
 
   .contentdiv {
     margin-right: 8px;
