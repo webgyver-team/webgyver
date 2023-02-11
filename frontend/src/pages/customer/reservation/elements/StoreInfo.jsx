@@ -1,3 +1,4 @@
+/* eslint-disable operator-linebreak */
 import React from 'react';
 import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
@@ -39,8 +40,18 @@ export default function StoreInfo({
     };
     handleClickedTimeButton(event, data);
   };
-
-  console.log(allTime.slice(-1));
+  // eslint-disable-next-line array-callback-return
+  const leftTime = allTime.filter((el) => {
+    // eslint-disable-next-line no-unused-expressions
+    !noTime.includes(el);
+  });
+  // 예약가능 마지막 시간 판단
+  const endTime = leftTime.length > 0 ? leftTime.slice(-1)[0].split(':') : null;
+  const isEnd =
+    endTime !== null &&
+    isToday &&
+    todayHour >= endTime[0] &&
+    todayMinute > endTime[1];
 
   return (
     <Main>
@@ -130,6 +141,7 @@ export default function StoreInfo({
             </Button>
           );
         })}
+        {isEnd && <span>더이상 예약 가능한 시간이 없습니다.</span>}
       </div>
     </Main>
   );
