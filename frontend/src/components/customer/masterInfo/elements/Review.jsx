@@ -28,12 +28,12 @@ export default function Review(props) {
   return (
     <Main>
       {/* eslint-disable-next-line */}
-      {data.props && data.props.reviews.length === 0 ? (
+      {data.props && data.props.length === 0 ? (
         <NoExample>등록된 후기가 없습니다.</NoExample>
       ) : null}
       {/* eslint-disable-next-line */}
       {data.props &&
-        data.props.reviews.map((review) => (
+        data.props.map((review) => (
           <CardView key={review?.reviewIdx} review={review} />
         ))}
       {/* <CardView review={reviews[0]} /> */}
@@ -70,6 +70,12 @@ function CardView({ review }) {
         ))}
       </Slider>
       <p className="content">{review.content}</p>
+      {review.comment !== null && (
+        <CommentBox>
+          <p>{review.comment.commentContent}</p>
+        </CommentBox>
+      )}
+      <EndBar />
     </Card>
   );
 }
@@ -106,7 +112,8 @@ const Card = styled.div`
 const ImgBox = styled.div`
   position: relative;
   // width: 100px;
-  height: 120px;
+  height: 140px;
+  margin-bottom: 8px;
 
   img {
     position: absolute;
@@ -126,4 +133,18 @@ const NoExample = styled.p`
   // border: 1px solid black;
   text-align: center;
   margin-top: 30vh;
+`;
+
+const CommentBox = styled.div`
+  padding: 16px;
+  margin: 16px 8px 16px 8px;
+  border-radius: 10px;
+  font-size: 14px;
+  background-color: ${(props) => props.theme.color.defaultsubBgColor};
+`;
+
+const EndBar = styled.div`
+  margin: 24px 0 16px 0;
+  height: 0px;
+  border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};
 `;
