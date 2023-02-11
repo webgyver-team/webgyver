@@ -14,7 +14,7 @@ export default function EndService() {
     const getReservationInfo = async () => {
       const response = await customer.get.endService(reservationIdx);
       if (response.statusCode === 200) {
-        setData(response.data.data);
+        setData(response.data);
       } else {
         if (response.statusCode === 403) {
           // eslint-disable-next-line
@@ -47,8 +47,8 @@ export default function EndService() {
             </Line>
             <NullBox />
             <Line>
-              <span className="first">문의 내용 : </span>
-              <span className="last">{data.content}</span>
+              <span className="first">문의 제목 : </span>
+              <span className="last">{data.title}</span>
             </Line>
           </InfoBox>
           <NullBox />

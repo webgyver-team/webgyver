@@ -3,7 +3,10 @@ import styled from 'styled-components';
 import { useSetRecoilState } from 'recoil';
 import Rating from '@mui/material/Rating';
 import Button from '@mui/material/Button';
-import { masterInfoModalState } from '../../../../atom';
+import {
+  masterInfoModalState,
+  masterInfoModalIdxState,
+} from '../../../../atom';
 
 export default function StoreInfo({
   idx,
@@ -20,7 +23,9 @@ export default function StoreInfo({
   isToday,
 }) {
   const setMasterInfoModal = useSetRecoilState(masterInfoModalState);
+  const setMasterInfoModalIdx = useSetRecoilState(masterInfoModalIdxState);
   const openMasterInfoModal = () => {
+    setMasterInfoModalIdx(idx);
     setMasterInfoModal(true);
   };
   const todayHour = new Date().getHours();
