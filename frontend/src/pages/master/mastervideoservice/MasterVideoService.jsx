@@ -11,7 +11,7 @@ import { useRecoilValue } from 'recoil';
 // import Button from '@mui/material/Button';
 import SideBar from './elements/SideBar';
 import Order from './elements/Order';
-import { userIdx, reservationIdxState } from '../../../atom';
+import { userIdx, reservationIdxState, matchFormState } from '../../../atom';
 
 export default function MasterVideoService() {
   const navigate = useNavigate();
@@ -24,6 +24,8 @@ export default function MasterVideoService() {
   const [mainScreenState, setMainScreenState] = useState('peerScreen');
   const conn = useRef(null);
   const myPeerConnection = useRef(null);
+
+  const reservationData = useRecoilValue(matchFormState);
 
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
@@ -108,34 +110,28 @@ export default function MasterVideoService() {
   }, []);
 
   useEffect(() => {
-    console.log(mainScreenState, myPeerConnection.current);
     if (mainScreenState === 'peerScreen' && myPeerConnection) {
       getUserCameraSub();
       const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
-      console.log(remoteStream);
       if (remoteStream) {
-        const remoteVideoTrack = remoteStream.getVideoTracks()[0];
-        if (remoteVideoTrack) {
-          const video = peerMainScreen.current;
-          console.log(peerMainScreen, remoteVideoTrack);
-          if (video) {
-            video.srcObject = remoteVideoTrack;
+        const video = peerMainScreen.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = remoteStream;
             video.play();
-          }
+          }, 500);
         }
       }
     } else if (mainScreenState === 'myScreen') {
+      getUserCameraMain();
       const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
-      console.log(remoteStream);
       if (remoteStream) {
-        const remoteVideoTrack = remoteStream.getVideoTracks()[0];
-        if (remoteVideoTrack) {
-          const video = peerSubScreen.current;
-          console.log(peerSubScreen, remoteVideoTrack);
-          if (video) {
-            video.srcObject = remoteVideoTrack;
+        const video = peerSubScreen.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = remoteStream;
             video.play();
-          }
+          }, 500);
         }
       }
     }
@@ -143,34 +139,29 @@ export default function MasterVideoService() {
 
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
-      setMainScreenState('peerScreen', () => {
-        getUserCameraSub();
-      });
+      setMainScreenState('peerScreen');
     } else {
-      setMainScreenState('myScreen', () => {
-        getUserCameraMain();
-      });
+      setMainScreenState('myScreen');
     }
   };
 
-  const [visitOrderOpen, setVisitOrderOpen] = useState(true);
+  const [visitOrderOpen, setVisitOrderOpen] = useState(false);
 
   useEffect(() => {
     return () => {
-      conn.current.close();
-      navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: false,
-        })
-        .then((stream) => {
-          const media = stream;
-          const tracks = media.getTracks();
-          tracks.forEach((track) => {
-            console.log(track);
-            track.stop();
+      navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
+        stream.getTracks().forEach((track) => {
+          myPeerConnection.current.getSenders().forEach((sender) => {
+            if (sender.track === track) {
+              sender.track.stop();
+              sender.replaceTrack(null);
+            }
           });
         });
+        stream.getTracks().forEach((track) => track.stop());
+      });
+      conn.current.close();
+      window.location.reload();
     };
   }, []);
 
@@ -224,7 +215,9 @@ export default function MasterVideoService() {
         });
     };
 
-    conn.current.onclose = () => console.log('끝');
+    conn.current.onclose = () => {
+      console.log('끝');
+    };
 
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
@@ -259,15 +252,21 @@ export default function MasterVideoService() {
         myPeerConnection.current.addIceCandidate(content.data);
       } else if (content.method === 'TOGETHER') {
         createOffer();
+      } else if (content.method === 'WANT_MEET') {
+        setVisitOrderOpen(true);
       }
     };
   }, []);
 
+  const registVisit = (data) => {
+    conn.current.send(JSON.stringify(data));
+  };
+
   return (
     <Main>
-      <Order open={visitOrderOpen} setOpen={setVisitOrderOpen} />
+      <Order open={visitOrderOpen} setOpen={setVisitOrderOpen} registVisit={registVisit} />
       <Side>
-        <SideBar />
+        {reservationData && <SideBar reservationData={reservationData} />}
       </Side>
       <Box1>
         {mainScreenState === 'myScreen' && (

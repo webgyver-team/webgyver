@@ -49,18 +49,19 @@ export default function MasterLogin() {
         nullIdError: false,
         nullPasswordError: false,
       });
-      const response = await master.login(data);
-      if (response.statusCode === 200) {
-        // 리코일persist 상태 변경
-        setAccessToken(response.data['access-token']);
-        setUserIdx(response.data.sellerIdx);
-        setAuth('master');
-        navigate('/master/schedule');
-      } else {
+      try {
+        const response = await master.login(data);
+        if (response.statusCode === 200) {
+          // 리코일persist 상태 변경
+          setAccessToken(response.data['access-token']);
+          setUserIdx(response.data.sellerIdx);
+          setAuth('master');
+          navigate('/master/schedule');
+        }
+      } catch (error) {
         alert('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
     }
-    // console.log(errors);
   };
   const handleOnKeyPress = (e) => {
     if (e.key === 'Enter') {
@@ -89,7 +90,6 @@ export default function MasterLogin() {
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
-              onKeyPress={handleOnKeyPress}
             />
             {errors.nullIdError && <ErrDiv>아이디를 입력하세요</ErrDiv>}
             <NullBox />

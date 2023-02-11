@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/media-has-caption */
@@ -62,15 +63,9 @@ export default function VideoService() {
   };
   const sendRequest = () => {
     console.log(conn.current);
-    conn.current.send(JSON.stringify({ data: 'ㅎㅇㅎㅇ' }));
+    conn.current.send(JSON.stringify({ method: 'WANT_MEET' }));
   };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
-
-  useEffect(() => {
-    return () => {
-      conn.current.close();
-    };
-  }, []);
 
   // 내 미디어 가져오기
   const getUserCameraMain = async () => {
@@ -113,12 +108,35 @@ export default function VideoService() {
 
   useLayoutEffect(() => {
     getUserCameraMain();
-    getUserCameraSub();
   });
 
   useEffect(() => {
-    getUserCameraMain();
-  }, [myMainScreen, mySubScreen]);
+    if (mainScreenState === 'peerScreen' && myPeerConnection) {
+      getUserCameraSub();
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      if (remoteStream) {
+        const video = peerMainScreen.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = remoteStream;
+            video.play();
+          }, 500);
+        }
+      }
+    } else if (mainScreenState === 'myScreen') {
+      getUserCameraMain();
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      if (remoteStream) {
+        const video = peerSubScreen.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = remoteStream;
+            video.play();
+          }, 500);
+        }
+      }
+    }
+  }, [mainScreenState]);
 
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
@@ -127,6 +145,24 @@ export default function VideoService() {
       setMainScreenState('myScreen');
     }
   };
+
+  useEffect(() => {
+    return () => {
+      navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
+        stream.getTracks().forEach((track) => {
+          myPeerConnection.current.getSenders().forEach((sender) => {
+            if (sender.track === track) {
+              sender.track.stop();
+              sender.replaceTrack(null);
+            }
+          });
+        });
+        stream.getTracks().forEach((track) => track.stop());
+      });
+      conn.current.close();
+      window.location.reload();
+    };
+  }, []);
 
   useLayoutEffect(() => {
     conn.current = new WebSocket(
