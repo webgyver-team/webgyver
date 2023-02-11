@@ -58,6 +58,7 @@ export default function NavBar(props) {
   const routeHome = () => navigate('/');
   const routeMypage = () => navigate('/mypage');
   const routeSignup = () => navigate('/signup');
+  const routeHistory = () => navigate('/usagehistory');
   // const handleChange = (event) => {
   //   if (event.target.checked) {
   //     setAuth('customer');
@@ -147,6 +148,9 @@ export default function NavBar(props) {
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
+                <Button color="inherit" onClick={routeHistory}>
+                  이용내역
+                </Button>
                 <Button color="inherit" onClick={doLogOut}>
                   로그아웃
                 </Button>
