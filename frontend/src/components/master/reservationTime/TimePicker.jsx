@@ -44,28 +44,49 @@ export default function TimePicker() {
   useEffect(() => {
     const loadReviewList = async () => {
       const response = await master.get.booktime(sellerIdx);
-      // console.log('hi', response.data);
-      if (response.data.bookTimeList === null) {
-        // eslint-disable-next-line no-alert
-        setFormContent(JSON.parse(JSON.stringify(hour)));
-        setResTimePopup(true);
-        // eslint-disable-next-line no-alert
-        alert('설정된 상담가능 시간이 없습니다.');
+      console.log('hi', response.data);
+      if (response.statusCode === 200) {
+        if (response.data.bookTimeList === null) {
+          // eslint-disable-next-line no-alert
+          setFormContent(JSON.parse(JSON.stringify(hour)));
+          alert('설정된 상담가능 시간이 없습니다.');
+          setResTimePopup(true);
+          // eslint-disable-next-line no-alert
+        } else {
+          // eslint-disable-next-line
+          // console.log('response', response.data.bookTimeList);
+          setFormContent(response.data.bookTimeList);
+        }
       } else {
-        // eslint-disable-next-line
-        // console.log('response', response.data.bookTimeList);
-        setFormContent(response.data.bookTimeList);
+        // eslint-disable-next-line no-console
+        console.log(response);
+        setFormContent(JSON.parse(JSON.stringify(hour)));
       }
     };
     loadReviewList();
-  }, [hour, sellerIdx, resTimePopup, setResTimePopup]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const registInfo = async () => {
     const data = {
       bookTimeList: formContent,
     };
     // eslint-disable-next-line
-    console.log(data);
+    console.log('putdata', data);
+
+    // 공백 시간 검증
+    let isError = false;
+    formContent.map((el) => {
+      if (el.holiday === false && el.open === '' && el.close === '') {
+        isError = true;
+      }
+    });
+    if (isError) {
+      // eslint-disable-next-line no-alert
+      alert('시간을 입력하거나 휴무일을 지정해주세요.');
+      return;
+    }
+
     const response = await master.put.booktime(data, sellerIdx);
     if (response.statusCode === 200) {
       // eslint-disable-next-line no-alert
