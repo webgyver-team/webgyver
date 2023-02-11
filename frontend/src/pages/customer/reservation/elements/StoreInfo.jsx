@@ -34,6 +34,9 @@ export default function StoreInfo({
     };
     handleClickedTimeButton(event, data);
   };
+
+  console.log(allTime.slice(-1));
+
   return (
     <Main>
       <div
