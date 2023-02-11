@@ -185,50 +185,52 @@ export default function Reservation() {
         <VerticalBar />
         <span onClick={() => setType(3)}>가격순</span>
       </FilterBox>
-      <div>
-        {loading ? (
-          <LoadingSpinner />
-        ) : (
-          storeList.map((store) => (
-            <StoreInfo
-              key={store.sellerIdx}
-              idx={store.sellerIdx}
-              storeName={store.storeName}
-              personName={store.personName}
-              address={store.address}
-              detailAddress={store.detailAddress}
-              distance={store.distance}
-              star={store.star}
-              picture={store.picture}
-              allTime={store.allTime}
-              noTime={store.noTime}
-              handleClickedTimeButton={handleClickedTimeButton}
-              isToday={searchingToday}
-            />
-          ))
-        )}
-      </div>
-      <NullBox />
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          position: 'sticky',
-          left: '0',
-          right: '0',
-          bottom: '20px',
-        }}
-      >
-        {reservationButton ? (
-          <Btn onClick={goReservationForm} style={{}}>
-            <span>상담 예약하기</span>
-          </Btn>
-        ) : (
-          <DisabledBtn>
-            <span>상담 예약하기</span>
-          </DisabledBtn>
-        )}
-      </div>
+      {loading ? (
+        <LoadingSpinner style={{ border: '2px solid black' }} />
+      ) : (
+        <>
+          <div>
+            {storeList.map((store) => (
+              <StoreInfo
+                key={store.sellerIdx}
+                idx={store.sellerIdx}
+                storeName={store.storeName}
+                personName={store.personName}
+                address={store.address}
+                detailAddress={store.detailAddress}
+                distance={store.distance}
+                star={store.star}
+                picture={store.picture}
+                allTime={store.allTime}
+                noTime={store.noTime}
+                handleClickedTimeButton={handleClickedTimeButton}
+                isToday={searchingToday}
+              />
+            ))}
+          </div>
+          <NullBox />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              position: 'sticky',
+              left: '0',
+              right: '0',
+              bottom: '20px',
+            }}
+          >
+            {reservationButton ? (
+              <Btn onClick={goReservationForm} style={{}}>
+                <span>상담 예약하기</span>
+              </Btn>
+            ) : (
+              <DisabledBtn>
+                <span>상담 예약하기</span>
+              </DisabledBtn>
+            )}
+          </div>
+        </>
+      )}
     </Main>
   );
 }
@@ -243,7 +245,6 @@ const CustomDatePickerDiv = styled.div`
   font-size: 24px;
   overflow-x: visible;
   height: 40px;
-  // border: 3px solid red;
   margin-bottom: 8px;
 `;
 

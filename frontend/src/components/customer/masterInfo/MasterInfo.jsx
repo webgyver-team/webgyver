@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import PropTypes from 'prop-types';
@@ -11,7 +11,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Info from './elements/Info';
 import Review from './elements/Review';
 import Example from './elements/Example';
-import { masterInfoModalState } from '../../../atom';
+import { masterInfoModalState, masterInfoModalIdxState } from '../../../atom';
+import { customer } from '../../../api/customerService';
 
 const modalStyle = {
   position: 'absolute',
@@ -64,12 +65,35 @@ function a11yProps(index) {
 
 export default function MasterInfo() {
   const [modalState, setmodalState] = useRecoilState(masterInfoModalState);
-  const closeMasterInfoState = () => setmodalState(false);
+  const [modalIdxState, setModalIdxState] = useRecoilState(
+    masterInfoModalIdxState,
+  ); // modal 내 마스터의 idx
+  const closeMasterInfoState = () => {
+    setModalIdxState(null);
+    setmodalState(false);
+  };
 
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const [info, setInfo] = useState(null);
+  const [review, setReview] = useState(null);
+  const [example, setExample] = useState(null);
+  useEffect(() => {
+    if (modalIdxState === null) return;
+    const getMasterInfo = async () => {
+      const responseInfo = await customer.get.masterInfo(modalIdxState);
+      setInfo(responseInfo.data.profile);
+
+      const responseExample = await customer.get.masterHistory(modalIdxState);
+      setExample(responseExample.data);
+
+      const responseReview = await customer.get.masterReview(modalIdxState);
+      setReview(responseReview.data);
+    };
+    getMasterInfo();
+  }, [modalIdxState]);
 
   return (
     <div>
@@ -113,13 +137,13 @@ export default function MasterInfo() {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              <Info />
+              <Info props={info} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <Review />
+              <Review props={review} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-              <Example />
+              <Example props={example} />
             </TabPanel>
           </Box>
         </CustomBox>

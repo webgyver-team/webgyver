@@ -2,6 +2,7 @@
 import Send from './send';
 
 const customerURL = '/api/v1/customer';
+const masterURL = '/api/v1/seller';
 
 export const customer = {
   get: {
@@ -44,6 +45,18 @@ export const customer = {
       const response = await Send.get(
         `${customerURL}/mypage/review/detail/${rIdx}`,
       );
+      return response;
+    },
+    masterInfo: async (idx) => {
+      const response = await Send.get(`${masterURL}/mypage/intro/${idx}`);
+      return response;
+    },
+    masterHistory: async (idx) => {
+      const response = await Send.get(`${masterURL}/mypage/history/${idx}`);
+      return response;
+    },
+    masterReview: async (idx) => {
+      const response = await Send.get(`${masterURL}/mypage/review/${idx}`);
       return response;
     },
   },

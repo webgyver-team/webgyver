@@ -55,7 +55,10 @@ export const masterInfoModalState = atom({
   key: 'masterInfoModalState',
   default: false,
 });
-
+export const masterInfoModalIdxState = atom({
+  key: 'masterInfoModalIdxState',
+  default: null,
+});
 // 선택된 카테고리
 export const categoryState = atom({
   key: 'categoryState',
