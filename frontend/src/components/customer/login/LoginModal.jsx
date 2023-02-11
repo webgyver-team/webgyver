@@ -64,16 +64,16 @@ export default function LoginModal() {
         nullIdError: false,
         nullPasswordError: false,
       });
-
-      const response = await customer.login(data);
-      if (response.statusCode === 200) {
-        // 리코일persist 상태 변경
-        setAuthState('customer');
-        setAccessToken(response.data['access-token']);
-        setUserIdx(response.data.customerIdx);
-        setLoginState(false);
-      } else {
-        // eslint-disable-next-line
+      try {
+        const response = await customer.login(data);
+        if (response.statusCode === 200) {
+          // 리코일persist 상태 변경
+          setAuthState('customer');
+          setAccessToken(response.data['access-token']);
+          setUserIdx(response.data.customerIdx);
+          setLoginState(false);
+        }
+      } catch (error) {
         alert('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
     }
@@ -82,6 +82,11 @@ export default function LoginModal() {
   const routeSignup = () => {
     setLoginState(false);
     navigate('/signup');
+  };
+  const handleOnKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      submit();
+    }
   };
 
   return (
@@ -118,6 +123,7 @@ export default function LoginModal() {
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
+              onKeyPress={handleOnKeyPress}
             />
             {errors.nullPasswordError && (
               <ErrDiv>비밀번호를 입력하세요.</ErrDiv>
