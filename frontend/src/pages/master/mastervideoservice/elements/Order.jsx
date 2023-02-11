@@ -7,7 +7,7 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import DatePicker from '../../../customer/reservation/elements/DatePicker';
 
-export default function AlertDialog({ open, setOpen }) {
+export default function AlertDialog({ open, setOpen, registVisit }) {
   const handleClose = () => {
     setOpen(false);
   };
@@ -27,7 +27,7 @@ export default function AlertDialog({ open, setOpen }) {
   const [dateText, setDateText] = useState('');
   useEffect(() => {
     const temp = formDate.split('-');
-    setDateText(`${temp[0]}년 ${temp[1]}월 ${temp[2]}일`);
+    setDateText(`${temp[0]}${temp[1]}${temp[2]}`);
   }, [formDate]);
 
   const [formContent, setFormContent] = useState({
@@ -36,12 +36,10 @@ export default function AlertDialog({ open, setOpen }) {
   });
   const registInfo = () => {
     const data = {
-      customerIdx: null,
-      partenrIdx: null,
-      categoryIdx: null,
-      date: formDate,
-      time: formContent,
+      method: 'ACCEPT_MEET',
+      time: `${formDate}-${formContent}`,
     };
+    registVisit(data);
     // eslint-disable-next-line
     console.log(data);
     handleClose();

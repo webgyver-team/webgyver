@@ -7,12 +7,15 @@ import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import RealTime from './elements/RealTime';
-import { userIdx, reservationIdxState, locateValueState } from '../../../atom';
+import {
+  userIdx, reservationIdxState, locateValueState, matchFormState,
+} from '../../../atom';
 
 export default function MasterSchedule() {
   const navigate = useNavigate();
   const idx = useRecoilValue(userIdx);
   const setReservationIdx = useSetRecoilState(reservationIdxState);
+  const setMatchForm = useSetRecoilState(matchFormState);
   const locationValue = useRecoilValue(locateValueState);
   const [data, setData] = useState([]);
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/seller/${idx}`;
@@ -67,8 +70,9 @@ export default function MasterSchedule() {
       // addLineToChatBox('Error!');
     };
   }, []);
-  const acceptReservation = (customerIdx) => {
+  const acceptReservation = (customerIdx, matchData) => {
     console.log(gWebSocket.current);
+    setMatchForm(matchData);
     const socketData = JSON.stringify({
       method: 'MAKE_RESERVATION',
       customerIdx,

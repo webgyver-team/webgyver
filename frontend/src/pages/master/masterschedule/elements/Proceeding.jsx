@@ -1,10 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+// import { useSetRecoilState } from 'recoil';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useNavigate } from 'react-router-dom';
+// import { matchFormState } from '../../../../atom';
 
 export default function Proceeding({ proceeding }) {
   const navigate = useNavigate();
@@ -19,6 +21,7 @@ export default function Proceeding({ proceeding }) {
 
   const [isShowMore, setIsShowMore] = useState(false);
   const shortComment = proceeding.content.slice(0, 60);
+  // const setMatchForm = useSetRecoilState(matchFormState);
   const onChangeShowMore = () => {
     setIsShowMore(!isShowMore);
   };

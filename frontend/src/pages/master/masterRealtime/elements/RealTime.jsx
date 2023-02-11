@@ -60,7 +60,7 @@ export default function RealTime({ data, acceptReservation }) {
               </div>
             </DetailBox>
             <BtnBox>
-              <AcceptBtn onClick={() => acceptReservation(data.idx)}>
+              <AcceptBtn onClick={() => acceptReservation(data.idx, data)}>
                 <span>{currentState[0]}</span>
               </AcceptBtn>
             </BtnBox>
