@@ -2,6 +2,10 @@ package com.ssafy.webgyver.config;
 
 
 import com.ssafy.webgyver.api.service.UserDetailServiceImpl;
+import com.ssafy.webgyver.common.auth.CustomCustomerDetailService;
+import com.ssafy.webgyver.common.auth.CustomSellerDetailService;
+import com.ssafy.webgyver.common.auth.JwtAuthenticationFilter;
+import com.ssafy.webgyver.common.auth.SsafyUserDetailService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,6 +28,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    private SsafyUserDetailService ssafyUserDetailService;
 
 //    private UserService userService;
+    private CustomCustomerDetailService customCustomerDetailService;
+    private CustomSellerDetailService customSellerDetailService;
 
     private final UserDetailServiceImpl userDetailServiceImpl;
     // Password 인코딩 방식에 BCrypt 암호화 방식 사용
@@ -58,9 +64,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), userDetailServiceImpl)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
-                .antMatchers("/api/v1/users/me").authenticated()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-                .anyRequest().permitAll()
-//                .antMatchers("/admin/**").hasAnyRole("Partner")
+                .antMatchers("/api/v1/**/member/**").permitAll()
+                .antMatchers("/api/v1/common/**").permitAll()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
+//                .anyRequest().hasAnyRole("CUSTOMER", "PARTNER")
+                //                .antMatchers("/admin/**").hasAnyRole("Partner")
                 .and().cors();
     }
 }

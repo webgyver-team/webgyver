@@ -298,7 +298,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         String timeString = "";
         for (int i = 0; i < 8; i++) {
-
+            System.out.println(timeReq.getBookTimeList().get(i).getHoliday());
             if (timeReq.getBookTimeList().get(i).getHoliday()) {
                 timeString += timeReq.getBookTimeList().get(i).getDay() + "$휴일%";
             } else {

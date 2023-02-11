@@ -6,11 +6,16 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -20,7 +25,7 @@ import java.util.List;
 @Table(name = "seller")
 @DynamicInsert
 @ToString
-public class Seller extends BaseEntity {
+public class Seller extends BaseEntity implements UserDetails {
 
     @Column(unique = true, length = 50)
     private String id;
@@ -82,6 +87,13 @@ public class Seller extends BaseEntity {
     private Double lat;
     private Double lng;
     private Integer point;
+//    @JsonIgnore
+//    @Column
+//    @ElementCollection(fetch = FetchType.EAGER)
+//    @Builder.Default
+//    private List<String> roles = new ArrayList<>();
+    private String role;
+
 
     public void updateSellerDescription(String companyDescription){
         this.companyDescription = companyDescription;
@@ -101,5 +113,41 @@ public class Seller extends BaseEntity {
         this. companyName = companyName;
         this.address = address;
         this.detailAddress = detailAddress;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        Collection<GrantedAuthority> collect = new ArrayList<>();
+        collect.add(new GrantedAuthority() {
+            @Override
+            public String getAuthority() {
+                return getRole();
+            }
+        });
+        return null;
+    }
+    @Override
+    public String getUsername() {
+        return null;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return false;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return false;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }
