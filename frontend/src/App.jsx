@@ -162,6 +162,7 @@ const Page = styled.div`
   font-family: 'Roboto';
   font-size: 32px;
   // height: 'calc(var(--vh,1vh) * 100)');
+  // eslint-disable-next-line prettier/prettier
   height: ${(props) => (props.isNav
     ? 'calc(var(--vh,1vh) * 100 - 64px)'
     : 'calc(var(--vh,1vh) * 100)')};
