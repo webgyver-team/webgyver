@@ -13,6 +13,7 @@ export default function CompleteHistory() {
   const [histories, setHistories] = useState([]);
   const customerIdx = useRecoilValue(userIdx);
   if (customerIdx === null) {
+    // eslint-disable-next-line no-alert
     alert('로그인이 필요합니다.');
   }
   useEffect(() => {
@@ -21,7 +22,8 @@ export default function CompleteHistory() {
       if (response.statusCode === 200) {
         setHistories(response.data.reservationList);
       } else {
-        console.log('출력');
+        // eslint-disable-next-line no-console
+        console.log(response);
       }
     };
     getHistory();
@@ -170,6 +172,7 @@ const ImgBox = styled.div`
 const ContentBox = styled.div`
   width: 100%;
   display: flex;
+  justify-content: space-between;
 
   .contentdiv {
     margin-right: 8px;
