@@ -49,6 +49,7 @@ export default function TimePicker() {
         if (response.data.bookTimeList === null) {
           // eslint-disable-next-line no-alert
           setFormContent(JSON.parse(JSON.stringify(hour)));
+          // eslint-disable-next-line no-alert
           alert('설정된 상담가능 시간이 없습니다.');
           setResTimePopup(true);
           // eslint-disable-next-line no-alert

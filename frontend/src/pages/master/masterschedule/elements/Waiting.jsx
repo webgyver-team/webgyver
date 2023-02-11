@@ -42,6 +42,8 @@ export default function Waiting({ waiting, setReload }) {
       // eslint-disable-next-line
       console.log(response);
       // eslint-disable-next-line no-alert
+      alert('예약에 실패했습니다.');
+      // eslint-disable-next-line no-alert
       alert(response);
     }
   };
