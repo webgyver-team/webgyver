@@ -1,10 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+import { useSetRecoilState } from 'recoil';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useNavigate } from 'react-router-dom';
+import { reservationIdxState } from '../../../../atom';
 
 export default function Proceeding({ proceeding }) {
   const navigate = useNavigate();
@@ -16,6 +18,7 @@ export default function Proceeding({ proceeding }) {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+  const setReservationIdxState = useSetRecoilState(reservationIdxState);
 
   const [isShowMore, setIsShowMore] = useState(false);
   const shortComment = proceeding.content.slice(0, 60);
@@ -24,7 +27,10 @@ export default function Proceeding({ proceeding }) {
   };
 
   const currentState = ['입장하기'];
-  const routeVideoService = () => navigate('/master/videoservice');
+  const routeVideoService = () => {
+    setReservationIdxState(proceeding.reservationIdx);
+    navigate('/videoservice');
+  };
 
   return (
     <Card>
