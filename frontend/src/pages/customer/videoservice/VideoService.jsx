@@ -203,7 +203,9 @@ export default function VideoService() {
       }
     });
 
-    conn.current.onclose = () => console.log('끝');
+    conn.current.onclose = () => {
+      console.log('끝');
+    };
 
     const createOffer = async () => {
       navigator.mediaDevices

@@ -15,17 +15,17 @@ import { userIdx, reservationIdxState, matchFormState } from '../../../atom';
 
 export default function MasterVideoService() {
   const navigate = useNavigate();
+  const myMainScreen = useRef(null);
+  const mySubScreen = useRef(null);
   const masterIdx = useRecoilValue(userIdx);
   const reservationIdx = useRecoilValue(reservationIdxState);
-  const mainVideo = useRef(null);
-  const subVideo = useRef(null);
+  const peerMainScreen = useRef(null);
+  const peerSubScreen = useRef(null);
+  const [mainScreenState, setMainScreenState] = useState('peerScreen');
   const conn = useRef(null);
   const myPeerConnection = useRef(null);
-  const [screenChange, setScreenChange] = useState(true);
-  const screenChange2 = useRef(true);
+
   const reservationData = useRecoilValue(matchFormState);
-  // 방문 수리 ON/OFF
-  const [visitOrderOpen, setVisitOrderOpen] = useState(false);
 
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
@@ -66,46 +66,87 @@ export default function MasterVideoService() {
     navigate('/master/endservice');
   };
 
-  useEffect(() => {
-    // 내 미디어 가져오기
-    const getUserCameraSub = async () => {
-      navigator.mediaDevices
-        .getUserMedia({
-          video: true,
-          audio: true,
-        })
-        .then((stream) => {
-          // 비디오 tag에 stream 추가
-          const video = screenChange ? subVideo.current : mainVideo.current;
-          video.srcObject = stream;
-          video.play();
-        });
-      // .catch((error) => {
-      //   console.log(error);
-      // });
-    };
+  // 내 미디어 가져오기
+  const getUserCameraSub = async () => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: true,
+      })
+      .then((stream) => {
+        // 비디오 tag에 stream 추가
+        const video = mySubScreen.current;
 
-    // 상대방 미디어 가져오기
-    const getOpponentCamera = () => {
-      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
-      const video = screenChange ? mainVideo.current : subVideo.current;
-      setTimeout(() => {
-        video.srcObject = remoteStream;
+        video.srcObject = stream;
+
         video.play();
-      }, 100);
-    };
-    console.log('저기', screenChange);
-    getUserCameraSub();
-    getOpponentCamera();
-  }, [screenChange]);
-
-  // 비디오 스크린 위치 스왑
-  const changeScreen = () => {
-    setScreenChange(!screenChange);
-    screenChange2.current = !screenChange2.current;
+      });
+    // .catch((error) => {
+    //   console.log(error);
+    // });
   };
 
-  // 페이지 나갈때 카메라 제거
+  const getUserCameraMain = async () => {
+    navigator.mediaDevices
+      .getUserMedia({
+        video: true,
+        audio: true,
+      })
+      .then((stream) => {
+        // 비디오 tag에 stream 추가
+        const video = myMainScreen.current;
+
+        video.srcObject = stream;
+
+        video.play();
+      });
+    // .catch((error) => {
+    //   console.log(error);
+    // });
+  };
+
+  useLayoutEffect(() => {
+    getUserCameraSub();
+  }, []);
+
+  useEffect(() => {
+    if (mainScreenState === 'peerScreen' && myPeerConnection) {
+      getUserCameraSub();
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      if (remoteStream) {
+        const video = peerMainScreen.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = remoteStream;
+            video.play();
+          }, 100);
+        }
+      }
+    } else if (mainScreenState === 'myScreen') {
+      getUserCameraMain();
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      if (remoteStream) {
+        const video = peerSubScreen.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = remoteStream;
+            video.play();
+          }, 100);
+        }
+      }
+    }
+  }, [mainScreenState]);
+
+  const changeScreen = () => {
+    if (mainScreenState === 'myScreen') {
+      setMainScreenState('peerScreen');
+    } else {
+      setMainScreenState('myScreen');
+    }
+  };
+
+  const [visitOrderOpen, setVisitOrderOpen] = useState(false);
+
   useEffect(() => {
     return () => {
       navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
@@ -149,9 +190,15 @@ export default function MasterVideoService() {
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
     myPeerConnection.current.addEventListener('track', (data) => {
-      const video = screenChange2.current ? mainVideo.current : subVideo.current;
-      video.srcObject = new MediaStream([data.track]);
-      video.play();
+      if (mainScreenState === 'peerScreen') {
+        const video = peerMainScreen.current;
+        video.srcObject = new MediaStream([data.track]);
+        video.play();
+      } else {
+        const video = peerSubScreen.current;
+        video.srcObject = new MediaStream([data.track]);
+        video.play();
+      }
     });
     const createOffer = async () => {
       navigator.mediaDevices
@@ -228,19 +275,37 @@ export default function MasterVideoService() {
         {reservationData && <SideBar reservationData={reservationData} />}
       </Side>
       <Box1>
-        <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
-          <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
-            <video playsInline autoPlay width="100%" ref={mainVideo} />
-          </MainScreen>
+        {mainScreenState === 'myScreen' && (
+          <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
+            <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
+              <video playsInline autoPlay width="100%" ref={myMainScreen} />
+            </MainScreen>
 
-          <SubScreen
-            onClick={changeScreen}
-            ref={SubScreenRef}
-            width={subScreenWidth}
-          >
-            <video playsInline autoPlay width="100%" ref={subVideo} />
-          </SubScreen>
-        </VideoBox>
+            <SubScreen
+              onClick={changeScreen}
+              ref={SubScreenRef}
+              width={subScreenWidth}
+            >
+              <video playsInline autoPlay width="100%" ref={peerSubScreen} />
+            </SubScreen>
+          </VideoBox>
+        )}
+
+        {mainScreenState === 'peerScreen' && (
+          <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
+            <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
+              <video playsInline autoPlay width="100%" ref={peerMainScreen} />
+            </MainScreen>
+
+            <SubScreen
+              onClick={changeScreen}
+              ref={SubScreenRef}
+              width={subScreenWidth}
+            >
+              <video playsInline autoPlay width="100%" ref={mySubScreen} />
+            </SubScreen>
+          </VideoBox>
+        )}
       </Box1>
       <NullBox />
       <BoxBox>
