@@ -11,15 +11,16 @@ export default function Example(props) {
   useLayoutEffect(() => {
     setData(props);
   }, [props]);
+
   return (
     <Main>
       {/* eslint-disable-next-line */}
-      {data.props && data.props.historyList.length === 0 ? (
+      {data.props && data.props.length === 0 ? (
         <NoExample>등록된 수리사례가 없습니다.</NoExample>
       ) : null}
       {/* eslint-disable-next-line */}
       {data.props &&
-        data.props.historyList.map((history) => (
+        data.props.map((history) => (
           <CardView key={history.articleIdx} history={history} />
         ))}
     </Main>
@@ -59,6 +60,7 @@ function CardView({ history }) {
         )}
       </Slider>
       <p>{history && history.content}</p>
+      <EndBar />
     </Card>
   );
 }
@@ -82,7 +84,8 @@ const Card = styled.div`
 const ImgBox = styled.div`
   position: relative;
   // width: 100px;
-  height: 120px;
+  height: 140px;
+  margin-bottom: 8px;
 
   img {
     position: absolute;
@@ -102,4 +105,10 @@ const NoExample = styled.p`
   // border: 1px solid black;
   text-align: center;
   margin-top: 30vh;
+`;
+
+const EndBar = styled.div`
+  margin: 24px 0 16px 0;
+  height: 0px;
+  border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};
 `;
