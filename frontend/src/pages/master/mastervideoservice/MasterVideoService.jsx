@@ -68,7 +68,7 @@ export default function MasterVideoService() {
 
   useEffect(() => {
     // 내 미디어 가져오기
-    const getUserCameraSub = async () => {
+    const getUserCamera = async () => {
       navigator.mediaDevices
         .getUserMedia({
           video: true,
@@ -94,8 +94,8 @@ export default function MasterVideoService() {
         video.play();
       }, 100);
     };
-    console.log('저기', screenChange);
-    getUserCameraSub();
+
+    getUserCamera();
     getOpponentCamera();
   }, [screenChange]);
 
