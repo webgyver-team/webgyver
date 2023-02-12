@@ -22,6 +22,7 @@ export default function MasterVideoService() {
   const conn = useRef(null);
   const myPeerConnection = useRef(null);
   const [screenChange, setScreenChange] = useState(true);
+  const screenChange2 = useRef(true);
   const reservationData = useRecoilValue(matchFormState);
   // 방문 수리 ON/OFF
   const [visitOrderOpen, setVisitOrderOpen] = useState(false);
@@ -101,6 +102,7 @@ export default function MasterVideoService() {
   // 비디오 스크린 위치 스왑
   const changeScreen = () => {
     setScreenChange(!screenChange);
+    screenChange2.current = !screenChange2.current;
   };
 
   // 페이지 나갈때 카메라 제거
@@ -147,9 +149,7 @@ export default function MasterVideoService() {
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
     myPeerConnection.current.addEventListener('track', (data) => {
-      console.log('여기', screenChange);
-      const video = screenChange ? mainVideo.current : subVideo.current;
-      console.log('hi');
+      const video = screenChange2.current ? mainVideo.current : subVideo.current;
       video.srcObject = new MediaStream([data.track]);
       video.play();
     });
