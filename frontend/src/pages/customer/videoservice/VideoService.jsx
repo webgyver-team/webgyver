@@ -62,7 +62,6 @@ export default function VideoService() {
     navigate('/endservice');
   };
   const sendRequest = () => {
-    console.log(conn.current);
     conn.current.send(JSON.stringify({ method: 'WANT_MEET' }));
   };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
@@ -110,7 +109,7 @@ export default function VideoService() {
     getUserCameraMain();
   });
 
-  useEffect(() => {
+  const renderPeerScreen = () => {
     if (mainScreenState === 'peerScreen' && myPeerConnection) {
       getUserCameraSub();
       const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
@@ -136,7 +135,11 @@ export default function VideoService() {
         }
       }
     }
-  }, [mainScreenState, myPeerConnection.current]);
+  };
+
+  useEffect(() => {
+    renderPeerScreen();
+  }, [mainScreenState]);
 
   const changeScreen = () => {
     if (mainScreenState === 'myScreen') {
@@ -168,7 +171,6 @@ export default function VideoService() {
     conn.current = new WebSocket(
       `ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
     );
-    console.log(conn.current);
     const configuration = {
       iceServers: [
         {
@@ -250,7 +252,6 @@ export default function VideoService() {
           });
       } else if (content.method === 'ANSWER') {
         const answer = content.data;
-        console.log(myPeerConnection.current);
         myPeerConnection.current.setRemoteDescription(answer);
       } else if (content.method === 'CANDIDATE') {
         // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정
