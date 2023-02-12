@@ -148,6 +148,19 @@ export default function VideoService() {
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
+    myPeerConnection.current.addEventListener('iceconnectionstatechange', () => {
+      if (myPeerConnection.iceConnectionState === 'disconnected') {
+        const video = screenChange2.current ? subVideo.current : mainVideo.current;
+        video.srcObject = null;
+      } else {
+        const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+        const video = screenChange2.current ? subVideo.current : mainVideo.current;
+        setTimeout(() => {
+          video.srcObject = remoteStream;
+          video.play();
+        }, 100);
+      }
+    });
     myPeerConnection.current.addEventListener('track', (data) => {
       const video = screenChange2.current ? subVideo.current : mainVideo.current;
       video.srcObject = new MediaStream([data.track]);
