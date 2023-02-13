@@ -94,7 +94,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         List<List<String>> existReservationTimeList = new ArrayList<>();
         for (Seller seller : sellerList) {
             List<Reservation> reservationList = reservationRepository.findReservationsBySellerAndReservationTimeBetween(
-                    seller, start, end).stream().filter(reservation -> !(reservation.getReservationType().equals("1") || !reservation.getReservationType().equals("3"))).collect(Collectors.toList());
+                    seller, start, end).stream().filter(reservation -> (reservation.getReservationType().equals("2") || reservation.getReservationType().equals("4") && reservation.getReservationType().equals("5") && reservation.getReservationType().equals("6"))).collect(Collectors.toList());
             List<String> existReservationTime = new ArrayList<>();
             for (Reservation reservation : reservationList) {
                 existReservationTime.add(
@@ -163,7 +163,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     public void reservationListMethod(List<Reservation> reservationList) {
         for (Reservation reservation : reservationList) {
-            System.out.println("!!!!!!!!!!!!"+reservation.getReservationTime());
+            System.out.println("!!!!!!!!!!!!" + reservation.getReservationTime());
             String title = null;    // 예약 제목
             String content = null; // 문의 내용
             List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
