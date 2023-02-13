@@ -2,16 +2,16 @@ import React from 'react';
 import styled from 'styled-components';
 import CircularProgress from '@mui/material/CircularProgress';
 
-export default function LoadingSpinner() {
+export default function LoadingSpinner({ height }) {
   return (
-    <LoadingBox>
+    <LoadingBox height={height}>
       <CircularProgress />
     </LoadingBox>
   );
 }
 
 const LoadingBox = styled.div`
-  // height: px;
+  height: ${(props) => props.height}px;
   display: flex;
   justify-content: center;
   align-items: center;

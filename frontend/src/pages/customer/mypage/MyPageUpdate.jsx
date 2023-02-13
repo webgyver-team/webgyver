@@ -77,13 +77,13 @@ export default function MyPageUpdate() {
       return;
     }
     // eslint-disable-next-line
-    console.log(data);
     const response = await customer.put.profile(data, customerIdx);
     if (response.statusCode === 200) {
       // eslint-disable-next-line
       alert('회원정보가 수정되었습니다.');
       navigate('/mypage');
     } else {
+      // eslint-disable-next-line
       alert(response.message);
     }
   };

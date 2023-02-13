@@ -7,10 +7,12 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { customer } from '../../../../api/customerService';
 import { userIdx } from '../../../../atom';
+import LoadingSpinner from '../../../common/LoadingSpinner';
 import WhiteImage from '../../../../assets/image/white.png';
 
 export default function CompleteHistory() {
   const [histories, setHistories] = useState([]);
+  const [loading, setLoading] = useState(true);
   const customerIdx = useRecoilValue(userIdx);
   if (customerIdx === null) {
     // eslint-disable-next-line no-alert
@@ -22,22 +24,28 @@ export default function CompleteHistory() {
       if (response.statusCode === 200) {
         setHistories(response.data.reservationList);
       } else {
-        // eslint-disable-next-line no-console
-        console.log(response);
+        // eslint-disable-next-line no-alert
+        alert(response.message);
       }
+      setLoading(false);
     };
     getHistory();
-    // disable-eslint-next-line
   }, [customerIdx]);
   return (
     <Main>
-      {/* eslint-disable-next-line */}
-      {histories &&
-        histories.map((history) => (
-          <CardView key={history.reservationIdx} history={history} />
-        ))}
-      {histories && histories.length > 0 ? null : (
-        <NoHistoryMessage>완료 내역이 없습니다.</NoHistoryMessage>
+      {loading ? (
+        <LoadingSpinner height="600" />
+      ) : (
+        // eslint-disable-next-line
+        <>
+          {histories.length > 0 ? (
+            histories.map((history) => (
+              <CardView key={history.reservationIdx} history={history} />
+            ))
+          ) : (
+            <NoHistoryMessage>완료 내역이 없습니다.</NoHistoryMessage>
+          )}
+        </>
       )}
     </Main>
   );
