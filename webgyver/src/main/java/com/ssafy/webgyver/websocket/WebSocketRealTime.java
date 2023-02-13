@@ -144,6 +144,7 @@ public class WebSocketRealTime {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
+        throwable.printStackTrace();
         log.warning("onError:" + throwable.getMessage());
     }
 
@@ -165,19 +166,19 @@ public class WebSocketRealTime {
             return;
         Gson gson = new Gson();
         Map<String, Object> customerProperties = customer.getUserProperties();
-        int viewDistance = (int) Math.round((double) customerProperties.get("viewDistance"));
+        int viewDistance = (int) Math.round(Double.valueOf((String) customerProperties.get("viewDistance")));
         int sellerCnt = 0;
 
         if (viewDistance == -1) {
             // 거리 무관으로 설정한 경우.
             sellerCnt = (int) sellerSession.stream().filter(Session::isOpen).count();
         } else {
-            double lat1 = (double) customerProperties.get("lat");
-            double lng1 = (double) customerProperties.get("lng");
+            double lat1 = Double.valueOf((String) customerProperties.get("lat"));
+            double lng1 = Double.valueOf((String) customerProperties.get("lng"));
             for (Session seller : sellerSession) {
                 Map<String, Object> sellerProperties = seller.getUserProperties();
-                double lat2 = (double) sellerProperties.get("lat");
-                double lng2 = (double) sellerProperties.get("lng");
+                double lat2 = Double.valueOf((String) sellerProperties.get("lat"));
+                double lng2 = Double.valueOf((String) sellerProperties.get("lng"));
                 double distance = CommonUtil.getDistanceWithKM(lat1, lng1, lat2, lng2);
                 if (distance <= viewDistance) {
                     sellerCnt += 1;
@@ -198,8 +199,8 @@ public class WebSocketRealTime {
             }
             Map<String, Object> customerProperties = customer.getUserProperties();
             RefreshSellerMessage refreshSellerMessage = RefreshSellerMessage.builder()
-                    .lat((double) customerProperties.get("lat"))
-                    .lng((double) customerProperties.get("lng"))
+                    .lat((String) customerProperties.get("lat"))
+                    .lng((String) customerProperties.get("lng"))
                     .title((String) customerProperties.get("title"))
                     .content((String) customerProperties.get("content"))
                     .address((String) customerProperties.get("address"))
@@ -246,7 +247,7 @@ public class WebSocketRealTime {
     }
 
     public void METHOD_CHANGE_DISTANCE(Session session, Map<String, Object> info) throws IOException {
-        session.getUserProperties().put("viewDistance", Double.valueOf(String.valueOf(info.get("viewDistance"))));
+        session.getUserProperties().put("viewDistance", String.valueOf(info.get("viewDistance")));
         refreshCustomerAllCustomer();
     }
 }

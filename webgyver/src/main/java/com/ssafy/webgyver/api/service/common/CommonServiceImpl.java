@@ -50,8 +50,10 @@ public class CommonServiceImpl implements CommonService {
         reservation.setSeller(seller);
         reservation.setCategory(category);
         reservation.setReservationPrice(reservationInfo.getPrice());
-        reservation.setReservationTime(TimeUtil.getNeareastHourIn15Inc(LocalDateTime.now()));
+//        reservation.setReservationTime(TimeUtil.getNeareastHourIn15Inc(LocalDateTime.now()));
+        reservation.setReservationTime(LocalDateTime.now());
         reservation.setReservationType("1");
+        reservation.setReservationState("4");
 
         reservationRepository.save(reservation);
 
