@@ -8,6 +8,7 @@ import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
+import com.ssafy.webgyver.api.service.common.SmsService;
 import com.ssafy.webgyver.db.entity.*;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
@@ -41,6 +42,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     final SellerCategoryRepository sellerCategoryRepository;
     final SellerRepository sellerRepository;
     final CustomerRepository customerRepository;
+    final SmsService smsService;
 
     @Override
     @Transactional
@@ -53,8 +55,8 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
         Reservation reservation = ReservationParsingUtil.parseReservationReq2Reservation(req);
 
-        Seller seller = Seller.builder().build();
-        seller.setIdx(req.getSellerIdx());
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+
         Category category = Category.builder().idx(req.getCategoryIdx()).build();
         SellerCategory sellerCategory = sellerCategoryRepository.findSellerCategoryBySellerAndCategory(
                 seller, category);
@@ -75,6 +77,15 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
             pictureRepository.save(
                     PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article));
         }
+
+        StringBuilder sb = new StringBuilder();
+        sb.append("[Webgyver]").append('\n')
+                .append(reservation.getReservationTime()).append("에").append('\n')
+                .append("예약 상담 [").append(article.getTitle()).append("]이(가) 접수되었습니다.").append('\n')
+                .append("예약 내용을 확인 후 수락해 주세요.");
+
+        smsService.onSendMessage(reservation.getSeller().getPhoneNumber(), sb.toString());
+
         return reservation;
 //        req.getImages().stream().map(image -> pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article)));
 
