@@ -16,10 +16,10 @@ import {
 
 export default function ReservationForm() {
   const navigate = useNavigate();
-  const location = useRecoilValue(locateValueState);
-  const categoryIdx = useRecoilValue(categoryState);
-  const customerIdx = useRecoilValue(userIdx);
-  const [matchForm, setMatchForm] = useRecoilState(matchFormState);
+  const location = useRecoilValue(locateValueState); // 위치 정보
+  const categoryIdx = useRecoilValue(categoryState); // 카테고리 정보
+  const customerIdx = useRecoilValue(userIdx); // 고객 idx
+  const [matchForm, setMatchForm] = useRecoilState(matchFormState); // matchForm 자체
   const [formTitle, setFormTitle] = useState(matchForm.title);
   const [formContent, setFormContent] = useState(matchForm.content);
   const [cost, setCost] = useState(matchForm.cost);

@@ -18,6 +18,7 @@ export default function StoreInfo({
   distance,
   star,
   picture,
+  price,
   allTime,
   noTime,
   handleClickedTimeButton,
@@ -79,26 +80,30 @@ export default function StoreInfo({
         <PictureBox>
           <Picture src={picture} alt="" />
         </PictureBox>
-        <div>
+        <InfoBox>
           <StoreNameContent>{storeName}</StoreNameContent>
           <MasterNameContent>{personName}</MasterNameContent>
-          <p style={{ fontSize: '12px' }}>
-            {`${address} ${detailAddress} (${
+          <AddressContent>
+            {`${address} ${detailAddress} (${(
               Math.round(distance * 100) / 100
-            }km)`}
-          </p>
-          <RatingBox>
-            <Rating
-              name="half-rating-read"
-              value={star}
-              precision={0.1}
-              readOnly
-            />
-            <span style={{ fontSize: '12px' }}>
-              {Math.round(star * 100) / 100}
-            </span>
-          </RatingBox>
-        </div>
+            ).toLocaleString('ko-kr')}km)`}
+          </AddressContent>
+          <RatingPriceBox>
+            <RatingBox>
+              <Rating
+                name="half-rating-read"
+                value={star}
+                precision={0.1}
+                readOnly
+              />
+              <RatingContent>{Math.round(star * 100) / 100}</RatingContent>
+            </RatingBox>
+            {/* eslint-disable-next-line */}
+            <PriceBox>
+              {`상담가: ${Number(price).toLocaleString('ko-KR')}원`}
+            </PriceBox>
+          </RatingPriceBox>
+        </InfoBox>
       </StoreBox>
       <TimeBox>
         {allTime.map((time) => {
@@ -147,7 +152,9 @@ const StoreBox = styled.div`
   display: flex;
   padding-right: 8px;
 `;
-
+const InfoBox = styled.div`
+  width: 100%;
+`;
 const TimeBox = styled.div`
   display: inline-flex;
   width: 100%;
@@ -157,14 +164,15 @@ const TimeBox = styled.div`
 const PictureBox = styled.div`
   margin-right: 4px;
 `;
-
+const PriceBox = styled.div`
+  font-size: 12px;
+`;
 const Picture = styled.img`
   height: 96px;
   width: 96px;
   object-fit: cover;
   padding: 4px;
 `;
-
 const StoreNameContent = styled.span`
   font-size: 18px;
   font-weight: bold;
@@ -175,13 +183,22 @@ const MasterNameContent = styled.span`
   font-weight: bold;
   margin-left: 4px;
 `;
-
+const AddressContent = styled.p`
+  font-size: 12px;
+`;
+const RatingPriceBox = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
 const RatingBox = styled.div`
   display: flex;
   align-items: center;
   font-size: 12px;
 `;
-
+const RatingContent = styled.span`
+  font-size: 12px;
+`;
 const NoTimeMessage = styled.span`
   font-size: 16px;
   font-weight: bold;

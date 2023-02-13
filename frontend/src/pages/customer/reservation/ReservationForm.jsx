@@ -50,12 +50,20 @@ export default function ReservationForm() {
     }, 100);
   }, []);
   const changeFormTitle = (event) => {
+    if (event.target.value.trim().length > 250) {
+      setMsgForTitle('최대 250자까지 입력 가능합니다.');
+      return;
+    }
     setFormTitle(event.target.value);
     if (event.target.value.trim().length === 0) {
       setMsgForTitle('제목은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForTitle('');
   };
   const changeFormContent = (event) => {
+    if (event.target.value.trim().length > 250) {
+      setMsgForContent('최대 250자까지 입력 가능합니다.');
+      return;
+    }
     setFormContent(event.target.value);
     if (event.target.value.trim().length === 0) {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');

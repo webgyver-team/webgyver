@@ -18,7 +18,8 @@ export default function Direct() {
       openLocateModal();
       navigate('/match/form');
     } else {
-      alert('로그인 후 이용해주세요.');
+      // eslint-disable-next-line
+      alert('로그인 후 이용해 주세요.');
       openLoginModal();
     }
   };
