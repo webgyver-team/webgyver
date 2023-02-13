@@ -86,14 +86,16 @@ export default function VideoService() {
 
     // 상대방 미디어 가져오기
     const getOpponentCamera = async () => {
-      const remoteStream = await myPeerConnection.current.getReceivers()[1];
-      const stream = await new MediaStream([remoteStream.track]);
-      const video = screenChange ? subVideo.current : mainVideo.current;
-      if (video) {
-        setTimeout(() => {
-          video.srcObject = stream;
-          video.play();
-        }, 100);
+      const remoteStream = await myPeerConnection.current.getReceivers();
+      if (remoteStream) {
+        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
+        const video = screenChange ? subVideo.current : mainVideo.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = stream;
+            video.play();
+          }, 100);
+        }
       }
     };
 
@@ -156,9 +158,9 @@ export default function VideoService() {
         const video = screenChange2.current ? subVideo.current : mainVideo.current;
         video.srcObject = null;
       } else {
-        const remoteStream = await myPeerConnection.current.getReceivers()[1];
-        const stream = await new MediaStream([remoteStream.track]);
-        const video = screenChange ? subVideo.current : mainVideo.current;
+        const remoteStream = await myPeerConnection.current.getReceivers();
+        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
+        const video = screenChange2.current ? subVideo.current : mainVideo.current;
         if (video) {
           setTimeout(() => {
             video.srcObject = stream;
