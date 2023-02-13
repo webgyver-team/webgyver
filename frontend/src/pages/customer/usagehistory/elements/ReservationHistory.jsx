@@ -8,9 +8,12 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { customer } from '../../../../api/customerService';
 import { userIdx, reservationIdxState } from '../../../../atom';
+import LoadingSpinner from '../../../common/LoadingSpinner';
+import WhiteImage from '../../../../assets/image/white.png';
 
 export default function ReservationHistory() {
-  const [histories, setHistories] = useState([]);
+  const [histories, setHistories] = useState(null);
+  const [loading, setLoading] = useState(true);
   const customerIdx = useRecoilValue(userIdx);
   useEffect(() => {
     const getHistory = async () => {
@@ -18,16 +21,25 @@ export default function ReservationHistory() {
       if (response.statusCode === 200) {
         setHistories(response.data.reservationList);
       }
+      setLoading(false);
     };
     getHistory();
   }, [customerIdx]);
   return (
     <Main>
-      {histories.map((history) => (
-        <CardView key={history.reservationIdx} history={history} />
-      ))}
-      {histories.length > 0 ? null : (
-        <NoHistoryMessage>예약 내역이 없습니다.</NoHistoryMessage>
+      {loading ? (
+        <LoadingSpinner height="600" />
+      ) : (
+        // eslint-disable-next-line
+        <>
+          {histories.length > 0 ? (
+            histories.map((history) => (
+              <CardView key={history.reservationIdx} history={history} />
+            ))
+          ) : (
+            <NoHistoryMessage>예약 내역이 없습니다.</NoHistoryMessage>
+          )}
+        </>
       )}
     </Main>
   );
@@ -89,6 +101,11 @@ function CardView({ history }) {
         <div>
           <SliderBox>
             <Slider {...slickSettings}>
+              {history.imageList.length === 0 ? (
+                <ImgBox>
+                  <NoImage src={WhiteImage} alt="" />
+                </ImgBox>
+              ) : null}
               {history.imageList.map((image, idx) => (
                 // eslint-disable-next-line
                 <ImgBox key={image.saveName + idx}>
@@ -108,9 +125,7 @@ function CardView({ history }) {
                 </span>
               ) : (
                 // 임시로 처리..
-                <span onClick={() => routeVideoService(history)}>
-                  {currentState[history.state]}
-                </span>
+                <span>{currentState[history.state]}</span>
               )}
             </StateBtn>
           </BtnBox>
@@ -231,4 +246,8 @@ const NoHistoryMessage = styled.p`
   transform: translate(-50%, -50%);
   font-weight: bold;
   font-size: 18px;
+`;
+
+const NoImage = styled.img`
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
 `;
