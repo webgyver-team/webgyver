@@ -72,7 +72,7 @@ export default function MasterVideoService() {
       navigator.mediaDevices
         .getUserMedia({
           video: true,
-          audio: true,
+          audio: false,
         })
         .then((stream) => {
           // 비디오 tag에 stream 추가
