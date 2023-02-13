@@ -30,7 +30,7 @@ public class ReservationServiceImpl implements ReservationService {
     @Override
     public void updateReservationFinished(long reservationIdx) {
         Reservation reservation = reservationRepository.findById(reservationIdx).get();
-        reservation.setReservationType("5");
+        reservation.setReservationState("5");
         reservationRepository.save(reservation);
     }
 }
