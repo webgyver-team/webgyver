@@ -35,9 +35,10 @@ export default function AlertDialog({ open, setOpen, registVisit }) {
     endTime: '10:00',
   });
   const registInfo = () => {
+    const start = formContent.startTime.split(':');
     const data = {
       method: 'ACCEPT_MEET',
-      time: `${formDate}-${formContent}`,
+      time: `${dateText}-${start[0]}${start[1]}`,
     };
     registVisit(data);
     // eslint-disable-next-line

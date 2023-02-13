@@ -126,7 +126,7 @@ export default function MasterVideoService() {
 
   useLayoutEffect(() => {
     conn.current = new WebSocket(
-      `wss://i8b101.p.ssafy.io:9001/facetime/seller/${masterIdx}/${reservationIdx}`,
+      `wss://webgyver.site:9001/facetime/seller/${masterIdx}/${reservationIdx}`,
     );
     const configuration = {
       iceServers: [

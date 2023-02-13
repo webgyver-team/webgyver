@@ -18,7 +18,7 @@ export default function MasterSchedule() {
   const setMatchForm = useSetRecoilState(matchFormState);
   const locationValue = useRecoilValue(locateValueState);
   const [data, setData] = useState([]);
-  const webSocketAddress = `wss://i8b101.p.ssafy.io:9001/realtime/seller/${idx}`;
+  const webSocketAddress = `wss://webgyver.site:9001/realtime/seller/${idx}`;
   const gWebSocket = useRef(null);
 
   useEffect(() => {
