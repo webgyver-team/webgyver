@@ -14,7 +14,7 @@ export default function MasterReview() {
   useEffect(() => {
     const loadReviewList = async () => {
       const response = await master.get.review(userId);
-      setReviewList(response.data.reviews);
+      setReviewList(response.data.reviews.reverse());
       console.log('hi', response.data);
       setReload(false);
     };
