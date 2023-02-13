@@ -126,10 +126,9 @@ export default function Matching() {
   // eslint-disable-next-line react/jsx-one-expression-per-line
   const alertText = (
     <p>
-      {Math.floor(counter / 60)}
-      분
-      {counter % 60}
-      초 뒤, 이전 페이지로 돌아갑니다.
+      {`${Math.floor(counter / 60)}분 ${
+        counter % 60
+      }초 뒤, 이전 페이지로 돌아갑니다.`}
     </p>
   );
 
