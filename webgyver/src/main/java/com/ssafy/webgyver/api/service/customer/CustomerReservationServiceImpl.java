@@ -91,7 +91,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         List<List<String>> existReservationTimeList = new ArrayList<>();
         for (Seller seller : sellerList) {
             List<Reservation> reservationList = reservationRepository.findReservationsBySellerAndReservationTimeBetween(
-                    seller, start, end).stream().filter(reservation -> (Arrays.asList(new String[]{"2", "4", "5", "6"}).contains(reservation.getReservationType()))).collect(Collectors.toList());
+                    seller, start, end).stream().filter(reservation -> (Arrays.asList(new String[]{"2", "4", "5", "6"}).contains(reservation.getReservationState()))).collect(Collectors.toList());
             List<String> existReservationTime = new ArrayList<>();
             for (Reservation reservation : reservationList) {
                 existReservationTime.add(
