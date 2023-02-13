@@ -10,12 +10,18 @@ const { persistAtom } = recoilPersist({
 // 로그인 판단용 State, null, master, customer
 export const authState = atom({
   key: 'authState',
-  default: false,
+  default: null,
   effects_UNSTABLE: [persistAtom],
 });
 
 export const accessToken = atom({
   key: 'accessToken',
+  default: '',
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const userIdx = atom({
+  key: 'userIdx',
   default: '',
   effects_UNSTABLE: [persistAtom],
 });
@@ -38,9 +44,10 @@ export const locateValueState = atom({
   default: {
     address: '대전 유성구 덕명동 124',
     detail: 'B102호',
-    longitude: 127.298666015874,
-    latitude: 36.3551691100904,
+    longitude: '127.298666015874',
+    latitude: '36.3551691100904',
   },
+  effects_UNSTABLE: [persistAtom],
 });
 
 // 가게 정보 모달 on/off
@@ -48,11 +55,14 @@ export const masterInfoModalState = atom({
   key: 'masterInfoModalState',
   default: false,
 });
-
+export const masterInfoModalIdxState = atom({
+  key: 'masterInfoModalIdxState',
+  default: null,
+});
 // 선택된 카테고리
 export const categoryState = atom({
   key: 'categoryState',
-  default: '',
+  default: null,
   effects_UNSTABLE: [persistAtom],
 });
 
@@ -89,7 +99,44 @@ export const chosenReservation = atom({
   effects_UNSTABLE: [persistAtom],
 });
 
+// 사례페이지 등록 모달 ON/OFF
 export const exampleFormState = atom({
   key: 'exampleFormState',
+  default: false,
+});
+
+// 사례페이지 수정 모달 ON/OFF
+export const exampleEditState = atom({
+  key: 'exampleEditState',
+  default: false,
+});
+
+// 사례 수정용 데이터 전송
+export const exampleDataState = atom({
+  key: 'exampleDataState',
+  default: [],
+});
+
+export const reservationIdxState = atom({
+  key: 'reservationIdx',
+  default: null,
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const matchFormState = atom({
+  key: 'matchFormState',
+  default: {
+    address: '',
+    detailAddress: '',
+    title: '',
+    content: '',
+    cost: 0,
+    images: [],
+  },
+  effects_UNSTABLE: [persistAtom],
+});
+
+export const resTimePopupState = atom({
+  key: 'resTimePopupState',
   default: false,
 });

@@ -5,6 +5,7 @@ import { useRecoilState, useRecoilValue, useSetRecoilState } from 'recoil';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { useNavigate } from 'react-router-dom';
 import DatePicker from './elements/DatePicker';
+import LoadingSpinner from '../../common/LoadingSpinner';
 import {
   authState,
   loginOpenState,
@@ -12,9 +13,10 @@ import {
   reservationDate,
   chosenReservation,
   locateModalState,
+  categoryState,
 } from '../../../atom';
 import StoreInfo from './elements/StoreInfo';
-import { storeList } from './dummyData';
+import { customer } from '../../../api/customerService';
 
 export default function Reservation() {
   const navigate = useNavigate();
@@ -24,7 +26,9 @@ export default function Reservation() {
   // 위치설정 모달 on/off
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const openLocateModal = () => setLocateModalOpen(true);
-  // 예약 정보 {idx, storeName, date, time}
+  const [type, setType] = useState(1);
+  const [storeList, setStoreList] = useState([]);
+  const category = useRecoilValue(categoryState);
   const reservationNull = {
     idx: null,
     storeName: null,
@@ -36,7 +40,8 @@ export default function Reservation() {
   const [clickedReservation, setClickedReservation] = useState(reservationNull); // 클릭한 예약 정보
   const [clickedTimeButton, setClickedTimeButton] = useState(null); // 클릭한 시간 버튼(HTML Element)
   const [reservationButton, setReservationButton] = useState(false); // 예약하기 버튼 on off(boolean)
-
+  const [searchingToday, setSearchingToday] = useState(true);
+  const [loading, setLoading] = useState(true);
   // 날짜 선택했을 때 실행되는 함수
   const handleDate = (value) => {
     if (date !== value) {
@@ -64,6 +69,8 @@ export default function Reservation() {
     if (
       // reservation의 property와 하나라도 다르다면(다른 버튼 클릭)
       // eslint-disable-next-line operator-linebreak
+      clickedReservation.idx === null ||
+      // eslint-disable-next-line operator-linebreak
       data.idx !== clickedReservation.idx ||
       // eslint-disable-next-line operator-linebreak
       data.time !== clickedReservation.time ||
@@ -75,7 +82,7 @@ export default function Reservation() {
         clickedTimeButton.style.backgroundColor = '#ffffff';
         clickedTimeButton.style.color = '#1976D2';
       }
-      setClickedTimeButton(() => event.target); // 클릭한 시간 버튼을 저장
+      setClickedTimeButton(event.target); // 클릭한 시간 버튼을 저장
       setClickedReservation(data); // data를 reservation으로 저장
       return;
     }
@@ -91,9 +98,17 @@ export default function Reservation() {
   const goReservationForm = () => {
     // eslint-disable-next-line
     if (auth === 'customer') {
-      setReservation(clickedReservation); // 이때 세션 스토리지에 저장
-      navigate('/reservation/form');
+      if (
+        // eslint-disable-next-line
+        confirm(
+          `예약 업체: ${clickedReservation.storeName}\n예약 일시: ${clickedReservation.date} ${clickedReservation.time}\n\n예약을 진행하시겠습니까?`,
+        )
+      ) {
+        setReservation(clickedReservation); // 이때 세션 스토리지에 저장
+        navigate('/reservation/form');
+      }
     } else {
+      // eslint-disable-next-line
       alert('로그인 후 이용해주세요.');
       openLoginModal();
     }
@@ -111,39 +126,61 @@ export default function Reservation() {
   }, [clickedTimeButton]);
 
   const location = useRecoilValue(locateValueState); // 주소 정보
+
   useEffect(() => {
-    // 주소 또는 선택 날짜가 바뀌었으면
-    // storeList 갱신해야 함
-
-    // eslint-disable-next-line
-    console.log('[가게 정보] axios 호출 필요');
-  }, [location, date]);
-
-  const [type, setType] = useState(1);
+    setLoading(true);
+    const todayObj = new Date();
+    // 오늘 (YYYYMMDD)
+    const today = `${todayObj.getFullYear()}${
+      (todayObj.getMonth() + 1).toString().length < 2
+        ? `0${todayObj.getMonth() + 1}`
+        : `${todayObj.getMonth() + 1}`
+    }${
+      todayObj.getDate().toString().length < 2
+        ? `0${todayObj.getDate()}`
+        : `${todayObj.getDate()}`
+    }`;
+    const loadStoreList = async () => {
+      const data = {
+        categoryIdx: category,
+        lat: location.latitude,
+        lng: location.longitude,
+        date: date.replaceAll('-', ''),
+      };
+      if (data.categoryIdx === null) {
+        // eslint-disable-next-line
+        alert('상담할 카테고리를 선택하세요.');
+        navigate('/');
+        return;
+      }
+      const response = await customer.get.stores(type, data);
+      if (today === data.date) {
+        setSearchingToday(true); // 오늘 적용해서 현재 시간 고려
+      } else {
+        setSearchingToday(false);
+      }
+      setStoreList(response.data.storeList);
+      setLoading(false);
+    };
+    loadStoreList();
+  }, [location, date, category, type, navigate]);
 
   return (
     <Main>
       <DateDiv>
-        <h2
-          style={{
-            fontSize: '18px',
-            fontWeight: 'bold',
-            marginTop: '8px',
-            marginBottom: '8px',
-          }}
-        >
+        <DateTitle>
           날짜 선택
           {` [ ${date.split('-')[0]}-${date.split('-')[1]}-${
             date.split('-')[2]
           } ] `}
-        </h2>
+        </DateTitle>
         <CustomDatePickerDiv>
           <DatePicker handleDate={handleDate} />
         </CustomDatePickerDiv>
       </DateDiv>
       <LocateDiv onClick={openLocateModal}>
         <SiteBox>
-          <span>현재 위치</span>
+          <span style={{ marginTop: '-4px' }}>현재 위치</span>
           <ChevronRightIcon />
         </SiteBox>
         <div style={{ fontSize: '16px' }}>
@@ -153,57 +190,62 @@ export default function Reservation() {
       <FilterBox type={type}>
         <span onClick={() => setType(1)}>거리순</span>
         <VerticalBar />
-        <span onClick={() => setType(3)}>평점순</span>
+        <span onClick={() => setType(2)}>평점순</span>
         <VerticalBar />
-        <span onClick={() => setType(5)}>가격순</span>
+        <span onClick={() => setType(3)}>가격순</span>
       </FilterBox>
-      <div>
-        {storeList.map((store) => (
-          <StoreInfo
-            key={store.idx}
-            idx={store.idx}
-            storeName={store.storeName}
-            personName={store.personName}
-            address={store.address}
-            detailAddress={store.detailAddress}
-            distance={store.distance}
-            star={store.star}
-            picture={store.picture}
-            allTime={store.allTime}
-            noTime={store.noTime}
-            handleClickedTimeButton={handleClickedTimeButton}
-          />
-        ))}
-      </div>
-      <NullBox />
-      <div
-        style={{
-          display: 'flex',
-          justifyContent: 'center',
-          position: 'sticky',
-          left: '0',
-          right: '0',
-          bottom: '20px',
-        }}
-      >
-        {reservationButton ? (
-          <Btn onClick={goReservationForm} style={{}}>
-            <span>상담 예약하기</span>
-          </Btn>
-        ) : (
-          <DisabledBtn>
-            <span>상담 예약하기</span>
-          </DisabledBtn>
-        )}
-      </div>
+      {loading ? (
+        <LoadingSpinner height="200" />
+      ) : (
+        <>
+          <div>
+            {storeList.map((store) => (
+              <StoreInfo
+                key={store.sellerIdx}
+                idx={store.sellerIdx}
+                storeName={store.storeName}
+                personName={store.personName}
+                address={store.address}
+                detailAddress={store.detailAddress}
+                distance={store.distance}
+                star={store.star}
+                picture={store.picture}
+                allTime={store.allTime}
+                noTime={store.noTime}
+                handleClickedTimeButton={handleClickedTimeButton}
+                isToday={searchingToday}
+              />
+            ))}
+          </div>
+          <NullBox />
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              position: 'sticky',
+              left: '0',
+              right: '0',
+              bottom: '20px',
+            }}
+          >
+            {reservationButton ? (
+              <Btn onClick={goReservationForm} style={{}}>
+                <span>상담 예약하기</span>
+              </Btn>
+            ) : (
+              <DisabledBtn>
+                <span>상담 예약하기</span>
+              </DisabledBtn>
+            )}
+          </div>
+        </>
+      )}
     </Main>
   );
 }
 
 const Main = styled.div`
   width: 100%;
-  height: calc(100vh - 120px);
-  overflow-y: scroll;
   position: 'relative';
 `;
 
@@ -212,7 +254,6 @@ const CustomDatePickerDiv = styled.div`
   font-size: 24px;
   overflow-x: visible;
   height: 40px;
-  // border: 3px solid red;
   margin-bottom: 8px;
 `;
 
@@ -220,7 +261,11 @@ const DateDiv = styled.div`
   padding: 8px;
   margin-bottom: 12px;
 `;
-
+const DateTitle = styled.h2`
+  font-size: 18px;
+  font-weight: bold;
+  margin: 8px 0px;
+`;
 const LocateDiv = styled.div`
   border-top: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};
@@ -237,6 +282,7 @@ const SiteBox = styled.div`
   font-size: 16px;
   font-weight: bold;
   margin-right: 8px;
+  min-width: 96px;
 `;
 
 const Btn = styled.div`
@@ -282,7 +328,7 @@ const FilterBox = styled.div`
   span {
     cursor: pointer;
 
-    :nth-child(${(props) => props.type}) {
+    :nth-child(${(props) => props.type * 2 - 1}) {
       font-weight: bold;
     }
   }

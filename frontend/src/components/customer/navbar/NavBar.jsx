@@ -6,10 +6,7 @@ import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import MenuIcon from '@mui/icons-material/Menu';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import Switch from '@mui/material/Switch';
 import Button from '@mui/material/Button';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import FormGroup from '@mui/material/FormGroup';
 import List from '@mui/material/List';
 import ListItem from '@mui/material/ListItem';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -20,7 +17,8 @@ import styled from 'styled-components';
 import { useRecoilState, useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import Webgyver from '../../../assets/icon/webgyver_white.png';
-import { authState, loginOpenState } from '../../../atom';
+// eslint-disable-next-line
+import { authState, accessToken, loginOpenState, userIdx } from '../../../atom';
 
 const drawerWidth = 240;
 
@@ -31,7 +29,17 @@ export default function NavBar(props) {
     ? ['로그아웃', '내 계정', '이용내역']
     : ['로그인', '회원가입'];
   const setLoginOpenState = useSetRecoilState(loginOpenState);
+  const setAccessToken = useSetRecoilState(accessToken);
+  const setCustomerIdx = useSetRecoilState(userIdx);
   const openLoginModal = () => setLoginOpenState(true);
+
+  const doLogOut = () => {
+    setAuth(null);
+    setAccessToken('');
+    setCustomerIdx(null);
+    navigate('/');
+  };
+
   const chooseMenu = (item) => {
     // 아래 사이드바 메뉴 클릭 시 실행
     // item의 조건을 추가해 함수 로직 작성
@@ -43,16 +51,21 @@ export default function NavBar(props) {
       navigate('/mypage');
     } else if (item === '이용내역') {
       navigate('/usagehistory');
+    } else if (item === '로그아웃') {
+      doLogOut();
     }
   };
   const routeHome = () => navigate('/');
-  const handleChange = (event) => {
-    if (event.target.checked) {
-      setAuth('customer');
-    } else {
-      setAuth(false);
-    }
-  };
+  const routeMypage = () => navigate('/mypage');
+  const routeSignup = () => navigate('/signup');
+  const routeHistory = () => navigate('/usagehistory');
+  // const handleChange = (event) => {
+  //   if (event.target.checked) {
+  //     setAuth('customer');
+  //   } else {
+  //     setAuth(null);
+  //   }
+  // };
 
   // eslint-disable-next-line react/prop-types
   const { window } = props;
@@ -61,7 +74,6 @@ export default function NavBar(props) {
   const handleDrawerToggle = () => {
     setMobileOpen((prevState) => !prevState);
   };
-
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: 'center' }}>
       <Typography variant="h6" sx={{ my: 2 }}>
@@ -91,18 +103,6 @@ export default function NavBar(props) {
   return (
     <Main>
       <Box sx={{ flexGrow: 1 }}>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={auth}
-                onChange={handleChange}
-                aria-label="login switch"
-              />
-            }
-            label={auth ? 'customer' : false}
-          />
-        </FormGroup>
         <AppBar position="static" color="primary">
           <Toolbar>
             {/* 메뉴 버튼 */}
@@ -148,13 +148,19 @@ export default function NavBar(props) {
             </Typography>
             {auth && (
               <Box sx={{ display: { xs: 'none', sm: 'block' } }}>
-                <Button color="inherit">로그아웃</Button>
+                <Button color="inherit" onClick={routeHistory}>
+                  이용내역
+                </Button>
+                <Button color="inherit" onClick={doLogOut}>
+                  로그아웃
+                </Button>
                 <IconButton
                   size="large"
                   aria-label="account of current user"
                   aria-controls="menu-appbar"
                   aria-haspopup="true"
                   color="inherit"
+                  onClick={routeMypage}
                 >
                   <AccountCircle />
                 </IconButton>
@@ -165,7 +171,9 @@ export default function NavBar(props) {
                 <Button color="inherit" onClick={openLoginModal}>
                   로그인
                 </Button>
-                <Button color="inherit">회원가입</Button>
+                <Button color="inherit" onClick={routeSignup}>
+                  회원가입
+                </Button>
               </Box>
             )}
           </Toolbar>

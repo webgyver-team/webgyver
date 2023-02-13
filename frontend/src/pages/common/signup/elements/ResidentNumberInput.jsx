@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { TextField } from '@mui/material';
 import styled from 'styled-components';
 import Message from './Message';
+import DateValidation from './DateValidation';
 
 export default function ResidentNumberInput({
   updateData,
@@ -10,11 +11,22 @@ export default function ResidentNumberInput({
 }) {
   const [residentNumber1, setResidentNumber1] = useState(initialValue1);
   const [residentNumber2, setResidentNumber2] = useState(initialValue2);
-  const [submitNum, setSubmitNum] = useState(''); // 제출할 문자열
+  const residentNumberToBirthDay = (input) => {
+    // eslint-disable-next-line
+    const birthYearStart =
+      input.slice(-1) === '1' || input.slice(-1) === '2' ? '19' : '20';
+    updateData({ birthDay: `${birthYearStart}${input}` });
+  };
+  const SumDate = (input) => {
+    // eslint-disable-next-line
+    const birthYearStart =
+      input.slice(-1) === '1' || input.slice(-1) === '2' ? '19' : '20';
+    return `${birthYearStart}${input}`.slice(0, -1);
+  };
   const [msg, setMsg] = useState('');
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {
-      setMsg(() => '주민등록번호는 숫자만 입력할 수 있습니다.');
+      setMsg(() => '주민번호는 숫자만 입력할 수 있습니다.');
       return false;
     }
     setMsg(() => '');
@@ -32,7 +44,7 @@ export default function ResidentNumberInput({
       event.target.value.trim().length > 0 &&
       event.target.value.trim().length < 6
     ) {
-      setMsg(() => '주민등록번호 앞자리 6자리를 입력해주세요.');
+      setMsg(() => '주민번호 앞자리 6자리를 입력해주세요.');
     }
     setResidentNumber1(() => event.target.value);
     if (
@@ -40,18 +52,27 @@ export default function ResidentNumberInput({
       event.target.value.trim().length === 6 &&
       residentNumber2.trim().length === 7
     ) {
-      // submit 문자열 업데이트
-      if (residentNumber2[0] === '1' || residentNumber2[0] === '2') {
-        setSubmitNum(
-          `19${residentNumber1.trim()}${residentNumber2.replaceAll('*', '')}`,
+      if (
+        DateValidation(
+          SumDate(
+            `${event.target.value.trim()}${residentNumber2.replaceAll(
+              '*',
+              '',
+            )}`,
+          ),
+        )
+      ) {
+        // submit 문자열 업데이트
+        residentNumberToBirthDay(
+          `${event.target.value.trim()}${residentNumber2.replaceAll('*', '')}`,
         );
       } else {
-        setSubmitNum(
-          `20${residentNumber1.trim()}${residentNumber2.replaceAll('*', '')}`,
-        );
+        setMsg(() => '올바른 날짜를 입력해주세요.');
       }
-      updateData({ birthDay: submitNum });
-    } else updateData({ birthDay: null });
+    } else {
+      setMsg(() => '');
+      updateData({ birthDay: null });
+    }
   };
   const changeResidentNumber2 = (event) => {
     const actualInput = event.target.value.replaceAll('*', '');
@@ -65,26 +86,23 @@ export default function ResidentNumberInput({
     if (actualInput.trim().length !== 0) {
       const value = Number(actualInput.trim());
       if (value < 1 || value > 4) {
-        setMsg(() => '주민등록번호 뒷자리는 1부터 4까지 가능합니다.');
+        setMsg(() => '주민번호 뒷자리는 1부터 4까지 가능합니다.');
         return;
       }
     }
     if (residentNumber1.trim().length === 6 && actualInput.length === 1) {
       // submit 문자열 업데이트
-      if (actualInput === '1' || actualInput === '2') {
-        setSubmitNum(`19${residentNumber1.trim()}${actualInput}`);
-      } else {
-        setSubmitNum(`20${residentNumber1.trim()}${actualInput}`);
-      }
-      updateData({ birthDay: submitNum });
-    } else updateData({ birthDay: null });
+      residentNumberToBirthDay(`${residentNumber1.trim()}${actualInput}`);
+    } else {
+      updateData({ birthDay: null });
+    }
   };
   return (
     <div>
       <InputDiv style={{ width: '100%' }}>
         <TextField
           style={{ width: '48%' }}
-          label="주민등록번호 앞 6자리"
+          label="주민번호 앞 6자"
           variant="outlined"
           value={residentNumber1}
           inputProps={{ maxLength: 6 }}
@@ -94,7 +112,7 @@ export default function ResidentNumberInput({
         <p>-</p>
         <TextField
           style={{ width: '48%' }}
-          label="주민등록번호 뒷 1자리"
+          label="주민번호 뒤 1자"
           variant="outlined"
           value={residentNumber2.length === 7 || focus ? residentNumber2 : ''}
           required

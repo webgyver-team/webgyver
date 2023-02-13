@@ -8,12 +8,13 @@ import CloseIcon from '@mui/icons-material/Close';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
 import {
+  // eslint-disable-next-line
   loginOpenState,
-  // accessToken,
-  // authState,
-  //  주석 해제 예정
+  authState,
+  accessToken,
+  userIdx,
 } from '../../../atom';
-// import customer from '../../../api/accountsApi';
+import { customer } from '../../../api/accountsApi';
 
 const style = {
   position: 'absolute',
@@ -31,8 +32,9 @@ export default function LoginModal() {
   const navigate = useNavigate();
   const modalState = useRecoilState(loginOpenState);
   const setLoginState = useSetRecoilState(loginOpenState);
-  // const setAccessToken = useSetRecoilState(accessToken);
-  // const setAuthState = useSetRecoilState(authState);
+  const setAccessToken = useSetRecoilState(accessToken);
+  const setAuthState = useSetRecoilState(authState);
+  const setUserIdx = useSetRecoilState(userIdx);
   const closeLogin = () => setLoginState(false);
   const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
@@ -46,7 +48,7 @@ export default function LoginModal() {
     });
   };
   // 제출 시 id/pw 빈 칸이 아닌지 검증
-  const submit = () => {
+  const submit = async () => {
     if (data?.id === '') {
       setErrors({
         nullIdError: true,
@@ -62,19 +64,33 @@ export default function LoginModal() {
         nullIdError: false,
         nullPasswordError: false,
       });
-      // const response = customer.login(data);
-      // if (response.statusCode === 200) {
-      //   // 리코일persist 상태 변경
-      //   setAccessToken(response.data.accessToken);
-      //   setAuthState('customer');
-      // }
+      try {
+        const response = await customer.login(data);
+        if (response.statusCode === 200) {
+          // 리코일persist 상태 변경
+          setAuthState('customer');
+          setAccessToken(response.data['access-token']);
+          setUserIdx(response.data.customerIdx);
+          setLoginState(false);
+        } else {
+          // eslint-disable-next-line
+          alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+        }
+      } catch (error) {
+        // eslint-disable-next-line
+        alert(error);
+      }
     }
-    // console.log(errors);
   };
   // 회원가입 링크
   const routeSignup = () => {
     setLoginState(false);
     navigate('/signup');
+  };
+  const handleOnKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      submit();
+    }
   };
 
   return (
@@ -99,7 +115,7 @@ export default function LoginModal() {
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
             />
-            {errors.nullIdError && <ErrDiv>아이디를 입력하세요</ErrDiv>}
+            {errors.nullIdError && <ErrDiv>아이디를 입력하세요.</ErrDiv>}
             <NullBox />
             <TextField
               id="password"
@@ -111,18 +127,21 @@ export default function LoginModal() {
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
+              onKeyPress={handleOnKeyPress}
             />
-            {errors.nullPasswordError && <ErrDiv>비밀번호를 입력하세요</ErrDiv>}
+            {errors.nullPasswordError && (
+              <ErrDiv>비밀번호를 입력하세요.</ErrDiv>
+            )}
             {/* <NullBox /> */}
           </Body>
           {!(errors.nullIdError || errors.nullPasswordError) && <NullBox />}
-          <NullBox />
-          <Linkdiv onClick={routeSignup}>회원가입</Linkdiv>
           <BtnBox>
             <Button variant="contained" onClick={submit}>
               로그인
             </Button>
           </BtnBox>
+          <NullBox />
+          <Linkdiv onClick={routeSignup}>회원가입</Linkdiv>
         </Box>
       </Modal>
     </div>
@@ -166,7 +185,6 @@ const NullBox = styled.div`
 const BtnBox = styled.div`
   display: flex;
   justify-content: center;
-  margin-top: 8px;
 `;
 
 const ErrDiv = styled.div`
@@ -180,4 +198,5 @@ const Linkdiv = styled.div`
   cursor: pointer;
   color: gray;
   font-size: 16px;
+  margin-top: 8px;
 `;

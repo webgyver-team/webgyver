@@ -1,55 +1,72 @@
-import React from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { reservationIdxState } from '../../../atom';
+import { customer } from '../../../api/customerService';
 
 export default function EndService() {
   const navigate = useNavigate();
-  const data = {
-    storeName: 'gd',
-    personName: 'gdgd',
-    content: 'gdgdgd',
-    price: '5000',
-  };
+  const reservationIdx = useRecoilValue(reservationIdxState);
+  const [data, setData] = useState(null);
+  useEffect(() => {
+    const getReservationInfo = async () => {
+      const response = await customer.get.endService(reservationIdx);
+      if (response.statusCode === 200) {
+        setData(response.data);
+      } else {
+        // eslint-disable-next-line
+        alert(response.message);
+      }
+    };
+    getReservationInfo();
+  }, []);
   const routeVideoService = () => navigate('/videoservice');
   const routeReviewForm = () => navigate('/reviewform');
 
   return (
     <Main>
-      <Header>상담이 완료되었습니다.</Header>
-      <NullBox />
-      <InfoBox>
-        <Line>
-          <span className="first">상호명 : </span>
-          <span className="last">{data.storeName}</span>
-        </Line>
-        <NullBox />
-        <Line>
-          <span className="first">판매자 : </span>
-          <span className="last">{data.personName}</span>
-        </Line>
-        <NullBox />
-        <Line>
-          <span className="first">문의 제목 : </span>
-          <span className="last">{data.content}</span>
-        </Line>
-      </InfoBox>
-      <NullBox />
-      <TransparentBox>
-        <Line>
-          <span className="first">상담이용료</span>
-          <span className="last">{`${data.price} 원`}</span>
-        </Line>
-        <NullBox />
-        <NullBox />
-      </TransparentBox>
-      <BoxBox>
-        <GrayBtn onClick={routeVideoService}>다시 연결하기</GrayBtn>
-      </BoxBox>
-      <BoxBox>
-        <BtnBox>
-          <Btn onClick={routeReviewForm}>리뷰 작성</Btn>
-        </BtnBox>
-      </BoxBox>
+      {data === null ? null : (
+        <>
+          <Header>상담이 완료되었습니다.</Header>
+          <NullBox />
+          <InfoBox>
+            <Line>
+              <span className="first">상호명 : </span>
+              <span className="last">{data.companyName || '?'}</span>
+            </Line>
+            <NullBox />
+            <Line>
+              <span className="first">판매자 : </span>
+              <span className="last">{data.sellerName || '?'}</span>
+            </Line>
+            <NullBox />
+            <Line>
+              <span className="first">문의 제목 : </span>
+              <span className="last">{data.title || '?'}</span>
+            </Line>
+          </InfoBox>
+          <NullBox />
+          <TransparentBox>
+            <Line>
+              <span className="first">상담이용료</span>
+              <span className="last">{` ${data.price || '?'} 원`}</span>
+            </Line>
+            <NullBox />
+            <NullBox />
+          </TransparentBox>
+          <BoxBox>
+            <GrayBtn onClick={routeVideoService}>다시 연결하기</GrayBtn>
+          </BoxBox>
+          <br />
+          <BoxBox>
+            <BtnBox onClick={routeReviewForm}>
+              <Btn>리뷰 작성</Btn>
+            </BtnBox>
+          </BoxBox>
+        </>
+      )}
     </Main>
   );
 }
@@ -84,6 +101,7 @@ const InfoBox = styled.div`
 const Line = styled.div`
   display: flex;
   justify-content: space-between;
+  align-items: center;
 `;
 
 const NullBox = styled.div`
@@ -114,6 +132,11 @@ const BtnBox = styled.div`
   width: 80%;
   padding: 16px;
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
+  border-radius: 10px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const Btn = styled.div`

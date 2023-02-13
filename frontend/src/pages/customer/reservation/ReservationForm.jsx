@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
 import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
@@ -11,11 +12,14 @@ import {
   chosenReservation,
   locateValueState,
   categoryState,
+  userIdx,
 } from '../../../atom';
+import { customer } from '../../../api/customerService';
 
 export default function ReservationForm() {
   const navigate = useNavigate();
-  const reservation = useRecoilValue(chosenReservation);
+  const [reservation, setReservation] = useRecoilState(chosenReservation);
+  const [reservationTime, setReservationTime] = useState('');
   const location = useRecoilValue(locateValueState);
   const categoryIdx = useRecoilValue(categoryState);
   const [formTitle, setFormTitle] = useState('');
@@ -23,7 +27,28 @@ export default function ReservationForm() {
   const [msgForTitle, setMsgForTitle] = useState('');
   const [msgForContent, setMsgForContent] = useState('');
   const [imageList, setImageList] = useState([]);
-  const [imageData, setImageData] = useState([]);
+  const imageData = [];
+  const customerIdx = useRecoilValue(userIdx);
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (reservation === null || reservation.idx === null) {
+        // eslint-disable-next-line
+        alert('상담을 할 업체가 선택되지 않았습니다.');
+        navigate('/reservation');
+      } else {
+        setReservationTime(
+          `${reservation.date.split('-')[0]}년 ${
+            reservation.date.split('-')[1]
+          }월 ${reservation.date.split('-')[2]}일 ${reservation.time.replace(
+            ':',
+            '시 ',
+          )}분`,
+        );
+        // 예약날짜(연-월-일)와 예약시간(시:분)을 합쳐 (년 월 일 시 분) 형태로 for View에 띄우기
+      }
+    }, 100);
+  }, []);
   const changeFormTitle = (event) => {
     setFormTitle(event.target.value);
     if (event.target.value.trim().length === 0) {
@@ -50,7 +75,7 @@ export default function ReservationForm() {
       const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
       const hashImageName = sha256(
-        `${date.toString()}customerIdx${imageList[i].name}`,
+        `${date.toString()}${customerIdx}${originName}`,
       ); // [날짜 객체 + 회원 idx + 기존 파일명]을 조합하여 해시 처리
       const upload = new AWS.S3.ManagedUpload({
         params: {
@@ -60,34 +85,29 @@ export default function ReservationForm() {
         },
       });
       const promise = upload.promise();
-      promise.then((res) => {
+      promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
+        console.log(err);
       });
-      // .catch((err) => {
-      //   // eslint-disable-next-line
-      //   console.log(err)
-      // });
       const newData = {
         saveName: hashImageName + extensionName,
         originName: imageList[i].name,
       };
       imageData.push(newData);
-      setImageData((originalData) => [...originalData, newData]);
     }
   };
 
-  const registReservation = () => {
+  const registReservation = async () => {
     const data = {
-      customerIdx: 100, // 고객 idx
-      partenrIdx: reservation.idx, // 예약 업체 idx
+      customerIdx, // 고객 idx
+      sellerIdx: reservation.idx, // 예약 업체 idx
+      categoryIdx, // 선택한 카테고리의 idx
       time: `${reservation.date.replaceAll('-', '')}-${reservation.time.replace(
         ':',
         '',
       )}`, // 예약 시간(연월일-시분)
       address: location.address, // 주소
       detailAddress: location.detail, // 상세주소
-      categoryIdx, // 선택한 카테고리의 idx
       title: formTitle, // 제목
       content: formContent, // 내용
       images: imageData, // 이미지 파일의 hash 이름, 원래 이름
@@ -132,98 +152,99 @@ export default function ReservationForm() {
 
     // 이미지 전송 후 받은 url을 picture에 넣고 보낸 후에
     // 잘 보내졌으면 data를 POST
-    sendImageListToS3()
-      .then(() => {
+    sendImageListToS3().then(async () => {
+      // eslint-disable-next-line
+      const response = await customer.post.reservation(data);
+      // eslint-disable-next-line
+      if (response.statusCode === 200) {
         // eslint-disable-next-line
-        console.log(data); // POST로 수정 예정
-      })
-      .then(() => {
+        alert(
+          '예약상담이 등록되었습니다.\n상담 수락 여부는 예약 내역에서 확인 가능합니다.',
+        );
         navigate('/usagehistory');
-      });
-    // .catch((err) => {
-    //   // eslint-disable-next-line
-    //   console.log(err);
-    // });
+        setReservation(null);
+      } else {
+        // eslint-disable-next-line
+        alert(`${response.message}\n예약 내용을 다시 확인바랍니다.`);
+      }
+    });
   };
-  const reservationTime = `${reservation.date.split('-')[0]}년 ${
-    reservation.date.split('-')[1]
-  }월 ${reservation.date.split('-')[2]}일 ${reservation.time.replace(
-    ':',
-    '시 ',
-  )}분`; // 예약날짜(연-월-일)와 예약시간(시:분)을 합쳐 (년 월 일 시 분) 형태로 for View에 띄우기
+
   return (
     <div style={{ width: '100%', padding: '16px' }}>
       <FormTitle>예약상담 등록</FormTitle>
-      <FormBox>
-        <div>
-          <FormInput>
-            <TextField
-              label="예약업체"
-              variant="outlined"
-              required
-              margin="normal"
-              fullWidth
-              disabled
-              value={reservation.storeName}
-            />
-          </FormInput>
-          <FormInput>
-            <TextField
-              label="예약일시"
-              variant="outlined"
-              required
-              margin="normal"
-              fullWidth
-              disabled
-              value={reservationTime}
-            />
-          </FormInput>
-          <FormInput>
-            <TextField
-              label="주소"
-              variant="outlined"
-              required
-              multiline
-              margin="normal"
-              fullWidth
-              disabled
-              value={`${location.address} ${location.detail}`}
-            />
-          </FormInput>
-          <FormInput style={{ marginTop: '16px' }}>
-            <TextField
-              label="제목"
-              variant="outlined"
-              required
-              fullWidth
-              onChange={changeFormTitle}
-              value={formTitle}
-            />
-            <ErrorMessage>{msgForTitle}</ErrorMessage>
-          </FormInput>
-          <FormInput style={{ marginTop: '4px' }}>
-            <TextField
-              label="내용"
-              variant="outlined"
-              required
-              fullWidth
-              multiline
-              maxRows={4}
-              onChange={changeFormContent}
-              value={formContent}
-            />
-            <ErrorMessage>{msgForContent}</ErrorMessage>
-          </FormInput>
-          <FormInput>
-            <ImageInput sendImageList={setImageList} />
-          </FormInput>
-          <div style={{ textAlign: 'center', marginTop: '16px' }}>
-            <Button variant="contained" onClick={registReservation}>
-              등록
-            </Button>
+      {reservation !== null ? (
+        <FormBox>
+          <div>
+            <FormInput>
+              <TextField
+                label="예약업체"
+                variant="outlined"
+                required
+                margin="normal"
+                fullWidth
+                disabled
+                value={reservation.storeName || ''}
+              />
+            </FormInput>
+            <FormInput>
+              <TextField
+                label="예약일시"
+                variant="outlined"
+                required
+                margin="normal"
+                fullWidth
+                disabled
+                value={reservationTime}
+              />
+            </FormInput>
+            <FormInput>
+              <TextField
+                label="주소"
+                variant="outlined"
+                required
+                multiline
+                margin="normal"
+                fullWidth
+                disabled
+                value={`${location.address} ${location.detail}`}
+              />
+            </FormInput>
+            <FormInput style={{ marginTop: '16px' }}>
+              <TextField
+                label="제목"
+                variant="outlined"
+                required
+                fullWidth
+                onChange={changeFormTitle}
+                value={formTitle}
+              />
+              <ErrorMessage>{msgForTitle}</ErrorMessage>
+            </FormInput>
+            <FormInput style={{ marginTop: '4px' }}>
+              <TextField
+                label="내용"
+                variant="outlined"
+                required
+                fullWidth
+                multiline
+                maxRows={4}
+                onChange={changeFormContent}
+                value={formContent}
+              />
+              <ErrorMessage>{msgForContent}</ErrorMessage>
+            </FormInput>
+            <FormInput>
+              <ImageInput sendImageList={setImageList} />
+            </FormInput>
+            <SubmitButton>
+              <Button variant="contained" onClick={registReservation}>
+                등록
+              </Button>
+            </SubmitButton>
           </div>
-        </div>
-      </FormBox>
+        </FormBox>
+      ) : null}
     </div>
   );
 }
@@ -253,5 +274,10 @@ const ErrorMessage = styled.div`
 
 const FormInput = styled.div`
   max-width: 400px;
-  width: 100vw;
+  width: 90vw;
+`;
+
+const SubmitButton = styled.div`
+  textalign: center;
+  margin-top: 16px;
 `;

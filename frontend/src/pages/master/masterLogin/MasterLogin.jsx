@@ -5,7 +5,7 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { authState, accessToken } from '../../../atom';
+import { authState, accessToken, userIdx } from '../../../atom';
 import { master } from '../../../api/accountsApi';
 import WebGyver from '../../../assets/image/WebGyver.png';
 
@@ -20,6 +20,7 @@ export default function MasterLogin() {
   const navigate = useNavigate();
   const setAuth = useSetRecoilState(authState);
   const setAccessToken = useSetRecoilState(accessToken);
+  const setUserIdx = useSetRecoilState(userIdx);
   const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
     nullIdError: false,
@@ -32,7 +33,7 @@ export default function MasterLogin() {
     });
   };
   // 제출 시 id/pw 빈 칸이 아닌지 검증
-  const submit = () => {
+  const submit = async () => {
     if (data?.id === '') {
       setErrors({
         nullIdError: true,
@@ -48,17 +49,27 @@ export default function MasterLogin() {
         nullIdError: false,
         nullPasswordError: false,
       });
-      const response = master.login(data);
-      console.log(data.id, data.password);
-      if (response.statusCode === 200) {
-        // 리코일persist 상태 변경
-        setAccessToken(response.data.accessToken);
-        setAuth('customer');
+      try {
+        const response = await master.login(data);
+        if (response.statusCode === 200) {
+          // 리코일persist 상태 변경
+          setAccessToken(response.data['access-token']);
+          setUserIdx(response.data.sellerIdx);
+          setAuth('master');
+          navigate('/master/schedule');
+        } else {
+          alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+        }
+      } catch (error) {
+        alert('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
     }
-    // console.log(errors);
   };
-
+  const handleOnKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      submit();
+    }
+  };
   const routeSignup = () => {
     navigate('/master/signup');
   };
@@ -94,6 +105,7 @@ export default function MasterLogin() {
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
+              onKeyPress={handleOnKeyPress}
             />
             {errors.nullPasswordError && <ErrDiv>비밀번호를 입력하세요</ErrDiv>}
             {/* <NullBox /> */}

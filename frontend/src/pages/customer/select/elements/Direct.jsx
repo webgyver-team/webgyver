@@ -27,7 +27,7 @@ export default function Direct() {
       <BtnBox>
         <div>
           <p>지금 상담 가능한</p>
-          <p>전문가와 연결해</p>
+          <p>전문가와 연결해 드려요</p>
         </div>
         <BtnPosition>
           <Btn onClick={routeDirect}>
@@ -98,5 +98,5 @@ const InfoBox = styled.div`
   display: flex;
   justify-content: center;
   border-radius: 20px;
-  padding: 48px;
+  padding: 40px;
 `;

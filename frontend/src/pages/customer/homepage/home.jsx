@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-// import { useRecoilState } from 'recoil';
-// import { categoryState } from '../../atom';
 import CircularProgress from '@mui/material/CircularProgress';
 import { useNavigate } from 'react-router-dom';
 import CategoryLine from './elements/categoryline';
@@ -9,19 +7,18 @@ import MainImage from '../../../assets/image/MainImage.png';
 
 export default function Home() {
   const navigate = useNavigate();
-  const [loadding, setLodding] = useState(true);
-  // const category = useRecoilState(categoryState);
+  const [loading, setLoading] = useState(true);
   useEffect(() => {
     setTimeout(() => {
-      setLodding(false);
+      setLoading(false);
     }, 500);
   }, []);
 
-  if (loadding) {
+  if (loading) {
     return (
-      <LoaddingBox>
+      <LoadingBox>
         <CircularProgress />
-      </LoaddingBox>
+      </LoadingBox>
     );
   }
   const routeMasterLogin = () => navigate('/master/login');
@@ -40,7 +37,7 @@ export default function Home() {
         <NullBox />
       </CategoryBox>
       <LoginLinkBox>
-        <Titlediv onClick={routeMasterLogin}>전문가 로그인 링크</Titlediv>
+        <Titlediv onClick={routeMasterLogin}>전문가 페이지 바로가기</Titlediv>
       </LoginLinkBox>
     </Main>
   );
@@ -51,7 +48,7 @@ const Main = styled.div`
   background-color: ${(props) => props.theme.color.defaultsubBgColor};
 `;
 
-const LoaddingBox = styled.div`
+const LoadingBox = styled.div`
   height: 100vw;
   display: flex;
   justify-content: center;
@@ -61,6 +58,7 @@ const LoaddingBox = styled.div`
 const CategoryBox = styled.div`
   border-radius: 20px 20px 0 0;
   background-color: ${(props) => props.theme.color.defaultBgColor};
+  padding-top: 16px;
 `;
 
 const IntroductionBox = styled.div`
@@ -90,7 +88,7 @@ const NullBox = styled.div`
 `;
 
 const LoginLinkBox = styled.div`
-  height: 64px;
+  height: 56px;
   display: flex;
   justify-content: center;
   align-items: center;

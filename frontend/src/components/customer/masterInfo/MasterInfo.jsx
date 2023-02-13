@@ -1,18 +1,18 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { useRecoilState } from 'recoil';
 import PropTypes from 'prop-types';
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
-import Typography from '@mui/material/Typography';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import CloseIcon from '@mui/icons-material/Close';
 import Info from './elements/Info';
 import Review from './elements/Review';
 import Example from './elements/Example';
-import { masterInfoModalState } from '../../../atom';
+import { masterInfoModalState, masterInfoModalIdxState } from '../../../atom';
+import { customer } from '../../../api/customerService';
 
 const modalStyle = {
   position: 'absolute',
@@ -42,7 +42,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 0 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -65,13 +65,38 @@ function a11yProps(index) {
 
 export default function MasterInfo() {
   const [modalState, setmodalState] = useRecoilState(masterInfoModalState);
-  const closeMasterInfoState = () => setmodalState(false);
+  const [modalIdxState, setModalIdxState] = useRecoilState(
+    masterInfoModalIdxState,
+  ); // modal 내 마스터의 idx
+  const [value, setValue] = useState(0);
 
-  const [value, setValue] = React.useState(0);
+  const closeMasterInfoState = () => {
+    setModalIdxState(null);
+    setmodalState(false);
+    setValue(0);
+  };
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
+  const [info, setInfo] = useState(null);
+  const [review, setReview] = useState(null);
+  const [example, setExample] = useState(null);
+  useEffect(() => {
+    if (modalIdxState === null) return;
+    const getMasterInfo = async () => {
+      const responseInfo = await customer.get.masterInfo(modalIdxState);
+      setInfo(responseInfo.data.profile);
+
+      const responseExample = await customer.get.masterHistory(modalIdxState);
+      setExample(responseExample.data.historyList.reverse());
+
+      const responseReview = await customer.get.masterReview(modalIdxState);
+      console.log(responseReview.data.reviews);
+      setReview(responseReview.data.reviews);
+    };
+    getMasterInfo();
+  }, [modalIdxState]);
 
   return (
     <div>
@@ -115,13 +140,13 @@ export default function MasterInfo() {
               </Tabs>
             </Box>
             <TabPanel value={value} index={0}>
-              <Info />
+              <Info props={info} />
             </TabPanel>
             <TabPanel value={value} index={1}>
-              <Review />
+              <Review props={review} />
             </TabPanel>
             <TabPanel value={value} index={2}>
-              <Example />
+              <Example props={example} />
             </TabPanel>
           </Box>
         </CustomBox>
@@ -141,6 +166,8 @@ const CloseBtn = styled(CloseIcon)`
 `;
 
 const CustomBox = styled(Box)`
+  max-height: 85vh;
+
   // 넘치면 스크롤
   overflow-y: scroll;
 

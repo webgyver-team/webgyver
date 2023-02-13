@@ -18,7 +18,7 @@ import ReservationForm from './pages/customer/reservation/ReservationForm';
 import Match from './pages/customer/match/Match';
 import MatchForm from './pages/customer/match/MatchForm';
 import MasterInfo from './components/customer/masterInfo/MasterInfo';
-import UsageHistory from './pages/customer/usagehistoy/UsageHistory';
+import UsageHistory from './pages/customer/usagehistory/UsageHistory';
 import MyPage from './pages/customer/mypage/MyPage';
 import MyPageUpdate from './pages/customer/mypage/MyPageUpdate';
 import VideoService from './pages/customer/videoservice/VideoService';
@@ -27,49 +27,74 @@ import ReviewForm from './pages/customer/reviewfrom/ReviewForm';
 import MasterLogin from './pages/master/masterLogin/MasterLogin';
 import MasterMyPageUpdate from './pages/master/mypage/MyPageUpdate';
 import MasterNavBar from './components/master/navbar/MasterNavBar';
-import PrivateRoute from './components/common/privateroute/PrivateRoute';
 import MasterVideoService from './pages/master/mastervideoservice/MasterVideoService';
 import MasterEndService from './pages/master/masterendservice/MasterEndService';
 import MasterSchedule from './pages/master/masterschedule/MasterSchedule';
 import MasterRealtime from './pages/master/masterRealtime/MasterRealtime';
 import MasterReview from './pages/master/masterReview/MasterReview';
 import MasterExample from './pages/master/masterExample/MasterExample';
-import MasterMypage from './pages/master/Mypage/Mypage';
+import MasterMypage from './pages/master/mypage/Mypage';
+import MasterHistory from './pages/master/history/History';
+import TimePicker from './components/master/reservationTime/TimePicker';
+// 라우트 가드용
+import PrivateRoute from './components/common/privateroute/PrivateRoute';
+import PrivateRouteMaster from './components/common/privateroute/PrivateRouteMaster';
 import { authState } from './atom';
 
 // 네브바가 없어도 되는 url
-const notNavList = ['/videoservice', '/master/login'];
+const notNavList = [
+  '/videoservice',
+  '/master/login',
+  '/master/videoservice',
+  '/master/signup',
+];
 
 function App() {
   const [auth] = useRecoilState(authState);
   // const [url, setUrl] = useState(''); // 현재 url
-  const [onNav, setOnNav] = useState(true);
+  const [isNav, setIsNav] = useState(true);
   // 마스터 url에 위치하는지 판단
   const [onMaster, setOnMaster] = useState(false);
   const location = useLocation();
   useEffect(() => {
     // setUrl(location.pathname);
-    notNavList.includes(location.pathname) ? setOnNav(false) : setOnNav(true);
+    notNavList.includes(location.pathname) ? setIsNav(false) : setIsNav(true);
     location.pathname.includes('/master')
       ? setOnMaster(true)
       : setOnMaster(false);
   }, [location]);
+
+  // 모바일 100vh 맞추는 로직
+  function setScreenSize() {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }
+  useEffect(() => {
+    setScreenSize();
+    window.addEventListener('resize', setScreenSize);
+  });
+
   return (
     <>
       {/* styled-component에서 제공하는 ThemeProvider, 하위 모든 컴포넌트에 대해서 해당 프롭스를 전부 전달 한다. */}
       <ThemeProvider theme={normal}>
         <All>
           <Main>
-            {onNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
-            <LoginModal />
-            <MasterInfo />
+            {isNav && (onMaster ? <MasterNavBar /> : <CustomerNavBar />)}
+            {isNav && !onMaster && <LoginModal />}
+            {isNav && !onMaster && <MasterInfo />}
             <LocateModal />
-            <Page isMaster={onMaster}>
+            {isNav && onMaster && <TimePicker />}
+            <Page isMaster={onMaster} isNav={isNav}>
               <Routes>
                 <Route path="/" element={<Home />} />
                 <Route path="/signup" element={<CustomerSignUp />} />
                 <Route path="/select" element={<Select />} />
                 <Route path="/reservation" element={<Reservation />} />
+                <Route path="/master/login" element={<MasterLogin />} />
+                <Route path="/master/signup" element={<MasterSignUp />} />
+                {/* 아래부터 로그인 유저만 접근 가능 */}
+                {/* 일반 고객 URL */}
                 <Route
                   path="/reservation/form"
                   element={
@@ -79,32 +104,169 @@ function App() {
                     />
                   }
                 />
-                <Route path="/match" element={<Match />} />
-                <Route path="/match/form" element={<MatchForm />} />
-                <Route path="/sellerinfo" element={<MasterInfo />} />
-                <Route path="/usagehistory" element={<UsageHistory />} />
-                <Route path="/mypage" element={<MyPage />} />
-                <Route path="/videoservice" element={<VideoService />} />
                 <Route
-                  path="/master/videoservice"
-                  element={<MasterVideoService />}
+                  path="/match"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<Match />}
+                    />
+                  }
                 />
-                <Route path="/mypage/update" element={<MyPageUpdate />} />
-                <Route path="/endservice" element={<EndService />} />
+                <Route
+                  path="/match/form"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<MatchForm />}
+                    />
+                  }
+                />
+                <Route
+                  path="/usagehistory"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<UsageHistory />}
+                    />
+                  }
+                />
+                <Route
+                  path="/mypage"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<MyPage />}
+                    />
+                  }
+                />
+                <Route
+                  path="/videoservice"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<VideoService />}
+                    />
+                  }
+                />
+                <Route
+                  path="/mypage/update"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<MyPageUpdate />}
+                    />
+                  }
+                />
+                <Route
+                  path="/reviewform"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<ReviewForm />}
+                    />
+                  }
+                />
+                <Route
+                  path="/reviewform/:rIdx"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<ReviewForm />}
+                    />
+                  }
+                />
+                <Route
+                  path="/endservice"
+                  element={
+                    <PrivateRoute
+                      authenticated={auth}
+                      component={<EndService />}
+                    />
+                  }
+                />
+                {/* 마스터 URL */}
                 <Route
                   path="/master/endservice"
-                  element={<MasterEndService />}
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterEndService />}
+                    />
+                  }
                 />
-                <Route path="/reviewform" element={<ReviewForm />} />
-                <Route path="/master/login" element={<MasterLogin />} />
-                <Route path="/master/schedule" element={<MasterSchedule />} />
-                <Route path="/master/realtime" element={<MasterRealtime />} />
-                <Route path="/master/review" element={<MasterReview />} />
-                <Route path="/master/example" element={<MasterExample />} />
-                <Route path="/master/mypage" element={<MasterMypage />} />
-                <Route path="/master/signup" element={<MasterSignUp />} />
-                <Route path="/master/mypage/update" element={<MasterMyPageUpdate />} />
-
+                <Route
+                  path="/master/schedule"
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterSchedule />}
+                    />
+                  }
+                />
+                <Route
+                  path="/master/videoservice"
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterVideoService />}
+                    />
+                  }
+                />
+                <Route
+                  path="/master/realtime"
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterRealtime />}
+                    />
+                  }
+                />
+                <Route
+                  path="/master/review"
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterReview />}
+                    />
+                  }
+                />
+                <Route
+                  path="/master/example"
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterExample />}
+                    />
+                  }
+                />
+                <Route
+                  path="/master/mypage"
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterMypage />}
+                    />
+                  }
+                />
+                <Route
+                  path="/master/mypage/update"
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterMyPageUpdate />}
+                    />
+                  }
+                />
+                <Route
+                  path="/master/history"
+                  element={
+                    <PrivateRouteMaster
+                      authenticated={auth}
+                      component={<MasterHistory />}
+                    />
+                  }
+                />
                 <Route path="*" element={<div>404</div>} />
               </Routes>
             </Page>
@@ -119,7 +281,6 @@ export default App;
 
 const All = styled.div`
   width: 100vw;
-  // min-height: 800px;
   display: flex;
   justify-content: center;
 `;
@@ -134,11 +295,23 @@ const Page = styled.div`
   width: 100vw;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   color: ${(props) => props.theme.color.defaultColor};
   background-size: 6px 6px;
   font-family: 'Roboto';
   font-size: 32px;
-  // overflow-y: scroll;
+  // height: 'calc(var(--vh,1vh) * 100)');
+  // eslint-disable-next-line prettier/prettier
+  height: ${(props) => (props.isNav
+    ? 'calc(var(--vh,1vh) * 100 - 64px)'
+    : 'calc(var(--vh,1vh) * 100)')};
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: ${(props) => props.theme.color.defaultWhite};
+
+  @media screen and (max-width: 600px) {
+    height: ${(props) => (props.isNav
+    ? 'calc(var(--vh,1vh) * 100 - 56px)'
+    : 'calc(var(--vh,1vh) * 100)')};
+  }
 `;

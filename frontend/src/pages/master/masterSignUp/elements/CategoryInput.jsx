@@ -1,3 +1,5 @@
+/* eslint-disable react/no-array-index-key */
+/* eslint-disable prettier/prettier */
 import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import IconButton from '@mui/material/IconButton';
@@ -12,6 +14,7 @@ export default function CategoryInput({ updateData, initialList }) {
   );
   useEffect(() => {
     for (let i = 0; i < categoryItemList.length; i += 1) {
+      categoryItemList[i].index = i + 1;
       categorySelected[categoryItemList[i].category.idx] = true;
     }
   }, [categoryItemList, categorySelected]);
@@ -76,18 +79,19 @@ export default function CategoryInput({ updateData, initialList }) {
       <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>카데고리 등록</h2>
       <Message msg={msg} />
       <CategoryItemListDiv>
-        {categoryItemList.map((item) => (
-          <CategoryInputItem
-            categoryItem={item}
-            changeCategoryItem={changeCategoryItem}
-            deleteCategoryItem={deleteCategoryItem}
-            categorySelected={categorySelected}
-            setCategorySelected={setCategorySelected}
-            changeMsg={changeMsg}
-            index={item.index}
-            key={item.index}
-          />
-        ))}
+        {categoryItemList
+          && categoryItemList.map((item) => (
+            <CategoryInputItem
+              categoryItem={item}
+              changeCategoryItem={changeCategoryItem}
+              deleteCategoryItem={deleteCategoryItem}
+              categorySelected={categorySelected}
+              setCategorySelected={setCategorySelected}
+              changeMsg={changeMsg}
+              index={item.index}
+              key={item.index}
+            />
+          ))}
       </CategoryItemListDiv>
       <div style={{ textAlign: 'center' }}>
         <IconButton

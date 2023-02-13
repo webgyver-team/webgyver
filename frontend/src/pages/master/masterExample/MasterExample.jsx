@@ -1,39 +1,59 @@
-import React, { useState } from 'react';
+/* eslint-disable operator-linebreak */
+/* eslint-disable react/no-array-index-key */
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-import { useSetRecoilState } from 'recoil';
-import { exampleFormState } from '../../../atom';
-import ReviewImg1 from '../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../assets/image/review3.jpg';
+import { useSetRecoilState, useRecoilValue } from 'recoil';
+import { exampleFormState, userIdx } from '../../../atom';
 import Example from './elements/Example';
 import Form from './elements/Form';
+import Edit from './elements/Edit';
+import { master } from '../../../api/masterService';
 
-export default function MasterSchedule() {
-  const setModalOpen = useSetRecoilState(exampleFormState);
-  const modalOpen = () => {
-    setModalOpen(true);
+export default function MasterExample() {
+  // 사례 작성 모달창 켜기
+  const setexampleFormOpen = useSetRecoilState(exampleFormState);
+  const formModalOpen = () => {
+    setexampleFormOpen(true);
   };
 
-  const [historys] = useState([
-    {
-      content:
-        '물이 아니라 불이 나오는 고객님이 계셨습니다. 다행스럽게도 큰일나기 전에, 전화상담을 통해서 연결된 밸브를 제거하고 온수로 재연결하셨습니다.',
-      images: [ReviewImg1, ReviewImg2, ReviewImg3],
-    },
-  ]);
+  // 새 글 작성시 리로드
+  const [reload, setReload] = useState(false);
 
-  // const NoData = <NoDataBox>아직 사례가 없습니다.</NoDataBox>;
+  const NoData = <NoDataBox>아직 사례가 없습니다.</NoDataBox>;
+
+  // 로드데이타
+  const [exampleList, setExampleList] = useState([]);
+  const userId = useRecoilValue(userIdx);
+  // console.log('id', userId);
+  useEffect(() => {
+    const loadExampleList = async () => {
+      const response = await master.get.example(userId);
+      setExampleList(response.data.historyList.reverse());
+    };
+    // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야
+    // eslint-disable-next-line
+    loadExampleList();
+    setReload(false);
+  }, [userId, reload]);
 
   return (
     <Main>
-      <Form />
-      <BtnBox>
-        <StateBtn onClick={modalOpen}>
-          <span>작성하기</span>
-        </StateBtn>
-      </BtnBox>
+      <Edit setReload={setReload} />
+      <Form setReload={setReload} />
+      <Titlebox>
+        <Text>수리 사례</Text>
+        <BtnBox>
+          <StateBtn onClick={formModalOpen}>
+            <span>작성하기</span>
+          </StateBtn>
+        </BtnBox>
+      </Titlebox>
       <TableBox>
-        <Example history={historys[0]} />
+        {!exampleList.length && NoData}
+        {exampleList &&
+          exampleList.map((el, i) => (
+            <Example key={i} example={el} setReload={setReload} />
+          ))}
       </TableBox>
     </Main>
   );
@@ -42,6 +62,16 @@ export default function MasterSchedule() {
 const Main = styled.div`
   witdh: 100%;
   margin: 16px;
+`;
+
+const Titlebox = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const Text = styled.p`
+  font-size: 16px;
+  font-weight: bold;
 `;
 
 const TableBox = styled.div`
@@ -71,7 +101,9 @@ const StateBtn = styled.div`
   cursor: pointer;
 `;
 
-// const NoDataBox = styled.div`
-//   text-align: center;
-//   font-size: 24px;
-// `;
+const NoDataBox = styled.div`
+  text-align: center;
+  font-size: 24px;
+  min-width: 70vw;
+  margin: 16px;
+`;

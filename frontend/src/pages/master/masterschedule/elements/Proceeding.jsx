@@ -1,12 +1,16 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
+// import { useSetRecoilState } from 'recoil';
+import { useSetRecoilState, useRecoilState } from 'recoil';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import { useNavigate } from 'react-router-dom';
+// import { matchFormState } from '../../../../atom';
+import { reservationIdxState, matchFormState } from '../../../../atom';
 
-export default function Proceeding({ history }) {
+export default function Proceeding({ proceeding }) {
   const navigate = useNavigate();
   const slickSettings = {
     dots: false,
@@ -16,35 +20,53 @@ export default function Proceeding({ history }) {
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+  const setReservationIdxState = useSetRecoilState(reservationIdxState);
+  const [ReservationData, setReservationData] = useRecoilState(matchFormState);
 
   const [isShowMore, setIsShowMore] = useState(false);
-  const shortComment = history.content.slice(0, 60);
+  const shortComment = proceeding.content.slice(0, 60);
+  // const setMatchForm = useSetRecoilState(matchFormState);
   const onChangeShowMore = () => {
     setIsShowMore(!isShowMore);
   };
 
   const currentState = ['입장하기'];
-  const routeVideoService = () => navigate('/master/videoservice');
+  const routeVideoService = () => {
+    setReservationIdxState(proceeding.reservationIdx);
+    setReservationData((original) => ({
+      ...original,
+      title: ReservationData.title,
+      content: ReservationData.content,
+      images: ReservationData.images,
+    }));
+    navigate('/master/videoservice');
+  };
 
   return (
     <Card>
       <ContentBox>
         <div>
+          {!proceeding.pictureList.length && <NoImgBox />}
           <SliderBox>
             <Slider {...slickSettings}>
-              {history.images.map((el) => (
+              {proceeding.pictureList.map((el) => (
                 <ImgBox key={el}>
-                  <img src={el} alt="" />
+                  <img
+                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                    alt=""
+                  />
                 </ImgBox>
               ))}
             </Slider>
           </SliderBox>
         </div>
         <div className="contentdiv">
-          <p className="title">{history.title}</p>
-          <p className="date">{`일시: ${history.date}`}</p>
+          <p className="title">{proceeding.title}</p>
+          <p className="date">
+            {`일시: ${proceeding.reservationTime.substr(0, 16)}`}
+          </p>
           <span className="content">
-            {isShowMore ? history.content : shortComment}
+            {isShowMore ? proceeding.content : shortComment}
           </span>
           <MoreBtn type="button" onClick={onChangeShowMore}>
             {isShowMore ? '[닫기]' : '[더보기]'}
@@ -158,4 +180,11 @@ const StateBtn = styled.div`
     cursor: pointer;
     background-color: ${(props) => props.theme.color.dafaultBorder};
   }
+`;
+
+const NoImgBox = styled.div`
+  width: 128px;
+  height: 120px;
+  border: 1px solid ${(props) => props.theme.color.dafaultBorder};
+  margin: 0 4px 8px 4px;
 `;

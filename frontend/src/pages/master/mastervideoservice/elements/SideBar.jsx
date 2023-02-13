@@ -5,11 +5,8 @@ import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import ReviewImg1 from '../../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../../assets/image/review3.jpg';
 
-export default function SideBar() {
+export default function SideBar({ reservationData }) {
   const [sideBarOpen, setSideBarOpen] = useState(false);
 
   const handleDrawerToggle = () => {
@@ -17,12 +14,10 @@ export default function SideBar() {
   };
   const [history] = useState([
     {
-      title: '뜨거운 물이 나오지 않는 건에 대하여',
-      content:
-        '수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!수도꼭지에서 물이 아니라 불까지 나옵니다 어떻게 하죠?!!!',
+      title: reservationData.title,
+      content: reservationData.content,
       date: '01월 28일 09:00',
-      images: [ReviewImg1, ReviewImg2, ReviewImg3],
-      company: '수리Ssap고수Shop',
+      images: reservationData.images,
     },
   ]);
 
@@ -39,17 +34,22 @@ export default function SideBar() {
     <Main>
       {sideBarOpen && (
         <ContentBox>
-          <SdBox>
-            <SliderBox>
-              <Slider {...slickSettings}>
-                {history[0].images.map((el) => (
-                  <ImgBox key={el}>
-                    <img src={el} alt="" />
-                  </ImgBox>
-                ))}
-              </Slider>
-            </SliderBox>
-          </SdBox>
+          <InnerBox>
+            <SdBox>
+              <SliderBox>
+                <Slider {...slickSettings}>
+                  {history[0].images.map((el) => (
+                    <ImgBox key={el}>
+                      <img
+                        src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                        alt=""
+                      />
+                    </ImgBox>
+                  ))}
+                </Slider>
+              </SliderBox>
+            </SdBox>
+          </InnerBox>
           <Title>{history[0].title}</Title>
           <Content>{history[0].content}</Content>
         </ContentBox>
@@ -63,8 +63,20 @@ export default function SideBar() {
 const Main = styled.div`
   display: flex;
   justify-content: flex-start;
-  min-height: 400px;
-  max-width: 300px;
+  min-height: 440px;
+  max-width: 380px;
+
+  .slick-prev:before {
+    color: gray;
+  }
+
+  .slick-next:before {
+    color: gray;
+  }
+`;
+
+const InnerBox = styled.div`
+  padding: 16px;
 `;
 
 const OpenToggle = styled.div`
@@ -94,12 +106,12 @@ const SdBox = styled.div`
 `;
 
 const SliderBox = styled.div`
-  width: 20vw;
+  width: 280px;
 `;
 
 const ImgBox = styled.div`
   position: relative;
-  height: 16vw;
+  height: 160px;
 
   img {
     position: absolute;

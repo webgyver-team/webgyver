@@ -1,30 +1,56 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import ReviewImg1 from '../../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../../assets/image/review3.jpg';
+import { useNavigate } from 'react-router-dom';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { customer } from '../../../../api/customerService';
+import { userIdx, loginOpenState } from '../../../../atom';
+import LoadingSpinner from '../../../common/LoadingSpinner';
 
 export default function ReviewHistory() {
-  const [reviews] = useState([
-    {
-      title: '뜨거운 물이 나오지 않는 건에 대하여',
-      content:
-        '물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다! 물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다!',
-      date: '01월 28일 09:00',
-      images: [ReviewImg1, ReviewImg2, ReviewImg3],
-      score: 3.0,
-    },
-  ]);
-
+  const customerIdx = useRecoilValue(userIdx);
+  const setLoginOpenState = useSetRecoilState(loginOpenState);
+  const [reviews, setReviews] = useState(null);
+  const [reload, setReload] = useState(true);
+  useEffect(() => {
+    if (!reload) return;
+    if (customerIdx === null) {
+      alert('로그인이 필요합니다.');
+      setLoginOpenState(true);
+      return;
+    }
+    const getReviews = async () => {
+      const response = await customer.get.reviews(customerIdx);
+      if (response.statusCode === 200) {
+        setReviews(response.data.reviews);
+      } else {
+        // eslint-disable-next-line
+        alert(response.message);
+      }
+    };
+    getReviews();
+    setReload(false);
+  }, [customerIdx, reload, setLoginOpenState]);
   return (
     <Main>
-      <CardView review={reviews[0]} />
-      <CardView review={reviews[0]} />
+      {reviews === null ? <LoadingSpinner /> : null}
+      {/* eslint-disable-next-line */}
+      {reviews &&
+        reviews.map((review) => (
+          <CardView
+            key={review.reviewIdx}
+            review={review}
+            setReload={setReload}
+          />
+        ))}
+      {reviews && reviews.length === 0 ? (
+        <NoReviewMessage>리뷰 내역이 없습니다.</NoReviewMessage>
+      ) : null}
     </Main>
   );
 }
@@ -33,27 +59,57 @@ const Main = styled.div`
   width: 100%;
 `;
 
-export function CardView({ review }) {
+export function CardView({ review, setReload }) {
   const slickSettings = {
     dots: false,
     arrows: false,
-    infinite: true,
+    infinite: false,
     speed: 500,
     slidesToShow: 2,
     slidesToScroll: 1,
+  };
+  const navigate = useNavigate();
+  const deleteReview = async () => {
+    // eslint-disable-next-line
+    if (confirm('리뷰를 삭제하시겠습니까?')) {
+      const response = await customer.delete.review(review.reviewIdx);
+      if (response.statusCode === 200) {
+        // eslint-disable-next-line
+        alert('리뷰가 삭제되었습니다.');
+        setReload(true);
+      } else {
+        // eslint-disable-next-line
+        alert(response.message);
+      }
+    }
+  };
+  const editReview = (rIdx) => {
+    navigate(`/reviewForm/${rIdx}`);
   };
 
   return (
     <Card>
       <TitleBox>
         <p className="title">{review.title}</p>
-        <EditIcon />
+        <div
+          style={{
+            width: '60px',
+            display: 'flex',
+            justifyContent: 'space-between',
+          }}
+        >
+          <EditIcon onClick={() => editReview(review.reviewIdx)} />
+          <DeleteIcon onClick={deleteReview} />
+        </div>
       </TitleBox>
-      <p className="score">{`평점 : ${review.score}`}</p>
+      <p className="score">{`평점 : ${review.rating}`}</p>
       <Slider {...slickSettings}>
-        {review.images.map((el) => (
-          <ImgBox>
-            <img src={el} alt="" />
+        {review.images.map((image) => (
+          <ImgBox key={image.saveName}>
+            <img
+              src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${image.saveName}`}
+              alt=""
+            />
           </ImgBox>
         ))}
       </Slider>
@@ -117,4 +173,13 @@ const ImgBox = styled.div`
     object-fit: cover;
     border-radius: 5px;
   }
+`;
+
+const NoReviewMessage = styled.p`
+  position: absolute;
+  top: 55%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-weight: bold;
+  font-size: 18px;
 `;

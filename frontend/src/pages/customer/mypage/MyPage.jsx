@@ -5,14 +5,12 @@ import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
-import Typography from '@mui/material/Typography';
 import Box from '@mui/material/Box';
 import MyInfo from './element/MyInfo';
 import ReviewHistory from './element/ReviewHistory';
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
-
   return (
     <div
       role="tabpanel"
@@ -23,7 +21,7 @@ function TabPanel(props) {
     >
       {value === index && (
         <Box sx={{ p: 0 }}>
-          <Typography>{children}</Typography>
+          <div>{children}</div>
         </Box>
       )}
     </div>
@@ -63,7 +61,14 @@ export default function BasicTabs() {
         >
           <Tab
             disableRipple
-            label={<CustomTab className="classes.tabLabel">내 정보</CustomTab>}
+            label={
+              <CustomTab
+                style={value === 0 ? { fontWeight: 'bold' } : {}}
+                className="classes.tabLabel"
+              >
+                내 정보
+              </CustomTab>
+            }
             {...a11yProps(0)}
           />
           <BarBox>
@@ -71,7 +76,14 @@ export default function BasicTabs() {
           </BarBox>
           <Tab
             disableRipple
-            label={<CustomTab className="classes.tabLabel">후ㅤ기</CustomTab>}
+            label={
+              <CustomTab
+                style={value === 2 ? { fontWeight: 'bold' } : {}}
+                className="classes.tabLabel"
+              >
+                내 리뷰
+              </CustomTab>
+            }
             {...a11yProps(2)}
           />
         </Tabs>
@@ -115,5 +127,4 @@ const VerticalBar = styled.div`
 const CustomTab = styled.span`
   color: ${(props) => props.theme.color.defaultColor};
   font-size: 16px;
-  font-weight: bold;
 `;

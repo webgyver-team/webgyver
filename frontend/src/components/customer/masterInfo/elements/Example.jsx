@@ -1,18 +1,28 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import React from 'react';
+import React, { useState, useLayoutEffect } from 'react';
 import styled from 'styled-components';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
-import ReviewImg1 from '../../../../assets/image/review1.jpg';
-import ReviewImg2 from '../../../../assets/image/review2.jpg';
-import ReviewImg3 from '../../../../assets/image/review3.jpg';
+import WhiteImg from '../../../../assets/image/white.png';
 
-export default function Example() {
+export default function Example(props) {
+  const [data, setData] = useState(props);
+  useLayoutEffect(() => {
+    setData(props);
+  }, [props]);
+
   return (
     <Main>
-      <CardView />
-      <CardView />
+      {/* eslint-disable-next-line */}
+      {data.props && data.props.length === 0 ? (
+        <NoExample>등록된 수리사례가 없습니다.</NoExample>
+      ) : null}
+      {/* eslint-disable-next-line */}
+      {data.props &&
+        data.props.map((history) => (
+          <CardView key={history.articleIdx} history={history} />
+        ))}
     </Main>
   );
 }
@@ -21,7 +31,7 @@ const Main = styled.div`
   width: 100%;
 `;
 
-function CardView() {
+function CardView({ history }) {
   const slickSettings = {
     dots: false,
     infinite: false,
@@ -29,24 +39,28 @@ function CardView() {
     slidesToShow: 2,
     slidesToScroll: 1,
   };
-
   return (
     <Card>
       <Slider {...slickSettings}>
-        <ImgBox>
-          <img src={ReviewImg1} alt="" />
-        </ImgBox>
-        <ImgBox>
-          <img src={ReviewImg2} alt="" />
-        </ImgBox>
-        <ImgBox>
-          <img src={ReviewImg3} alt="" />
-        </ImgBox>
+        {history && history.images.length === 0 ? (
+          <ImgBox>
+            <img src={WhiteImg} alt="default" />
+          </ImgBox>
+        ) : (
+          history.images.map((image) => (
+            // eslint-disable-next-line
+            <ImgBox key={image.saveName}>
+              <img
+                src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${image.saveName}`}
+                alt={image.originName}
+              />
+            </ImgBox>
+            // eslint-disable-next-line
+          ))
+        )}
       </Slider>
-      <p>
-        물이 아니라 불이 나오는 고객님이 계셨습니다. 다행스럽게도 큰일나기 전에,
-        전화상담을 통해서 연결된 밸브를 제거하고 온수로 재연결하셨습니다.
-      </p>
+      <p>{history && history.content}</p>
+      <EndBar />
     </Card>
   );
 }
@@ -70,7 +84,8 @@ const Card = styled.div`
 const ImgBox = styled.div`
   position: relative;
   // width: 100px;
-  height: 120px;
+  height: 140px;
+  margin-bottom: 8px;
 
   img {
     position: absolute;
@@ -82,4 +97,18 @@ const ImgBox = styled.div`
     object-fit: cover;
     border-radius: 5px;
   }
+`;
+
+const NoExample = styled.p`
+  font-size: 18px;
+  font-weight: bold;
+  // border: 1px solid black;
+  text-align: center;
+  margin-top: 30vh;
+`;
+
+const EndBar = styled.div`
+  margin: 24px 0 16px 0;
+  height: 0px;
+  border-bottom: 1px solid ${(props) => props.theme.color.dafaultBorder};
 `;

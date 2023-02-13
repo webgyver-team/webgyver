@@ -7,9 +7,21 @@ import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import FormControlLabel from '@mui/material/FormControlLabel';
+import Checkbox from '@mui/material/Checkbox';
+import { useRecoilState } from 'recoil';
+import { userIdx } from '../../../../atom';
+import { master } from '../../../../api/masterService';
 
 // eslint-disable-next-line object-curly-newline
-export default function AlertDialog({ open, setOpen, hour, setHour }) {
+export default function AlertDialog({
+  open,
+  setOpen,
+  hour,
+  setHour,
+  setReload,
+}) {
+  const [masterIdx] = useRecoilState(userIdx);
   const [formContent, setFormContent] = useState([]);
   useEffect(() => {
     setFormContent(JSON.parse(JSON.stringify(hour)));
@@ -20,13 +32,21 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
     setOpen(false);
   };
 
-  const registInfo = () => {
+  const registInfo = async () => {
     const data = {
-      partenrIdx: null,
-      businessHour: formContent,
+      companyTime: formContent,
     };
-    // eslint-disable-next-line
-    console.log(data);
+    // console.log(data);
+    const response = await master.put.businessHour(data, masterIdx);
+    if (response.statusCode === 200) {
+      // eslint-disable-next-line no-alert
+      setReload(true);
+      // eslint-disable-next-line no-alert
+      alert('변경되었습니다.');
+    } else {
+      // eslint-disable-next-line no-alert
+      alert('오류가 발생했습니다.');
+    }
     handleClose();
   };
 
@@ -49,6 +69,17 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
       return temp;
     });
     setFormContent([...formContent]);
+  };
+
+  const changeHoliday = (idx) => {
+    // holiday
+    setFormContent((prevState) => {
+      const temp = prevState;
+      temp[idx].holiday = !temp[idx].holiday;
+      return temp;
+    });
+    setFormContent([...formContent]);
+    // console.log(formContent);
   };
 
   const update = () => {
@@ -90,6 +121,19 @@ export default function AlertDialog({ open, setOpen, hour, setHour }) {
                   sx={{ width: 150 }}
                   onChange={(e) => changeCloseTime(i, e.target.value)}
                 />
+                <CheckDiv>
+                  <FormControlLabel
+                    control={
+                      <Checkbox
+                        checked={el.holiday}
+                        onChange={() => {
+                          changeHoliday(i);
+                        }}
+                      />
+                    }
+                    label="휴무"
+                  />
+                </CheckDiv>
               </TimeBox>
             </div>
           ))}
@@ -117,4 +161,8 @@ const TimeBox = styled.div`
 
 const Day = styled.span`
   margin-right: 8px;
+`;
+
+const CheckDiv = styled.div`
+  margin-left: 8px;
 `;

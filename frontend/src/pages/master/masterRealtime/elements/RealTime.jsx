@@ -1,14 +1,11 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React, { useState } from 'react';
 import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 
-export default function RealTime({ data }) {
-  const navigate = useNavigate();
-  const routeVideoService = () => navigate('/master/videoservice');
+export default function RealTime({ data, acceptReservation }) {
   // 더보기 on/off
   const [isDetail, setIsDetail] = useState(false);
   const handleIsDetail = () => {
@@ -42,27 +39,32 @@ export default function RealTime({ data }) {
           </BtnBox>
         </div>
         {isDetail && (
-          <DetailBox>
-            <div>
-              <SliderBox>
-                <Slider {...slickSettings}>
-                  {data.images.map((el) => (
-                    <ImgBox key={el}>
-                      <img src={el} alt="" />
-                    </ImgBox>
-                  ))}
-                </Slider>
-              </SliderBox>
-            </div>
-            <div className="contentdiv">
-              <span className="content">{data.content}</span>
-            </div>
+          <div>
+            <DetailBox>
+              <div>
+                <SliderBox>
+                  <Slider {...slickSettings}>
+                    {data.images.map((el) => (
+                      <ImgBox key={el}>
+                        <img
+                          src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                          alt=""
+                        />
+                      </ImgBox>
+                    ))}
+                  </Slider>
+                </SliderBox>
+              </div>
+              <div className="contentdiv">
+                <span className="content">{data.content}</span>
+              </div>
+            </DetailBox>
             <BtnBox>
-              <AcceptBtn onClick={routeVideoService}>
+              <AcceptBtn onClick={() => acceptReservation(data.idx, data)}>
                 <span>{currentState[0]}</span>
               </AcceptBtn>
             </BtnBox>
-          </DetailBox>
+          </div>
         )}
       </ContentBox>
     </Card>
@@ -74,7 +76,9 @@ const Card = styled.div`
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 5px;
   margin: 8px;
-  width: 912px;
+  // width: 912px;
+  width: 80vw;
+  min-width: 600px;
 
   .header {
     display: flex;
@@ -126,7 +130,7 @@ const ContentBox = styled.div`
   width: 100%;
 
   .contentdiv {
-    min-width: 480px;
+    min-width: 280px;
     max-width: 640px;
     margin-right: 8px;
     margin-left: 8px;
@@ -151,7 +155,7 @@ const SliderBox = styled.div`
 const BtnBox = styled.div`
   width: auto;
   display: flex;
-  flex-direction: column-reverse;
+  flex-direction: row-reverse;
 `;
 
 const StateBtn = styled.div`

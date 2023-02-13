@@ -47,25 +47,18 @@ export default function PhoneNumberInput({
           setMsg(() => '첫번째 전화번호 입력은 010만 가능합니다.');
           return false;
         }
-        // 여기서는 다른 단계에 문제가 없는지 다시 체크...?
-        // checkMsg(phoneNumber2, 2);
-        // checkMsg(phoneNumber3, 3);
         break;
       case 2:
         if (value.trim().length > 0 && value.trim().length < 4) {
           setMsg(() => '두번째 전화번호 입력은 4자리 숫자만 가능합니다.');
           return false;
         }
-        // checkMsg(phoneNumber1, 1);
-        // checkMsg(phoneNumber3, 3);
         break;
       case 3:
         if (value.trim().length > 0 && value.trim().length < 4) {
           setMsg(() => '세번째 전화번호 입력은 4자리 숫자만 가능합니다.');
           return false;
         }
-        // checkMsg(phoneNumber1, 1);
-        // checkMsg(phoneNumber2, 2);
         break;
       default:
         break;
@@ -94,13 +87,12 @@ export default function PhoneNumberInput({
   };
 
   //   전화번호 유효성 검사
-  //   모두 숫자형태의 input이어야 함
-  //   1번 칸: 2자리~3자리 가능 | 010, 011, 지역번호 등 가능
-  //   2번 칸: 3자리~4자리 가능
-  //   3번 칸: 4자리만 가능
+  //   1번 칸: 2자리~3자리 숫자 가능 | 010, 011, 지역번호 등 가능
+  //   2번 칸: 3자리~4자리 숫자 가능
+  //   3번 칸: 4자리 숫자만 가능
   return (
     <div>
-      <InputDiv style={{ width: '100%' }}>
+      <InputDiv>
         <TextField
           label="전화번호"
           variant="outlined"

@@ -1,16 +1,25 @@
+/* eslint-disable no-undef */
+/* eslint-disable react-hooks/exhaustive-deps */
+/* eslint-disable prettier/prettier */
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
+import { userIdx, reservationIdxState } from '../../../atom';
 // import Button from '@mui/material/Button';
 
 export default function VideoService() {
   const navigate = useNavigate();
-  const myMainScreen = useRef(null);
-  const mySubScreen = useRef(null);
-  const peerFace = useRef(null);
-  const [mainScreenState, setMainScreenState] = useState('myScreen');
+  const customerIdx = useRecoilValue(userIdx);
+  const reservationIdx = useRecoilValue(reservationIdxState);
+  const mainVideo = useRef(null);
+  const subVideo = useRef(null);
+  const conn = useRef(null);
+  const myPeerConnection = useRef(null);
+  const [screenChange, setScreenChange] = useState(true);
+  const screenChange2 = useRef(true);
 
   // 화면 너비 가져오는 로직들
   const MainScreenRef = useRef(null);
@@ -50,108 +59,197 @@ export default function VideoService() {
   const routeEndService = () => {
     navigate('/endservice');
   };
+  const sendRequest = () => {
+    console.log(conn.current);
+    conn.current.send(JSON.stringify({ method: 'WANT_MEET' }));
+  };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
 
-  // 내 미디어 가져오기
-  const getUserCameraMain = async () => {
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-      })
-      .then((stream) => {
-        // 비디오 tag에 stream 추가
-        const video = myMainScreen.current;
-
-        video.srcObject = stream;
-
-        video.play();
-      });
-    // .catch((error) => {
-    //   console.log(error);
-    // });
-  };
-
-  const getUserCameraSub = async () => {
-    navigator.mediaDevices
-      .getUserMedia({
-        video: true,
-      })
-      .then((stream) => {
-        // 비디오 tag에 stream 추가
-        const video = mySubScreen.current;
-
-        video.srcObject = stream;
-
-        video.play();
-      });
-    // .catch((error) => {
-    //   console.log(error);
-    // });
-  };
-
   useEffect(() => {
-    getUserCameraMain();
-  }, [myMainScreen, mySubScreen]);
+    // 내 미디어 가져오기
+    const getUserCamera = async () => {
+      navigator.mediaDevices
+        .getUserMedia({
+          video: { facingMode: { exact: 'environment' } },
+          audio: true,
+        })
+        .then((stream) => {
+          // 비디오 tag에 stream 추가
+          const video = screenChange ? mainVideo.current : subVideo.current;
+          video.srcObject = stream;
+          video.play();
+        });
+      // .catch((error) => {
+      //   console.log(error);
+      // });
+    };
 
+    // 상대방 미디어 가져오기
+    const getOpponentCamera = () => {
+      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+      const video = screenChange ? subVideo.current : mainVideo.current;
+      setTimeout(() => {
+        video.srcObject = remoteStream;
+        video.play();
+      }, 100);
+    };
+
+    getUserCamera();
+    getOpponentCamera();
+  }, [screenChange]);
+
+  // 비디오 스크린 위치 스왑
   const changeScreen = () => {
-    if (mainScreenState === 'myScreen') {
-      setMainScreenState('peerScreen');
-      getUserCameraSub();
-    } else {
-      setMainScreenState('myScreen');
-      getUserCameraMain();
-    }
+    setScreenChange(!screenChange);
+    screenChange2.current = !screenChange2.current;
   };
 
-  // const configuration = {
-  //   iceServers: [
-  //     {
-  //       urls: 'stun:stun.l.google.com:19302',
-  //     },
-  //   ],
-  // };
-  // const myConnection = new RTCPeerConnection(configuration);
-  // myConnection.addEventListener('track', (data) => {
-  //   peerFace.srcObject = new MediaStream([data.track]);
-  // });
+  // 페이지 나갈때 카메라 제거
+  useEffect(() => {
+    return () => {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } }, audio: false }).then((stream) => {
+        stream.getTracks().forEach((track) => {
+          myPeerConnection.current.getSenders().forEach((sender) => {
+            if (sender.track === track) {
+              sender.track.stop();
+              sender.replaceTrack(null);
+            }
+          });
+        });
+        stream.getTracks().forEach((track) => track.stop());
+      });
+      conn.current.close();
+      window.location.reload();
+    };
+  }, []);
+
+  useLayoutEffect(() => {
+    conn.current = new WebSocket(
+      `wss://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
+    );
+    console.log(conn.current);
+    const configuration = {
+      iceServers: [
+        {
+          urls: 'stun:stun.l.google.com:19302',
+        },
+      ],
+    };
+    const send = async (message) => {
+      // 소켓으로 메세지 보내기
+      console.log('보냄: ', message);
+      conn.current.send(JSON.stringify(message));
+    };
+    const sendCandidate = (event) => {
+      send({
+        method: 'CANDIDATE',
+        data: event.candidate,
+      });
+    };
+    myPeerConnection.current = new RTCPeerConnection(configuration);
+    myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
+    myPeerConnection.current.addEventListener('iceconnectionstatechange', () => {
+      if (myPeerConnection.iceConnectionState === 'disconnected') {
+        const video = screenChange2.current ? subVideo.current : mainVideo.current;
+        video.srcObject = null;
+      } else {
+        const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+        const video = screenChange2.current ? subVideo.current : mainVideo.current;
+        setTimeout(() => {
+          video.srcObject = remoteStream;
+          video.play();
+        }, 100);
+      }
+    });
+    myPeerConnection.current.addEventListener('track', (data) => {
+      const video = screenChange2.current ? subVideo.current : mainVideo.current;
+      video.srcObject = new MediaStream([data.track]);
+      video.play();
+    });
+
+    const createOffer = async () => {
+      navigator.mediaDevices
+        .getUserMedia({
+          audio: true,
+          video: { facingMode: { exact: 'environment' } },
+        })
+        .then((stream) => {
+          stream
+            .getTracks()
+            .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+        })
+        .then(async () => {
+          const offer = await myPeerConnection.current.createOffer();
+          await myPeerConnection.current.setLocalDescription(offer);
+          await send({
+            method: 'OFFER',
+            data: offer,
+          });
+        });
+    };
+
+    conn.current.onclose = () => {
+      console.log('끝');
+    };
+
+    conn.current.onmessage = async (message) => {
+      const content = JSON.parse(message.data);
+      console.log('받고 해체: ', content);
+      if (content.method === 'OFFER') {
+        // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
+        const offer = content.data;
+        myPeerConnection.current.setRemoteDescription(offer);
+        navigator.mediaDevices
+          .getUserMedia({
+            audio: true,
+            video: { facingMode: { exact: 'environment' } },
+          })
+          .then((stream) => {
+            stream
+              .getTracks()
+              .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+          })
+          .then(async () => {
+            const answer = await myPeerConnection.current.createAnswer();
+            await myPeerConnection.current.setLocalDescription(answer);
+            await send({
+              method: 'ANSWER',
+              data: answer,
+            });
+          });
+      } else if (content.method === 'ANSWER') {
+        const answer = content.data;
+        console.log(myPeerConnection.current);
+        myPeerConnection.current.setRemoteDescription(answer);
+      } else if (content.method === 'CANDIDATE') {
+        // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정
+        myPeerConnection.current.addIceCandidate(content.data);
+      } else if (content.method === 'TOGETHER') {
+        createOffer();
+      }
+    };
+  }, []);
+
   return (
     <Main>
       <BoxBox>
-        {mainScreenState === 'myScreen' && (
-          <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
-            <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
-              <video playsInline autoPlay width="100%" ref={myMainScreen} />
-            </MainScreen>
+        <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
+          <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
+            <video playsInline autoPlay width="100%" ref={mainVideo} />
+          </MainScreen>
 
-            <SubScreen
-              onClick={changeScreen}
-              ref={SubScreenRef}
-              width={subScreenWidth}
-            >
-              <video playsInline autoPlay width="100%" ref={peerFace} />
-            </SubScreen>
-          </VideoBox>
-        )}
-
-        {mainScreenState === 'peerScreen' && (
-          <VideoBox ref={videoBoxRef} width={videoBoxWidth}>
-            <MainScreen ref={MainScreenRef} width={mainScreenWidth}>
-              <video playsInline autoPlay width="100%" ref={peerFace} />
-            </MainScreen>
-
-            <SubScreen
-              onClick={changeScreen}
-              ref={SubScreenRef}
-              width={subScreenWidth}
-            >
-              <video playsInline autoPlay width="100%" ref={mySubScreen} />
-            </SubScreen>
-          </VideoBox>
-        )}
+          <SubScreen
+            onClick={changeScreen}
+            ref={SubScreenRef}
+            width={subScreenWidth}
+          >
+            <video playsInline autoPlay width="100%" ref={subVideo} />
+          </SubScreen>
+        </VideoBox>
       </BoxBox>
       <NullBox2 width={subScreenWidth} />
       <BoxBox>
-        <Btn>
+        <Btn onClick={sendRequest}>
           <span>출장요청</span>
         </Btn>
       </BoxBox>

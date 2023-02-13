@@ -35,7 +35,9 @@ export default function BasicModal() {
   // const [open, setOpen] = useState(false);
   const [postOpen, setpostOpen] = useState(false);
   const [coordinateValue, setCoordinateValue] = useState({ x: null, y: null });
-  const [locateModalOpen, setLocateModalOpen] = useRecoilState(locateModalState);
+  // eslint-disable-next-line
+  const [locateModalOpen, setLocateModalOpen] =
+    useRecoilState(locateModalState);
   const [locationValue, setLocationValue] = useRecoilState(locateValueState);
 
   // 컴포넌트 내 주소 관리 State
@@ -44,6 +46,8 @@ export default function BasicModal() {
       ? locationValue.address
       : '여기를 눌러주세요.',
     detail: locationValue.detail ? locationValue.detail : '',
+    lat: locationValue.latitude ? locationValue.latitude : null,
+    lng: locationValue.longitude ? locationValue.longitude : null,
   });
   // 기본주소 변경 함수
   const setAddress = (ans) => {
@@ -97,6 +101,7 @@ export default function BasicModal() {
       if (status === kakao.maps.services.Status.OK) {
         // console.log(result[0]);
         setCoordinateValue({ x: result[0].x, y: result[0].y });
+        console.log(result[0]);
       }
     });
   }, [addressValue.address]);
@@ -114,7 +119,7 @@ export default function BasicModal() {
           <CloseBtn onClick={handleClose} />
           {!postOpen && (
             <>
-              <Header>주소설정</Header>
+              <Header>주소 설정</Header>
               <Body>
                 <LocaInput
                   label="주소"

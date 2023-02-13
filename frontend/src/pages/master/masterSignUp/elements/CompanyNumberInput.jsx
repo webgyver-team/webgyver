@@ -22,7 +22,12 @@ export default function CompanyNumberInput({
   const [msg, setMsg] = useState('');
   const [inputDisabled, setInputDisabled] = useState(false);
   const [btnDisabled, setBtnDisabled] = useState(true);
-  const [changeBtnVisible, setChangeBtnVisible] = useState(true);
+  const [changeBtnVisible, setChangeBtnVisible] = useState(false);
+  useEffect(() => {
+    if (initialValue1 !== '') {
+      setChangeBtnVisible(true);
+    }
+  }, [initialValue1]);
   const checkExistence = () => {
     // 유효성 검사 한번 들어가자
     if (companyNumber.length !== companyNumber.trim().length) {
@@ -64,7 +69,6 @@ export default function CompanyNumberInput({
       });
     // 성공 했으면 아이디 input disabled
   };
-
   useEffect(() => {
     // 각각의 phoneNumber가 바뀌었을 때...
     if (

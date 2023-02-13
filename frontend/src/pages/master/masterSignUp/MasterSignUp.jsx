@@ -3,7 +3,12 @@ import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import Button from '@mui/material/Button';
 import { useNavigate } from 'react-router-dom';
-import { locateValueState, authState, accessToken } from '../../../atom';
+import {
+  locateValueState,
+  authState,
+  accessToken,
+  userIdx,
+} from '../../../atom';
 import { master } from '../../../api/accountsApi';
 import IdInput from '../../common/signup/elements/IdInput';
 import PasswordInput from '../../common/signup/elements/PasswordInput';
@@ -28,6 +33,7 @@ export default function MasterSignUp() {
     }, // 기본 카테고리 리스트
   ];
   const setAuth = useSetRecoilState(authState);
+  const setUserIdx = useSetRecoilState(userIdx);
   const setAccessToken = useSetRecoilState(accessToken);
   const [data, setData] = useState({
     id: null,
@@ -39,6 +45,8 @@ export default function MasterSignUp() {
     companyName: null,
     representativeName: null,
     companyNumber: null,
+    lat: location.latitude,
+    lng: location.longitude,
     address: location.address,
     detailAddress: location.detail,
     categoryList: defaultCategoryList,
@@ -50,13 +58,14 @@ export default function MasterSignUp() {
     }));
   };
 
-  const registCustomer = () => {
+  const registCustomer = async () => {
     // 각 입력정보 모아져 있는 data를 가지고 유효성 검사하자
     // 아이디 -> 글자수 제한 충족시킨 후 중복 검사 거쳐야 값 O, 그 전엔 null
 
+    console.log(data);
     if (data.id === null) {
       // eslint-disable-next-line
-      alert('아이디를 입력하세요.');
+      alert('아이디를 입력한 후 중복 검사를 하세요.');
       return;
     }
     // 비밀번호 -> 비밀번호 확인을 거친 비밀번호여야 인정됨, 그 전엔 null
@@ -118,17 +127,22 @@ export default function MasterSignUp() {
       }
     }
     // eslint-disable-next-line
-    // api 호출 추가 예정
     delete data.useCheck;
-    const response = master.signup(data);
-    if (response.statusCode === '200') {
-      const loginResponse = master.login({
+    const response = await master.signup(data);
+    if (response.statusCode === 200) {
+      // eslint-disable-next-line no-alert
+      alert('회원가입이 완료되었습니다.');
+      const loginResponse = await master.login({
         id: data.id,
         password: data.password,
       });
-      setAccessToken(loginResponse.data.accessToken);
+      setAccessToken(loginResponse.data['access-token']);
       setAuth('master');
+      setUserIdx(loginResponse.data.sellerIdx);
       navigate('/master/schedule');
+    } else {
+      // eslint-disable-next-line
+      alert('다시 시도해주세요.');
     }
   };
   return (
@@ -137,7 +151,11 @@ export default function MasterSignUp() {
       <SignUpForm>
         <FormDiv>
           <FormTitle>회원 정보 입력</FormTitle>
-          <IdInput updateData={updateData} initialValue="" />
+          <IdInput
+            updateData={updateData}
+            initialValue=""
+            checkDuplicate={master.checkDuplicate}
+          />
           <PasswordInput updateData={updateData} />
           <NameInput updateData={updateData} initialValue="" />
           <ResidentNumberInput

@@ -8,13 +8,12 @@ export default function ImageInput({ sendImageList }) {
   const [imagePreviewList, setImagePreviewList] = useState([]); // 이미지 파일 src for 미리보기
   // 이미지 변경 이벤트 함수
   const changeImageList = async (data) => {
-    const images = data.target.files; // 입력받은 이미지 파일
+    const images = data.target.files; // 추가로 입력받은 이미지 파일
     const removeDupl = [...imageList, ...images]; // 이미지 파일 중복 제거용 배열
 
     // 이미지 파일 정보는 객체 배열이므로 -> 파일 이름 속성으로 객체 중복 제거
     const nonDuplImages = removeDupl.filter((item) => {
       let idx; // 중복되는 객체의 인덱스 정보를 담을 변수
-
       for (let i = 0; i < removeDupl.length; i += 1) {
         // 반복문을 통해 중복 객체의 인덱스 정보를 찾음
         if (item.name === removeDupl[i].name) {
@@ -37,9 +36,6 @@ export default function ImageInput({ sendImageList }) {
     await setImageList([...nonDuplImages]);
     // 부모로 해당 배열 전송
     await sendImageList([...nonDuplImages]);
-
-    // 이건 Set으로 중복제거해보려 했는데, 객체 배열은 중복제거가 안되더라..
-    // await setImageState([...new Set([...imageState, ...images])]);
   };
 
   //  이미지 미리보기 처리 ( imageState 변경 시 실행 )
@@ -51,11 +47,10 @@ export default function ImageInput({ sendImageList }) {
       setImagePreviewList([]);
       return;
     }
-
     imageList.forEach((image) => {
       const reader = new FileReader(); // 이미지 파일 읽어줄 친구
-      reader.readAsDataURL(image); // 이미지 URL 변환
 
+      reader.readAsDataURL(image); // 이미지 URL 변환
       // onload : 읽기 성공 시, onloadend : 읽기 성공 실패 여부 상관 없음
       reader.onload = () => {
         imagePreview = [...imagePreview, { image, url: reader.result }]; // 데이터 담아줌
@@ -136,6 +131,14 @@ export default function ImageInput({ sendImageList }) {
                       right: '-8px',
                       color: '#EB4D4D',
                     }}
+                    sx={[
+                      {
+                        '&:hover': {
+                          opacity: 0.7,
+                          cursor: 'pointer',
+                        },
+                      },
+                    ]}
                   />
                 </ImageBox>
               );
