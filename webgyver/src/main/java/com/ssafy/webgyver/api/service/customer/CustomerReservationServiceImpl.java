@@ -163,6 +163,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     public void reservationListMethod(List<Reservation> reservationList) {
         for (Reservation reservation : reservationList) {
+            System.out.println("!!!!!!!!!!!!"+reservation.getReservationTime());
             String title = null;    // 예약 제목
             String content = null; // 문의 내용
             List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
@@ -199,6 +200,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     }
 
     public void reservationState4ListMethod(List<Reservation> reservationList) {
+        System.out.println(reservationList);
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
             if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {

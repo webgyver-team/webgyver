@@ -138,7 +138,7 @@ public class WebSocketFaceTime {
         System.out.println(jsonMessage);
         Map<String, Object> info = gson.fromJson(jsonMessage, new TypeToken<Map<String, Object>>() {
         }.getType());
-//        System.out.println(info);
+        System.out.println(info);
         log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + jsonMessage);
         Room room = extractRoom(session);
 //        room.sendMessage(jsonMessage);
@@ -176,6 +176,7 @@ public class WebSocketFaceTime {
     }
 
     public void ACCEPT_MEET(Room room, LocalDateTime time) {
+        System.out.println("ACCEPT_MEET!!!");
         long reservationIdx = room.getReservation().getIdx();
         reservationService.updateReservation2Meet(reservationIdx, time);
 
