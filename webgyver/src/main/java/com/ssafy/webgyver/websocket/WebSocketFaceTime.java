@@ -119,6 +119,12 @@ public class WebSocketFaceTime {
         if (room == null)
             return;
         room.leave(session);
+        if (room.sessions.size() == 1) {
+            Map<String, Object> reply = new HashMap<>();
+            reply.put("method", MethodType.OPPONENT_OUT);
+            reply.put("msg", "상대방이 나갔습니다.");
+            room.sendMessage(gson.toJson(reply));
+        }
         if (room.sessions.size() == 0) {
             rooms.remove(room.getReservation().getIdx());
             explore(room);
@@ -129,9 +135,11 @@ public class WebSocketFaceTime {
     @OnMessage
     public void onMessage(String jsonMessage, Session session) throws IOException {
         Gson gson = new Gson();
+        System.out.println(jsonMessage);
         Map<String, Object> info = gson.fromJson(jsonMessage, new TypeToken<Map<String, Object>>() {
         }.getType());
-        System.out.println(info);
+//        System.out.println(info);
+        log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" + jsonMessage);
         Room room = extractRoom(session);
 //        room.sendMessage(jsonMessage);
         MethodType method = MethodType.valueOf((String) info.remove("method"));
@@ -156,8 +164,14 @@ public class WebSocketFaceTime {
                 reply.put("method", MethodType.ACCEPT_MEET);
                 reply.put("time", stringTime);
                 break;
+            //
+            case OFFER:
+            case CANDIDATE:
+            case ANSWER:
+                reply.put("method", method);
+                reply.put("data", info.get(("data")));
+                break;
         }
-        System.out.println(reply);
         room.sendMessageOther(gson.toJson(reply), session);
     }
 
@@ -169,7 +183,8 @@ public class WebSocketFaceTime {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
-        log.warning("onError:" + throwable.getMessage());
+
+        throwable.printStackTrace();
     }
 
     public Room extractRoom(Session session) {

@@ -16,6 +16,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
     @NoArgsConstructor
     static class Response {
         private Long idx;
+        private String userName;
         private String companyName;
         private String partnerName;
         private String phoneNumber;
@@ -31,6 +32,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         private String reviewCnt;
         public Response(Seller entity, List<CompanyTimeDTO> companyTimeDTOList, List<CategoryDTO> categoryDTOList){
             this.idx = entity.getIdx();
+            this.userName = entity.getName();
             this.companyName = entity.getCompanyName();
             this.partnerName = entity.getRepresentativeName();
             this.phoneNumber = entity.getPhoneNumber();
