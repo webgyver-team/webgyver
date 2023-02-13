@@ -125,7 +125,7 @@ export default function VideoService() {
 
   useLayoutEffect(() => {
     conn.current = new WebSocket(
-      `wss://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
+      `wss://i8b101.p.ssafy.io:9001/facetime/customer/${customerIdx}/${reservationIdx}`,
     );
     console.log(conn.current);
     const configuration = {
