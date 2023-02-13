@@ -180,7 +180,7 @@ export default function Reservation() {
       </DateDiv>
       <LocateDiv onClick={openLocateModal}>
         <SiteBox>
-          <span style={{ marginTop: '-4px' }}>현재 위치</span>
+          <span style={{ marginTop: '-2px' }}>현재 위치</span>
           <ChevronRightIcon />
         </SiteBox>
         <div style={{ fontSize: '16px' }}>
@@ -195,7 +195,7 @@ export default function Reservation() {
         <span onClick={() => setType(3)}>가격순</span>
       </FilterBox>
       {loading ? (
-        <LoadingSpinner height="200" />
+        <LoadingSpinner height="400" />
       ) : (
         <>
           <div>
@@ -229,7 +229,7 @@ export default function Reservation() {
             }}
           >
             {reservationButton ? (
-              <Btn onClick={goReservationForm} style={{}}>
+              <Btn onClick={goReservationForm}>
                 <span>상담 예약하기</span>
               </Btn>
             ) : (
