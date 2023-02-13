@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
 import com.ssafy.webgyver.api.request.seller.SellerCalendarReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
+import com.ssafy.webgyver.api.service.common.SmsService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
@@ -27,6 +28,7 @@ import java.util.List;
 public class SellerReservationServiceImpl implements SellerReservationService{
     final ReservationRepository reservationRepository;
     final PictureRepository pictureRepository;
+    final SmsService smsService;
     @Value("${properties.file.toss.secret}")
     String tossKey;
 
@@ -59,11 +61,27 @@ public class SellerReservationServiceImpl implements SellerReservationService{
         LocalDateTime now = LocalDateTime.now();
         BaseResponseBody res;
         Reservation reservation = reservationRepository.findById(req.getIdx()).get();
+        StringBuilder reservationStringBuilder = new StringBuilder();
+
+        String title = "";
+        String[] smsDate = reservation.getReservationTime().toString().split("T");
+        for (Article article : reservation.getArticleList()){
+            if (article.getType() == -1){
+                title = article.getTitle();
+            }
+        }
+
         if (!reservation.getReservationState().equals("1")) {
             res = BaseResponseBody.of(200, "이미 상태가 변경됐습니다.");
             return res;
         }
         if (!reservation.getCreatedAt().plusMinutes(5).isAfter(now)){
+            reservationStringBuilder.append("[Webgyver]").append('\n')
+                .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                .append("예약하신 [").append(title).append("]이(가) 수락 시간 초과로 거절 되었습니다.");
+
+            smsService.onSendMessage(reservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+
             reservation.updateReservationState("3");
             reservationRepository.save(reservation);
             res = BaseResponseBody.of(200, "승낙 가능한 시간이 지났습니다.");
@@ -72,27 +90,57 @@ public class SellerReservationServiceImpl implements SellerReservationService{
             // 승낙
             if (req.isAcceptFlag()) {
                 res = BaseResponseBody.of(200, "승낙 및 결제 성공");
-                String title = "";
-                for (Article article : reservation.getArticleList()){
-                    if (article.getType() == -1){
-                        title = article.getTitle();
-                    }
-                }
+
                 BaseResponseBody payRes = CommonUtil.requestPay(tossKey, reservation.getCustomer().getCustomerKey(), reservation.getCustomer().getBillingKey(), title, reservation.getReservationPrice());
                 if (payRes.getStatusCode() == 200){
                     reservation.updateReservationState("2");
                     reservationRepository.save(reservation);
+
+                    reservationStringBuilder.append("[Webgyver]").append('\n')
+                        .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                        .append("예약하신 [").append(title).append("]이(가) 예약 확정되었습니다.").append('\n')
+                        .append("등록하신 카드로 결제금액 ").append(reservation.getReservationPrice()).append("원이 결제완료 되었습니다.");
+
+                    StringBuilder sellerPayStringBuilder = new StringBuilder();
+                    sellerPayStringBuilder.append("[Webgyver]").append('\n')
+                        .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                        .append("예약하신 [").append(title).append("]의 결제금액 ").append(reservation.getReservationPrice()).append("원이 적립되었습니다.");
+
+                    smsService.onSendMessage(reservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+                    smsService.onSendMessage(reservation.getSeller().getPhoneNumber(), sellerPayStringBuilder.toString());
+
                     List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(reservation.getSeller().getIdx(), "1");
                     for (Reservation tempReservation : reservationList) {
                         if (tempReservation.getIdx() == reservation.getIdx()) continue;
                         // 예약 시간이 같은데 하나 승낙 했으면 나머지 state 3으로 변경
                         if (tempReservation.getReservationTime().isEqual(reservation.getReservationTime())){
+                            String tmpTitle = "";
+                            for (Article article : tempReservation.getArticleList()){
+                                if (article.getType() == -1){
+                                    tmpTitle = article.getTitle();
+                                }
+                            }
+
+                            reservationStringBuilder.setLength(0);
+                            reservationStringBuilder.append("[Webgyver]").append('\n')
+                                .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                                .append("예약하신 [").append(tmpTitle).append("]이(가) 거절 되었습니다.");
+
+                            smsService.onSendMessage(tempReservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+
                             tempReservation.updateReservationState("3");
                             reservationRepository.save(tempReservation);
                         }
                     }
                     return res;
                 } else {
+                    reservationStringBuilder.append("[Webgyver]").append('\n')
+                        .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                        .append("예약하신 [").append(title).append("]이(가)").append('\n')
+                        .append("[").append(payRes.getMessage()).append("] 사유로 예약할 수 없습니다.");
+
+                    smsService.onSendMessage(reservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+
                     return payRes;
                 }
             }
@@ -101,6 +149,13 @@ public class SellerReservationServiceImpl implements SellerReservationService{
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
                 res = BaseResponseBody.of(200, "거절 성공");
+
+                reservationStringBuilder.append("[Webgyver]").append('\n')
+                    .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                    .append("예약하신 [").append(title).append("]이(가) 거절 되었습니다.");
+
+                smsService.onSendMessage(reservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+
                 return res;
             }
         }
