@@ -76,10 +76,11 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         }
 
         StringBuilder sb = new StringBuilder();
+        String[] smsDate = reservation.getReservationTime().toString().split("T");
         sb.append("[Webgyver]").append('\n')
-                .append(reservation.getReservationTime()).append("에").append('\n')
-                .append("예약 상담 [").append(article.getTitle()).append("]이(가) 접수되었습니다.").append('\n')
-                .append("예약 내용을 확인 후 수락해 주세요.");
+            .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+            .append("예약 상담 [").append(article.getTitle()).append("]이(가) 접수되었습니다.").append('\n')
+            .append("예약 내용을 확인 후 수락해 주세요.");
 
         smsService.onSendMessage(reservation.getSeller().getPhoneNumber(), sb.toString());
 

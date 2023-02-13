@@ -4,6 +4,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.service.common.CommonService;
+import com.ssafy.webgyver.api.service.common.SmsService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Customer;
@@ -30,6 +31,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class WebSocketRealTime {
     private final CommonService commonService;
+
+    private final SmsService smsService;
 
     @Value("${properties.file.toss.secret}")
     String tossKey;
@@ -97,7 +100,6 @@ public class WebSocketRealTime {
         long sellerIdx = (long) seller.getUserProperties().get("idx");
         long customerIdx = Math.round((double) info.get("customerIdx"));
 
-
         Session customer = null;
         for (Session session : customerSession) {
             if (customerIdx == (long) session.getUserProperties().get("idx")) {
@@ -119,7 +121,6 @@ public class WebSocketRealTime {
         System.out.println(responseBody.getStatusCode());
         System.out.println(responseBody.getMessage());
 
-
         // 실시간 상담 reservation 테이블에 등록!!!!!!!
         Reservation insertedRes = commonService.insertReservationArticlePictureList(customerIdx, sellerIdx, reservationInfo);
         long reservationIdx = insertedRes.getIdx();
@@ -134,6 +135,21 @@ public class WebSocketRealTime {
 
         customer.getBasicRemote().sendText(messageString);
         seller.getBasicRemote().sendText(messageString);
+
+        StringBuilder customerStringBuiler = new StringBuilder();
+        StringBuilder sellerStringBuiler = new StringBuilder();
+
+        customerStringBuiler.append("[Webgyver]").append('\n')
+                .append("문의하신 실시간 상담 [").append(reservationInfo.getTitle()).append("]의 상담이 성사되어")
+                .append("등록하신 카드로 ").append(reservationInfo.getPrice()).append("원이 결제완료 되었습니다.");
+
+        sellerStringBuiler.append("[Webgyver]").append('\n')
+                .append("실시간 상담 [").append(reservationInfo.getTitle()).append("]의 상담이 성사되어")
+                .append("결제금액 ").append(reservationInfo.getPrice()).append("원이 적립되었습니다.");
+
+        smsService.onSendMessage(customerForPay.getPhoneNumber(), customerStringBuiler.toString());
+        smsService.onSendMessage(commonService.getSeller(sellerIdx).getPhoneNumber(), sellerStringBuiler.toString());
+
 //        System.out.println(messageString);
 
 //
