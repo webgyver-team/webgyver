@@ -293,13 +293,13 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         for (Reservation reservation : reservationList) {
             boolean addFirst = false;
             // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
-            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
+            if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
                 continue;
             }
             // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
-            else if (reservation.getReservationTime().isAfter(currentTime)) {
+            else if (!reservation.getReservationTime().isAfter(currentTime)) {
                 reservation.updateReservationState("4");
                 reservationRepository.save(reservation);
                 addFirst = true;
