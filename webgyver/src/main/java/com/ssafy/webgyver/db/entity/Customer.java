@@ -61,46 +61,51 @@ public class Customer extends BaseEntity implements UserDetails {
 
     @Column(name = "billing_key")
     private String billingKey;
-    private String role;
-//    @JsonIgnore
+    @JsonIgnore
+    @Column
+    @ElementCollection(fetch = FetchType.EAGER)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+    //    @JsonIgnore
 //    @Column
 //    @ElementCollection(fetch = FetchType.EAGER)
 //    @Builder.Default
 //    private List<String> roles = new ArrayList<>();
-    @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return getRole();
-            }
-        });
-        return null;
-    }
 //    @Override
 //    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        return this.roles.stream()
-//                .map(SimpleGrantedAuthority::new)
-//                .collect(Collectors.toList());    }
+//        Collection<GrantedAuthority> collect = new ArrayList<>();
+//        collect.add(new GrantedAuthority() {
+//            @Override
+//            public String getAuthority() {
+//                return getRole();
+//            }
+//        });
+//        return null;
+//    }
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println(roles);
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());    }
     @Override
     public String getUsername() {
-        return null;
+        return id;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override

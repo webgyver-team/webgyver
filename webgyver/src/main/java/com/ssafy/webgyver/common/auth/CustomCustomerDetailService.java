@@ -7,14 +7,17 @@ import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class CustomCustomerDetailService implements UserDetailsService {
     private final CustomerMemberRepository customerRepository;
+//    private final PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
+        System.out.println("ID는 > : " + id);
         return customerRepository.findCustomerById(id)
                 .map(this::createUserDetail)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));
@@ -22,5 +25,10 @@ public class CustomCustomerDetailService implements UserDetailsService {
 
     private UserDetails createUserDetail(Customer customer){
         return new User(customer.getId(), customer.getPassword(), customer.getAuthorities());
+//        return User.builder()
+//                .username(customer.getId())
+//                .password(customer.getPassword())
+//                .roles(customer.getAuthorities().)
+//                .build();
     }
 }

@@ -1,41 +1,30 @@
-//package com.ssafy.webgyver.common.auth;
-//
-//import com.auth0.jwt.JWTVerifier;
-//import com.auth0.jwt.interfaces.DecodedJWT;
-//import com.ssafy.webgyver.api.service.UserService;
-//import com.ssafy.webgyver.common.util.JwtTokenUtil;
-//import com.ssafy.webgyver.common.util.ResponseBodyWriteUtil;
-//import java.util.Arrays;
-//import java.util.Collection;
-//import java.util.stream.Collectors;
-//import lombok.AllArgsConstructor;
-//import lombok.NoArgsConstructor;
-//import lombok.RequiredArgsConstructor;
-//import org.springframework.security.authentication.AuthenticationManager;
-//import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-//import org.springframework.security.core.Authentication;
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.authority.SimpleGrantedAuthority;
-//import org.springframework.security.core.context.SecurityContextHolder;
-//import org.springframework.security.core.userdetails.User;
-//import org.springframework.security.core.userdetails.UserDetails;
-//import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-//import org.springframework.transaction.annotation.Transactional;
-//
-//import javax.servlet.FilterChain;
-//import javax.servlet.ServletException;
-//import javax.servlet.http.HttpServletRequest;
-//import javax.servlet.http.HttpServletResponse;
-//import java.io.IOException;
-//
-///**
-// * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
-// */
-//@NoArgsConstructor
-//@AllArgsConstructor
-//@RequiredArgsConstructor
-//public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
-//	private UserService userService;
+package com.ssafy.webgyver.common.auth;
+
+import com.ssafy.webgyver.common.util.JwtTokenProvider;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.util.StringUtils;
+import org.springframework.web.filter.GenericFilterBean;
+
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+
+/**
+ * 요청 헤더에 jwt 토큰이 있는 경우, 토큰 검증 및 인증 처리 로직 정의.
+ */
+@Slf4j
+@RequiredArgsConstructor
+public class JwtAuthenticationFilter extends GenericFilterBean {
+    private final JwtTokenProvider jwtTokenProvider;
+    private static final String AUTHORITIES_KEY = "auth";
+    private static final String BEARER_TYPE = "Bearer";
+    //	private UserService userService;
 //
 //	public JwtAuthenticationFilter(AuthenticationManager authenticationManager, UserService userService) {
 //		super(authenticationManager);
@@ -96,22 +85,29 @@
 //        }
 //        return null;
 //    }
-//    public Authentication getAuthentication(HttpServletRequest request) throws Exception{
-//        // 토큰 복호화
-//        String token = request.getHeader(JwtTokenUtil.HEADER_STRING);
-//
-//        if (claims.get(AUTHORITIES_KEY) == null) {
-//            throw new RuntimeException("권한 정보가 없는 토큰입니다.");
-//        }
-//
-//        // 클레임에서 권한 정보 가져오기
-//        Collection<? extends GrantedAuthority> authorities =
-//                Arrays.stream(claims.get(AUTHORITIES_KEY).toString().split(","))
-//                        .map(SimpleGrantedAuthority::new)
-//                        .collect(Collectors.toList());
-//
-//        // UserDetails 객체를 만들어서 Authentication 리턴
-//        UserDetails principal = new User(claims.getSubject(), "", authorities);
-//        return new UsernamePasswordAuthenticationToken(principal, "", authorities);
-//    }
-//}
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // 1. Request Header 에서 JWT 토큰 추출
+        String token = resolveToken((HttpServletRequest) request);
+        // 2. validateToken 으로 토큰 유효성 검사
+        if (token != null && jwtTokenProvider.validateToken(token)) {
+            // (추가) Redis 에 해당 accessToken logout 여부 확인
+//            String isLogout = (String) redisTemplate.opsForValue().get(token);
+//            if (ObjectUtils.isEmpty(isLogout)) {
+                // 토큰이 유효할 경우 토큰에서 Authentication 객체를 가지고 와서 SecurityContext 에 저장
+                Authentication authentication = jwtTokenProvider.getAuthentication(token);
+                SecurityContextHolder.getContext().setAuthentication(authentication);
+//            }
+        }
+        chain.doFilter(request, response);
+    }
+
+    // Request Header 에서 토큰 정보 추출
+    private String resolveToken(HttpServletRequest request) {
+        String bearerToken = request.getHeader(AUTHORITIES_KEY);
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(BEARER_TYPE)) {
+            return bearerToken.substring(7);
+        }
+        return null;
+    }
+}
