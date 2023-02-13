@@ -95,15 +95,15 @@ export default function Waiting({ waiting, setReload }) {
             {noMore && (isShowMore ? '[닫기]' : '[더보기]')}
           </MoreBtn>
         </div>
-        <BtnBox>
-          <StateBtn onClick={acceptRes}>
-            <span>{currentState[0]}</span>
-          </StateBtn>
-          <StateBtn onClick={rejectRes}>
-            <span>{currentState[1]}</span>
-          </StateBtn>
-        </BtnBox>
       </ContentBox>
+      <BtnBox>
+        <StateBtn onClick={acceptRes}>
+          <span>{currentState[0]}</span>
+        </StateBtn>
+        <StateBtn onClick={rejectRes}>
+          <span>{currentState[1]}</span>
+        </StateBtn>
+      </BtnBox>
     </Card>
   );
 }
@@ -113,6 +113,8 @@ const Card = styled.div`
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 5px;
   margin: 8px;
+  display: flex;
+  justify-content: space-between;
 
   .title {
     font-size: 14px;
@@ -160,7 +162,6 @@ const ContentBox = styled.div`
   display: flex;
 
   .contentdiv {
-    min-width: 480px;
     max-width: 640px;
     margin-right: 8px;
     margin-left: 8px;

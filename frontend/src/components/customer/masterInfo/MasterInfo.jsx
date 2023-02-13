@@ -92,7 +92,6 @@ export default function MasterInfo() {
       setExample(responseExample.data.historyList.reverse());
 
       const responseReview = await customer.get.masterReview(modalIdxState);
-      console.log(responseReview.data.reviews);
       setReview(responseReview.data.reviews);
     };
     getMasterInfo();

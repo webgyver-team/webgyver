@@ -38,7 +38,7 @@ export default function ReviewHistory() {
   }, [customerIdx, reload, setLoginOpenState]);
   return (
     <Main>
-      {reviews === null ? <LoadingSpinner /> : null}
+      {reviews === null ? <LoadingSpinner height="500" /> : null}
       {/* eslint-disable-next-line */}
       {reviews &&
         reviews.map((review) => (
