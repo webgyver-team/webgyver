@@ -37,6 +37,8 @@ export default function Review({ review, setReload }) {
     setFormContent(event.target.value);
     if (event.target.value.trim().length === 0) {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');
+    } else if (event.target.value.trim().length > 250) {
+      setMsgForContent('최대 250자까지 입력 가능합니다.');
     } else setMsgForContent('');
   };
   const registComment = () => {
