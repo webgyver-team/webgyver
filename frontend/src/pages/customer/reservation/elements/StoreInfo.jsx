@@ -52,7 +52,24 @@ export default function StoreInfo({
     isToday &&
     todayHour >= endTime[0] &&
     todayMinute > endTime[1];
-
+  const timePassed = (target) => {
+    let targetHour = Number(target.split(':')[0]);
+    let targetMinute = Number(target.split(':')[1]);
+    if (targetMinute - 2 < 0) {
+      targetMinute += 58;
+      targetHour = (targetHour - 1) % 24;
+    } else {
+      targetMinute -= 2;
+    } // 타겟 시간을 2분 전으로 재설정
+    // 이미 지난 시간이면 return true;
+    if (
+      targetHour < todayHour ||
+      (targetHour === todayHour && targetMinute < todayMinute)
+    ) {
+      return true;
+    }
+    return false;
+  };
   return (
     <Main>
       <StoreBox onClick={openMasterInfoModal}>
@@ -82,13 +99,7 @@ export default function StoreInfo({
       </StoreBox>
       <TimeBox>
         {allTime.map((time) => {
-          if (
-            isToday &&
-            (Number(time.split(':')[0]) < todayHour ||
-              // 5분 전까지만 예약 가능하게
-              (Number(time.split(':')[0]) === todayHour &&
-                Number(time.split(':')[1] < todayMinute + 2)))
-          ) {
+          if (isToday && timePassed(time)) {
             return null;
           } // 현재 시간 보다 작으면 그냥 return null
           if (!noTime.includes(time)) {
