@@ -31,7 +31,10 @@ export default function Proceeding({ today }) {
             <Slider {...slickSettings}>
               {today.pictureList.map((el) => (
                 <ImgBox key={el}>
-                  <img src={el} alt="" />
+                  <img
+                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                    alt=""
+                  />
                 </ImgBox>
               ))}
             </Slider>

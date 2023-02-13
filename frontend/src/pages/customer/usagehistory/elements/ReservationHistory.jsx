@@ -118,16 +118,17 @@ function CardView({ history }) {
             </Slider>
           </SliderBox>
           <BtnBox>
-            <StateBtn>
-              {history.state === 4 ? (
+            {history.state === 4 ? (
+              <StateBtn2>
                 <span onClick={() => routeVideoService(history)}>
                   {currentState[history.state]}
                 </span>
-              ) : (
-                // 임시로 처리..
+              </StateBtn2>
+            ) : (
+              <StateBtn>
                 <span>{currentState[history.state]}</span>
-              )}
-            </StateBtn>
+              </StateBtn>
+            )}
           </BtnBox>
         </div>
       </ContentBox>
@@ -232,7 +233,9 @@ const StateBtn = styled.div`
   width: 126px;
   box-shadow: 1px 1px 4px 0px ${(props) => props.theme.color.dafaultBorder};
   background-color: ${(props) => props.theme.color.defaultBgColor};
+`;
 
+const StateBtn2 = styled(StateBtn)`
   :hover {
     cursor: pointer;
     background-color: ${(props) => props.theme.color.dafaultBorder};

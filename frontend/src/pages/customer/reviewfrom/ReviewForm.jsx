@@ -135,7 +135,6 @@ export default function ReviewForm() {
         if (response.statusCode === 200) {
           // eslint-disable-next-line
           alert('리뷰가 등록되었습니다.');
-          setReservationIdx(null); // 등록할 예약 idx를 해제
           navigate('/mypage');
         } else {
           // eslint-disable-next-line
