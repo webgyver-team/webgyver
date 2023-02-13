@@ -15,6 +15,7 @@ export default function ReservationHistory() {
   const [histories, setHistories] = useState(null);
   const [loading, setLoading] = useState(true);
   const customerIdx = useRecoilValue(userIdx);
+
   useEffect(() => {
     const getHistory = async () => {
       const response = await customer.get.reservationHistory(customerIdx);
