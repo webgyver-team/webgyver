@@ -114,18 +114,20 @@ export default function Review({ review, setReload }) {
     <Card>
       <ContentBox>
         {!review.images.length && <NoImgBox />}
-        <SliderBox>
-          <Slider {...slickSettings}>
-            {review.images.map((el) => (
-              <ImgBox key={el}>
-                <img
-                  src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
-                  alt=""
-                />
-              </ImgBox>
-            ))}
-          </Slider>
-        </SliderBox>
+        {review.images.length > 0 && (
+          <SliderBox>
+            <Slider {...slickSettings}>
+              {review.images.map((el) => (
+                <ImgBox key={el}>
+                  <img
+                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                    alt=""
+                  />
+                </ImgBox>
+              ))}
+            </Slider>
+          </SliderBox>
+        )}
         <div className="contentdiv">
           <div>
             <span className="name">{`작성자 : ${review.customerName}`}</span>
@@ -135,18 +137,25 @@ export default function Review({ review, setReload }) {
         </div>
       </ContentBox>
       {review.comment !== null && !edit && (
-        <ReviewBox>
-          <ReplyBox>
-            <div>{review.comment.commentContent}</div>
-          </ReplyBox>
-          <Btn color="#FF4444" onClick={removeComment}>
-            <DeleteIcon fontSize="small" style={{ color: '#FF4444' }} />
-            <BtnText style={{ color: '#FF4444' }}>삭제</BtnText>
-          </Btn>
-          <Button variant="contained" onClick={openEdit}>
-            댓글 수정
-          </Button>
-        </ReviewBox>
+        <div>
+          <NullBox />
+          <ReviewBox>
+            <ReplyBox>
+              <div>{review.comment.commentContent}</div>
+            </ReplyBox>
+            <Btn color="#FF4444" onClick={removeComment}>
+              <DeleteIcon fontSize="small" style={{ color: '#FF4444' }} />
+              <BtnText style={{ color: '#FF4444' }}>삭제</BtnText>
+            </Btn>
+            <Button
+              variant="contained"
+              onClick={openEdit}
+              style={{ minWidth: '94px' }}
+            >
+              댓글 수정
+            </Button>
+          </ReviewBox>
+        </div>
       )}
       {(review.comment === null || edit) && (
         <div style={{ marginTop: '4px' }}>
@@ -159,11 +168,15 @@ export default function Review({ review, setReload }) {
               fullWidth
               multiline
               maxRows={4}
-              style={{ maxWidth: '700px' }}
+              style={{ maxWidth: '700px', marginRight: '4px' }}
               onChange={changeFormContent}
               value={formContent}
             />
-            <Button variant="contained" onClick={registComment}>
+            <Button
+              variant="contained"
+              onClick={registComment}
+              style={{ minWidth: '94px' }}
+            >
               댓글 등록
             </Button>
           </ReviewBox>
@@ -179,7 +192,7 @@ const Card = styled.div`
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 5px;
   margin: 8px;
-  width: 912px;
+  width: 70vw;
 
   .title {
     font-size: 14px;
@@ -246,7 +259,7 @@ const SliderBox = styled.div`
 `;
 
 const NullBox = styled.div`
-  height: 16px;
+  height: 8px;
 `;
 
 const ReviewBox = styled.div`
@@ -290,6 +303,7 @@ const Btn = styled.div`
   margin: 0 4px 0 4px;
   padding: 6px 8px 6px 8px;
   cursor: pointer;
+  min-width: 70px;
 `;
 
 const BtnText = styled.span`

@@ -25,6 +25,7 @@ export default function Proceeding({ today }) {
   return (
     <Card>
       <ContentBox>
+        {today.type === '5' && <VisitBox>방문일정</VisitBox>}
         <div>
           {!today.pictureList.length && <NoImgBox />}
           <SliderBox>
@@ -103,9 +104,9 @@ const ImgBox = styled.div`
 const ContentBox = styled.div`
   width: 100%;
   display: flex;
+  position: relative;
 
   .contentdiv {
-    min-width: 480px;
     max-width: 640px;
     margin-right: 8px;
     margin-left: 8px;
@@ -138,4 +139,15 @@ const NoImgBox = styled.div`
   height: 120px;
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   margin: 0 4px 8px 4px;
+`;
+
+const VisitBox = styled.div`
+  position: absolute;
+  top: -4px;
+  right: 0;
+  font-size: 14px;
+  padding: 8px;
+  color: ${(props) => props.theme.color.defaultBlue};
+  border: 1px solid ${(props) => props.theme.color.defaultBlue};
+  border-radius: 5px;
 `;
