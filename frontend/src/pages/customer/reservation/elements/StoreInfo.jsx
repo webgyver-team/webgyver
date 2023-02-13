@@ -83,13 +83,11 @@ export default function StoreInfo({
       <TimeBox>
         {allTime.map((time) => {
           if (
-            // eslint-disable-next-line
             isToday &&
-            // eslint-disable-next-line
             (Number(time.split(':')[0]) < todayHour ||
-              // eslint-disable-next-line
+              // 5분 전까지만 예약 가능하게
               (Number(time.split(':')[0]) === todayHour &&
-                Number(time.split(':')[1] < todayMinute)))
+                Number(time.split(':')[1] < todayMinute + 2)))
           ) {
             return null;
           } // 현재 시간 보다 작으면 그냥 return null
