@@ -102,4 +102,9 @@ public class Seller extends BaseEntity {
         this.address = address;
         this.detailAddress = detailAddress;
     }
+
+    public void addReview(long star) {
+        this.reviewCount++;
+        this.starTotal += star;
+    }
 }
