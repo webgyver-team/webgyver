@@ -85,13 +85,16 @@ export default function VideoService() {
     };
 
     // 상대방 미디어 가져오기
-    const getOpponentCamera = () => {
-      const remoteStream = myPeerConnection.current.getReceivers()[0];
+    const getOpponentCamera = async () => {
+      const remoteStream = await myPeerConnection.current.getReceivers()[1];
+      const stream = await new MediaStream([remoteStream.track]);
       const video = screenChange ? subVideo.current : mainVideo.current;
-      setTimeout(() => {
-        video.srcObject = remoteStream;
-        video.play();
-      }, 100);
+      if (video) {
+        setTimeout(() => {
+          video.srcObject = stream;
+          video.play();
+        }, 100);
+      }
     };
 
     getUserCamera();
@@ -148,17 +151,20 @@ export default function VideoService() {
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
-    myPeerConnection.current.addEventListener('iceconnectionstatechange', () => {
+    myPeerConnection.current.addEventListener('iceconnectionstatechange', async () => {
       if (myPeerConnection.iceConnectionState === 'disconnected') {
         const video = screenChange2.current ? subVideo.current : mainVideo.current;
         video.srcObject = null;
       } else {
-        const remoteStream = myPeerConnection.current.getReceivers()[0];
-        const video = screenChange2.current ? subVideo.current : mainVideo.current;
-        setTimeout(() => {
-          video.srcObject = remoteStream;
-          video.play();
-        }, 100);
+        const remoteStream = await myPeerConnection.current.getReceivers()[1];
+        const stream = await new MediaStream([remoteStream.track]);
+        const video = screenChange ? subVideo.current : mainVideo.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = stream;
+            video.play();
+          }, 100);
+        }
       }
     });
     myPeerConnection.current.addEventListener('track', (data) => {
