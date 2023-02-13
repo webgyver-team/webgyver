@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,8 +51,8 @@ public class SellerReservationServiceImpl implements SellerReservationService {
         reservationState1ListMethod(reservationList);
         // 오늘 잡혀 있는 상담
         todayList = new ArrayList<>();
-        LocalDateTime today = LocalDateTime.now().plusDays(1);
-        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationTimeBeforeAndReservationState(req.getSellerIdx(), today, "2");
+        LocalDate date = LocalDate.now();
+        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationTimeBetween(req.getSellerIdx(), date.atStartOfDay(), date.plusDays(1).atStartOfDay());
         reservationState2ListMethod(reservationList);
         // 현재 진행중인 상담
         proceedingList = new ArrayList<>();
