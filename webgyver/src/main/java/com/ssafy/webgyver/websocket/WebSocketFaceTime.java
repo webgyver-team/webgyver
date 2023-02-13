@@ -119,6 +119,12 @@ public class WebSocketFaceTime {
         if (room == null)
             return;
         room.leave(session);
+        if (room.sessions.size() == 1) {
+            Map<String, Object> reply = new HashMap<>();
+            reply.put("method", MethodType.OPPONENT_OUT);
+            reply.put("msg", "상대방이 나갔습니다.");
+            room.sendMessage(gson.toJson(reply));
+        }
         if (room.sessions.size() == 0) {
             rooms.remove(room.getReservation().getIdx());
             explore(room);
