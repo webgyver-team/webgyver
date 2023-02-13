@@ -5,6 +5,7 @@ import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
 import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
 import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
+import com.ssafy.webgyver.api.response.customer.CustomerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.api.service.common.SmsService;
@@ -25,7 +26,9 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -159,7 +162,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public CustomerAddressRes getCustomerAddress(CustomerIdxReq req) {
         Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
         CustomerAddressRes res;
-        if (customer.getAddress() == null){
+        if (customer.getAddress() == null) {
             res = CustomerAddressRes.of(200, "null address", null);
         } else {
             CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
@@ -301,13 +304,13 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         for (Reservation reservation : reservationList) {
             boolean addFirst = false;
             // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
-            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
+            if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
                 continue;
             }
             // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
-            else if (reservation.getReservationTime().isAfter(currentTime)) {
+            else if (!reservation.getReservationTime().isAfter(currentTime)) {
                 reservation.updateReservationState("4");
                 reservationRepository.save(reservation);
                 addFirst = true;
@@ -348,5 +351,24 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                 reservationDTOList.add(reservationDTO);
             }
         }
+    }
+
+    public CustomerReservationEndInfoRes getReservationEndInfo(long reservationIdx) {
+        Reservation reservation = reservationRepository.findById(reservationIdx).get();
+        if (reservation == null) {
+            return CustomerReservationEndInfoRes.of(403, "NoReservation");
+        }
+//        if(  !reservation.getReservationState().equals("5")){
+//            return CustomerReservationEndInfoRes.of(403, "NoEnd");
+//        }
+        Article article = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -1);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("sellerName", reservation.getSeller().getName());
+        response.put("companyName", reservation.getSeller().getCompanyName());
+        response.put("title", article.getTitle());
+        response.put("price", reservation.getReservationPrice());
+
+        return CustomerReservationEndInfoRes.of(200, "Success", response);
     }
 }

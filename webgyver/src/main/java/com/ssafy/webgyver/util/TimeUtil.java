@@ -39,8 +39,9 @@ public class TimeUtil {
         List<String> splitedBookTime = Arrays.stream(bookTime.split("%")).collect(Collectors.toList());
         String temp1 = splitedBookTime.get(getDayName(today) - 1).substring(4);
         List<String> temp2 = Arrays.stream(temp1.split("~")).collect(Collectors.toList());
+        System.out.println("temp 2 : " + temp2);
+        if (temp2.get(0).equals("휴일")) return null;
         List<String> result = getBetweenTime(temp2.get(0), temp2.get(1));
-
         return result;
     }
 
@@ -56,7 +57,7 @@ public class TimeUtil {
             curInt += 15;
             if (curInt % 100 == 60)
                 curInt += 40;
-            result.add(String.format("%d:%02d", curInt / 100, curInt % 100));
+            result.add(String.format("%02d:%02d", curInt / 100, curInt % 100));
         }
         return result;
 

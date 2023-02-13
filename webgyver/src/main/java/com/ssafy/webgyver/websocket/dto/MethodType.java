@@ -11,4 +11,8 @@ public enum MethodType {
     CHANGE_DISTANCE,
     MAKE_RESERVATION,
     ERROR,
+    OFFER,
+    CANDIDATE,
+    ANSWER,
+    OPPONENT_OUT
 }
