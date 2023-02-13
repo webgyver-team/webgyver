@@ -25,10 +25,7 @@ import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -105,7 +102,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         List<List<String>> existReservationTimeList = new ArrayList<>();
         for (Seller seller : sellerList) {
             List<Reservation> reservationList = reservationRepository.findReservationsBySellerAndReservationTimeBetween(
-                    seller, start, end).stream().filter(reservation -> (reservation.getReservationType().equals("2") || reservation.getReservationType().equals("4") && reservation.getReservationType().equals("5") && reservation.getReservationType().equals("6"))).collect(Collectors.toList());
+                    seller, start, end).stream().filter(reservation -> (Arrays.asList(new String[]{"2", "4", "5", "6"}).contains(reservation.getReservationType()))).collect(Collectors.toList());
             List<String> existReservationTime = new ArrayList<>();
             for (Reservation reservation : reservationList) {
                 existReservationTime.add(
