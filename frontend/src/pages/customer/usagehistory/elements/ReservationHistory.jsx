@@ -125,9 +125,7 @@ function CardView({ history }) {
                 </span>
               ) : (
                 // 임시로 처리..
-                <span onClick={() => routeVideoService(history)}>
-                  {currentState[history.state]}
-                </span>
+                <span>{currentState[history.state]}</span>
               )}
             </StateBtn>
           </BtnBox>
