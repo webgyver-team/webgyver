@@ -344,9 +344,12 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     public CustomerReservationEndInfoRes getReservationEndInfo(long reservationIdx) {
         Reservation reservation = reservationRepository.findById(reservationIdx).get();
-        if (reservation == null || !reservation.getReservationState().equals("5")) {
-            return CustomerReservationEndInfoRes.of(403, "NoEnd");
+        if (reservation == null) {
+            return CustomerReservationEndInfoRes.of(403, "NoReservation");
         }
+//        if(  !reservation.getReservationState().equals("5")){
+//            return CustomerReservationEndInfoRes.of(403, "NoEnd");
+//        }
         Article article = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -1);
 
         Map<String, Object> response = new HashMap<>();
