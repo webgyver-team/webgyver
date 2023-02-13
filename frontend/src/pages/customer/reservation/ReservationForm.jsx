@@ -32,8 +32,8 @@ export default function ReservationForm() {
 
   useEffect(() => {
     setTimeout(() => {
-      console.log(reservation);
       if (reservation === null || reservation.idx === null) {
+        // eslint-disable-next-line
         alert('상담을 할 업체가 선택되지 않았습니다.');
         navigate('/reservation');
       } else {
@@ -85,20 +85,15 @@ export default function ReservationForm() {
         },
       });
       const promise = upload.promise();
-      promise.then((res) => {
+      promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
+        console.log(err);
       });
-      // .catch((err) => {
-      //   // eslint-disable-next-line
-      //   console.log(err)
-      // });
       const newData = {
         saveName: hashImageName + extensionName,
         originName: imageList[i].name,
       };
       imageData.push(newData);
-      // setImageData((originalData) => [...originalData, newData]);
     }
   };
 
@@ -159,19 +154,18 @@ export default function ReservationForm() {
     // 잘 보내졌으면 data를 POST
     sendImageListToS3().then(async () => {
       // eslint-disable-next-line
-      console.log(data); // POST로 수정 예정
       const response = await customer.post.reservation(data);
       // eslint-disable-next-line
       if (response.statusCode === 200) {
         // eslint-disable-next-line
-        alert('예약상담이 등록되었습니다.');
+        alert(
+          '예약상담이 등록되었습니다.\n상담 수락 여부는 예약 내역에서 확인 가능합니다.',
+        );
         navigate('/usagehistory');
         setReservation(null);
       } else {
         // eslint-disable-next-line
-        console.log(response);
-        // eslint-disable-next-line
-        alert('예약 내용을 다시 확인바랍니다.');
+        alert(`${response.message}\n예약 내용을 다시 확인바랍니다.`);
       }
     });
   };
@@ -243,11 +237,11 @@ export default function ReservationForm() {
             <FormInput>
               <ImageInput sendImageList={setImageList} />
             </FormInput>
-            <div style={{ textAlign: 'center', marginTop: '16px' }}>
+            <SubmitButton>
               <Button variant="contained" onClick={registReservation}>
                 등록
               </Button>
-            </div>
+            </SubmitButton>
           </div>
         </FormBox>
       ) : null}
@@ -281,4 +275,9 @@ const ErrorMessage = styled.div`
 const FormInput = styled.div`
   max-width: 400px;
   width: 90vw;
+`;
+
+const SubmitButton = styled.div`
+  textalign: center;
+  margin-top: 16px;
 `;

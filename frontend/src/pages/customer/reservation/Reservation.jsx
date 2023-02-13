@@ -195,7 +195,7 @@ export default function Reservation() {
         <span onClick={() => setType(3)}>가격순</span>
       </FilterBox>
       {loading ? (
-        <LoadingSpinner style={{ border: '2px solid black' }} />
+        <LoadingSpinner height="200" />
       ) : (
         <>
           <div>
