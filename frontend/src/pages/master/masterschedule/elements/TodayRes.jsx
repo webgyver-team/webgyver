@@ -107,7 +107,6 @@ const ContentBox = styled.div`
   position: relative;
 
   .contentdiv {
-    min-width: 480px;
     max-width: 640px;
     margin-right: 8px;
     margin-left: 8px;

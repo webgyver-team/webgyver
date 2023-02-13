@@ -25,14 +25,16 @@ export default function MasterReview() {
 
   return (
     <Main>
-      <Text>리뷰</Text>
-      <TableBox>
-        {!reviewList.length && NoData}
-        {reviewList &&
-          reviewList.map((el, i) => (
-            <Review key={i} review={el} setReload={setReload} />
-          ))}
-      </TableBox>
+      <div>
+        <Text>리뷰</Text>
+        <TableBox>
+          {!reviewList.length && NoData}
+          {reviewList &&
+            reviewList.map((el, i) => (
+              <Review key={i} review={el} setReload={setReload} />
+            ))}
+        </TableBox>
+      </div>
     </Main>
   );
 }

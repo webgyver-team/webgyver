@@ -160,7 +160,6 @@ const ContentBox = styled.div`
   display: flex;
 
   .contentdiv {
-    min-width: 480px;
     max-width: 640px;
     margin-right: 8px;
     margin-left: 8px;
