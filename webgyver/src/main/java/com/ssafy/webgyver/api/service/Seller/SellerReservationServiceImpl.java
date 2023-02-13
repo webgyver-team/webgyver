@@ -159,9 +159,12 @@ public class SellerReservationServiceImpl implements SellerReservationService {
     @Override
     public SellerReservationEndInfoRes getSellerReservationEndInfo(long reservationIdx) {
         Reservation reservation = reservationRepository.findById(reservationIdx).get();
-        if (reservation == null || !reservation.getReservationState().equals("5")) {
-            return SellerReservationEndInfoRes.of(403, "NoEnd");
+        if (reservation == null) {
+            return SellerReservationEndInfoRes.of(403, "NoReservation");
         }
+//         if(!reservation.getReservationState().equals("5")){
+//             return SellerReservationEndInfoRes.of(403, "NoEnd");
+//         }
 
         Article article = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -1);
 

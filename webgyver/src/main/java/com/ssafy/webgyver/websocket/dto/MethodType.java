@@ -14,4 +14,5 @@ public enum MethodType {
     OFFER,
     CANDIDATE,
     ANSWER,
+    OPPONENT_OUT
 }
