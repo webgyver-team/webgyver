@@ -33,9 +33,9 @@ export default function ReviewForm() {
       // 얘는 등록 모드 -> idx를 reviewIdx로 덮어 써야 함
       setNewForm(true);
       if (reservationIdx === null) {
+        navigate('/');
         // eslint-disable-next-line
         alert('잘못된 접근입니다.');
-        navigate('/');
       }
     } else {
       // 얘는 수정 모드 -> idx를 reservationIdx로 덮어 써야 함
@@ -67,6 +67,10 @@ export default function ReviewForm() {
   const [imageList, setImageList] = useState([]);
   const [imageData, setImageData] = useState([]);
   const changeTitle = (event) => {
+    if (event.target.value.trim().length > 250) {
+      setMsgForTitle('최대 250자까지 입력 가능합니다.');
+      return;
+    }
     setData((original) => ({
       ...original,
       ...{ title: event.target.value },
@@ -76,6 +80,10 @@ export default function ReviewForm() {
     } else setMsgForTitle('');
   };
   const changeContent = (event) => {
+    if (event.target.value.trim().length > 250) {
+      setMsgForContent('최대 250자까지 입력 가능합니다.');
+      return;
+    }
     setData((original) => ({
       ...original,
       ...{ content: event.target.value },
@@ -128,7 +136,10 @@ export default function ReviewForm() {
       if (newForm) {
         data.reservationIdx = data.idx;
         delete data.idx;
-        const response = await customer.post.review(data);
+        const response = await customer.post.review({
+          ...data,
+          ...{ images: imageData },
+        });
         if (response.statusCode === 200) {
           // eslint-disable-next-line
           alert('리뷰가 등록되었습니다.');
@@ -181,14 +192,6 @@ export default function ReviewForm() {
           />
         </Box>
         <NullBox />
-        <div>
-          <ImageInput
-            sendImageList={setImageList}
-            existImages={imageListFromReview}
-            sendExistImages={setImageListFromReview}
-          />
-        </div>
-        <NullBox />
         <NullBox />
         <div style={{ marginTop: '4px' }}>
           <Header>리뷰를 입력해 주세요.</Header>
@@ -201,7 +204,6 @@ export default function ReviewForm() {
             fullWidth
             multiline
             rows={1}
-            style={{ maxWidth: '400px' }}
             onChange={changeTitle}
             value={data.title}
           />
@@ -214,11 +216,18 @@ export default function ReviewForm() {
             fullWidth
             multiline
             rows={4}
-            style={{ maxWidth: '400px' }}
             onChange={changeContent}
             value={data.content}
           />
           <ErrorMessage>{msgForContent}</ErrorMessage>
+        </div>
+
+        <div>
+          <ImageInput
+            sendImageList={setImageList}
+            existImages={imageListFromReview}
+            sendExistImages={setImageListFromReview}
+          />
         </div>
         <div style={{ textAlign: 'center', marginTop: '16px' }}>
           <Button variant="contained" onClick={registReview}>

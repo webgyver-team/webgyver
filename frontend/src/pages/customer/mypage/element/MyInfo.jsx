@@ -31,7 +31,7 @@ export default function MyInfo() {
   return (
     <Main>
       {myInfo === null ? (
-        <LoadingSpinner />
+        <LoadingSpinner height="500" />
       ) : (
         <InfoBox>
           <div>
