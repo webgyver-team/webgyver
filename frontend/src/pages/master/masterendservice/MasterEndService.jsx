@@ -91,8 +91,8 @@ const Main = styled.div`
   font-size: 16px;
 `;
 
-const Header = styled.divt`
-  ext-align: center;
+const Header = styled.div`
+  text-align: center;
   font-size: 20px;
   font-weight: bold;
 `;

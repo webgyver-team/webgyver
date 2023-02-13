@@ -52,7 +52,7 @@ export default function Proceeding({ proceeding }) {
               {proceeding.pictureList.map((el) => (
                 <ImgBox key={el}>
                   <img
-                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el}`}
+                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
                     alt=""
                   />
                 </ImgBox>
