@@ -70,7 +70,7 @@ export default function VideoService() {
     const getUserCamera = async () => {
       navigator.mediaDevices
         .getUserMedia({
-          video: true,
+          video: { facingMode: { exact: 'environment' } },
           audio: true,
         })
         .then((stream) => {
@@ -107,7 +107,7 @@ export default function VideoService() {
   // 페이지 나갈때 카메라 제거
   useEffect(() => {
     return () => {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
+      navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: 'environment' } }, audio: false }).then((stream) => {
         stream.getTracks().forEach((track) => {
           myPeerConnection.current.getSenders().forEach((sender) => {
             if (sender.track === track) {
@@ -125,7 +125,7 @@ export default function VideoService() {
 
   useLayoutEffect(() => {
     conn.current = new WebSocket(
-      `ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
+      `wss://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
     );
     console.log(conn.current);
     const configuration = {
@@ -171,7 +171,7 @@ export default function VideoService() {
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
-          video: true,
+          video: { facingMode: { exact: 'environment' } },
         })
         .then((stream) => {
           stream
@@ -202,7 +202,7 @@ export default function VideoService() {
         navigator.mediaDevices
           .getUserMedia({
             audio: true,
-            video: true,
+            video: { facingMode: { exact: 'environment' } },
           })
           .then((stream) => {
             stream
