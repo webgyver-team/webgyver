@@ -55,33 +55,19 @@ export default function StoreInfo({
 
   return (
     <Main>
-      <div
-        style={{
-          display: 'flex',
-          paddingRight: '8px',
-        }}
-        onClick={openMasterInfoModal}
-      >
-        <div style={{ marginRight: '4px' }}>
+      <StoreBox onClick={openMasterInfoModal}>
+        <PictureBox>
           <Picture src={picture} alt="" />
-        </div>
+        </PictureBox>
         <div>
-          <span style={{ fontSize: '18px', fontWeight: 'bold' }}>
-            {storeName}
-          </span>
-          <span
-            style={{ fontSize: '12px', fontWeight: 'bold', marginLeft: '4px' }}
-          >
-            {personName}
-          </span>
+          <StoreNameContent>{storeName}</StoreNameContent>
+          <MasterNameContent>{personName}</MasterNameContent>
           <p style={{ fontSize: '12px' }}>
             {`${address} ${detailAddress} (${
               Math.round(distance * 100) / 100
             }km)`}
           </p>
-          <div
-            style={{ display: 'flex', alignItems: 'center', fontSize: '12px' }}
-          >
+          <RatingBox>
             <Rating
               name="half-rating-read"
               value={star}
@@ -91,17 +77,10 @@ export default function StoreInfo({
             <span style={{ fontSize: '12px' }}>
               {Math.round(star * 100) / 100}
             </span>
-          </div>
+          </RatingBox>
         </div>
-      </div>
-      <div
-        style={{
-          display: 'inline-flex',
-          width: '100%',
-          overflowX: 'scroll',
-          paddingBottom: '12px',
-        }}
-      >
+      </StoreBox>
+      <TimeBox>
         {allTime.map((time) => {
           if (
             // eslint-disable-next-line
@@ -142,7 +121,7 @@ export default function StoreInfo({
           );
         })}
         {isEnd && <span>더이상 예약 가능한 시간이 없습니다.</span>}
-      </div>
+      </TimeBox>
     </Main>
   );
 }
@@ -152,9 +131,41 @@ const Main = styled.div`
   padding: 8px 0 8px 8px;
 `;
 
+const StoreBox = styled.div`
+  display: flex;
+  padding-right: 8px;
+`;
+
+const TimeBox = styled.div`
+  display: inline-flex;
+  width: 100%;
+  overflow-x: scroll;
+  padding-bottom: 12px;
+`;
+const PictureBox = styled.div`
+  margin-right: 4px;
+`;
+
 const Picture = styled.img`
   height: 96px;
   width: 96px;
   object-fit: cover;
   padding: 4px;
+`;
+
+const StoreNameContent = styled.span`
+  font-size: 18px;
+  font-weight: bold;
+`;
+
+const MasterNameContent = styled.span`
+  font-size: 12px;
+  font-weight: bold;
+  margin-left: 4px;
+`;
+
+const RatingBox = styled.div`
+  display: flex;
+  align-items: center;
+  font-size: 12px;
 `;

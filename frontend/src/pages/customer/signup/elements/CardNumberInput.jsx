@@ -78,7 +78,7 @@ export default function CardNumberInput({
   return (
     <div>
       <div style={{ display: 'flex' }}>
-        <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>카드 등록</h2>
+        <CardInputTitle>카드 등록</CardInputTitle>
         <Message msg={msg} />
       </div>
       <CardNumberForm>
@@ -88,8 +88,8 @@ export default function CardNumberInput({
           value={cardNumber1}
           required
           margin="normal"
-          style={{ width: '25%' }}
           inputProps={{ maxLength: 4 }}
+          style={{ width: '25%' }}
           onChange={(event) => changeCardNumber(event, 1)}
         />
         <p>-</p>
@@ -99,8 +99,8 @@ export default function CardNumberInput({
           value={cardNumber2}
           required
           margin="normal"
-          style={{ width: '25%' }}
           inputProps={{ maxLength: 4 }}
+          style={{ width: '25%' }}
           onChange={(event) => changeCardNumber(event, 2)}
         />
         <p>-</p>
@@ -110,8 +110,8 @@ export default function CardNumberInput({
           value={cardNumber3}
           required
           margin="normal"
-          style={{ width: '25%' }}
           inputProps={{ maxLength: 4 }}
+          style={{ width: '25%' }}
           onChange={(event) => changeCardNumber(event, 3)}
         />
         <p>-</p>
@@ -120,8 +120,8 @@ export default function CardNumberInput({
           value={cardNumber4}
           required
           margin="normal"
-          style={{ width: '25%' }}
           inputProps={{ maxLength: 4 }}
+          style={{ width: '25%' }}
           onChange={(event) => changeCardNumber(event, 4)}
         />
       </CardNumberForm>
@@ -134,7 +134,7 @@ export default function CardNumberInput({
           placeholder="MM"
           margin="normal"
           inputProps={{ maxLength: 2 }}
-          style={{ marginRight: '16px', width: '30%' }}
+          style={{ marginRight: '8px' }}
           onChange={(event) => changeCardValid(event, 1)}
         />
         <TextField
@@ -144,7 +144,7 @@ export default function CardNumberInput({
           placeholder="YY"
           margin="normal"
           inputProps={{ maxLength: 2 }}
-          style={{ marginRight: '16px', width: '30%' }}
+          style={{ marginRight: '8px' }}
           onChange={(event) => changeCardValid(event, 2)}
         />
       </CardValidityForm>
@@ -157,6 +157,10 @@ const CardNumberForm = styled.div`
   align-items: center;
 `;
 
+const CardInputTitle = styled.h2`
+  font-size: 16px;
+  font-weight: bold;
+`;
 const CardValidityForm = styled.div`
   display: flex;
   align-items: center;

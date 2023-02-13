@@ -171,7 +171,7 @@ export default function Reservation() {
       </DateDiv>
       <LocateDiv onClick={openLocateModal}>
         <SiteBox>
-          <span>현재 위치</span>
+          <span style={{ marginTop: '-4px' }}>현재 위치</span>
           <ChevronRightIcon />
         </SiteBox>
         <div style={{ fontSize: '16px' }}>
@@ -273,6 +273,7 @@ const SiteBox = styled.div`
   font-size: 16px;
   font-weight: bold;
   margin-right: 8px;
+  min-width: 96px;
 `;
 
 const Btn = styled.div`

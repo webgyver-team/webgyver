@@ -112,7 +112,7 @@ export default function ResidentNumberInput({
         <p>-</p>
         <TextField
           style={{ width: '48%' }}
-          label="주민번호 뒷 1자"
+          label="주민번호 뒤 1자"
           variant="outlined"
           value={residentNumber2.length === 7 || focus ? residentNumber2 : ''}
           required

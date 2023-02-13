@@ -135,11 +135,11 @@ export default function MyPageUpdate() {
               initialValueYY={data.cardValidity.slice(2, 4)}
             />
           </SignUpForm>
-          <div style={{ textAlign: 'center' }}>
+          <SignUpButton>
             <Button variant="contained" onClick={registCustomer}>
               수정
             </Button>
-          </div>
+          </SignUpButton>
         </div>
       ) : (
         <LoadingSpinner />
@@ -157,4 +157,9 @@ const SignUpTitle = styled.h2`
 const SignUpForm = styled.div`
   font-size: 20px;
   font-weight: bold;
+`;
+
+const SignUpButton = styled.div`
+  margin: 8px 0px;
+  text-align: center;
 `;

@@ -68,12 +68,14 @@ export default function MasterInfo() {
   const [modalIdxState, setModalIdxState] = useRecoilState(
     masterInfoModalIdxState,
   ); // modal 내 마스터의 idx
+  const [value, setValue] = useState(0);
+
   const closeMasterInfoState = () => {
     setModalIdxState(null);
     setmodalState(false);
+    setValue(0);
   };
 
-  const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };

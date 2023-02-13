@@ -14,7 +14,6 @@ export default function ImageInput({ sendImageList }) {
     // 이미지 파일 정보는 객체 배열이므로 -> 파일 이름 속성으로 객체 중복 제거
     const nonDuplImages = removeDupl.filter((item) => {
       let idx; // 중복되는 객체의 인덱스 정보를 담을 변수
-
       for (let i = 0; i < removeDupl.length; i += 1) {
         // 반복문을 통해 중복 객체의 인덱스 정보를 찾음
         if (item.name === removeDupl[i].name) {
@@ -37,9 +36,6 @@ export default function ImageInput({ sendImageList }) {
     await setImageList([...nonDuplImages]);
     // 부모로 해당 배열 전송
     await sendImageList([...nonDuplImages]);
-
-    // 이건 Set으로 중복제거해보려 했는데, 객체 배열은 중복제거가 안되더라..
-    // await setImageState([...new Set([...imageState, ...images])]);
   };
 
   //  이미지 미리보기 처리 ( imageState 변경 시 실행 )

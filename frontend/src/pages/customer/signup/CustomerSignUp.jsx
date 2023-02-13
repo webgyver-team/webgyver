@@ -138,11 +138,11 @@ export default function CustomerSignUp() {
 
         <Agreement updateData={updateData} />
       </SignUpForm>
-      <div style={{ textAlign: 'center' }}>
+      <SignUpButton>
         <Button variant="contained" onClick={registCustomer}>
           가입
         </Button>
-      </div>
+      </SignUpButton>
     </div>
   );
 }
@@ -156,4 +156,8 @@ const SignUpTitle = styled.h2`
 const SignUpForm = styled.div`
   font-size: 20px;
   font-weight: bold;
+`;
+const SignUpButton = styled.div`
+  margin: 8px 0px;
+  text-align: center;
 `;
