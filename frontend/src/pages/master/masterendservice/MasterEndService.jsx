@@ -33,9 +33,9 @@ export default function MasterEndService() {
   const dateToString = (date) => {
     const dayTimeList = date.split('-');
     // eslint-disable-next-line
-    const day = dayTimeList[0].substring(0, 4) + '년 ' + dayTimeList[0].substring(5, 2) + '월 ' + dayTimeList[0].substring(7, 2)
+    const day = dayTimeList[0].substr(0, 4) + '년 ' + dayTimeList[0].substr(4, 2) + '월 ' + dayTimeList[0].substr(6, 2) + '일'
     // eslint-disable-next-line
-    const time = dayTimeList[1].substring(0, 2) + ':' + dayTimeList[1].substring(2, 2)
+    const time = dayTimeList[1].substr(0, 2) + ':' + dayTimeList[1].substr(2, 2)
     return `${day} ${time}`;
   };
 
@@ -68,7 +68,7 @@ export default function MasterEndService() {
           </Line>
           <Line>
             <span className="first">방문 위치</span>
-            <span className="last">{`${data.meet.address} ${data.meet.deatilAddress}`}</span>
+            <span className="last">{`${data.meet.address} ${data.meet.detailAddress}`}</span>
           </Line>
           <NullBox />
           <NullBox />
@@ -91,8 +91,8 @@ const Main = styled.div`
   font-size: 16px;
 `;
 
-const Header = styled.div`
-  text-align: center;
+const Header = styled.divt`
+  ext-align: center;
   font-size: 20px;
   font-weight: bold;
 `;
@@ -129,11 +129,13 @@ const TransparentBox = styled.div`
 
   .first {
     font-weight: bold;
+    min-width: 68px;
   }
 
   .last {
     margin-right: 16px;
-    font-size: 24px;
+    font-size: 16px;
+    padding-left: 16px;
   }
 `;
 
