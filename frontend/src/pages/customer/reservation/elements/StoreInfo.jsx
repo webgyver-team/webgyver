@@ -31,6 +31,7 @@ export default function StoreInfo({
   };
   const todayHour = new Date().getHours();
   const todayMinute = new Date().getMinutes();
+
   const chooseTimeButton = (event) => {
     const data = {
       idx,
@@ -40,18 +41,7 @@ export default function StoreInfo({
     };
     handleClickedTimeButton(event, data);
   };
-  // eslint-disable-next-line array-callback-return
-  const leftTime = allTime.filter((el) => {
-    // eslint-disable-next-line no-unused-expressions
-    !noTime.includes(el);
-  });
-  // 예약가능 마지막 시간 판단
-  const endTime = leftTime.length > 0 ? leftTime.slice(-1)[0].split(':') : null;
-  const isEnd =
-    endTime !== null &&
-    isToday &&
-    todayHour >= endTime[0] &&
-    todayMinute > endTime[1];
+
   const timePassed = (target) => {
     let targetHour = Number(target.split(':')[0]);
     let targetMinute = Number(target.split(':')[1]);
@@ -70,6 +60,19 @@ export default function StoreInfo({
     }
     return false;
   };
+
+  // eslint-disable-next-line array-callback-return
+  const leftTime = allTime.filter((el) => {
+    // eslint-disable-next-line no-unused-expressions
+    return !noTime.includes(el);
+  });
+  // 예약가능 마지막 시간 판단
+  const endTime = leftTime.length > 0 ? leftTime.slice(-1)[0].split(':') : null;
+  const isEnd =
+    isToday && // 오늘이면서
+    endTime !== null &&
+    timePassed(`${endTime[0]}:${endTime[1]}`);
+
   return (
     <Main>
       <StoreBox onClick={openMasterInfoModal}>
@@ -129,7 +132,7 @@ export default function StoreInfo({
             </Button>
           );
         })}
-        {isEnd && <span>더이상 예약 가능한 시간이 없습니다.</span>}
+        {isEnd && <NoTimeMessage>예약 가능한 시간이 없습니다.</NoTimeMessage>}
       </TimeBox>
     </Main>
   );
@@ -177,4 +180,10 @@ const RatingBox = styled.div`
   display: flex;
   align-items: center;
   font-size: 12px;
+`;
+
+const NoTimeMessage = styled.span`
+  font-size: 16px;
+  font-weight: bold;
+  margin: 0px auto;
 `;

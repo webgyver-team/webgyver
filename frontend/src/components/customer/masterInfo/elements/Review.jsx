@@ -14,16 +14,6 @@ export default function Review(props) {
   useLayoutEffect(() => {
     setData(props);
   }, [props]);
-  // const [reviews] = useState([
-  //   {
-  //     title: '뜨거운 물이 나오지 않는 건에 대하여',
-  //     content:
-  //       '물말고 불도 나오길래 수리상담 받아봤어요!! 다행히도 이제 물만 잘 나옵니다!',
-  //     date: '01월 28일 09:00',
-  //     images: [ReviewImg1, ReviewImg2, ReviewImg3],
-  //     score: 3.0,
-  //   },
-  // ]);
 
   return (
     <Main>
@@ -36,7 +26,6 @@ export default function Review(props) {
         data.props.map((review) => (
           <CardView key={review?.reviewIdx} review={review} />
         ))}
-      {/* <CardView review={reviews[0]} /> */}
     </Main>
   );
 }

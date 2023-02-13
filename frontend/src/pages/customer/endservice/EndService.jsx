@@ -16,12 +16,8 @@ export default function EndService() {
       if (response.statusCode === 200) {
         setData(response.data);
       } else {
-        if (response.statusCode === 403) {
-          // eslint-disable-next-line
-          alert('아직 끝나지 않은 상담입니다.');
-          navigate('/usagehistory');
-        }
-        setData(null);
+        // eslint-disable-next-line
+        alert(response.message);
       }
     };
     getReservationInfo();
@@ -38,24 +34,24 @@ export default function EndService() {
           <InfoBox>
             <Line>
               <span className="first">상호명 : </span>
-              <span className="last">{data.companyName}</span>
+              <span className="last">{data.companyName || '?'}</span>
             </Line>
             <NullBox />
             <Line>
               <span className="first">판매자 : </span>
-              <span className="last">{data.sellerName}</span>
+              <span className="last">{data.sellerName || '?'}</span>
             </Line>
             <NullBox />
             <Line>
               <span className="first">문의 제목 : </span>
-              <span className="last">{data.title}</span>
+              <span className="last">{data.title || '?'}</span>
             </Line>
           </InfoBox>
           <NullBox />
           <TransparentBox>
             <Line>
               <span className="first">상담이용료</span>
-              <span className="last">{`${data.price} 원`}</span>
+              <span className="last">{` ${data.price || '?'} 원`}</span>
             </Line>
             <NullBox />
             <NullBox />
@@ -63,6 +59,7 @@ export default function EndService() {
           <BoxBox>
             <GrayBtn onClick={routeVideoService}>다시 연결하기</GrayBtn>
           </BoxBox>
+          <br />
           <BoxBox>
             <BtnBox onClick={routeReviewForm}>
               <Btn>리뷰 작성</Btn>
@@ -102,8 +99,9 @@ const InfoBox = styled.div`
 `;
 
 const Line = styled.div`
-  // display: flex;
-  // justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 `;
 
 const NullBox = styled.div`

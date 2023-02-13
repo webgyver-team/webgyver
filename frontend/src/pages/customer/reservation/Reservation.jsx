@@ -69,6 +69,8 @@ export default function Reservation() {
     if (
       // reservation의 property와 하나라도 다르다면(다른 버튼 클릭)
       // eslint-disable-next-line operator-linebreak
+      clickedReservation.idx === null ||
+      // eslint-disable-next-line operator-linebreak
       data.idx !== clickedReservation.idx ||
       // eslint-disable-next-line operator-linebreak
       data.time !== clickedReservation.time ||
@@ -80,7 +82,7 @@ export default function Reservation() {
         clickedTimeButton.style.backgroundColor = '#ffffff';
         clickedTimeButton.style.color = '#1976D2';
       }
-      setClickedTimeButton(() => event.target); // 클릭한 시간 버튼을 저장
+      setClickedTimeButton(event.target); // 클릭한 시간 버튼을 저장
       setClickedReservation(data); // data를 reservation으로 저장
       return;
     }
@@ -96,8 +98,15 @@ export default function Reservation() {
   const goReservationForm = () => {
     // eslint-disable-next-line
     if (auth === 'customer') {
-      setReservation(clickedReservation); // 이때 세션 스토리지에 저장
-      navigate('/reservation/form');
+      if (
+        // eslint-disable-next-line
+        confirm(
+          `예약 업체: ${clickedReservation.storeName}\n예약 일시: ${clickedReservation.date} ${clickedReservation.time}\n\n예약을 진행하시겠습니까?`,
+        )
+      ) {
+        setReservation(clickedReservation); // 이때 세션 스토리지에 저장
+        navigate('/reservation/form');
+      }
     } else {
       // eslint-disable-next-line
       alert('로그인 후 이용해주세요.');
@@ -186,7 +195,7 @@ export default function Reservation() {
         <span onClick={() => setType(3)}>가격순</span>
       </FilterBox>
       {loading ? (
-        <LoadingSpinner style={{ border: '2px solid black' }} />
+        <LoadingSpinner height="200" />
       ) : (
         <>
           <div>
