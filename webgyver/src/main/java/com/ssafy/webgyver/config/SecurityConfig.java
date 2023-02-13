@@ -77,14 +77,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customCustomerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customSellerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
-                        UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers("/api/v1/**/member/**", "/api/v1/common/**").permitAll()
 //                .antMatchers().permitAll()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-                .anyRequest().hasAnyRole("CUSTOMER", "PARTNER")
-//                                .antMatchers("/admin/**").hasAnyRole("Partner")
-                .and().cors();
+                .anyRequest().hasAuthority("CUSTOMER")
+//                .anyRequest().authenticated()
+//                .and().cors()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
     @Bean
     @Override
