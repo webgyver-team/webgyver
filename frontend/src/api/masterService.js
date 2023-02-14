@@ -101,6 +101,13 @@ export const master = {
       );
       return response;
     },
+    point: async (data, idx) => {
+      const response = await Send.put(
+        `${masterURL}/mypage/exchange/${idx}`,
+        data,
+      );
+      return response;
+    },
   },
   delete: {
     example: async (idx) => {
