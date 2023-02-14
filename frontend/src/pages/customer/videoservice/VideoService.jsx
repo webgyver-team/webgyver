@@ -74,7 +74,7 @@ export default function VideoService() {
       navigator.mediaDevices
         .getUserMedia({
           video: { facingMode: { exact: 'environment' } },
-          audio: true,
+          audio: false,
         })
         .then((stream) => {
           // 비디오 tag에 stream 추가

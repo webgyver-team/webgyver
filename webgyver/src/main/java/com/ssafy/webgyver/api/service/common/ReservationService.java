@@ -9,4 +9,6 @@ public interface ReservationService {
     Optional<Reservation> getReservation(long reservationIdx);
 
     void updateReservation2Meet(long reservationIdx, LocalDateTime time);
+
+    void updateReservationFinished(long reservationIdx);
 }

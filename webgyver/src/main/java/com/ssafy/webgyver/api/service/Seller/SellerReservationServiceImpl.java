@@ -3,14 +3,18 @@ package com.ssafy.webgyver.api.service.Seller;
 import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
 import com.ssafy.webgyver.api.request.seller.SellerCalendarReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
+import com.ssafy.webgyver.api.response.customer.CustomerReservationEndInfoRes;
+import com.ssafy.webgyver.api.response.seller.SellerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import com.ssafy.webgyver.util.CommonUtil;
+import com.ssafy.webgyver.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -19,12 +23,15 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class SellerReservationServiceImpl implements SellerReservationService{
+public class SellerReservationServiceImpl implements SellerReservationService {
+    final ArticleRepository articleRepository;
     final ReservationRepository reservationRepository;
     final PictureRepository pictureRepository;
     @Value("${properties.file.toss.secret}")
@@ -33,6 +40,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
     static List<SellerReservationListRes.ReservationDTO> proceedingList;
     static List<SellerReservationListRes.ReservationDTO> waitingList;
     static List<SellerReservationListRes.ReservationDTO> todayList;
+
     @Override
     public SellerReservationListRes getSellerReservationList(SellerIdxReq req) {
 
@@ -47,7 +55,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
         reservationState2ListMethod(reservationList);
         // 현재 진행중인 상담
         proceedingList = new ArrayList<>();
-        reservationList  = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(req.getSellerIdx(), "4");
+        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(req.getSellerIdx(), "4");
         reservationState4ListMethod(reservationList);
         SellerReservationListRes res = SellerReservationListRes.of(200, "Success", proceedingList, waitingList, todayList);
         return res;
@@ -63,30 +71,30 @@ public class SellerReservationServiceImpl implements SellerReservationService{
             res = BaseResponseBody.of(200, "이미 상태가 변경됐습니다.");
             return res;
         }
-        if (!reservation.getCreatedAt().plusMinutes(5).isAfter(now)){
+        if (!reservation.getCreatedAt().plusMinutes(5).isAfter(now)) {
             reservation.updateReservationState("3");
             reservationRepository.save(reservation);
             res = BaseResponseBody.of(200, "승낙 가능한 시간이 지났습니다.");
             return res;
-        }else {
+        } else {
             // 승낙
             if (req.isAcceptFlag()) {
                 res = BaseResponseBody.of(200, "승낙 및 결제 성공");
                 String title = "";
-                for (Article article : reservation.getArticleList()){
-                    if (article.getType() == -1){
+                for (Article article : reservation.getArticleList()) {
+                    if (article.getType() == -1) {
                         title = article.getTitle();
                     }
                 }
                 BaseResponseBody payRes = CommonUtil.requestPay(tossKey, reservation.getCustomer().getCustomerKey(), reservation.getCustomer().getBillingKey(), title, reservation.getReservationPrice());
-                if (payRes.getStatusCode() == 200){
+                if (payRes.getStatusCode() == 200) {
                     reservation.updateReservationState("2");
                     reservationRepository.save(reservation);
                     List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(reservation.getSeller().getIdx(), "1");
                     for (Reservation tempReservation : reservationList) {
                         if (tempReservation.getIdx() == reservation.getIdx()) continue;
                         // 예약 시간이 같은데 하나 승낙 했으면 나머지 state 3으로 변경
-                        if (tempReservation.getReservationTime().isEqual(reservation.getReservationTime())){
+                        if (tempReservation.getReservationTime().isEqual(reservation.getReservationTime())) {
                             tempReservation.updateReservationState("3");
                             reservationRepository.save(tempReservation);
                         }
@@ -148,6 +156,35 @@ public class SellerReservationServiceImpl implements SellerReservationService{
         return response;
     }
 
+    @Override
+    public SellerReservationEndInfoRes getSellerReservationEndInfo(long reservationIdx) {
+        Reservation reservation = reservationRepository.findById(reservationIdx).get();
+        if (reservation == null) {
+            return SellerReservationEndInfoRes.of(403, "NoReservation");
+        }
+//         if(!reservation.getReservationState().equals("5")){
+//             return SellerReservationEndInfoRes.of(403, "NoEnd");
+//         }
+
+        Article article = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -1);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("point", reservation.getSeller().getPoint());
+        response.put("content", article.getContent());
+        response.put("title", article.getTitle());
+        response.put("price", reservation.getReservationPrice());
+        if (reservation.getReservationType().equals("3")) {
+            response.put("date", TimeUtil.time2String(reservation.getReservationTime(), "yyyyMMdd-HHmm"));
+            response.put("address", reservation.getCustomerAddress());
+            response.put("detailAddress", reservation.getCustomerDetailAddress());
+            response.put("hasMeet", true);
+        } else {
+            response.put("hasMeet", false);
+        }
+
+        return SellerReservationEndInfoRes.of(200, "Success", response);
+    }
+
     public void reservationState4ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
@@ -191,6 +228,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
             }
         }
     }
+
     public void reservationState1ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
@@ -237,6 +275,7 @@ public class SellerReservationServiceImpl implements SellerReservationService{
             }
         }
     }
+
     public void reservationState2ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
