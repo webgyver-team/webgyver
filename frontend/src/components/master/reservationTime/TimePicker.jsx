@@ -18,14 +18,14 @@ import { master } from '../../../api/masterService';
 // eslint-disable-next-line object-curly-newline
 export default function TimePicker() {
   const [hour, setHour] = useState([
-    { day: '월요일', open: '', close: '', holiday: false },
-    { day: '화요일', open: '', close: '', holiday: false },
-    { day: '수요일', open: '', close: '', holiday: false },
-    { day: '목요일', open: '', close: '', holiday: false },
-    { day: '금요일', open: '', close: '', holiday: false },
-    { day: '토요일', open: '', close: '', holiday: false },
-    { day: '일요일', open: '', close: '', holiday: false },
-    { day: '공휴일', open: '', close: '', holiday: true },
+    { day: '월요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '화요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '수요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '목요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '금요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '토요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '일요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '공휴일', open: '09:00', close: '18:00', holiday: true },
   ]);
 
   const [sellerIdx] = useRecoilState(userIdx);

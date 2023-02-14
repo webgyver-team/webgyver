@@ -108,7 +108,7 @@ export const master = {
       return response;
     },
     review: async (idx) => {
-      const response = await Send.delete(`${masterURL}/mypage/reivew/${idx}`);
+      const response = await Send.delete(`${masterURL}/mypage/comment/${idx}`);
       return response;
     },
   },

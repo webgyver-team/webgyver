@@ -106,6 +106,9 @@ export default function Matching() {
       setMainScreenWidth(MainScreenRef.current.offsetWidth);
     };
     window.addEventListener('resize', handleResize);
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
   }, [MainScreenRef]);
 
   const [distance, setDistance] = useState('1km 이내');

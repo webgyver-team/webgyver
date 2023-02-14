@@ -104,7 +104,7 @@ export default function Mypage() {
         <InfoBox>
           <InfoTextBox>
             <p>{myPageData && myPageData.storeName}</p>
-            <p>{myPageData && myPageData.partnerName}</p>
+            <p>{myPageData && myPageData.userName}</p>
             <p>{myPageData && myPageData.address}</p>
           </InfoTextBox>
         </InfoBox>

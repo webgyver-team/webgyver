@@ -23,6 +23,8 @@ export default function Proceeding({ proceeding }) {
   const setReservationIdxState = useSetRecoilState(reservationIdxState);
   const [ReservationData, setReservationData] = useRecoilState(matchFormState);
 
+  const noMore = proceeding.content.length > 60;
+  console.log(noMore);
   const [isShowMore, setIsShowMore] = useState(false);
   const shortComment = proceeding.content.slice(0, 60);
   // const setMatchForm = useSetRecoilState(matchFormState);
@@ -51,7 +53,10 @@ export default function Proceeding({ proceeding }) {
             <Slider {...slickSettings}>
               {proceeding.pictureList.map((el) => (
                 <ImgBox key={el}>
-                  <img src={el} alt="" />
+                  <img
+                    src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${el.saveName}`}
+                    alt=""
+                  />
                 </ImgBox>
               ))}
             </Slider>
@@ -66,15 +71,15 @@ export default function Proceeding({ proceeding }) {
             {isShowMore ? proceeding.content : shortComment}
           </span>
           <MoreBtn type="button" onClick={onChangeShowMore}>
-            {isShowMore ? '[닫기]' : '[더보기]'}
+            {noMore && (isShowMore ? '[닫기]' : '[더보기]')}
           </MoreBtn>
         </div>
-        <BtnBox>
-          <StateBtn onClick={routeVideoService}>
-            <span>{currentState[0]}</span>
-          </StateBtn>
-        </BtnBox>
       </ContentBox>
+      <BtnBox>
+        <StateBtn onClick={routeVideoService}>
+          <span>{currentState[0]}</span>
+        </StateBtn>
+      </BtnBox>
     </Card>
   );
 }
@@ -84,6 +89,8 @@ const Card = styled.div`
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 5px;
   margin: 8px;
+  display: flex;
+  justify-content: space-between;
 
   .title {
     font-size: 14px;
@@ -127,7 +134,6 @@ const ContentBox = styled.div`
   display: flex;
 
   .contentdiv {
-    min-width: 480px;
     max-width: 640px;
     margin-right: 8px;
     margin-left: 8px;

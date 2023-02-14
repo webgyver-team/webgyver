@@ -72,7 +72,7 @@ export default function MasterVideoService() {
       navigator.mediaDevices
         .getUserMedia({
           video: true,
-          audio: true,
+          audio: false,
         })
         .then((stream) => {
           // 비디오 tag에 stream 추가
@@ -86,13 +86,18 @@ export default function MasterVideoService() {
     };
 
     // 상대방 미디어 가져오기
-    const getOpponentCamera = () => {
-      const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
-      const video = screenChange ? mainVideo.current : subVideo.current;
-      setTimeout(() => {
-        video.srcObject = remoteStream;
-        video.play();
-      }, 100);
+    const getOpponentCamera = async () => {
+      const remoteStream = await myPeerConnection.current.getReceivers();
+      if (remoteStream) {
+        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
+        const video = screenChange ? mainVideo.current : subVideo.current;
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = stream;
+            video.play();
+          }, 100);
+        }
+      }
     };
 
     getUserCamera();
@@ -148,17 +153,20 @@ export default function MasterVideoService() {
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
-    myPeerConnection.current.addEventListener('iceconnectionstatechange', () => {
+    myPeerConnection.current.addEventListener('iceconnectionstatechange', async () => {
       if (myPeerConnection.iceConnectionState === 'disconnected') {
         const video = screenChange2.current ? mainVideo.current : subVideo.current;
         video.srcObject = null;
       } else {
-        const remoteStream = myPeerConnection.current.getRemoteStreams()[0];
+        const remoteStream = await myPeerConnection.current.getReceivers();
+        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
         const video = screenChange2.current ? mainVideo.current : subVideo.current;
-        setTimeout(() => {
-          video.srcObject = remoteStream;
-          video.play();
-        }, 100);
+        if (video) {
+          setTimeout(() => {
+            video.srcObject = stream;
+            video.play();
+          }, 100);
+        }
       }
     });
     myPeerConnection.current.addEventListener('track', (data) => {
