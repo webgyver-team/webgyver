@@ -59,6 +59,10 @@ export const customer = {
       const response = await Send.get(`${masterURL}/mypage/review/${idx}`);
       return response;
     },
+    locate: async (idx) => {
+      const response = await Send.get(`${customerURL}/reservation/address/${idx}`);
+      return response;
+    },
   },
   post: {
     //리뷰 등록
