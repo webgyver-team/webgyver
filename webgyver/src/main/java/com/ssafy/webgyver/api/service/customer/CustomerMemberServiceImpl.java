@@ -62,7 +62,7 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
                 .id(customerRegisterInfo.getId())
                 .password(passwordEncoder.encode(customerRegisterInfo.getPassword()))
                 .name(customerRegisterInfo.getName())
-                .birthDay(LocalDate.parse(customerBirth.substring(0,8), formatter).atStartOfDay())
+                .birthDay(LocalDate.parse(customerBirth.substring(0,8), formatter))
                 .gender(customerBirth.substring(8))
                 .phoneNumber(customerRegisterInfo.getPhoneNumber())
                 .cardNumber(customerRegisterInfo.getCardNumber())

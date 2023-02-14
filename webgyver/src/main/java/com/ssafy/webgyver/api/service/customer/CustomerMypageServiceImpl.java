@@ -84,7 +84,7 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
 
         if(isCheck(req.getBirthDay())) {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd");
-            customer.setBirthDay(LocalDate.parse(req.getBirthDay().substring(0, 8), formatter).atStartOfDay());
+            customer.setBirthDay(LocalDate.parse(req.getBirthDay().substring(0, 8), formatter));
             customer.setGender(req.getBirthDay().substring(8));
         }
 

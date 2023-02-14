@@ -49,7 +49,7 @@ public class SellerServiceImpl implements SellerService {
                 .id(sellerRegisterInfo.getId())
                 .password(passwordEncoder.encode(sellerRegisterInfo.getPassword()))
                 .name(sellerRegisterInfo.getName())
-                .birthDay(LocalDate.parse(sellerBirth.substring(0, 8), formatter).atStartOfDay())
+                .birthDay(LocalDate.parse(sellerBirth.substring(0, 8), formatter))
                 .gender(sellerBirth.substring(8))
                 .phoneNumber(sellerRegisterInfo.getPhoneNumber())
                 .companyName(sellerRegisterInfo.getCompanyName())
