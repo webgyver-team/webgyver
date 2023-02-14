@@ -106,7 +106,6 @@ export default function TimePicker() {
         : String((parseInt(Number(temp[1]) / 15) + 1) * 15);
     // eslint-disable-next-line no-nested-ternary
     result = result === '60' ? '00' : result === '0' ? '00' : result;
-    // console.log(`${temp[0]}:${result}`);
     return `${temp[0]}:${result}`;
   };
 

@@ -35,7 +35,6 @@ export default function Mypage() {
     const getMyPageData = async () => {
       const response = await master.get.myPage(idx);
       setMyPageData(response.data.profile);
-      console.log(response.data.profile.companyTime);
       setIsTime(response.data.profile.companyTime);
       if (response.data.profile.companyTime !== null) {
         setBusinessHoursOpen(response.data.profile.companyTime);

@@ -130,7 +130,7 @@ export default function VideoService() {
 
   useLayoutEffect(() => {
     conn.current = new WebSocket(
-      `ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
+      `wss://webgyver.site:9001/facetime/customer/${customerIdx}/${reservationIdx}`,
     );
     const configuration = {
       iceServers: [
