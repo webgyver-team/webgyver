@@ -10,6 +10,7 @@ import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes
 import com.ssafy.webgyver.api.service.customer.CustomerReservationService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.util.CheckUserUtil;
 import com.ssafy.webgyver.websocket.WebSocketFaceTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * 인증(authentication) 와 인가(authorization) 처리를 위한 스프링 시큐리티 설정 정의.
@@ -72,13 +73,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customCustomerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customSellerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
-                .antMatchers("/api/v1/**/member/**", "/api/v1/common/**").permitAll();
+                .antMatchers("/api/v1/**/member/**", "/api/v1/common/**").permitAll()
 //                .antMatchers().permitAll()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-//                .anyRequest().hasAnyAuthority("CUSTOMER", "PARTNER")
-//                .anyRequest().authenticated()
-//                .and().cors()
-//                .and()
-//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .anyRequest().hasAnyAuthority("CUSTOMER", "PARTNER")
+//                .anyRequest().authenticated();
+                .and().cors()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
     @Bean
     @Override
