@@ -21,6 +21,7 @@ const modalStyle = {
   p: 2,
   pt: 5,
   pb: 3,
+  outline: 'none',
 };
 
 const postCodeStyle = {

@@ -154,13 +154,18 @@ export default function Reservation() {
         return;
       }
       const response = await customer.get.stores(type, data);
-      if (today === data.date) {
-        setSearchingToday(true); // 오늘 적용해서 현재 시간 고려
+      if (response.statusCode === 200) {
+        if (today === data.date) {
+          setSearchingToday(true); // 오늘 적용해서 현재 시간 고려
+        } else {
+          setSearchingToday(false);
+        }
+        setStoreList(response.data.storeList);
+        setLoading(false);
       } else {
-        setSearchingToday(false);
+        // eslint-disable-next-line
+        alert(response.message);
       }
-      setStoreList(response.data.storeList);
-      setLoading(false);
     };
     loadStoreList();
   }, [location, date, category, type, navigate]);
@@ -180,7 +185,7 @@ export default function Reservation() {
       </DateDiv>
       <LocateDiv onClick={openLocateModal}>
         <SiteBox>
-          <span style={{ marginTop: '-4px' }}>현재 위치</span>
+          <span style={{ marginTop: '-2px' }}>현재 위치</span>
           <ChevronRightIcon />
         </SiteBox>
         <div style={{ fontSize: '16px' }}>
@@ -188,14 +193,14 @@ export default function Reservation() {
         </div>
       </LocateDiv>
       <FilterBox type={type}>
-        <span onClick={() => setType(1)}>거리순</span>
+        <span onClick={() => setType(1)}>거리 가까운순</span>
         <VerticalBar />
-        <span onClick={() => setType(2)}>평점순</span>
+        <span onClick={() => setType(2)}>평점 높은순</span>
         <VerticalBar />
-        <span onClick={() => setType(3)}>가격순</span>
+        <span onClick={() => setType(3)}>가격 낮은순</span>
       </FilterBox>
       {loading ? (
-        <LoadingSpinner height="200" />
+        <LoadingSpinner height="400" />
       ) : (
         <>
           <div>
@@ -205,6 +210,7 @@ export default function Reservation() {
                 idx={store.sellerIdx}
                 storeName={store.storeName}
                 personName={store.personName}
+                price={store.price}
                 address={store.address}
                 detailAddress={store.detailAddress}
                 distance={store.distance}
@@ -229,7 +235,7 @@ export default function Reservation() {
             }}
           >
             {reservationButton ? (
-              <Btn onClick={goReservationForm} style={{}}>
+              <Btn onClick={goReservationForm}>
                 <span>상담 예약하기</span>
               </Btn>
             ) : (

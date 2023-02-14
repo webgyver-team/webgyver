@@ -13,6 +13,7 @@ export default function EndService() {
   useEffect(() => {
     const getReservationInfo = async () => {
       const response = await customer.get.endService(reservationIdx);
+      console.log(response);
       if (response.statusCode === 200) {
         setData(response.data);
       } else {
@@ -34,24 +35,24 @@ export default function EndService() {
           <InfoBox>
             <Line>
               <span className="first">상호명 : </span>
-              <span className="last">{data.companyName || '?'}</span>
+              <span className="last">{data.companyName}</span>
             </Line>
             <NullBox />
             <Line>
               <span className="first">판매자 : </span>
-              <span className="last">{data.sellerName || '?'}</span>
+              <span className="last">{data.sellerName}</span>
             </Line>
             <NullBox />
             <Line>
               <span className="first">문의 제목 : </span>
-              <span className="last">{data.title || '?'}</span>
+              <span className="last">{data.title}</span>
             </Line>
           </InfoBox>
           <NullBox />
           <TransparentBox>
             <Line>
               <span className="first">상담이용료</span>
-              <span className="last">{` ${data.price || '?'} 원`}</span>
+              <span className="last">{` ${data.price} 원`}</span>
             </Line>
             <NullBox />
             <NullBox />

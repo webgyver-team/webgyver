@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { useRecoilValue, useRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
@@ -6,7 +7,7 @@ import AWS from 'aws-sdk';
 import { sha256 } from 'js-sha256';
 import Button from '@mui/material/Button';
 import TextField from '@mui/material/TextField';
-import ImageInput from '../reservation/elements/ImageInput';
+import ImageInput from '../reviewfrom/elements/ImageInput';
 import {
   locateValueState,
   categoryState,
@@ -16,33 +17,72 @@ import {
 
 export default function ReservationForm() {
   const navigate = useNavigate();
-  const location = useRecoilValue(locateValueState);
-  const categoryIdx = useRecoilValue(categoryState);
-  const customerIdx = useRecoilValue(userIdx);
-  const [matchForm, setMatchForm] = useRecoilState(matchFormState);
-  const [formTitle, setFormTitle] = useState(matchForm.title);
-  const [formContent, setFormContent] = useState(matchForm.content);
-  const [cost, setCost] = useState(matchForm.cost);
-  const [costDisplay, setCostDisplay] = useState(0);
-  const [msgForTitle, setMsgForTitle] = useState('');
-  const [msgForContent, setMsgForContent] = useState('');
-  const [msgForCost, setMsgForCost] = useState('');
-  const [imageList, setImageList] = useState([]);
-  const [imageData, setImageData] = useState([]);
+  const location = useRecoilValue(locateValueState); // 위치 정보
+  const categoryIdx = useRecoilValue(categoryState); // 카테고리 정보
+  const customerIdx = useRecoilValue(userIdx); // 고객 idx
+  const [matchForm, setMatchForm] = useRecoilState(matchFormState); // matchForm 자체
+  const [imageListFromPrev, setImageListFromPrev] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState({
+    categoryIdx,
+    customerIdx,
+    title: '',
+    content: '',
+    cost: 0,
+    address: location.address,
+    detailAddress: location.detail,
+    images: [],
+  });
+  const [msgForTitle, setMsgForTitle] = useState(''); // 제목 메시지
+  const [msgForContent, setMsgForContent] = useState(''); // 내용 메시지
+  const [msgForCost, setMsgForCost] = useState(''); // 비용 메시지
+  const [imageList, setImageList] = useState([]); // 이미지 리스트
+  const [imageData, setImageData] = useState([]); // 이미지 데이터
+
+  useEffect(() => {
+    if (matchForm !== null) {
+      setData({
+        ...matchForm,
+        ...{ images: [] },
+      });
+      setImageListFromPrev([...matchForm.images]);
+      setLoading(false);
+    }
+  }, []);
+
   const changeFormTitle = (event) => {
-    setFormTitle(event.target.value);
+    if (event.target.value.trim().length > 250) {
+      setMsgForTitle('최대 250자까지 입력 가능합니다.');
+      return;
+    }
+    setData((original) => ({
+      ...original,
+      ...{ title: event.target.value },
+    }));
     if (event.target.value.trim().length === 0) {
       setMsgForTitle('제목은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForTitle('');
   };
+
   const changeFormContent = (event) => {
-    setFormContent(event.target.value);
+    if (event.target.value.trim().length > 250) {
+      setMsgForContent('최대 250자까지 입력 가능합니다.');
+      return;
+    }
+    setData((original) => ({
+      ...original,
+      ...{ content: event.target.value },
+    }));
     if (event.target.value.trim().length === 0) {
       setMsgForContent('내용은 한 글자 이상으로 작성해야 합니다.');
     } else setMsgForContent('');
   };
+
   // 이미지 S3 전송 함수
   const sendImageListToS3 = async () => {
+    if (imageListFromPrev.length > 0) {
+      data.images = [...data.images, ...imageListFromPrev];
+    }
     AWS.config.update({
       region: process.env.REACT_APP_AWS_REGION,
       accessKeyId: process.env.REACT_APP_AWS_ACCESS_KEY_ID,
@@ -54,7 +94,7 @@ export default function ReservationForm() {
       const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
       const hashImageName = sha256(
-        `${date.toString()}customerIdx${imageList[i].name}`,
+        `${date.toString()}${customerIdx}${originName}`,
       ); // [날짜 객체 + 회원 idx + 기존 파일명]을 조합하여 해시 처리
       const upload = new AWS.S3.ManagedUpload({
         params: {
@@ -64,14 +104,10 @@ export default function ReservationForm() {
         },
       });
       const promise = upload.promise();
-      promise.then((res) => {
+      promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(res.Location + '에 ' + imageList[i] + '를 저장 완료');
+        alert(err);
       });
-      // .catch((err) => {
-      //   // eslint-disable-next-line
-      // console.log(err)
-      // });
       const newData = {
         saveName: hashImageName + extensionName,
         originName: imageList[i].name,
@@ -81,16 +117,6 @@ export default function ReservationForm() {
     }
   };
   const registReservation = () => {
-    const data = {
-      customerIdx,
-      address: location.address,
-      detailAddress: location.detail,
-      categoryIdx,
-      title: formTitle,
-      content: formContent,
-      cost,
-      images: imageData,
-    };
     // data에 대한 유효성 검사 필요!!
     if (data.customerIdx === null) {
       // 고객 정보 알 수 없음
@@ -131,17 +157,15 @@ export default function ReservationForm() {
     // 잘 보내졌으면 data를 POST
     sendImageListToS3()
       .then(() => {
-        // eslint-disable-next-line
-        setMatchForm(data);
-        console.log(data); // POST로 수정 예정
+        setMatchForm({ ...data, ...{ images: data.images.concat(imageData) } });
       })
       .then(() => {
         navigate('/match');
+      })
+      .catch((err) => {
+        // eslint-disable-next-line
+        alert(err);
       });
-    // .catch((err) => {
-    //   // eslint-disable-next-line
-    //   console.log(err);
-    // });
   };
   const onlyNumber = (input) => {
     if (Number.isNaN(Number(input))) {
@@ -161,9 +185,11 @@ export default function ReservationForm() {
       setMsgForCost('상담가격은 10만원 미만으로 설정할 수 있습니다.');
       return;
     }
-    setCost(value);
+    setData((original) => ({
+      ...original,
+      ...{ cost: value },
+    }));
     value = `${value.toLocaleString('ko-KR')}`;
-    setCostDisplay(value);
   };
 
   return (
@@ -190,7 +216,7 @@ export default function ReservationForm() {
               required
               fullWidth
               onChange={changeFormTitle}
-              value={formTitle}
+              value={data.title}
             />
             <ErrorMessage>{msgForTitle}</ErrorMessage>
           </FormInput>
@@ -203,13 +229,19 @@ export default function ReservationForm() {
               multiline
               rows={4}
               onChange={changeFormContent}
-              value={formContent}
+              value={data.content}
             />
             <ErrorMessage>{msgForContent}</ErrorMessage>
           </FormInput>
-          <FormInput style={{ marginBottom: '16px' }}>
-            <ImageInput sendImageList={setImageList} />
-          </FormInput>
+          {!loading && (
+            <FormInput style={{ marginBottom: '16px' }}>
+              <ImageInput
+                sendImageList={setImageList}
+                existImages={matchForm.images}
+                sendExistImages={setImageListFromPrev}
+              />
+            </FormInput>
+          )}
           <FormInput style={{ marginTop: '4px' }}>
             <TextField
               label="상담비용"
@@ -218,7 +250,7 @@ export default function ReservationForm() {
               multiline
               margin="normal"
               fullWidth
-              value={costDisplay}
+              value={data.cost}
               onChange={handleCost}
             />
             <ErrorMessage>{msgForCost}</ErrorMessage>

@@ -21,8 +21,9 @@ export default function ReviewForm() {
   const customerIdx = useRecoilValue(userIdx);
   const [newForm, setNewForm] = useState(null);
   const [imageListFromReview, setImageListFromReview] = useState([]);
+  const [loading, setLoading] = useState(true); // imageListFromReview 다 받아낸 후 props로 보내기 위함
   const [data, setData] = useState({
-    idx: reservationIdx, // review or reservationIdx,
+    idx: reservationIdx, // review or reservationIdx
     title: '',
     content: '',
     rating: 5,
@@ -33,9 +34,9 @@ export default function ReviewForm() {
       // 얘는 등록 모드 -> idx를 reviewIdx로 덮어 써야 함
       setNewForm(true);
       if (reservationIdx === null) {
+        navigate('/');
         // eslint-disable-next-line
         alert('잘못된 접근입니다.');
-        navigate('/');
       }
     } else {
       // 얘는 수정 모드 -> idx를 reservationIdx로 덮어 써야 함
@@ -48,9 +49,8 @@ export default function ReviewForm() {
             ...response.data.review,
             ...{ images: [] },
           }));
-          response.data.review.images.forEach((image) => {
-            imageListFromReview.push(image);
-          });
+          setImageListFromReview([...response.data.review.images]);
+          setLoading(false);
         } else {
           // eslint-disable-next-line
           alert('해당 리뷰를 수정할 수 없습니다.');
@@ -67,6 +67,10 @@ export default function ReviewForm() {
   const [imageList, setImageList] = useState([]);
   const [imageData, setImageData] = useState([]);
   const changeTitle = (event) => {
+    if (event.target.value.trim().length > 250) {
+      setMsgForTitle('최대 250자까지 입력 가능합니다.');
+      return;
+    }
     setData((original) => ({
       ...original,
       ...{ title: event.target.value },
@@ -76,6 +80,10 @@ export default function ReviewForm() {
     } else setMsgForTitle('');
   };
   const changeContent = (event) => {
+    if (event.target.value.trim().length > 250) {
+      setMsgForContent('최대 250자까지 입력 가능합니다.');
+      return;
+    }
     setData((original) => ({
       ...original,
       ...{ content: event.target.value },
@@ -123,12 +131,27 @@ export default function ReviewForm() {
     }
   };
   const registReview = async () => {
+    if (data.title.trim().length === 0) {
+      // 제목 입력 유효하지 않음
+      // eslint-disable-next-line
+      alert('제목을 한 글자 이상 입력해야 합니다.');
+      return;
+    }
+    if (data.content.trim().length === 0) {
+      // eslint-disable-next-line
+      alert('내용을 한 글자 이상 입력해야 합니다.');
+      return;
+      // 내용 입력 유효하지 않음
+    }
     // 신규 폼 등록
     sendImageListToS3().then(async () => {
       if (newForm) {
         data.reservationIdx = data.idx;
         delete data.idx;
-        const response = await customer.post.review(data);
+        const response = await customer.post.review({
+          ...data,
+          ...{ images: imageData },
+        });
         if (response.statusCode === 200) {
           // eslint-disable-next-line
           alert('리뷰가 등록되었습니다.');
@@ -181,14 +204,6 @@ export default function ReviewForm() {
           />
         </Box>
         <NullBox />
-        <div>
-          <ImageInput
-            sendImageList={setImageList}
-            existImages={imageListFromReview}
-            sendExistImages={setImageListFromReview}
-          />
-        </div>
-        <NullBox />
         <NullBox />
         <div style={{ marginTop: '4px' }}>
           <Header>리뷰를 입력해 주세요.</Header>
@@ -201,7 +216,6 @@ export default function ReviewForm() {
             fullWidth
             multiline
             rows={1}
-            style={{ maxWidth: '400px' }}
             onChange={changeTitle}
             value={data.title}
           />
@@ -214,12 +228,21 @@ export default function ReviewForm() {
             fullWidth
             multiline
             rows={4}
-            style={{ maxWidth: '400px' }}
             onChange={changeContent}
             value={data.content}
           />
           <ErrorMessage>{msgForContent}</ErrorMessage>
         </div>
+        {!loading && (
+          <div>
+            <ImageInput
+              sendImageList={setImageList}
+              existImages={imageListFromReview}
+              sendExistImages={setImageListFromReview}
+            />
+          </div>
+        )}
+
         <div style={{ textAlign: 'center', marginTop: '16px' }}>
           <Button variant="contained" onClick={registReview}>
             {newForm === true ? '리뷰 등록' : '리뷰 수정'}

@@ -14,10 +14,7 @@ export default function CompleteHistory() {
   const [histories, setHistories] = useState([]);
   const [loading, setLoading] = useState(true);
   const customerIdx = useRecoilValue(userIdx);
-  if (customerIdx === null) {
-    // eslint-disable-next-line no-alert
-    alert('로그인이 필요합니다.');
-  }
+
   useEffect(() => {
     const getHistory = async () => {
       const response = await customer.get.completeHistory(customerIdx);
@@ -72,7 +69,7 @@ function CardView({ history }) {
     setIsShowMore(!isShowMore);
   };
 
-  const currentType = ['예약상담', '바로상담', '방문예약'];
+  const currentType = ['', '예약상담', '바로상담', '방문예약'];
   const currentState = [
     '',
     '수락 대기중',

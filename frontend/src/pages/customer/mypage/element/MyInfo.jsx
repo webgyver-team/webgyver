@@ -12,11 +12,6 @@ export default function MyInfo() {
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const [myInfo, setMyInfo] = useState(null);
   useEffect(() => {
-    if (customerIdx === null) {
-      alert('로그인이 필요합니다.');
-      setLoginOpenState(true);
-      return;
-    }
     const getMyInfo = async () => {
       const response = await customer.get.myInfo(customerIdx);
       if (response.statusCode === 200) {
@@ -31,7 +26,7 @@ export default function MyInfo() {
   return (
     <Main>
       {myInfo === null ? (
-        <LoadingSpinner />
+        <LoadingSpinner height="500" />
       ) : (
         <InfoBox>
           <div>
@@ -62,13 +57,10 @@ export default function MyInfo() {
           <div>
             <span className="first">카드정보</span>
             <span className="last">
-              {`${myInfo.cardNumber.slice(0, 4)}-${myInfo.cardNumber.slice(
+              {`${myInfo.cardNumber.slice(
+                0,
                 4,
-                8,
-              )}-${myInfo.cardNumber.slice(8, 12)}-${myInfo.cardNumber.slice(
-                12,
-                16,
-              )}`}
+              )}-XXXX-XXXX-${myInfo.cardNumber.slice(12, 16)}`}
             </span>
           </div>
         </InfoBox>

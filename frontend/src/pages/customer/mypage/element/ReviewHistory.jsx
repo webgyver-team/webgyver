@@ -19,13 +19,9 @@ export default function ReviewHistory() {
   const [reload, setReload] = useState(true);
   useEffect(() => {
     if (!reload) return;
-    if (customerIdx === null) {
-      alert('로그인이 필요합니다.');
-      setLoginOpenState(true);
-      return;
-    }
     const getReviews = async () => {
       const response = await customer.get.reviews(customerIdx);
+
       if (response.statusCode === 200) {
         setReviews(response.data.reviews);
       } else {
@@ -38,7 +34,7 @@ export default function ReviewHistory() {
   }, [customerIdx, reload, setLoginOpenState]);
   return (
     <Main>
-      {reviews === null ? <LoadingSpinner /> : null}
+      {reviews === null ? <LoadingSpinner height="500" /> : null}
       {/* eslint-disable-next-line */}
       {reviews &&
         reviews.map((review) => (
@@ -90,7 +86,11 @@ export function CardView({ review, setReload }) {
   return (
     <Card>
       <TitleBox>
-        <p className="title">{review.title}</p>
+        <p className="title">
+          {review.title.length > 30
+            ? `${review.title.slice(0, 30)}...`
+            : review.title}
+        </p>
         <div
           style={{
             width: '60px',

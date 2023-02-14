@@ -14,7 +14,7 @@ export default function MasterReview() {
   useEffect(() => {
     const loadReviewList = async () => {
       const response = await master.get.review(userId);
-      setReviewList(response.data.reviews);
+      setReviewList(response.data.reviews.reverse());
       console.log('hi', response.data);
       setReload(false);
     };
@@ -25,14 +25,16 @@ export default function MasterReview() {
 
   return (
     <Main>
-      <Text>리뷰</Text>
-      <TableBox>
-        {!reviewList.length && NoData}
-        {reviewList &&
-          reviewList.map((el, i) => (
-            <Review key={i} review={el} setReload={setReload} />
-          ))}
-      </TableBox>
+      <div>
+        <Text>리뷰</Text>
+        <TableBox>
+          {!reviewList.length && NoData}
+          {reviewList &&
+            reviewList.map((el, i) => (
+              <Review key={i} review={el} setReload={setReload} />
+            ))}
+        </TableBox>
+      </div>
     </Main>
   );
 }

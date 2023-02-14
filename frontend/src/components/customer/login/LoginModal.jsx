@@ -78,7 +78,7 @@ export default function LoginModal() {
         }
       } catch (error) {
         // eslint-disable-next-line
-        alert(error);
+        alert('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
     }
   };
@@ -111,6 +111,7 @@ export default function LoginModal() {
               label="아이디"
               variant="outlined"
               required
+              margin="dense"
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
@@ -124,6 +125,7 @@ export default function LoginModal() {
               label="비밀번호"
               variant="outlined"
               required
+              margin="dense"
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
