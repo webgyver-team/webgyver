@@ -21,6 +21,7 @@ public class BaseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Long idx;
 
+    @Column(name = "created_at")
     @DateTimeFormat(pattern = "yyyy-MM-dd-HH-mm")
     private LocalDateTime createdAt = LocalDateTime.now();
 
