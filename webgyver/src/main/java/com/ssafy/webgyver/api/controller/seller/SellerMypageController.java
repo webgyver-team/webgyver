@@ -8,9 +8,9 @@ import com.ssafy.webgyver.api.request.common.picture.PictureListReq;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
+import com.ssafy.webgyver.api.response.seller.SellerGetBookTimeRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
-import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
-import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
+import com.ssafy.webgyver.api.service.seller.SellerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
@@ -19,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -68,6 +67,8 @@ public class SellerMypageController {
             @RequestBody Map<String, Object> request
 //            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
     ) {
+        System.out.println("~~~~~~~~~~~~~~~~");
+        System.out.println("PUTMAPPING!!!!!!!!!!");
         // 1. 아티클과 연관단 사진 모두 삭제
         sellerMypageService.deleteAllPicture(articleIdx);
         // 2. 아티클 업데이트
@@ -76,14 +77,19 @@ public class SellerMypageController {
         ArticleAllReq articleAllReq = new ArticleAllReq();
         articleAllReq.setType(Long.valueOf(String.valueOf(request.get("type"))));
         articleAllReq.setContent((String) request.get("content"));
+        articleAllReq.setIdx(articleIdx);
 
         PictureListReq pictureListReq = new PictureListReq();
         Gson gson = new Gson();
         pictureListReq.setImages(gson.fromJson(gson.toJson(request.get("images")), new TypeToken<List<PictureReq>>() {
         }.getType()));
+        System.out.println("------------------------------------");
+        System.out.println(articleIdx);
+        System.out.println(articleAllReq);
+        System.out.println(pictureListReq);
+        System.out.println("------------------------------------");
 
-
-        Article result = sellerMypageService.insertHistory(articleAllReq);
+        Article result = sellerMypageService.updateHistory(articleAllReq);
         sellerMypageService.insertPictures(result, pictureListReq);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }
@@ -141,5 +147,15 @@ public class SellerMypageController {
     @DeleteMapping("/comment/{a_idx}")
     public ResponseEntity<?> deleteComment(@PathVariable(name = "a_idx") Long commentIdx) {
         return ResponseEntity.ok().body(sellerMypageService.deleteComment(commentIdx));
+    }
+    @GetMapping("/booktime/{sellerIdx}")
+    public ResponseEntity<?> getSellerBookTime(@PathVariable(name = "sellerIdx") Long sellerIdx, SellerIdxReq idxReq){
+        SellerGetBookTimeRes res = sellerMypageService.getSellerBookTime(idxReq);
+        return ResponseEntity.ok(res);
+    }
+    @PutMapping("/booktime/{sellerIdx}")
+    public ResponseEntity<?> updateSellerBookTime(@PathVariable(name = "sellerIdx") Long sellerIdx, SellerIdxReq idxReq, @RequestBody SellerUpdateBookTimeReq timeReq){
+        BaseResponseBody res = sellerMypageService.updateSellerBookTime(idxReq, timeReq);
+        return ResponseEntity.ok(res);
     }
 }

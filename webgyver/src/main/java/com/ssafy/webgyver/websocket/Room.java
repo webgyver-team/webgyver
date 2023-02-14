@@ -38,29 +38,32 @@ public class Room {
     public Map<String, Object> roomInfo() {
         Map<String, Object> res = new HashMap<>();
         for (Session session : sessions) {
-            res.put((String) session.getUserProperties().get("name"), session.getUserProperties());
+            String key1 = (String) session.getUserProperties().get("type");
+            String key2 = String.valueOf((long) session.getUserProperties().get("idx"));
+            res.put(key1 + "-" + key2, "");
         }
-        res.put("sellerName", reservation.getSeller().getName());
-        res.put("customerName", reservation.getCustomer().getName());
-        res.put("예약시간", reservation.getReservationTime());
-        res.put("예약가격", reservation.getReservationPrice());
+//        res.put("sellerName", reservation.getSeller().getName());
+//        res.put("customerName", reservation.getCustomer().getName());
+//        res.put("예약시간", reservation.getReservationTime());
+//        res.put("예약가격", reservation.getReservationPrice());
         return res;
     }
 
-    public synchronized void join(Session session) {
+    public synchronized void join(Session session) throws IOException {
         // 이미 접속한 다른 세션이 있으면 강제 종료함.
+        Set<Session> willDie = new HashSet<>();
+        System.out.println("나의 세션 : " + session.getUserProperties().get("type") + " " + session.getUserProperties().get("idx"));
         for (Session other : sessions) {
             if (other.getUserProperties().get("type").equals(session.getUserProperties().get("type"))) {
                 if (other.getUserProperties().get("idx").equals(session.getUserProperties().get("idx"))) {
-                    if (other.isOpen()) {
-                        try {
-                            other.close();
-                        } catch (IOException e) {
-                            throw new RuntimeException(e);
-                        }
-                    }
+                    willDie.add(other);
+                    System.out.println("원래 접속한 세션 죽임 : " + other.getUserProperties().get("type") + " " + other.getUserProperties().get("idx"));
                 }
             }
+        }
+        for (Session other : willDie) {
+            if (other.isOpen())
+                other.close();
         }
         sessions.add(session);
     }
@@ -79,7 +82,7 @@ public class Room {
 
     public synchronized void sendMessageOther(String msg, Session me) {
         for (Session session : sessions) {
-            if (session.getId().equals(me.getId())|| !session.isOpen())
+            if (session.getId().equals(me.getId()) || !session.isOpen())
                 continue;
             System.out.println("나 메세지 보낸다!!~!");
             sendMessage(msg, session);
@@ -97,7 +100,7 @@ public class Room {
 
     public void explore() throws IOException {
         Set<Session> copySessions = new HashSet<>(sessions);
-        for(Session session:copySessions){
+        for (Session session : copySessions) {
             leave(session);
             session.close();
         }

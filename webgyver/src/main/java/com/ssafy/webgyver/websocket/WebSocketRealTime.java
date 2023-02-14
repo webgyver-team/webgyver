@@ -105,7 +105,7 @@ public class WebSocketRealTime {
                 break;
             }
         }
-        // 결제부터 하고, 예약, 아티클, 이미지 넣기
+        // 결제부터 하고, 예약, 아티클, 이미지 넣기, MAP으로 다시 고쳐야함.
         RefreshSellerMessage reservationInfo = null;
         for (RefreshSellerMessage cur : refreshSellerMessageList) {
             if (cur.getIdx() == customerIdx) {
@@ -208,7 +208,7 @@ public class WebSocketRealTime {
                     .images(gson.fromJson(gson.toJson(customerProperties.get("images")), new TypeToken<List<PictureReq>>() {
                     }.getType()))
                     .idx((long) customerProperties.get("idx"))
-                    .categoryIdx(Math.round((double) customerProperties.get("categoryIdx")))
+                    .categoryIdx(Math.round(Double.valueOf((String) customerProperties.get("categoryIdx"))))
                     .build();
 
             refreshSellerMessageList.add(refreshSellerMessage);
@@ -246,7 +246,7 @@ public class WebSocketRealTime {
     }
 
     public void METHOD_CHANGE_DISTANCE(Session session, Map<String, Object> info) throws IOException {
-        session.getUserProperties().put("viewDistance", Double.valueOf((String) info.get("viewDistance")));
+        session.getUserProperties().put("viewDistance", Double.valueOf(String.valueOf(info.get("viewDistance"))));
         refreshCustomerAllCustomer();
     }
 }

@@ -4,6 +4,7 @@ import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.request.customer.CustomerModifyReviewReq;
 import com.ssafy.webgyver.api.request.customer.CustomerMypageReq;
 import com.ssafy.webgyver.api.request.customer.CustomerRegisterReviewReq;
+import com.ssafy.webgyver.api.response.article.CustomerReviewListRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Customer;
@@ -192,6 +193,29 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
         }
 
         return reviews;
+    }
+
+    /**
+     * 사용자 리뷰 상세 조회
+     * @param reviewIdx 리뷰 idx
+     * @return 상세 조회 결과
+     */
+    @Override
+    public BaseResponseBody getDetailReview(Long reviewIdx) {
+        Map<String, Object> review = new HashMap<>();
+        Article article = articleRepository.findByIdx(reviewIdx);
+
+        if(article != null) {
+            review.put("review", article);
+            List<Picture> pictures = pictureRepository.findPicturesByArticleIdx(reviewIdx);
+
+            if(pictures != null)
+                review.put("images", pictures);
+
+            return CustomerReviewListRes.getDetailCustomerArticle(200, "OK", review);
+        }
+
+        return BaseResponseBody.of(500, "목록을 가져올 수 없습니다. 잠시 후 다시 시도해 주세요.");
     }
 
     /**

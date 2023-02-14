@@ -46,29 +46,34 @@ public class WebSocketFaceTime {
     @OnOpen
     public void onOpen(Session session, @PathParam("type") String type, @PathParam("idx") Long idx, @PathParam("reservationIdx") Long reservationIdx) throws IOException {
         // 폭발머신 출동!!!!!
-        startExplosionMachine();
-
+//        startExplosionMachine();
+        Map<String, Object> reply = new HashMap<>();
         if (!rooms.containsKey(reservationIdx)) {
             System.out.println("noReservationIdx");
-            Reservation reservation = reservationService.getReservation(reservationIdx);
+            Optional<Reservation> reservation = reservationService.getReservation(reservationIdx);
             // 올바르지 않은 입력일때 1. 예약번호 잘못 입력함
-            if (reservation == null) {
+            if (!reservation.isPresent()) {
+                reply.put("method", MethodType.ERROR);
+                reply.put("msg", "예약번호를 잘못입력하셨습니다.");
+                session.getBasicRemote().sendText(gson.toJson(reply));
                 session.close();
                 return;
             }
-            addRoom(reservation);
+            addRoom(reservation.get());
         }
 
         // 올바르지 않은 입력일때2
         // ex) reservationIdx = 100, customerIdx = 1, sellerIdx = 2일때
         // 100번 예약으로 6번 소비자가 왔다던가, 1번 판매자가 왔다던가 등..
         Room room = rooms.get(reservationIdx);
-        if ((type.equals("seller") && room.getSellerIdx() != idx) || (type.equals("partner") && room.getCustomerIdx() != idx)) {
-            String msg = "해당 방에 입장할수 있는 권한이 없습니다.";
-            System.out.println(msg);
-            session.getBasicRemote().sendText(msg);
-            CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, msg);
-            session.close(closeReason);
+//        System.out.println(room.getSellerIdx() + "/////" + room.getCustomerIdx() + "//////" + room.getReservation().getIdx());
+        if ((type.equals("seller") && room.getSellerIdx() != idx) || (type.equals("customer") && room.getCustomerIdx() != idx)) {
+            reply.put("method", MethodType.ERROR);
+            reply.put("msg", "해당 방의 입장권한이 없습니다.");
+            session.getBasicRemote().sendText(gson.toJson(reply));
+            session.close();
+//            CloseReason closeReason = new CloseReason(CloseReason.CloseCodes.CANNOT_ACCEPT, msg);
+//            session.close(closeReason);
             return;
         }
 
@@ -79,6 +84,7 @@ public class WebSocketFaceTime {
         session.getUserProperties().put("reservationIdx", reservationIdx);
         room.join(session);
 
+        System.out.println(room.roomInfo());
         Message message = null;
         if (room.sessions.size() == 1) {
             message = new Message(MethodType.ALONE);
@@ -128,12 +134,14 @@ public class WebSocketFaceTime {
         Room room = extractRoom(session);
 //        room.sendMessage(jsonMessage);
         MethodType method = MethodType.valueOf((String) info.remove("method"));
+        Map<String, Object> reply = new HashMap<>();
         if (method == null) {
-            session.getBasicRemote().sendText("메세지 형식을 지켜주세요.");
+            reply.put("method", MethodType.ERROR);
+            reply.put("msg", "메세지 형식을 지켜주세요");
+            session.getBasicRemote().sendText(gson.toJson(reply));
             return;
         }
 //        room.sendMessageOther(jsonMessage, session);
-        Map<String, Object> reply = new HashMap<>();
         switch (method) {
             case WANT_MEET:
                 reply.put("method", MethodType.WANT_MEET);
@@ -176,7 +184,6 @@ public class WebSocketFaceTime {
         Room room = new Room(reservation);
         if (!rooms.containsKey(reservation.getIdx())) {
             rooms.put(reservation.getIdx(), room);
-            System.out.println(room);
         }
     }
 
@@ -186,7 +193,7 @@ public class WebSocketFaceTime {
     }
 
     public Map<String, Object> roomInfo(long reservationIdx) {
-        addRoom(reservationService.getReservation(reservationIdx));
+        addRoom(reservationService.getReservation(reservationIdx).get());
         return rooms.get(reservationIdx).roomInfo();
     }
 

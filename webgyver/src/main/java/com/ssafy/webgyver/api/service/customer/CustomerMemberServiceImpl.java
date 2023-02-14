@@ -5,14 +5,22 @@ import com.ssafy.webgyver.api.request.customer.CustomerLoginReq;
 import com.ssafy.webgyver.api.request.customer.CustomerSignUpPostReq;
 import com.ssafy.webgyver.api.response.customer.CustomerLoginRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
+import com.ssafy.webgyver.common.util.JwtTokenProvider;
 import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import com.ssafy.webgyver.db.entity.Customer;
+import com.ssafy.webgyver.db.entity.RoleType;
 import com.ssafy.webgyver.db.repository.customer.CustomerMemberRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,14 +32,17 @@ import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
+import java.util.Collections;
 import java.util.Optional;
 
 @Slf4j
-@Service
 @RequiredArgsConstructor
+@Service
 public class CustomerMemberServiceImpl implements CustomerMemberService{
-    final CustomerMemberRepository customerMemberRepository;
-    final PasswordEncoder passwordEncoder;
+    private final CustomerMemberRepository customerMemberRepository;
+    private final PasswordEncoder passwordEncoder;
+    private final JwtTokenProvider jwtTokenProvider;
+    private final AuthenticationManager authenticationManager;
 
     @Value("${properties.file.toss.secret}")
     String tossKey;
@@ -58,6 +69,7 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
                 .cardValidity(customerRegisterInfo.getCardValidity())
                 .customerKey(customerKey)
                 .billingKey(resultBilling.getMessage())
+                .roles(Collections.singletonList(RoleType.CUSTOMER.name()))
                 .build();
 
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
@@ -128,12 +140,25 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
         String userId = req.getId();
         String password = req.getPassword();
 
-        Customer customer = customerMemberRepository.findCustomerById(userId).get();
+        Optional<Customer> customer = customerMemberRepository.findCustomerById(userId);
+        System.out.println("customer : " + customer);
+        if (!customer.isPresent()) {
+            return CustomerLoginRes.of(201, "해당하는 유저가 존재하지 않습니다.", null, null);
+        }
+
         // 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
-        if (passwordEncoder.matches(password, customer.getPassword())) {
+        if (passwordEncoder.matches(password, customer.get().getPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-            return CustomerLoginRes.of(200, "Success", JwtTokenUtil.getToken(
-                    String.valueOf(customer.getIdx())),customer.getIdx());
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, password);
+            System.out.println("Token : " + authenticationToken);
+
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+//            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
+
+            System.out.println("authentication : " + authentication );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            return CustomerLoginRes.of(200, "Success", jwtTokenProvider.generateToken(
+                   authentication),customer.get().getIdx());
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
         return CustomerLoginRes.of(401, "Invalid Password", null, null);

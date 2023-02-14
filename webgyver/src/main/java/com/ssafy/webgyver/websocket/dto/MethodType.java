@@ -9,5 +9,6 @@ public enum MethodType {
     GO_FACE_TIME,
     INIT,
     CHANGE_DISTANCE,
-    MAKE_RESERVATION
+    MAKE_RESERVATION,
+    ERROR,
 }
