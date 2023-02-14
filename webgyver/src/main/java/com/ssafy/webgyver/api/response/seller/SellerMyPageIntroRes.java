@@ -30,6 +30,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
         private String backgroundImage;
         private String ratingAvg;
         private String reviewCnt;
+        private Integer point;
         public Response(Seller entity, List<CompanyTimeDTO> companyTimeDTOList, List<CategoryDTO> categoryDTOList){
             this.idx = entity.getIdx();
             this.userName = entity.getName();
@@ -46,6 +47,7 @@ public class SellerMyPageIntroRes extends DataResponseBody {
             this.backgroundImage = entity.getCompanyImage();
             this.ratingAvg = String.valueOf(Math.round(((double) entity.getStarTotal() / entity.getReviewCount()) * 100.0) / 100.0);
             this.reviewCnt = String.valueOf(entity.getReviewCount());
+            this.point = entity.getPoint();
         }
     }
     @Getter

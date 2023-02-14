@@ -311,4 +311,15 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         BaseResponseBody res = BaseResponseBody.of(200, "Success");
         return res;
     }
+
+    @Override
+    @Transactional
+    public BaseResponseBody exchangePoint(SellerExchangeReq req) {
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        seller.updatePoint(req.getPoint() * -1);
+
+        sellerRepository.save(seller);
+
+        return BaseResponseBody.of(200, "OK");
+    }
 }

@@ -48,4 +48,6 @@ public interface SellerMypageService {
     BaseResponseBody deleteComment(Long commentIdx);
     SellerGetBookTimeRes getSellerBookTime(SellerIdxReq req);
     BaseResponseBody updateSellerBookTime(SellerIdxReq req, SellerUpdateBookTimeReq timeReq);
+
+    BaseResponseBody exchangePoint(SellerExchangeReq req);
 }

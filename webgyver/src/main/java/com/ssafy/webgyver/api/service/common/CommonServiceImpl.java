@@ -84,4 +84,9 @@ public class CommonServiceImpl implements CommonService {
     public Seller getSeller(long sellerIdx) {
         return sellerRepository.findSellerByIdx(sellerIdx);
     }
+
+    @Override
+    public void setSeller(Seller seller) {
+        sellerRepository.save(seller);
+    }
 }
