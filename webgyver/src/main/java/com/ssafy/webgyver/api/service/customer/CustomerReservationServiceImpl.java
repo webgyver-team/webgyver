@@ -170,7 +170,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         if (customer.getAddress() == null) {
             res = CustomerAddressRes.of(201, "null address", null);
         } else {
-            CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
+            CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress(), customer.getLat(), customer.getLng());
             res = CustomerAddressRes.of(200, "have address", response);
         }
 
