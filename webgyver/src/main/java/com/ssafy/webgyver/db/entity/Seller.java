@@ -149,8 +149,19 @@ public class Seller extends BaseEntity implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     public void addReview(long star) {
         this.reviewCount++;
         this.starTotal += star;
+    }
+
+    public void deleteReview(long star) {
+        this.reviewCount--;
+        this.starTotal -= star;
+    }
+
+    public void updateReview(long beforeStar, long afterStar) {
+        this.starTotal -= beforeStar;
+        this.starTotal += afterStar;
     }
 }
