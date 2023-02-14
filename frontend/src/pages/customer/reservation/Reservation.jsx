@@ -204,24 +204,26 @@ export default function Reservation() {
       ) : (
         <>
           <div>
-            {storeList.map((store) => (
-              <StoreInfo
-                key={store.sellerIdx}
-                idx={store.sellerIdx}
-                storeName={store.storeName}
-                personName={store.personName}
-                price={store.price}
-                address={store.address}
-                detailAddress={store.detailAddress}
-                distance={store.distance}
-                star={store.star}
-                picture={store.picture}
-                allTime={store.allTime}
-                noTime={store.noTime}
-                handleClickedTimeButton={handleClickedTimeButton}
-                isToday={searchingToday}
-              />
-            ))}
+            {storeList.map((store) => {
+              return (
+                <StoreInfo
+                  key={store.sellerIdx}
+                  idx={store.sellerIdx}
+                  storeName={store.storeName}
+                  personName={store.personName}
+                  price={store.price}
+                  address={store.address}
+                  detailAddress={store.detailAddress}
+                  distance={store.distance}
+                  star={store.star}
+                  picture={store.image}
+                  allTime={store.allTime}
+                  noTime={store.noTime}
+                  handleClickedTimeButton={handleClickedTimeButton}
+                  isToday={searchingToday}
+                />
+              );
+            })}
           </div>
           <NullBox />
           <div
