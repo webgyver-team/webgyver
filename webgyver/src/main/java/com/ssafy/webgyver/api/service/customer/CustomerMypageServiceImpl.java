@@ -6,10 +6,7 @@ import com.ssafy.webgyver.api.request.customer.CustomerMypageReq;
 import com.ssafy.webgyver.api.request.customer.CustomerRegisterReviewReq;
 import com.ssafy.webgyver.api.response.article.CustomerReviewListRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
-import com.ssafy.webgyver.db.entity.Article;
-import com.ssafy.webgyver.db.entity.Customer;
-import com.ssafy.webgyver.db.entity.Picture;
-import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.db.entity.*;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
@@ -226,8 +223,7 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
     @Override
     @Transactional
     public BaseResponseBody regiterReview(CustomerRegisterReviewReq req) {
-        Reservation reservation = Reservation.builder().build();
-        reservation.setIdx(req.getReservationIdx());
+        Reservation reservation = reservationRepository.findByIdx(req.getReservationIdx());
 
         long type = (req.getRating() * -1L) - 2; //별점
         Article review = Article.builder()
@@ -239,6 +235,9 @@ public class CustomerMypageServiceImpl implements CustomerMypageService {
         Article article = articleRepository.save(review);
 
         savePictures(req.getImages(), article);
+
+        Seller seller = reservation.getSeller();
+        seller.addReview(req.getRating());
 
         return BaseResponseBody.of(200, "Success");
     }
