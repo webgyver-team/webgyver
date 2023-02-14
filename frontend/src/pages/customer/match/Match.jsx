@@ -44,22 +44,6 @@ export default function Matching() {
     };
   }, []);
 
-  const useInterval = (callback, delay) => {
-    const savedCallback = useRef(null);
-    useEffect(() => {
-      savedCallback.current = callback;
-    }, [callback]);
-    useEffect(() => {
-      const executeCallback = () => {
-        savedCallback.current();
-      };
-      const timerId = setInterval(executeCallback, delay);
-      return () => clearInterval(timerId);
-    }, []);
-  };
-  useInterval(() => {
-    setCounter(counter - 1);
-  }, 1000);
   useEffect(() => {
     clearInterval();
     initialTime.current = 100;
@@ -155,12 +139,7 @@ export default function Matching() {
   };
 
   // eslint-disable-next-line react/jsx-one-expression-per-line
-  const alertText = (
-    <p>
-      {counter}
-      초 뒤, 이전 페이지로 돌아갑니다.
-    </p>
-  );
+  const alertText = <p>{counter}초 뒤, 이전 페이지로 돌아갑니다.</p>;
 
   const marker = (
     <div className="dot">
