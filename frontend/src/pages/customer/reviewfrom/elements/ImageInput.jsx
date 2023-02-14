@@ -62,7 +62,7 @@ export default function ImageInput({
     });
   }, [imageList]);
 
-  // 이미지 제거용 함수
+  // 신규 이미지 제거용 함수
   const removeImage = (targetName) => {
     const resultSet = imageList.filter((image) => {
       return image.name !== targetName;
