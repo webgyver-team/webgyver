@@ -47,6 +47,8 @@ export default function ReservationForm() {
       });
       setImageListFromPrev([...matchForm.images]);
       setLoading(false);
+    } else {
+      setLoading(false);
     }
   }, []);
 
@@ -237,7 +239,7 @@ export default function ReservationForm() {
             <FormInput style={{ marginBottom: '16px' }}>
               <ImageInput
                 sendImageList={setImageList}
-                existImages={matchForm.images}
+                existImages={matchForm !== null ? matchForm.images : []}
                 sendExistImages={setImageListFromPrev}
               />
             </FormInput>
