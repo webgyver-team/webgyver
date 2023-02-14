@@ -26,7 +26,7 @@ export default function Reservation() {
   // 위치설정 모달 on/off
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const openLocateModal = () => setLocateModalOpen(true);
-  const [type, setType] = useState(2);
+  const [type, setType] = useState(1);
   const [storeList, setStoreList] = useState([]);
   const category = useRecoilValue(categoryState);
   const reservationNull = {

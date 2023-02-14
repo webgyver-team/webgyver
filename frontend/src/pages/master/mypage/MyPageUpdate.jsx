@@ -40,6 +40,7 @@ export default function MyPageUpdate() {
     setNewProfileImage(event.target.files[0]);
   };
   const sendRequest = async () => {
+    console.log('PUT 요청 실행');
     const response = await master.put.profile(data, idx);
     if (response.statusCode === 200) {
       alert('수정이 완료되었습니다.');
@@ -52,6 +53,7 @@ export default function MyPageUpdate() {
   useLayoutEffect(() => {
     const getMyPageData = async () => {
       const response = await master.get.myPage(idx);
+      console.log('GET 요청 실행');
       setMyPageData(response.data.profile);
       setData({
         password: null,
