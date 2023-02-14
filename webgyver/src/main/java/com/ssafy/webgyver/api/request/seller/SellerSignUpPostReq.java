@@ -1,7 +1,7 @@
 package com.ssafy.webgyver.api.request.seller;
 
 import com.ssafy.webgyver.db.entity.SellerCategory;
-import com.ssafy.webgyver.db.entity.test.RoleType;
+import com.ssafy.webgyver.db.entity.RoleType;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;

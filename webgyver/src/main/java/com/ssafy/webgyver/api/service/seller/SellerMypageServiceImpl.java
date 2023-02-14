@@ -1,4 +1,4 @@
-package com.ssafy.webgyver.api.service.Seller;
+package com.ssafy.webgyver.api.service.seller;
 
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;
@@ -298,7 +298,7 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         String timeString = "";
         for (int i = 0; i < 8; i++) {
-
+            System.out.println(timeReq.getBookTimeList().get(i).getHoliday());
             if (timeReq.getBookTimeList().get(i).getHoliday()) {
                 timeString += timeReq.getBookTimeList().get(i).getDay() + "$휴일%";
             } else {
@@ -310,5 +310,16 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         sellerRepository.save(seller);
         BaseResponseBody res = BaseResponseBody.of(200, "Success");
         return res;
+    }
+
+    @Override
+    @Transactional
+    public BaseResponseBody exchangePoint(SellerExchangeReq req) {
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        seller.updatePoint(req.getPoint() * -1);
+
+        sellerRepository.save(seller);
+
+        return BaseResponseBody.of(200, "OK");
     }
 }

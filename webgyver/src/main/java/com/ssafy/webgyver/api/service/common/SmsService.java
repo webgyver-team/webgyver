@@ -34,53 +34,55 @@ public class SmsService {
      * @return 문자 전송 여부
      */
     public BaseResponseBody onSendMessage(String to, String content) {
-        try {
-            String baseUrl = "https://sens.apigw.ntruss.com";
-            String requestUrl = "/sms/v2/services/" + SERVICE_ID + "/messages";
-            URL url = new URL(baseUrl + requestUrl);
-
-            String timeStamp = Long.toString(System.currentTimeMillis());
-
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            connection.setRequestMethod("POST");
-            connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
-            connection.setRequestProperty("x-ncp-apigw-timestamp", timeStamp);
-            connection.setRequestProperty("x-ncp-iam-access-key", ACCESS_KEY);
-
-            String sig = makeSignature(requestUrl, timeStamp);
-            connection.setRequestProperty("x-ncp-apigw-signature-v2", sig);
-            connection.setDoOutput(true);
-
-            JSONArray array = new JSONArray();
-            JSONObject message = new JSONObject();
-            message.put("to", to);
-            array.add(message);
-
-            String type = content.getBytes(Charset.forName("EUC-KR")).length < 90 ? "SMS" : "LMS";
-
-            JSONObject jsonObject = new JSONObject();
-            jsonObject.put("type", type);
-            jsonObject.put("from", "01098320504");
-            jsonObject.put("content", content);
-            jsonObject.put("messages", array);
-
-            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
-            outputStream.flush();
-            outputStream.close();
-
-            System.out.println(connection.getResponseMessage());
-            if(connection.getResponseCode() == 202) {
-                return BaseResponseBody.of(200, "OK");
-
-            } else {
-                return BaseResponseBody.of(connection.getResponseCode(), connection.getResponseMessage());
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            return BaseResponseBody.of(500, "Fail");
-        }
+        return BaseResponseBody.of(200, "OK");
+        
+//        try {
+//            String baseUrl = "https://sens.apigw.ntruss.com";
+//            String requestUrl = "/sms/v2/services/" + SERVICE_ID + "/messages";
+//            URL url = new URL(baseUrl + requestUrl);
+//
+//            String timeStamp = Long.toString(System.currentTimeMillis());
+//
+//            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+//            connection.setRequestMethod("POST");
+//            connection.setRequestProperty("Content-Type", "application/json; charset=utf-8");
+//            connection.setRequestProperty("x-ncp-apigw-timestamp", timeStamp);
+//            connection.setRequestProperty("x-ncp-iam-access-key", ACCESS_KEY);
+//
+//            String sig = makeSignature(requestUrl, timeStamp);
+//            connection.setRequestProperty("x-ncp-apigw-signature-v2", sig);
+//            connection.setDoOutput(true);
+//
+//            JSONArray array = new JSONArray();
+//            JSONObject message = new JSONObject();
+//            message.put("to", to);
+//            array.add(message);
+//
+//            String type = content.getBytes(Charset.forName("EUC-KR")).length < 90 ? "SMS" : "LMS";
+//
+//            JSONObject jsonObject = new JSONObject();
+//            jsonObject.put("type", type);
+//            jsonObject.put("from", "01098320504");
+//            jsonObject.put("content", content);
+//            jsonObject.put("messages", array);
+//
+//            DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
+//            outputStream.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
+//            outputStream.flush();
+//            outputStream.close();
+//
+//            System.out.println(connection.getResponseMessage());
+//            if(connection.getResponseCode() == 202) {
+//                return BaseResponseBody.of(200, "OK");
+//
+//            } else {
+//                return BaseResponseBody.of(connection.getResponseCode(), connection.getResponseMessage());
+//            }
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            return BaseResponseBody.of(500, "Fail");
+//        }
     }
 
     private String makeSignature(String url, String timeStamp) throws Exception {

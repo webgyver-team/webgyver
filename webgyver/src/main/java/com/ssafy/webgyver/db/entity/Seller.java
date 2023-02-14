@@ -6,11 +6,16 @@ import lombok.*;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Builder
 @Getter
@@ -20,7 +25,7 @@ import java.util.List;
 @Table(name = "seller")
 @DynamicInsert
 @ToString
-public class Seller extends BaseEntity {
+public class Seller extends BaseEntity implements UserDetails {
 
     @Column(unique = true, length = 50)
     private String id;
@@ -34,7 +39,7 @@ public class Seller extends BaseEntity {
 
     @Column(name = "birth_day")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime birthDay;
+    private LocalDate birthDay;
 
     private String gender;
 
@@ -82,24 +87,85 @@ public class Seller extends BaseEntity {
     private Double lat;
     private Double lng;
     private Integer point;
+    @JsonIgnore
+    @Column
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+//    private String role;
 
-    public void updateSellerDescription(String companyDescription){
+
+    public void updateSellerDescription(String companyDescription) {
         this.companyDescription = companyDescription;
     }
-    public void updateSellerTime(String companyTime){
+
+    public void updateSellerTime(String companyTime) {
         this.companyTime = companyTime;
     }
-    public void updateSellerBookTime(String bookTime){
+
+    public void updateSellerBookTime(String bookTime) {
         this.bookTime = bookTime;
     }
 
-    public void updateSellerProfile(String profileImage, String companyImage, String password, String phoneNumber, String companyName, String address, String detailAddress){
+    public void updateSellerProfile(String profileImage, String companyImage, String password, String phoneNumber, String companyName, String address, String detailAddress) {
         this.profileImage = profileImage;
         this.companyImage = companyImage;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this. companyName = companyName;
+        this.companyName = companyName;
         this.address = address;
         this.detailAddress = detailAddress;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        System.out.println(roles);
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getUsername() {
+        return id;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    public void addReview(long star) {
+        this.reviewCount++;
+        this.starTotal += star;
+    }
+
+    public void deleteReview(long star) {
+        this.reviewCount--;
+        this.starTotal -= star;
+    }
+
+    public void updateReview(long beforeStar, long afterStar) {
+        this.starTotal -= beforeStar;
+        this.starTotal += afterStar;
+    }
+
+    public void updatePoint(int point) {
+        this.point += point;
     }
 }

@@ -10,8 +10,7 @@ import com.ssafy.webgyver.api.request.seller.*;
 import com.ssafy.webgyver.api.response.article.HistoryListRes;
 import com.ssafy.webgyver.api.response.seller.SellerGetBookTimeRes;
 import com.ssafy.webgyver.api.response.seller.SellerMyPageIntroRes;
-import com.ssafy.webgyver.api.response.seller.SellerMypageReviewListRes;
-import com.ssafy.webgyver.api.service.Seller.SellerMypageService;
+import com.ssafy.webgyver.api.service.seller.SellerMypageService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
@@ -20,7 +19,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -159,5 +157,12 @@ public class SellerMypageController {
     public ResponseEntity<?> updateSellerBookTime(@PathVariable(name = "sellerIdx") Long sellerIdx, SellerIdxReq idxReq, @RequestBody SellerUpdateBookTimeReq timeReq){
         BaseResponseBody res = sellerMypageService.updateSellerBookTime(idxReq, timeReq);
         return ResponseEntity.ok(res);
+    }
+
+    @PutMapping("/exchange/{sellerIdx}")
+    public ResponseEntity<?> exchangePoint(@PathVariable Long sellerIdx, @RequestBody SellerExchangeReq req) {
+        req.setSellerIdx(sellerIdx);
+
+        return ResponseEntity.ok(sellerMypageService.exchangePoint(req));
     }
 }

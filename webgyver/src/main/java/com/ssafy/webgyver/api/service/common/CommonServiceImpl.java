@@ -29,6 +29,8 @@ public class CommonServiceImpl implements CommonService {
     final PictureRepository pictureRepository;
     final CustomerRepository customerRepository;
 
+    final SellerRepository sellerRepository;
+
     @Override
     public CategoryListRes getCategoryList() {
         return CategoryListRes.of(200, "Success", categoryRepository.findAll());
@@ -78,5 +80,16 @@ public class CommonServiceImpl implements CommonService {
         return customerRepository.findByIdx(customerIdx).get();
     }
 
+    public Customer saveCustomer(Customer customer){
+        return customerRepository.save(customer);
+    }
+    @Override
+    public Seller getSeller(long sellerIdx) {
+        return sellerRepository.findSellerByIdx(sellerIdx);
+    }
 
+    @Override
+    public void setSeller(Seller seller) {
+        sellerRepository.save(seller);
+    }
 }

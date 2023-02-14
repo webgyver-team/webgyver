@@ -1,11 +1,6 @@
 package com.ssafy.webgyver.api.request.customer;
 
-import com.ssafy.webgyver.db.entity.SellerCategory;
-import com.ssafy.webgyver.db.entity.test.RoleType;
 import lombok.*;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 @Setter

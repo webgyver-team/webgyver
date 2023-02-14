@@ -49,8 +49,10 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         // 1-1. 등록할때 category + seller + sellerCategory랑 조인해서 가격이랑 카테고리 정보 가져와야함!
         // 2. 등록된 Reservation를 가지고 Article 등록
         // 3. 등록된 Article를 가지고 Picture들 등록.
+        // 4. 주소를 소비자 DB에 저장.
 
         Reservation reservation = ReservationParsingUtil.parseReservationReq2Reservation(req);
+
 
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
 
@@ -76,12 +78,18 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         }
 
         StringBuilder sb = new StringBuilder();
+        String[] smsDate = reservation.getReservationTime().toString().split("T");
         sb.append("[Webgyver]").append('\n')
-                .append(reservation.getReservationTime()).append("에").append('\n')
+                .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
                 .append("예약 상담 [").append(article.getTitle()).append("]이(가) 접수되었습니다.").append('\n')
                 .append("예약 내용을 확인 후 수락해 주세요.");
 
         smsService.onSendMessage(reservation.getSeller().getPhoneNumber(), sb.toString());
+
+        Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
+        customer.setAddress(req.getAddress());
+        customer.setDetailAddress(req.getDetailAddress());
+        customerRepository.save(customer);
 
         return reservation;
 //        req.getImages().stream().map(image -> pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article)));
@@ -160,7 +168,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
         CustomerAddressRes res;
         if (customer.getAddress() == null) {
-            res = CustomerAddressRes.of(200, "null address", null);
+            res = CustomerAddressRes.of(201, "null address", null);
         } else {
             CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
             res = CustomerAddressRes.of(200, "have address", response);

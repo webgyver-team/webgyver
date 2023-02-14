@@ -1,26 +1,34 @@
-package com.ssafy.webgyver.api.service.Seller;
+package com.ssafy.webgyver.api.service.seller;
 
 import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
 import com.ssafy.webgyver.api.request.seller.SellerCalendarReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
+import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationEndInfoRes;
+import com.ssafy.webgyver.api.response.seller.SellerAddressRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
+import com.ssafy.webgyver.api.service.common.SmsService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
+import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.entity.Picture;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
+import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import com.ssafy.webgyver.util.CommonUtil;
 import com.ssafy.webgyver.util.TimeUtil;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +42,9 @@ public class SellerReservationServiceImpl implements SellerReservationService {
     final ArticleRepository articleRepository;
     final ReservationRepository reservationRepository;
     final PictureRepository pictureRepository;
+    final SellerRepository sellerRepository;
+    final SmsService smsService;
+    final SellerRepository sellerRepository;
     @Value("${properties.file.toss.secret}")
     String tossKey;
 
@@ -50,8 +61,8 @@ public class SellerReservationServiceImpl implements SellerReservationService {
         reservationState1ListMethod(reservationList);
         // 오늘 잡혀 있는 상담
         todayList = new ArrayList<>();
-        LocalDateTime today = LocalDateTime.now().plusDays(1);
-        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationTimeBeforeAndReservationState(req.getSellerIdx(), today, "2");
+        LocalDate date = LocalDate.now();
+        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationTimeBetween(req.getSellerIdx(), date.atStartOfDay(), date.plusDays(1).atStartOfDay());
         reservationState2ListMethod(reservationList);
         // 현재 진행중인 상담
         proceedingList = new ArrayList<>();
@@ -67,11 +78,28 @@ public class SellerReservationServiceImpl implements SellerReservationService {
         LocalDateTime now = LocalDateTime.now();
         BaseResponseBody res;
         Reservation reservation = reservationRepository.findById(req.getIdx()).get();
+        StringBuilder reservationStringBuilder = new StringBuilder();
+
+        String title = "";
+        String[] smsDate = reservation.getReservationTime().toString().split("T");
+        for (Article article : reservation.getArticleList()){
+            if (article.getType() == -1){
+                title = article.getTitle();
+            }
+        }
+
         if (!reservation.getReservationState().equals("1")) {
             res = BaseResponseBody.of(200, "이미 상태가 변경됐습니다.");
             return res;
         }
-        if (!reservation.getCreatedAt().plusMinutes(5).isAfter(now)) {
+
+        if (!reservation.getCreatedAt().plusMinutes(5).isAfter(now)){
+            reservationStringBuilder.append("[Webgyver]").append('\n')
+                .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                .append("예약하신 [").append(title).append("]이(가) 수락 시간 초과로 거절 되었습니다.");
+
+            smsService.onSendMessage(reservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+
             reservation.updateReservationState("3");
             reservationRepository.save(reservation);
             res = BaseResponseBody.of(200, "승낙 가능한 시간이 지났습니다.");
@@ -80,27 +108,62 @@ public class SellerReservationServiceImpl implements SellerReservationService {
             // 승낙
             if (req.isAcceptFlag()) {
                 res = BaseResponseBody.of(200, "승낙 및 결제 성공");
-                String title = "";
-                for (Article article : reservation.getArticleList()) {
-                    if (article.getType() == -1) {
-                        title = article.getTitle();
-                    }
-                }
+
                 BaseResponseBody payRes = CommonUtil.requestPay(tossKey, reservation.getCustomer().getCustomerKey(), reservation.getCustomer().getBillingKey(), title, reservation.getReservationPrice());
                 if (payRes.getStatusCode() == 200) {
                     reservation.updateReservationState("2");
                     reservationRepository.save(reservation);
+
+                    Seller seller = reservation.getSeller();
+                    seller.updatePoint(reservation.getReservationPrice());
+
+                    sellerRepository.save(seller);
+
+                    reservationStringBuilder.append("[Webgyver]").append('\n')
+                        .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                        .append("예약하신 [").append(title).append("]이(가) 예약 확정되었습니다.").append('\n')
+                        .append("등록하신 카드로 결제금액 ").append(reservation.getReservationPrice()).append("원이 결제완료 되었습니다.");
+
+                    StringBuilder sellerPayStringBuilder = new StringBuilder();
+                    sellerPayStringBuilder.append("[Webgyver]").append('\n')
+                        .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                        .append("예약하신 [").append(title).append("]의 결제금액 ").append(reservation.getReservationPrice()).append("원이 적립되었습니다.");
+
+                    smsService.onSendMessage(reservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+                    smsService.onSendMessage(reservation.getSeller().getPhoneNumber(), sellerPayStringBuilder.toString());
+
                     List<Reservation> reservationList = reservationRepository.findReservationsBySellerIdxAndReservationStateOrderByReservationTimeDesc(reservation.getSeller().getIdx(), "1");
                     for (Reservation tempReservation : reservationList) {
                         if (tempReservation.getIdx() == reservation.getIdx()) continue;
                         // 예약 시간이 같은데 하나 승낙 했으면 나머지 state 3으로 변경
-                        if (tempReservation.getReservationTime().isEqual(reservation.getReservationTime())) {
+                        if (tempReservation.getReservationTime().isEqual(reservation.getReservationTime())){
+                            String tmpTitle = "";
+                            for (Article article : tempReservation.getArticleList()){
+                                if (article.getType() == -1){
+                                    tmpTitle = article.getTitle();
+                                }
+                            }
+
+                            reservationStringBuilder.setLength(0);
+                            reservationStringBuilder.append("[Webgyver]").append('\n')
+                                .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                                .append("예약하신 [").append(tmpTitle).append("]이(가) 거절 되었습니다.");
+
+                            smsService.onSendMessage(tempReservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+
                             tempReservation.updateReservationState("3");
                             reservationRepository.save(tempReservation);
                         }
                     }
                     return res;
                 } else {
+                    reservationStringBuilder.append("[Webgyver]").append('\n')
+                        .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                        .append("예약하신 [").append(title).append("]이(가)").append('\n')
+                        .append("[").append(payRes.getMessage()).append("] 사유로 예약할 수 없습니다.");
+
+                    smsService.onSendMessage(reservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+
                     return payRes;
                 }
             }
@@ -109,6 +172,13 @@ public class SellerReservationServiceImpl implements SellerReservationService {
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
                 res = BaseResponseBody.of(200, "거절 성공");
+
+                reservationStringBuilder.append("[Webgyver]").append('\n')
+                    .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                    .append("예약하신 [").append(title).append("]이(가) 거절 되었습니다.");
+
+                smsService.onSendMessage(reservation.getCustomer().getPhoneNumber(), reservationStringBuilder.toString());
+
                 return res;
             }
         }
@@ -184,6 +254,23 @@ public class SellerReservationServiceImpl implements SellerReservationService {
 
         return SellerReservationEndInfoRes.of(200, "Success", response);
     }
+
+    @Override
+    public SellerAddressRes getSellerAddress(SellerIdxReq req) {
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        SellerAddressRes res;
+        if (seller == null){
+            return SellerAddressRes.of(201, "존재하지 않는 사용자 입니다.", null);
+        }
+
+        if (seller.getAddress() == null) {
+            res = SellerAddressRes.of(201, "null address", null);
+        } else {
+            SellerAddressRes.Response response = new SellerAddressRes.Response(seller.getAddress(), seller.getDetailAddress());
+            res = SellerAddressRes.of(200, "have address", response);
+        }
+
+        return res;    }
 
     public void reservationState4ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();
