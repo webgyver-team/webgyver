@@ -20,10 +20,26 @@ export default function Mypage() {
   const [myPageData, setMyPageData] = useState(null);
   const [businessHoursOpen, setBusinessHoursOpen] = useState(false);
   const [reLoad, setReload] = useState(false);
+  const [businessHour, setBusinessHour] = useState([
+    { day: '월요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '화요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '수요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '목요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '금요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '토요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '일요일', open: '09:00', close: '18:00', holiday: false },
+    { day: '공휴일', open: '09:00', close: '18:00', holiday: true },
+  ]);
+  const [isTime, setIsTime] = useState(null);
   useLayoutEffect(() => {
     const getMyPageData = async () => {
       const response = await master.get.myPage(idx);
       setMyPageData(response.data.profile);
+      console.log(response.data.profile.companyTime);
+      setIsTime(response.data.profile.companyTime);
+      if (response.data.profile.companyTime !== null) {
+        setBusinessHoursOpen(response.data.profile.companyTime);
+      }
     };
     getMyPageData();
     setReload(false);
@@ -46,16 +62,6 @@ export default function Mypage() {
     setOpenTime(true);
   };
 
-  const [businessHour, setBusinessHour] = useState([
-    { day: '월요일', open: '09:00', close: '18:00', holiday: false },
-    { day: '화요일', open: '09:00', close: '18:00', holiday: false },
-    { day: '수요일', open: '09:00', close: '18:00', holiday: false },
-    { day: '목요일', open: '09:00', close: '18:00', holiday: false },
-    { day: '금요일', open: '09:00', close: '18:00', holiday: false },
-    { day: '토요일', open: '09:00', close: '18:00', holiday: false },
-    { day: '일요일', open: '09:00', close: '18:00', holiday: false },
-    { day: '공휴일', open: '09:00', close: '18:00', holiday: true },
-  ]);
   const routeMyPageUpdate = () => {
     navigate('/master/mypage/update');
   };
@@ -153,7 +159,10 @@ export default function Mypage() {
         </BusinessBox>
         {businessHoursOpen && (
           <BusinessHoursBox>
-            {businessHour.map((el, i) => (
+            {isTime === null && (
+              <NoneTime>영업시간을 설정해주세요.</NoneTime>
+            )}
+            {isTime !== null && businessHour.map((el, i) => (
               <div key={`hour-${i}`}>
                 <DetailTitle key={`title-${i}`}>{el.day}</DetailTitle>
                 <DetailContent key={`content-${i}`}>
@@ -364,4 +373,9 @@ const MoreBtn2 = styled(MoreBtn)`
 
 const NullBox = styled.div`
   height: 80px;
+`;
+
+const NoneTime = styled.div`
+  margin: 16px;
+  font-size: 14px;
 `;
