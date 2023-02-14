@@ -35,6 +35,7 @@ export default function Matching() {
   const matchForm = useRecoilValue(matchFormState);
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
+  const initialTime = useRef(100);
   const [counter, setCounter] = useState(100);
 
   useEffect(() => {
@@ -60,12 +61,19 @@ export default function Matching() {
     setCounter(counter - 1);
   }, 1000);
   useEffect(() => {
-    if (counter === 0) {
-      window.history.back();
-      // navigate('/match/form');
-    }
-    setTimeout(() => setCounter(counter - 1), 1000);
-  }, [counter]);
+    clearInterval();
+    initialTime.current = 100;
+    const timer = setInterval(() => {
+      initialTime.current -= 1;
+      setCounter(initialTime.current);
+      if (initialTime.current <= 0) {
+        navigate('/match/form');
+      }
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   // map resizer
   const MainScreenRef = useRef(null);
@@ -147,7 +155,12 @@ export default function Matching() {
   };
 
   // eslint-disable-next-line react/jsx-one-expression-per-line
-  const alertText = <p>{`${counter}초 뒤, 이전 페이지로 돌아갑니다.`}</p>;
+  const alertText = (
+    <p>
+      {counter}
+      초 뒤, 이전 페이지로 돌아갑니다.
+    </p>
+  );
 
   const marker = (
     <div className="dot">
