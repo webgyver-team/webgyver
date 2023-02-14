@@ -63,7 +63,7 @@ export default function TimePicker() {
     };
     loadReviewList();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [resTimePopup]);
 
   const registInfo = async () => {
     const data = {
@@ -104,7 +104,9 @@ export default function TimePicker() {
       Number(temp[1]) % 15 === 0
         ? String(parseInt(Number(temp[1]) / 15) * 15)
         : String((parseInt(Number(temp[1]) / 15) + 1) * 15);
-    result = result === '60' ? '00' : result;
+    // eslint-disable-next-line no-nested-ternary
+    result = result === '60' ? '00' : result === '0' ? '00' : result;
+    // console.log(`${temp[0]}:${result}`);
     return `${temp[0]}:${result}`;
   };
 

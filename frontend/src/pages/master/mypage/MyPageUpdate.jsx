@@ -89,7 +89,7 @@ export default function MyPageUpdate() {
     }
   }, [newBackgroundImage]);
   useEffect(() => {
-    if (ready[0] && ready[1]) {
+    if (data.password && ready[0] && ready[1]) {
       sendRequest();
     }
   }, [ready]);
