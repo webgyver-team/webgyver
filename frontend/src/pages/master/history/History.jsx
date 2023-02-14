@@ -19,14 +19,10 @@ export default function History() {
   const [historyList, setHistoryList] = useState([]);
   const userId = useRecoilValue(userIdx);
   useEffect(() => {
-    console.log(String(day.toISOString()).substring(0, 10));
     const selected = String(day.toISOString()).substring(0, 10).replaceAll('-', '');
-    console.log(selected);
     const loadhistory = async () => {
       const response = await master.get.history(userId, selected);
       setHistoryList(response.data.reservationList);
-      // eslint-disable-next-line no-console
-      console.log('hi', response.data);
     };
     loadhistory();
   }, [day, userId]);

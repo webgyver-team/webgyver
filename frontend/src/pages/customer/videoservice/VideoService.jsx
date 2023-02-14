@@ -4,16 +4,17 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { userIdx, reservationIdxState } from '../../../atom';
+import { userIdx, reservationIdxState, matchFormState } from '../../../atom';
 // import Button from '@mui/material/Button';
 
 export default function VideoService() {
   const navigate = useNavigate();
   const customerIdx = useRecoilValue(userIdx);
   const reservationIdx = useRecoilValue(reservationIdxState);
+  const setMatchForm = useSetRecoilState(matchFormState);
   const mainVideo = useRef(null);
   const subVideo = useRef(null);
   const conn = useRef(null);
@@ -54,13 +55,15 @@ export default function VideoService() {
     setMainScreenWidth(MainScreenRef.current.offsetWidth);
     setSubScreenWidth(SubScreenRef.current.offsetWidth);
     setVideoBoxWidth(videoBoxRef.current.offsetWidth);
+
+    // 얘는 더이상 있을 필요 없는 matchFormState를 초기화해주기 위함
+    setMatchForm(null);
   }, []);
 
   const routeEndService = () => {
     navigate('/endservice');
   };
   const sendRequest = () => {
-    console.log(conn.current);
     conn.current.send(JSON.stringify({ method: 'WANT_MEET' }));
   };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
@@ -79,9 +82,6 @@ export default function VideoService() {
           video.srcObject = stream;
           video.play();
         });
-      // .catch((error) => {
-      //   console.log(error);
-      // });
     };
 
     // 상대방 미디어 가져오기
@@ -132,7 +132,6 @@ export default function VideoService() {
     conn.current = new WebSocket(
       `wss://webgyver.site:9001/facetime/customer/${customerIdx}/${reservationIdx}`,
     );
-    console.log(conn.current);
     const configuration = {
       iceServers: [
         {
@@ -142,7 +141,6 @@ export default function VideoService() {
     };
     const send = async (message) => {
       // 소켓으로 메세지 보내기
-      console.log('보냄: ', message);
       conn.current.send(JSON.stringify(message));
     };
     const sendCandidate = (event) => {
@@ -170,7 +168,9 @@ export default function VideoService() {
       }
     });
     myPeerConnection.current.addEventListener('track', (data) => {
-      const video = screenChange2.current ? subVideo.current : mainVideo.current;
+      const video = screenChange2.current
+        ? subVideo.current
+        : mainVideo.current;
       video.srcObject = new MediaStream([data.track]);
       video.play();
     });
@@ -197,12 +197,10 @@ export default function VideoService() {
     };
 
     conn.current.onclose = () => {
-      console.log('끝');
     };
 
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log('받고 해체: ', content);
       if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
@@ -227,7 +225,6 @@ export default function VideoService() {
           });
       } else if (content.method === 'ANSWER') {
         const answer = content.data;
-        console.log(myPeerConnection.current);
         myPeerConnection.current.setRemoteDescription(answer);
       } else if (content.method === 'CANDIDATE') {
         // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정

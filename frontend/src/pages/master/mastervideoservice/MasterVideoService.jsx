@@ -80,9 +80,6 @@ export default function MasterVideoService() {
           video.srcObject = stream;
           video.play();
         });
-      // .catch((error) => {
-      //   console.log(error);
-      // });
     };
 
     // 상대방 미디어 가져오기
@@ -140,9 +137,7 @@ export default function MasterVideoService() {
         },
       ],
     };
-    conn.current.onopen = () => console.log('시작');
     const send = async (message) => {
-      console.log('보냄: ', message);
       conn.current.send(JSON.stringify(message));
     };
     const sendCandidate = (event) => {
@@ -196,12 +191,10 @@ export default function MasterVideoService() {
     };
 
     conn.current.onclose = () => {
-      console.log('끝');
     };
 
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log('받고 해체: ', content);
       if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
@@ -225,7 +218,6 @@ export default function MasterVideoService() {
             });
           });
       } else if (content.method === 'ANSWER') {
-        console.log(myPeerConnection.current);
         const answer = content.data;
         myPeerConnection.current.setRemoteDescription(answer);
       } else if (content.method === 'CANDIDATE') {

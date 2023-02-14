@@ -78,7 +78,10 @@ export default function StoreInfo({
     <Main>
       <StoreBox onClick={openMasterInfoModal}>
         <PictureBox>
-          <Picture src={picture} alt="" />
+          <Picture
+            src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${picture}`}
+            alt=""
+          />
         </PictureBox>
         <InfoBox>
           <StoreNameContent>{storeName}</StoreNameContent>

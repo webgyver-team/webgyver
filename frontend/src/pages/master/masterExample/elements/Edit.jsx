@@ -73,7 +73,6 @@ export default function Edit({ setReload }) {
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     });
     for (let i = 0; i < imageList.length; i += 1) {
-      // console.log(`${imageList[i].name} 업로드 시도 중..`);
       const originName = imageList[i].name;
       const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
@@ -90,7 +89,7 @@ export default function Edit({ setReload }) {
       const promise = upload.promise();
       promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(err);
+        alert(err);
       });
       const newData = {
         saveName: hashImageName + extensionName,
@@ -118,19 +117,15 @@ export default function Edit({ setReload }) {
     // 잘 보내졌으면 data를 POST
     sendImageListToS3().then(async () => {
       // eslint-disable-next-line
-      console.log('보내기 전 데이터', data); // POST로 수정 예정
       const { articleIdx } = exampleData;
       // post 로직
       const response = await master.put.example(data, articleIdx);
-      // eslint-disable-next-line
       if (response.statusCode === 200) {
         setReload(true);
         // eslint-disable-next-line
         alert('사례가 수정되었습니다.');
         modalClose();
       } else {
-        // eslint-disable-next-line
-        console.log(response);
         // eslint-disable-next-line no-alert
         alert('내용을 다시 확인바랍니다.');
       }

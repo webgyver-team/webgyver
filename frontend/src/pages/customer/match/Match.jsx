@@ -23,7 +23,10 @@ const { kakao } = window;
 
 export default function Matching() {
   const navigate = useNavigate();
-  const routeMatchForm = () => navigate('/match/form');
+  const routeMatchForm = () => {
+    window.history.back();
+    // navigate('/match/form');
+  };
   const setReservationIdx = useSetRecoilState(reservationIdxState);
   const categoryIdx = String(useRecoilValue(categoryState));
   const idx = useRecoilValue(userIdx);
@@ -32,7 +35,8 @@ export default function Matching() {
   const matchForm = useRecoilValue(matchFormState);
   const webSocketAddress = `wss://webgyver.site:9001/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
-  const [counter, setCounter] = useState(180);
+  const initialTime = useRef(100);
+  const [counter, setCounter] = useState(100);
 
   useEffect(() => {
     return () => {
@@ -41,11 +45,19 @@ export default function Matching() {
   }, []);
 
   useEffect(() => {
-    if (counter === 0) {
-      navigate('/match/form');
-    }
-    setTimeout(() => setCounter(counter - 1), 1000);
-  }, [counter]);
+    clearInterval();
+    initialTime.current = 100;
+    const timer = setInterval(() => {
+      initialTime.current -= 1;
+      setCounter(initialTime.current);
+      if (initialTime.current <= 0) {
+        navigate('/match/form');
+      }
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   // map resizer
   const MainScreenRef = useRef(null);
@@ -67,8 +79,6 @@ export default function Matching() {
         price: matchForm.cost,
         viewDistance: '1',
       });
-      console.log(socketData);
-      console.log(gWebSocket.current);
       gWebSocket.current.send(socketData);
     };
     /**
@@ -76,7 +86,6 @@ export default function Matching() {
      */
     gWebSocket.current.onmessage = (message) => {
       const socketData = JSON.parse(message.data);
-      console.log(socketData);
       if (socketData.method === 'GO_FACE_TIME') {
         setReservationIdx(socketData.data.reservationIdx);
         navigate('/videoservice');
@@ -90,7 +99,6 @@ export default function Matching() {
      * 웹소켓 사용자 연결 해제하는 경우 호출
      */
     gWebSocket.current.onclose = () => {
-      console.log('끝');
       // addLineToChatBox('Server is disconnected.');
     };
 
@@ -117,24 +125,15 @@ export default function Matching() {
     setDistance(event.target.value);
   };
   const changeDistance = (value) => {
-    console.log(gWebSocket.current);
     const data = JSON.stringify({
       method: 'CHANGE_DISTANCE',
       viewDistance: value,
     });
-    console.log(data);
     gWebSocket.current.send(data);
   };
 
   // eslint-disable-next-line react/jsx-one-expression-per-line
-  const alertText = (
-    <p>
-      {Math.floor(counter / 60)}
-      분
-      {counter % 60}
-      초 뒤, 이전 페이지로 돌아갑니다.
-    </p>
-  );
+  const alertText = <p>{counter}초 뒤, 이전 페이지로 돌아갑니다.</p>;
 
   const marker = (
     <div className="dot">

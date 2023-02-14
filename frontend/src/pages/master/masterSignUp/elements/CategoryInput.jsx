@@ -79,19 +79,22 @@ export default function CategoryInput({ updateData, initialList }) {
       <h2 style={{ fontSize: '16px', fontWeight: 'bold' }}>카데고리 등록</h2>
       <Message msg={msg} />
       <CategoryItemListDiv>
-        {categoryItemList
-          && categoryItemList.map((item) => (
-            <CategoryInputItem
-              categoryItem={item}
-              changeCategoryItem={changeCategoryItem}
-              deleteCategoryItem={deleteCategoryItem}
-              categorySelected={categorySelected}
-              setCategorySelected={setCategorySelected}
-              changeMsg={changeMsg}
-              index={item.index}
-              key={item.index}
-            />
-          ))}
+        {/* eslint-disable-next-line */}
+        {categoryItemList &&
+          categoryItemList.map((item) => {
+            return (
+              <CategoryInputItem
+                categoryItem={item}
+                changeCategoryItem={changeCategoryItem}
+                deleteCategoryItem={deleteCategoryItem}
+                categorySelected={categorySelected}
+                setCategorySelected={setCategorySelected}
+                changeMsg={changeMsg}
+                index={item.index}
+                key={item.index}
+              />
+            );
+          })}
       </CategoryItemListDiv>
       <div style={{ textAlign: 'center' }}>
         <IconButton

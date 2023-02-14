@@ -125,14 +125,7 @@ export const reservationIdxState = atom({
 
 export const matchFormState = atom({
   key: 'matchFormState',
-  default: {
-    address: '',
-    detailAddress: '',
-    title: '',
-    content: '',
-    cost: 0,
-    images: [],
-  },
+  default: null,
   effects_UNSTABLE: [persistAtom],
 });
 

@@ -24,7 +24,6 @@ export default function Proceeding({ proceeding }) {
   const [ReservationData, setReservationData] = useRecoilState(matchFormState);
 
   const noMore = proceeding.content.length > 60;
-  console.log(noMore);
   const [isShowMore, setIsShowMore] = useState(false);
   const shortComment = proceeding.content.slice(0, 60);
   // const setMatchForm = useSetRecoilState(matchFormState);

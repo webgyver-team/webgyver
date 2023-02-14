@@ -49,8 +49,6 @@ export default function Review({ review, setReload }) {
     };
     // data로 axios POST하고
     const postComment = async () => {
-      // eslint-disable-next-line
-      console.log('postdata', data);
       const response = await master.post.review(data);
       if (response.statusCode === 200) {
         // eslint-disable-next-line
@@ -58,8 +56,6 @@ export default function Review({ review, setReload }) {
         setFormContent('');
         setReload(true);
       } else {
-        // eslint-disable-next-line
-        console.log(response);
         // eslint-disable-next-line no-alert
         alert('댓글 등록에 실패했습니다.');
       }
@@ -70,8 +66,6 @@ export default function Review({ review, setReload }) {
       commentContent: formContent,
     };
     const putComment = async () => {
-      // eslint-disable-next-line no-console
-      console.log('putdata', putData);
       const response = await master.put.review(putData, review.reviewIdx);
       if (response.statusCode === 200) {
         // eslint-disable-next-line
@@ -80,8 +74,6 @@ export default function Review({ review, setReload }) {
         setReload(true);
         setEdit(false);
       } else {
-        // eslint-disable-next-line
-        console.log(response);
         // eslint-disable-next-line no-alert
         alert('댓글 수정에 실패했습니다.');
       }
@@ -101,8 +93,6 @@ export default function Review({ review, setReload }) {
         setEdit(false);
         setFormContent('');
       } else {
-        // eslint-disable-next-line
-        console.log(response);
         // eslint-disable-next-line no-alert
         alert('댓글 삭제에 실패했습니다.');
       }

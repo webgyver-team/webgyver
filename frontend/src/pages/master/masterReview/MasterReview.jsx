@@ -15,7 +15,6 @@ export default function MasterReview() {
     const loadReviewList = async () => {
       const response = await master.get.review(userId);
       setReviewList(response.data.reviews.reverse());
-      console.log('hi', response.data);
       setReload(false);
     };
     loadReviewList();

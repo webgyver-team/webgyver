@@ -28,7 +28,6 @@ export default function MyPageUpdate() {
       setInitialResidentNumber2(
         `${response.data.customer.birthDay.slice(6, 7)}******`,
       );
-      // console.log(response.data.customer);
       setLoading(false);
     };
     getMyProfile();
