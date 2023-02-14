@@ -192,7 +192,6 @@ export default function ReservationForm() {
       ...original,
       ...{ cost: value },
     }));
-    value = `${value.toLocaleString('ko-KR')}`;
   };
 
   return (
@@ -253,7 +252,7 @@ export default function ReservationForm() {
               multiline
               margin="normal"
               fullWidth
-              value={data.cost}
+              value={data.cost.toLocaleString('ko-kr')}
               onChange={handleCost}
             />
             <ErrorMessage>{msgForCost}</ErrorMessage>
