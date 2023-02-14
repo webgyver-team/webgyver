@@ -26,7 +26,7 @@ export default function Reservation() {
   // 위치설정 모달 on/off
   const setLocateModalOpen = useSetRecoilState(locateModalState);
   const openLocateModal = () => setLocateModalOpen(true);
-  const [type, setType] = useState(2);
+  const [type, setType] = useState(1);
   const [storeList, setStoreList] = useState([]);
   const category = useRecoilValue(categoryState);
   const reservationNull = {
@@ -193,9 +193,9 @@ export default function Reservation() {
         </div>
       </LocateDiv>
       <FilterBox type={type}>
-        <span onClick={() => setType(2)}>평점 높은순</span>
+        <span onClick={() => setType(1)}>평점 높은순</span>
         <VerticalBar />
-        <span onClick={() => setType(1)}>거리 가까운순</span>
+        <span onClick={() => setType(2)}>거리 가까운순</span>
         <VerticalBar />
         <span onClick={() => setType(3)}>가격 낮은순</span>
       </FilterBox>

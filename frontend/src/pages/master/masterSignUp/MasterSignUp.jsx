@@ -127,6 +127,7 @@ export default function MasterSignUp() {
     }
     // eslint-disable-next-line
     delete data.useCheck;
+
     const response = await master.signup(data);
     if (response.statusCode === 200) {
       // eslint-disable-next-line no-alert
