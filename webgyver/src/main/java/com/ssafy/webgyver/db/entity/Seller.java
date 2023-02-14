@@ -164,4 +164,8 @@ public class Seller extends BaseEntity implements UserDetails {
         this.starTotal -= beforeStar;
         this.starTotal += afterStar;
     }
+
+    public void updatePoint(int point) {
+        this.point += point;
+    }
 }

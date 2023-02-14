@@ -9,6 +9,7 @@ import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.util.CommonUtil;
 import com.ssafy.webgyver.websocket.dto.Message;
 import com.ssafy.webgyver.websocket.dto.MethodType;
@@ -147,8 +148,13 @@ public class WebSocketRealTime {
                 .append("실시간 상담 [").append(reservationInfo.getTitle()).append("]의 상담이 성사되어")
                 .append("결제금액 ").append(reservationInfo.getPrice()).append("원이 적립되었습니다.");
 
+        Seller sellerInfo = commonService.getSeller(sellerIdx);
+
         smsService.onSendMessage(customerForPay.getPhoneNumber(), customerStringBuiler.toString());
-        smsService.onSendMessage(commonService.getSeller(sellerIdx).getPhoneNumber(), sellerStringBuiler.toString());
+        smsService.onSendMessage(sellerInfo.getPhoneNumber(), sellerStringBuiler.toString());
+
+        sellerInfo.updatePoint(reservationInfo.getPrice());
+        commonService.setSeller(sellerInfo);
 
 //        System.out.println(messageString);
 

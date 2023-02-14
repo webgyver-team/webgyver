@@ -158,4 +158,11 @@ public class SellerMypageController {
         BaseResponseBody res = sellerMypageService.updateSellerBookTime(idxReq, timeReq);
         return ResponseEntity.ok(res);
     }
+
+    @PutMapping("/exchange/{sellerIdx}")
+    public ResponseEntity<?> exchangePoint(@PathVariable Long sellerIdx, @RequestBody SellerExchangeReq req) {
+        req.setSellerIdx(sellerIdx);
+
+        return ResponseEntity.ok(sellerMypageService.exchangePoint(req));
+    }
 }

@@ -11,7 +11,9 @@ import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
 import com.ssafy.webgyver.db.entity.Picture;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
+import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import com.ssafy.webgyver.util.CommonUtil;
@@ -36,6 +38,7 @@ public class SellerReservationServiceImpl implements SellerReservationService {
     final ArticleRepository articleRepository;
     final ReservationRepository reservationRepository;
     final PictureRepository pictureRepository;
+    final SellerRepository sellerRepository;
     final SmsService smsService;
     @Value("${properties.file.toss.secret}")
     String tossKey;
@@ -105,6 +108,11 @@ public class SellerReservationServiceImpl implements SellerReservationService {
                 if (payRes.getStatusCode() == 200) {
                     reservation.updateReservationState("2");
                     reservationRepository.save(reservation);
+
+                    Seller seller = reservation.getSeller();
+                    seller.updatePoint(reservation.getReservationPrice());
+
+                    sellerRepository.save(seller);
 
                     reservationStringBuilder.append("[Webgyver]").append('\n')
                         .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
