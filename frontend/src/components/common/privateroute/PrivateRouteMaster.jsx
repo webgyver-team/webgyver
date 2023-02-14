@@ -5,7 +5,7 @@ export default function PrivateRouteMaster({
   authenticated,
   component: Component,
 }) {
-  return authenticated ? (
+  return authenticated === 'master' ? (
     Component
   ) : (
     // eslint-disable-next-line no-alert, react/jsx-props-no-spreading

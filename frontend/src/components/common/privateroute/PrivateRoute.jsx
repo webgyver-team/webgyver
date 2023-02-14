@@ -3,7 +3,7 @@ import React from 'react';
 import { Navigate } from 'react-router-dom';
 
 export default function PrivateRoute({ authenticated, component: Component }) {
-  return authenticated ? (
+  return authenticated === 'customer' ? (
     Component
   ) : (
     // eslint-disable-next-line no-alert
