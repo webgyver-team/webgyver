@@ -3,19 +3,25 @@ package com.ssafy.webgyver.api.service.seller;
 import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
 import com.ssafy.webgyver.api.request.seller.SellerCalendarReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
+import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationEndInfoRes;
+import com.ssafy.webgyver.api.response.seller.SellerAddressRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
 import com.ssafy.webgyver.api.service.common.SmsService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Article;
+import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.entity.Picture;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
+import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import com.ssafy.webgyver.util.CommonUtil;
 import com.ssafy.webgyver.util.TimeUtil;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -37,6 +43,7 @@ public class SellerReservationServiceImpl implements SellerReservationService {
     final ReservationRepository reservationRepository;
     final PictureRepository pictureRepository;
     final SmsService smsService;
+    final SellerRepository sellerRepository;
     @Value("${properties.file.toss.secret}")
     String tossKey;
 
@@ -241,6 +248,23 @@ public class SellerReservationServiceImpl implements SellerReservationService {
 
         return SellerReservationEndInfoRes.of(200, "Success", response);
     }
+
+    @Override
+    public SellerAddressRes getSellerAddress(SellerIdxReq req) {
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+        SellerAddressRes res;
+        if (seller == null){
+            return SellerAddressRes.of(201, "존재하지 않는 사용자 입니다.", null);
+        }
+
+        if (seller.getAddress() == null) {
+            res = SellerAddressRes.of(201, "null address", null);
+        } else {
+            SellerAddressRes.Response response = new SellerAddressRes.Response(seller.getAddress(), seller.getDetailAddress());
+            res = SellerAddressRes.of(200, "have address", response);
+        }
+
+        return res;    }
 
     public void reservationState4ListMethod(List<Reservation> reservationList) {
         LocalDateTime currentTime = LocalDateTime.now();

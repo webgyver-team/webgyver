@@ -161,7 +161,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
         CustomerAddressRes res;
         if (customer.getAddress() == null) {
-            res = CustomerAddressRes.of(200, "null address", null);
+            res = CustomerAddressRes.of(201, "null address", null);
         } else {
             CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
             res = CustomerAddressRes.of(200, "have address", response);
