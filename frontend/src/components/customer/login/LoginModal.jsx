@@ -111,6 +111,7 @@ export default function LoginModal() {
               label="아이디"
               variant="outlined"
               required
+              margin="dense"
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
@@ -124,6 +125,7 @@ export default function LoginModal() {
               label="비밀번호"
               variant="outlined"
               required
+              margin="dense"
               fullWidth
               inputProps={{ minLength: 6, maxLength: 10 }}
               onChange={onChangeAccount}
