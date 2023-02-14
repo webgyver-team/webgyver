@@ -80,6 +80,9 @@ public class CommonServiceImpl implements CommonService {
         return customerRepository.findByIdx(customerIdx).get();
     }
 
+    public Customer saveCustomer(Customer customer){
+        return customerRepository.save(customer);
+    }
     @Override
     public Seller getSeller(long sellerIdx) {
         return sellerRepository.findSellerByIdx(sellerIdx);

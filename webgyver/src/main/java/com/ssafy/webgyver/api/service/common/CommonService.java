@@ -13,6 +13,8 @@ public interface CommonService {
 
     Customer getCustomer(long customerIdx);
 
+    Customer saveCustomer(Customer customer);
+
     Seller getSeller(long sellerIdx);
 
     void setSeller(Seller seller);

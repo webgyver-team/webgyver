@@ -108,6 +108,8 @@ public class WebSocketRealTime {
                 break;
             }
         }
+
+
         // 결제부터 하고, 예약, 아티클, 이미지 넣기, MAP으로 다시 고쳐야함.
         RefreshSellerMessage reservationInfo = null;
         for (RefreshSellerMessage cur : refreshSellerMessageList) {
@@ -118,6 +120,13 @@ public class WebSocketRealTime {
         }
 
         Customer customerForPay = commonService.getCustomer(customerIdx);
+
+        // 소비자 주소 저장
+        customerForPay.setAddress(reservationInfo.getAddress());
+        customerForPay.setDetailAddress(reservationInfo.getDetailAddress());
+        commonService.saveCustomer(customerForPay);
+
+
         BaseResponseBody responseBody = CommonUtil.requestPay(tossKey, customerForPay.getCustomerKey(), customerForPay.getBillingKey(), reservationInfo.getTitle(), reservationInfo.getPrice());
         System.out.println(responseBody.getStatusCode());
         System.out.println(responseBody.getMessage());
