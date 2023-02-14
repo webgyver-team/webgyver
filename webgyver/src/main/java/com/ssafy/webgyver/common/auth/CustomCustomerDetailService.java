@@ -17,7 +17,6 @@ public class CustomCustomerDetailService implements UserDetailsService {
 //    private final PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
-        System.out.println("ID는 > : " + id);
         return customerRepository.findCustomerById(id)
                 .map(this::createUserDetail)
                 .orElseThrow(() -> new UsernameNotFoundException("해당하는 유저를 찾을 수 없습니다."));

@@ -1,18 +1,22 @@
-package com.ssafy.webgyver.api.service.Seller;
+package com.ssafy.webgyver.api.service.seller;
 
 import com.ssafy.webgyver.api.request.seller.SellerCheckDuplicateReq;
 import com.ssafy.webgyver.api.request.seller.SellerLoginReq;
 import com.ssafy.webgyver.api.request.seller.SellerSignUpPostReq;
 import com.ssafy.webgyver.api.response.seller.SellerLoginRes;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
-import com.ssafy.webgyver.common.util.JwtTokenUtil;
+import com.ssafy.webgyver.common.util.JwtTokenProvider;
+import com.ssafy.webgyver.db.entity.RoleType;
 import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.db.entity.SellerCategory;
 import com.ssafy.webgyver.db.repository.common.CategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -20,7 +24,9 @@ import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 @Service("SellerService")
 @RequiredArgsConstructor
@@ -29,6 +35,9 @@ public class SellerServiceImpl implements SellerService {
     final SellerRepository sellerRepository;
     final SellerCategoryRepository sellerCategoryRepository;
     final CategoryRepository categoryRepository;
+    private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider jwtTokenProvider;
+
 
     @Transactional
     @Override
@@ -54,6 +63,7 @@ public class SellerServiceImpl implements SellerService {
                 .sellerCategories(sellerRegisterInfo.getCategoryList())
                 .companyImage("defaultBgImage.png")
                 .profileImage("defaultProfileImage.png")
+                .roles(Collections.singletonList(RoleType.PARTNER.name()))
                 .build();
         // 보안을 위해서 유저 패스워드 암호화 하여 디비에 저장.
         Seller sellerRes = sellerRepository.save(seller);
@@ -87,12 +97,19 @@ public class SellerServiceImpl implements SellerService {
         String userId = req.getId();
         String password = req.getPassword();
 
-        Seller seller = sellerRepository.findSellerById(userId).get();
+        Optional<Seller> seller = sellerRepository.findSellerById(userId);
         // 로그인 요청한 유저로부터 입력된 패스워드 와 디비에 저장된 유저의 암호화된 패스워드가 같은지 확인.(유효한 패스워드인지 여부 확인)
-        if (passwordEncoder.matches(password, seller.getPassword())) {
+        if (!seller.isPresent()){
+            return SellerLoginRes.of(201, "해당하는 유저가 존재하지 않습니다.", null, null);
+        }
+        if (passwordEncoder.matches(password, seller.get().getPassword())) {
+            UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, password);
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
-            return SellerLoginRes.of(200, "Success", JwtTokenUtil.getToken(
-                    String.valueOf(seller.getIdx())), seller.getIdx());
+            return SellerLoginRes.of(200, "Success", jwtTokenProvider.generateToken(
+                    authentication), seller.get().getIdx());
         }
         // 유효하지 않는 패스워드인 경우, 로그인 실패로 응답.
         return SellerLoginRes.of(401, "Invalid Password", null, null);

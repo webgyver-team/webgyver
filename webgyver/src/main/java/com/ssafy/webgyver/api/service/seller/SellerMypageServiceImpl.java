@@ -1,4 +1,4 @@
-package com.ssafy.webgyver.api.service.Seller;
+package com.ssafy.webgyver.api.service.seller;
 
 import com.ssafy.webgyver.api.request.article.ArticleAllReq;
 import com.ssafy.webgyver.api.request.article.ArticleIdxReq;

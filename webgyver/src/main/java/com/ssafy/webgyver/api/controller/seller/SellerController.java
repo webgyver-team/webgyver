@@ -4,7 +4,7 @@ import com.ssafy.webgyver.api.request.seller.SellerCheckDuplicateReq;
 import com.ssafy.webgyver.api.request.seller.SellerLoginReq;
 import com.ssafy.webgyver.api.request.seller.SellerSignUpPostReq;
 import com.ssafy.webgyver.api.response.seller.SellerLoginRes;
-import com.ssafy.webgyver.api.service.Seller.SellerService;
+import com.ssafy.webgyver.api.service.seller.SellerService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

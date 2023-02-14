@@ -1,15 +1,12 @@
 package com.ssafy.webgyver.config;
 
 
-import com.ssafy.webgyver.api.service.UserDetailServiceImpl;
 import com.ssafy.webgyver.common.auth.*;
 import com.ssafy.webgyver.common.util.JwtTokenProvider;
-import com.ssafy.webgyver.common.util.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -17,7 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 /**
  * 인증(authentication) 와 인가(authorization) 처리를 위한 스프링 시큐리티 설정 정의.
@@ -31,10 +27,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //    private UserService userService;
     private final CustomCustomerDetailService customCustomerDetailService;
     private final CustomSellerDetailService customSellerDetailService;
-    private final JwtTokenUtil jwtTokenUtil;
     private final SellerProvider sellerProvider;
     private final CustomerProvider customerProvider;
-    private final UserDetailServiceImpl userDetailServiceImpl;
     private final JwtTokenProvider jwtTokenProvider;
 
 
@@ -78,13 +72,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customCustomerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customSellerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
-                .antMatchers("/api/v1/**/member/**", "/api/v1/common/**").permitAll()
+                .antMatchers("/api/v1/**/member/**", "/api/v1/common/**").permitAll();
 //                .antMatchers().permitAll()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-                .anyRequest().hasAuthority("CUSTOMER")
+//                .anyRequest().hasAnyAuthority("CUSTOMER", "PARTNER")
 //                .anyRequest().authenticated()
 //                .and().cors()
-                .and()
-                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+//                .and()
+//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
     @Bean
     @Override

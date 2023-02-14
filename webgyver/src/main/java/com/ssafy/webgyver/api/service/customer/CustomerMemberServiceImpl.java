@@ -43,8 +43,6 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
     private final PasswordEncoder passwordEncoder;
     private final JwtTokenProvider jwtTokenProvider;
     private final AuthenticationManager authenticationManager;
-    private final AuthenticationManagerBuilder authenticationManagerBuilder;
-
 
     @Value("${properties.file.toss.secret}")
     String tossKey;

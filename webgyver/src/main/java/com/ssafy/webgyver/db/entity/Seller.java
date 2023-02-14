@@ -87,63 +87,73 @@ public class Seller extends BaseEntity implements UserDetails {
     private Double lat;
     private Double lng;
     private Integer point;
-//    @JsonIgnore
-//    @Column
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @Builder.Default
-//    private List<String> roles = new ArrayList<>();
-    private String role;
+    @JsonIgnore
+    @Column
+    @ElementCollection(fetch = FetchType.LAZY)
+    @Builder.Default
+    private List<String> roles = new ArrayList<>();
+//    private String role;
 
 
-    public void updateSellerDescription(String companyDescription){
+    public void updateSellerDescription(String companyDescription) {
         this.companyDescription = companyDescription;
     }
-    public void updateSellerTime(String companyTime){
+
+    public void updateSellerTime(String companyTime) {
         this.companyTime = companyTime;
     }
-    public void updateSellerBookTime(String bookTime){
+
+    public void updateSellerBookTime(String bookTime) {
         this.bookTime = bookTime;
     }
 
-    public void updateSellerProfile(String profileImage, String companyImage, String password, String phoneNumber, String companyName, String address, String detailAddress){
+    public void updateSellerProfile(String profileImage, String companyImage, String password, String phoneNumber, String companyName, String address, String detailAddress) {
         this.profileImage = profileImage;
         this.companyImage = companyImage;
         this.password = password;
         this.phoneNumber = phoneNumber;
-        this. companyName = companyName;
+        this.companyName = companyName;
         this.address = address;
         this.detailAddress = detailAddress;
     }
 
+    //    @Override
+//    public Collection<? extends GrantedAuthority> getAuthorities() {
+//        Collection<GrantedAuthority> collect = new ArrayList<>();
+//        collect.add(new GrantedAuthority() {
+//            @Override
+//            public String getAuthority() {
+//                return getRole();
+//            }
+//        });
+//        return null;
+//    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collect = new ArrayList<>();
-        collect.add(new GrantedAuthority() {
-            @Override
-            public String getAuthority() {
-                return getRole();
-            }
-        });
-        return null;
+        System.out.println(roles);
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
     }
+
     @Override
     public String getUsername() {
-        return null;
+        return id;
     }
 
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return true;
     }
 
     @Override
