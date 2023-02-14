@@ -117,18 +117,6 @@ public class Seller extends BaseEntity implements UserDetails {
         this.detailAddress = detailAddress;
     }
 
-<<<<<<< HEAD
-    //    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        Collection<GrantedAuthority> collect = new ArrayList<>();
-//        collect.add(new GrantedAuthority() {
-//            @Override
-//            public String getAuthority() {
-//                return getRole();
-//            }
-//        });
-//        return null;
-//    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         System.out.println(roles);
@@ -160,10 +148,9 @@ public class Seller extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
-=======
+    }
     public void addReview(long star) {
         this.reviewCount++;
         this.starTotal += star;
->>>>>>> d9ca4fc525b396f855034bb2e5371b2035c8d81d
     }
 }
