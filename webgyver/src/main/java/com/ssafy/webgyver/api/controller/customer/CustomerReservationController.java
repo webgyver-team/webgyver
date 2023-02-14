@@ -33,7 +33,7 @@ public class CustomerReservationController {
         // 2. 등록된 Reservation IDX 를 가지고 Article 등록
         // 3. 등록된 Article IDX 를 가지고 Picture들 등록.
         Reservation reservation = customerReservationService.save(req);
-        webSocket.addRoom(reservation);
+//        webSocket.addRoom(reservation);
         return ResponseEntity.ok(BaseResponseBody.of(200, "success"));
     }
 
