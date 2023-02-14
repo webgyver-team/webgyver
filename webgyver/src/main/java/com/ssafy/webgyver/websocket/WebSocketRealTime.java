@@ -122,9 +122,7 @@ public class WebSocketRealTime {
         Customer customerForPay = commonService.getCustomer(customerIdx);
 
         // 소비자 주소 저장
-        customerForPay.setAddress(reservationInfo.getAddress());
-        customerForPay.setDetailAddress(reservationInfo.getDetailAddress());
-        commonService.saveCustomer(customerForPay);
+//
 
 
         BaseResponseBody responseBody = CommonUtil.requestPay(tossKey, customerForPay.getCustomerKey(), customerForPay.getBillingKey(), reservationInfo.getTitle(), reservationInfo.getPrice());
@@ -272,6 +270,13 @@ public class WebSocketRealTime {
             refreshSellerOneSeller(session);
             refreshCustomerAllCustomer();
         } else if ("customer".equals(session.getUserProperties().get("type"))) {
+            Customer customer = commonService.getCustomer((long) session.getUserProperties().get("idx"));
+            customer.setAddress((String) session.getUserProperties().get("address"));
+            customer.setDetailAddress((String) session.getUserProperties().get("detailAddress"));
+            customer.setLat(Double.valueOf((String) session.getUserProperties().get("lat")));
+            customer.setLng(Double.valueOf((String) session.getUserProperties().get("lng")));
+            commonService.saveCustomer(customer);
+
             refreshCustomerOneCustomer(session);
             refreshSellerAllSeller();
         }
