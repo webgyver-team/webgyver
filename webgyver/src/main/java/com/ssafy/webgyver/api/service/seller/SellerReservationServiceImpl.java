@@ -260,7 +260,7 @@ public class SellerReservationServiceImpl implements SellerReservationService {
         if (seller.getAddress() == null) {
             res = SellerAddressRes.of(201, "null address", null);
         } else {
-            SellerAddressRes.Response response = new SellerAddressRes.Response(seller.getAddress(), seller.getDetailAddress());
+            SellerAddressRes.Response response = new SellerAddressRes.Response(seller.getAddress(), seller.getDetailAddress(), seller.getLat(), seller.getLng());
             res = SellerAddressRes.of(200, "have address", response);
         }
 

@@ -61,6 +61,8 @@ public class Customer extends BaseEntity implements UserDetails {
 
     @Column(name = "billing_key")
     private String billingKey;
+    private Double lat;
+    private Double lng;
     @JsonIgnore
     @Column
     @ElementCollection(fetch = FetchType.EAGER)
