@@ -1,8 +1,11 @@
 package com.ssafy.webgyver.api.controller.seller;
 
+import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.seller.SellerAcceptReservationReq;
 import com.ssafy.webgyver.api.request.seller.SellerCalendarReq;
 import com.ssafy.webgyver.api.request.seller.SellerIdxReq;
+import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
+import com.ssafy.webgyver.api.response.seller.SellerAddressRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.seller.SellerReservationListRes;
 import com.ssafy.webgyver.api.service.seller.SellerReservationService;
@@ -37,7 +40,6 @@ public class SellerReservationController {
     @GetMapping("/calendar/{sellerIdx}/{day}")
     public ResponseEntity<?> getSellerCalendarReservation(@PathVariable Long sellerIdx, @PathVariable String day) {
         SellerCalendarReq req = new SellerCalendarReq(sellerIdx, TimeUtil.string2Time(day));
-        System.out.println(req.getDay());
         SellerReservationListRes res = sellerReservationService.getSellerCalendarReservationList(req);
         return ResponseEntity.ok().body(res);
     }
@@ -47,5 +49,9 @@ public class SellerReservationController {
         SellerReservationEndInfoRes res = sellerReservationService.getSellerReservationEndInfo(reservationIdx);
         return ResponseEntity.ok().body(res);
     }
-
+    @GetMapping("address/{sellerIdx}")
+    public ResponseEntity<SellerAddressRes> getCustomerAddress(@PathVariable("sellerIdx") Long sellerIdx, SellerIdxReq idxReq) {
+        SellerAddressRes res = sellerReservationService.getSellerAddress(idxReq);
+        return ResponseEntity.ok().body(res);
+    }
 }
