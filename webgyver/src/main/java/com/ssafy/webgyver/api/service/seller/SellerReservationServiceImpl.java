@@ -44,7 +44,6 @@ public class SellerReservationServiceImpl implements SellerReservationService {
     final PictureRepository pictureRepository;
     final SellerRepository sellerRepository;
     final SmsService smsService;
-    final SellerRepository sellerRepository;
     @Value("${properties.file.toss.secret}")
     String tossKey;
 
