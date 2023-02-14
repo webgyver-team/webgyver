@@ -12,11 +12,6 @@ export default function MyInfo() {
   const setLoginOpenState = useSetRecoilState(loginOpenState);
   const [myInfo, setMyInfo] = useState(null);
   useEffect(() => {
-    if (customerIdx === null) {
-      alert('로그인이 필요합니다.');
-      setLoginOpenState(true);
-      return;
-    }
     const getMyInfo = async () => {
       const response = await customer.get.myInfo(customerIdx);
       if (response.statusCode === 200) {

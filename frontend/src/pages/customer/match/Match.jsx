@@ -23,7 +23,10 @@ const { kakao } = window;
 
 export default function Matching() {
   const navigate = useNavigate();
-  const routeMatchForm = () => navigate('/match/form');
+  const routeMatchForm = () => {
+    window.history.back();
+    // navigate('/match/form');
+  };
   const setReservationIdx = useSetRecoilState(reservationIdxState);
   const categoryIdx = String(useRecoilValue(categoryState));
   const idx = useRecoilValue(userIdx);
@@ -41,6 +44,22 @@ export default function Matching() {
     };
   }, []);
 
+  const useInterval = (callback, delay) => {
+    const savedCallback = useRef(null);
+    useEffect(() => {
+      savedCallback.current = callback;
+    }, [callback]);
+    useEffect(() => {
+      const executeCallback = () => {
+        savedCallback.current();
+      };
+      const timerId = setInterval(executeCallback, delay);
+      return () => clearInterval(timerId);
+    }, []);
+  };
+  useInterval(() => {
+    setCounter(counter - 1);
+  }, 1000);
   useEffect(() => {
     clearInterval();
     initialTime.current = 100;
