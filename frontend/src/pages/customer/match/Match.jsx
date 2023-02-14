@@ -33,7 +33,7 @@ export default function Matching() {
   const locateValue = useRecoilValue(locateValueState);
   const [watching, setWatching] = useState(0);
   const matchForm = useRecoilValue(matchFormState);
-  const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/customer/${idx}`;
+  const webSocketAddress = `wss://webgyver.site:9001/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
   const initialTime = useRef(100);
   const [counter, setCounter] = useState(100);

@@ -104,6 +104,7 @@ public class Room {
             leave(session);
             session.close();
         }
+
     }
 
 //    static String makeEnterCode(String cIdx, String sIdx) {

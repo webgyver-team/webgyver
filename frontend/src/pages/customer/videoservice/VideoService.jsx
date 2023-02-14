@@ -137,7 +137,7 @@ export default function VideoService() {
 
   useLayoutEffect(() => {
     conn.current = new WebSocket(
-      `ws://i8b101.p.ssafy.io:9000/facetime/customer/${customerIdx}/${reservationIdx}`,
+      `wss://webgyver.site:9001/facetime/customer/${customerIdx}/${reservationIdx}`,
     );
     console.log(conn.current);
     const configuration = {
@@ -188,7 +188,7 @@ export default function VideoService() {
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
-          video: true,
+          video: { facingMode: { exact: 'environment' } },
         })
         .then((stream) => {
           stream
@@ -219,7 +219,7 @@ export default function VideoService() {
         navigator.mediaDevices
           .getUserMedia({
             audio: true,
-            video: true,
+            video: { facingMode: { exact: 'environment' } },
           })
           .then((stream) => {
             stream

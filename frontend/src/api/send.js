@@ -3,7 +3,7 @@
 import axios from 'axios';
 
 const instance = axios.create({
-  baseURL: 'http://i8b101.p.ssafy.io:9000',
+  baseURL: 'https://webgyver.site:9001',
   timeout: 2000,
   headers: {
     'Content-Type': 'application/json',
