@@ -13,8 +13,10 @@ import {
   authState,
   accessToken,
   userIdx,
+  locateValueState,
 } from '../../../atom';
 import { customer } from '../../../api/accountsApi';
+import { customer as api } from '../../../api/customerService';
 
 const style = {
   position: 'absolute',
@@ -35,6 +37,7 @@ export default function LoginModal() {
   const setAccessToken = useSetRecoilState(accessToken);
   const setAuthState = useSetRecoilState(authState);
   const setUserIdx = useSetRecoilState(userIdx);
+  const setLocationValue = useSetRecoilState(locateValueState);
   const closeLogin = () => setLoginState(false);
   const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
@@ -64,22 +67,32 @@ export default function LoginModal() {
         nullIdError: false,
         nullPasswordError: false,
       });
-      try {
-        const response = await customer.login(data);
-        if (response.statusCode === 200) {
-          // 리코일persist 상태 변경
-          setAuthState('customer');
-          setAccessToken(response.data['access-token']);
-          setUserIdx(response.data.customerIdx);
-          setLoginState(false);
-        } else {
-          // eslint-disable-next-line
-          alert('아이디 또는 비밀번호가 일치하지 않습니다.');
-        }
-      } catch (error) {
+      const response = await customer.login(data);
+      if (response.statusCode === 200) {
+        // 리코일persist 상태 변경
+        setAuthState('customer');
+        setAccessToken(response.data['access-token']);
+        setUserIdx(response.data.customerIdx);
+        setLoginState(false);
+      } else {
         // eslint-disable-next-line
         alert('아이디 또는 비밀번호가 일치하지 않습니다.');
       }
+      const locate = await api.get.locate(response.data.customerIdx);
+      if (locate.statusCode === 200 && locate.data.customerAddress !== null) {
+        setLocationValue({
+          address: locate.data.customerAddress.address,
+          detail: locate.data.customerAddress.detailAddress,
+          longitude: locate.data.customerAddress.longitude,
+          latitude: locate.data.customerAddress.latitude,
+        });
+      }
+      console.log({
+        address: locate.data.customerAddress.address,
+        detail: locate.data.customerAddress.detailAddress,
+        longitude: locate.data.customerAddress.lng,
+        latitude: locate.data.customerAddress.lat,
+      });
     }
   };
   // 회원가입 링크

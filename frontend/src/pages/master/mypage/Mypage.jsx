@@ -11,6 +11,7 @@ import { useRecoilState } from 'recoil';
 // import Background from '../../../assets/image/MasterBackground.jpg';
 import Info from './elements/Info';
 import TimePicker from './elements/TimePicker';
+import Exchange from './elements/Exchange';
 import { master } from '../../../api/masterService';
 import { userIdx } from '../../../atom';
 
@@ -56,9 +57,13 @@ export default function Mypage() {
 
   // 영업시간 수정 팝업
   const [openTime, setOpenTime] = useState(false);
-
   const handleClickOpenTime = () => {
     setOpenTime(true);
+  };
+  // 환전 팝업
+  const [openExchange, setOpenExchange] = useState(false);
+  const handleClickOpenExchange = () => {
+    setOpenExchange(true);
   };
 
   const routeMyPageUpdate = () => {
@@ -80,18 +85,30 @@ export default function Mypage() {
         setHour={setBusinessHour}
         setReload={setReload}
       />
+      {myPageData && (
+        <Exchange
+          open={openExchange}
+          setOpen={setOpenExchange}
+          point={myPageData.point}
+          setReload={setReload}
+        />
+      )}
+
       <div>
         <BtnBox>
-          <StateBtn>
+          <StateBtn onClick={handleClickOpenExchange}>
             <span>환전하기</span>
           </StateBtn>
-          <Money>₩ 1,000원</Money>
+          <Money>
+            {myPageData && `₩ ${myPageData.point.toLocaleString('ko-kr')}원`}
+          </Money>
         </BtnBox>
       </div>
       <MasterInfoBox
         backgroundImage={
-          myPageData
-          && `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.backgroundImage}`
+          // eslint-disable-next-line
+          myPageData &&
+          `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.backgroundImage}`
         }
       >
         <EditBox2>
@@ -100,8 +117,9 @@ export default function Mypage() {
         <MasterImgBox>
           <img
             src={
-              myPageData
-              && `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.profileImage}`
+              // eslint-disable-next-line
+              myPageData &&
+              `https://webgyver.s3.ap-northeast-2.amazonaws.com/${myPageData.profileImage}`
             }
             alt="마스터얼굴"
           />
@@ -158,17 +176,17 @@ export default function Mypage() {
         </BusinessBox>
         {businessHoursOpen && (
           <BusinessHoursBox>
-            {isTime === null && (
-              <NoneTime>영업시간을 설정해주세요.</NoneTime>
-            )}
-            {isTime !== null && businessHour.map((el, i) => (
-              <div key={`hour-${i}`}>
-                <DetailTitle key={`title-${i}`}>{el.day}</DetailTitle>
-                <DetailContent key={`content-${i}`}>
-                  {el.holiday ? '휴무' : `${el.open} - ${el.close}`}
-                </DetailContent>
-              </div>
-            ))}
+            {isTime === null && <NoneTime>영업시간을 설정해주세요.</NoneTime>}
+            {/* eslint-disable-next-line */}
+            {isTime !== null &&
+              businessHour.map((el, i) => (
+                <div key={`hour-${i}`}>
+                  <DetailTitle key={`title-${i}`}>{el.day}</DetailTitle>
+                  <DetailContent key={`content-${i}`}>
+                    {el.holiday ? '휴무' : `${el.open} - ${el.close}`}
+                  </DetailContent>
+                </div>
+              ))}
             <EditBox>
               <MoreBtn onClick={handleClickOpenTime}>수정하기</MoreBtn>
             </EditBox>
@@ -178,8 +196,9 @@ export default function Mypage() {
           <DetailTitle>카테고리</DetailTitle>
         </BusinessBox>
         <BusinessHoursBox>
-          {myPageData
-            && myPageData.categoryList.map((item, i) => (
+          {/* eslint-disable-next-line */}
+          {myPageData &&
+            myPageData.categoryList.map((item, i) => (
               <div key={i}>
                 <DetailTitle>{item.category.categoryName}</DetailTitle>
                 <DetailContent>{`${item.price}원`}</DetailContent>

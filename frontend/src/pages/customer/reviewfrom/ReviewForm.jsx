@@ -38,6 +38,7 @@ export default function ReviewForm() {
         // eslint-disable-next-line
         alert('잘못된 접근입니다.');
       }
+      setLoading(false);
     } else {
       // 얘는 수정 모드 -> idx를 reservationIdx로 덮어 써야 함
       setNewForm(false);
