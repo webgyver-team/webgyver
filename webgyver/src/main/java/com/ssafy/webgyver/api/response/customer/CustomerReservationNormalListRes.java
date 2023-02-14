@@ -68,9 +68,9 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
         }
         Comparator<Store> comparator = null;
         // 1-> 거리순, 2 -> 평점순, 3 -> 가격순
-        if (order.equals("1")) {
+        if (order.equals("2")) {
             comparator = (a, b) -> (Double.compare(Double.parseDouble(a.getDistance()), Double.parseDouble(b.getDistance())));
-        } else if (order.equals("2")) {
+        } else if (order.equals("1")) {
             comparator = (a, b) -> (Double.compare(b.getStar(), a.getStar()));
         } else {
             comparator = Comparator.comparingInt(Store::getPrice);
