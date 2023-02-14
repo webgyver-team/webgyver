@@ -5,8 +5,14 @@ import { TextField } from '@mui/material';
 import Button from '@mui/material/Button';
 import { useSetRecoilState } from 'recoil';
 import { useNavigate } from 'react-router-dom';
-import { authState, accessToken, userIdx } from '../../../atom';
+import {
+  authState,
+  accessToken,
+  userIdx,
+  locateValueState,
+} from '../../../atom';
 import { master } from '../../../api/accountsApi';
+import { master as api } from '../../../api/masterService';
 import WebGyver from '../../../assets/image/WebGyver.png';
 
 const style = {
@@ -21,6 +27,7 @@ export default function MasterLogin() {
   const setAuth = useSetRecoilState(authState);
   const setAccessToken = useSetRecoilState(accessToken);
   const setUserIdx = useSetRecoilState(userIdx);
+  const setLocationValue = useSetRecoilState(locateValueState);
   const [data, setData] = React.useState({ id: '', password: '' });
   const [errors, setErrors] = React.useState({
     nullIdError: false,
@@ -49,19 +56,25 @@ export default function MasterLogin() {
         nullIdError: false,
         nullPasswordError: false,
       });
-      try {
-        const response = await master.login(data);
-        if (response.statusCode === 200) {
-          // 리코일persist 상태 변경
-          setAccessToken(response.data['access-token']);
-          setUserIdx(response.data.sellerIdx);
-          setAuth('master');
-          navigate('/master/schedule');
-        } else {
-          alert('아이디 또는 비밀번호가 일치하지 않습니다.');
-        }
-      } catch (error) {
+      const response = await master.login(data);
+      if (response.statusCode === 200) {
+        // 리코일persist 상태 변경
+        setAccessToken(response.data['access-token']);
+        setUserIdx(response.data.sellerIdx);
+        setAuth('master');
+        navigate('/master/schedule');
+      } else {
+        // eslint-disable-next-line no-alert
         alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+      }
+      const locate = await api.get.locate(response.data.sellerIdx);
+      if (locate.statusCode === 200 && locate.data.sellerAddress !== null) {
+        setLocationValue({
+          address: locate.data.sellerAddress.address,
+          detail: locate.data.sellerAddress.detailAddress,
+          longitude: locate.data.sellerAddress.lng,
+          latitude: locate.data.sellerAddress.lat,
+        });
       }
     }
   };

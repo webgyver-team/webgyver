@@ -183,6 +183,7 @@ const Card = styled.div`
   border-radius: 5px;
   margin: 8px;
   width: 70vw;
+  min-width: 660px;
 
   .title {
     font-size: 14px;
@@ -280,6 +281,7 @@ const ReplyBox = styled.div`
 
 const NoImgBox = styled.div`
   width: 128px;
+  min-width: 128px;
   height: 120px;
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   margin: 0 4px 8px 4px;
