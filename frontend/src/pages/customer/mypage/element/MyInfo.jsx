@@ -62,13 +62,10 @@ export default function MyInfo() {
           <div>
             <span className="first">카드정보</span>
             <span className="last">
-              {`${myInfo.cardNumber.slice(0, 4)}-${myInfo.cardNumber.slice(
+              {`${myInfo.cardNumber.slice(
+                0,
                 4,
-                8,
-              )}-${myInfo.cardNumber.slice(8, 12)}-${myInfo.cardNumber.slice(
-                12,
-                16,
-              )}`}
+              )}-XXXX-XXXX-${myInfo.cardNumber.slice(12, 16)}`}
             </span>
           </div>
         </InfoBox>
