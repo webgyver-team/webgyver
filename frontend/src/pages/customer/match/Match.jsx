@@ -23,7 +23,10 @@ const { kakao } = window;
 
 export default function Matching() {
   const navigate = useNavigate();
-  const routeMatchForm = () => navigate('/match/form');
+  const routeMatchForm = () => {
+    window.history.back();
+    // navigate('/match/form');
+  };
   const setReservationIdx = useSetRecoilState(reservationIdxState);
   const categoryIdx = String(useRecoilValue(categoryState));
   const idx = useRecoilValue(userIdx);
@@ -32,7 +35,8 @@ export default function Matching() {
   const matchForm = useRecoilValue(matchFormState);
   const webSocketAddress = `wss://webgyver.site:9001/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
-  const [counter, setCounter] = useState(180);
+  const initialTime = useRef(100);
+  const [counter, setCounter] = useState(100);
 
   useEffect(() => {
     return () => {
@@ -41,11 +45,19 @@ export default function Matching() {
   }, []);
 
   useEffect(() => {
-    if (counter === 0) {
-      navigate('/match/form');
-    }
-    setTimeout(() => setCounter(counter - 1), 1000);
-  }, [counter]);
+    clearInterval();
+    initialTime.current = 100;
+    const timer = setInterval(() => {
+      initialTime.current -= 1;
+      setCounter(initialTime.current);
+      if (initialTime.current <= 0) {
+        navigate('/match/form');
+      }
+    }, 1000);
+    return () => {
+      clearInterval(timer);
+    };
+  }, []);
 
   // map resizer
   const MainScreenRef = useRef(null);
@@ -127,14 +139,7 @@ export default function Matching() {
   };
 
   // eslint-disable-next-line react/jsx-one-expression-per-line
-  const alertText = (
-    <p>
-      {Math.floor(counter / 60)}
-      분
-      {counter % 60}
-      초 뒤, 이전 페이지로 돌아갑니다.
-    </p>
-  );
+  const alertText = <p>{counter}초 뒤, 이전 페이지로 돌아갑니다.</p>;
 
   const marker = (
     <div className="dot">

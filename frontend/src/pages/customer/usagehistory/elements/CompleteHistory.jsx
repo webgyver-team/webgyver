@@ -53,7 +53,6 @@ const Main = styled.div`
 `;
 
 function CardView({ history }) {
-  console.log(history);
   const slickSettings = {
     dots: false,
     arrows: false,
