@@ -41,8 +41,6 @@ export default function AlertDialog({ open, setOpen, registVisit }) {
       time: `${dateText}-${start[0]}${start[1]}`,
     };
     registVisit(data);
-    // eslint-disable-next-line
-    console.log(data);
     handleClose();
   };
 

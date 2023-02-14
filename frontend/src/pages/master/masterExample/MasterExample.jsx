@@ -24,7 +24,6 @@ export default function MasterExample() {
   // 로드데이타
   const [exampleList, setExampleList] = useState([]);
   const userId = useRecoilValue(userIdx);
-  // console.log('id', userId);
   useEffect(() => {
     const loadExampleList = async () => {
       const response = await master.get.example(userId);

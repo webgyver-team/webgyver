@@ -41,8 +41,6 @@ export default function Example({ example, setReload }) {
         alert('사례가 삭제되었습니다.');
         setReload(true);
       } else {
-        // eslint-disable-next-line no-console
-        console.log(response);
         // eslint-disable-next-line no-alert
         alert('삭제에 실패하였습니다.');
       }

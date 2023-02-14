@@ -78,7 +78,6 @@ export default function ReservationForm() {
       secretAccessKey: process.env.REACT_APP_AWS_SECRET_ACCESS_KEY,
     });
     for (let i = 0; i < imageList.length; i += 1) {
-      // console.log(`${imageList[i].name} 업로드 시도 중..`);
       const originName = imageList[i].name;
       const date = new Date();
       const extensionName = `.${originName.split('.').pop()}`;
@@ -95,7 +94,7 @@ export default function ReservationForm() {
       const promise = upload.promise();
       promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(err);
+        alert(err);
       });
       const newData = {
         saveName: hashImageName + extensionName,

@@ -73,7 +73,6 @@ export default function BasicModal() {
   const onCompletePost = (data) => {
     setpostOpen(false);
     setAddress(data.address);
-    // console.log(data.address);
   };
 
   const handleClose = () => {
@@ -100,16 +99,13 @@ export default function BasicModal() {
     geocoder.addressSearch(addressValue.address, function (result, status) {
       // 정삭적으로 검색 완료 시
       if (status === kakao.maps.services.Status.OK) {
-        // console.log(result[0]);
         setCoordinateValue({ x: result[0].x, y: result[0].y });
-        console.log(result[0]);
       }
     });
   }, [addressValue.address]);
 
   return (
     <div>
-      {/* <Button onClick={handleOpen}>Open modal</Button> */}
       <Modal
         open={locateModalOpen}
         onClose={handleClose}

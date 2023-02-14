@@ -37,19 +37,16 @@ export default function MasterSchedule() {
         lat: locationValue.latitude,
       });
       gWebSocket.current.send(socketData);
-      console.log(socketData);
     };
     /**
      * 웹소켓 메시지(From Server) 수신하는 경우 호출
      */
     gWebSocket.current.onmessage = (message) => {
-      console.log(message);
       const socketData = JSON.parse(message.data);
       if (socketData.method === 'GO_FACE_TIME') {
         setReservationIdx(socketData.data.reservationIdx);
         navigate('/master/videoservice');
       }
-      console.log(socketData);
       setData(socketData);
       // addLineToChatBox(JSON.stringify(data));
       // addLineToChatBox('-----------------------------');
@@ -59,7 +56,6 @@ export default function MasterSchedule() {
      * 웹소켓 사용자 연결 해제하는 경우 호출
      */
     gWebSocket.current.onclose = () => {
-      console.log('끝');
       // addLineToChatBox('Server is disconnected.');
     };
 
@@ -71,7 +67,6 @@ export default function MasterSchedule() {
     };
   }, []);
   const acceptReservation = (customerIdx, matchData) => {
-    console.log(gWebSocket.current);
     setMatchForm(matchData);
     const socketData = JSON.stringify({
       method: 'MAKE_RESERVATION',

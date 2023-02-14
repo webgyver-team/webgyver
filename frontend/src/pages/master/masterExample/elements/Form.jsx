@@ -82,7 +82,7 @@ export default function Form({ setReload }) {
       const promise = upload.promise();
       promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(err);
+        alert(err);
       });
       const newData = {
         saveName: hashImageName + extensionName,
@@ -101,10 +101,6 @@ export default function Form({ setReload }) {
     };
     // 이미지 업로드한거 있으면
     // AWS S3에 보내고 저장한 경로명을 data에 담아라
-    // eslint-disable-next-line
-    console.log('console', imageList);
-    // eslint-disable-next-line
-    console.log('data', data);
     // data로 axios POST하고
     // 결과로 나온 idx를 가지고
     // 이미지 axios POST해야 함
@@ -118,8 +114,6 @@ export default function Form({ setReload }) {
     // 이미지 전송 후 받은 url을 picture에 넣고 보낸 후에
     // 잘 보내졌으면 data를 POST
     sendImageListToS3().then(async () => {
-      // eslint-disable-next-line
-      console.log(data); // POST로 수정 예정
       // post 로직
       const response = await master.post.example(data);
       // eslint-disable-next-line
@@ -130,8 +124,6 @@ export default function Form({ setReload }) {
         modalClose();
         setFormContent('');
       } else {
-        // eslint-disable-next-line
-        console.log(response);
         // eslint-disable-next-line no-alert
         alert('다시 시도하십시오.');
       }

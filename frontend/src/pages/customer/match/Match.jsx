@@ -95,8 +95,6 @@ export default function Matching() {
         price: matchForm.cost,
         viewDistance: '1',
       });
-      console.log(socketData);
-      console.log(gWebSocket.current);
       gWebSocket.current.send(socketData);
     };
     /**
@@ -104,7 +102,6 @@ export default function Matching() {
      */
     gWebSocket.current.onmessage = (message) => {
       const socketData = JSON.parse(message.data);
-      console.log(socketData);
       if (socketData.method === 'GO_FACE_TIME') {
         setReservationIdx(socketData.data.reservationIdx);
         navigate('/videoservice');
@@ -118,7 +115,6 @@ export default function Matching() {
      * 웹소켓 사용자 연결 해제하는 경우 호출
      */
     gWebSocket.current.onclose = () => {
-      console.log('끝');
       // addLineToChatBox('Server is disconnected.');
     };
 
@@ -145,12 +141,10 @@ export default function Matching() {
     setDistance(event.target.value);
   };
   const changeDistance = (value) => {
-    console.log(gWebSocket.current);
     const data = JSON.stringify({
       method: 'CHANGE_DISTANCE',
       viewDistance: value,
     });
-    console.log(data);
     gWebSocket.current.send(data);
   };
 

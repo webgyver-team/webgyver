@@ -62,7 +62,6 @@ export default function MasterSignUp() {
     // 각 입력정보 모아져 있는 data를 가지고 유효성 검사하자
     // 아이디 -> 글자수 제한 충족시킨 후 중복 검사 거쳐야 값 O, 그 전엔 null
 
-    console.log(data);
     if (data.id === null) {
       // eslint-disable-next-line
       alert('아이디를 입력한 후 중복 검사를 하세요.');

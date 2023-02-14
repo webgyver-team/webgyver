@@ -36,7 +36,6 @@ export default function AlertDialog({
     const data = {
       companyTime: formContent,
     };
-    // console.log(data);
     const response = await master.put.businessHour(data, masterIdx);
     if (response.statusCode === 200) {
       // eslint-disable-next-line no-alert
@@ -79,7 +78,6 @@ export default function AlertDialog({
       return temp;
     });
     setFormContent([...formContent]);
-    // console.log(formContent);
   };
 
   const update = () => {

@@ -16,9 +16,7 @@ export default function MasterEndService() {
 
   useEffect(() => {
     const loadExampleList = async () => {
-      // console.log(reservationIdx);
       const response = await master.get.endservice(reservationIdx);
-      console.log('response', response);
       setData(response.data);
     };
     // 주소 또는 선택 날짜가 바뀌었으면 storeList 갱신해야

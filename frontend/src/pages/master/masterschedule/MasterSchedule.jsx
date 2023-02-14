@@ -18,7 +18,6 @@ export default function MasterSchedule() {
   useEffect(() => {
     const loadReviewList = async () => {
       const response = await master.get.schedule(userId);
-      console.log(response.data);
       setScheduleList(response.data);
     };
     loadReviewList();

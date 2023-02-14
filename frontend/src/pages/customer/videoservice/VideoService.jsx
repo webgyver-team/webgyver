@@ -58,14 +58,12 @@ export default function VideoService() {
 
     // 얘는 더이상 있을 필요 없는 matchFormState를 초기화해주기 위함
     setMatchForm(null);
-    console.log('matchform 해제');
   }, []);
 
   const routeEndService = () => {
     navigate('/endservice');
   };
   const sendRequest = () => {
-    console.log(conn.current);
     conn.current.send(JSON.stringify({ method: 'WANT_MEET' }));
   };
   // const conn = new WebSocket('wss://webgyver.site:9000/socket');
@@ -84,9 +82,6 @@ export default function VideoService() {
           video.srcObject = stream;
           video.play();
         });
-      // .catch((error) => {
-      //   console.log(error);
-      // });
     };
 
     // 상대방 미디어 가져오기
@@ -137,7 +132,6 @@ export default function VideoService() {
     conn.current = new WebSocket(
       `wss://webgyver.site:9001/facetime/customer/${customerIdx}/${reservationIdx}`,
     );
-    console.log(conn.current);
     const configuration = {
       iceServers: [
         {
@@ -147,7 +141,6 @@ export default function VideoService() {
     };
     const send = async (message) => {
       // 소켓으로 메세지 보내기
-      console.log('보냄: ', message);
       conn.current.send(JSON.stringify(message));
     };
     const sendCandidate = (event) => {
@@ -204,12 +197,10 @@ export default function VideoService() {
     };
 
     conn.current.onclose = () => {
-      console.log('끝');
     };
 
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
-      console.log('받고 해체: ', content);
       if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
@@ -234,7 +225,6 @@ export default function VideoService() {
           });
       } else if (content.method === 'ANSWER') {
         const answer = content.data;
-        console.log(myPeerConnection.current);
         myPeerConnection.current.setRemoteDescription(answer);
       } else if (content.method === 'CANDIDATE') {
         // 리모트 디스크립션에 설정되어있는 피어와의 연결방식을 결정

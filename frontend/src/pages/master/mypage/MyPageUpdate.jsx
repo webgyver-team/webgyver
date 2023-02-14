@@ -71,7 +71,6 @@ export default function MyPageUpdate() {
   useEffect(() => {
     if (newProfileImage !== null) {
       const reader = new FileReader();
-      console.log(newProfileImage);
       reader.readAsDataURL(newProfileImage);
 
       reader.onload = () => {
@@ -121,15 +120,11 @@ export default function MyPageUpdate() {
     });
     const promise = upload.promise();
     promise
-      .then((res) => {
-        // eslint-disable-next-line
-        console.log(
-          `${res.Location}에 ${image}를 ${hashImageName} 경로에 저장 완료`,
-        );
+      .then(() => {
       })
       .catch((err) => {
         // eslint-disable-next-line
-        console.log(err);
+        alert(err);
       });
     const newData = {
       saveName: hashImageName + extensionName,
@@ -144,11 +139,9 @@ export default function MyPageUpdate() {
       updateData({ backgroundImage: newData.saveName });
       setReady([ready[0], true]);
     }
-    console.log(data, ready);
   };
 
   const updateMasterInfo = async () => {
-    console.log('수정 버튼 클릭');
     // 모든 항목 유효성 검사
     // 비밀번호 -> 비밀번호 확인을 거친 비밀번호여야 인정됨, 그 전엔 null
     if (data.password === null) {
@@ -202,7 +195,6 @@ export default function MyPageUpdate() {
         return;
       }
     }
-    console.log('여기까지 통과');
     // 프로필, 대표 이미지 새로 추가된 부분 S3에 보내줌 + 데이터 경로 setData
     if (newProfileImage !== null) {
       // S3 전송함수에 적용

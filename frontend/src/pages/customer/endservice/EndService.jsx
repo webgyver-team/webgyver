@@ -13,7 +13,6 @@ export default function EndService() {
   useEffect(() => {
     const getReservationInfo = async () => {
       const response = await customer.get.endService(reservationIdx);
-      console.log(response);
       if (response.statusCode === 200) {
         setData(response.data);
       } else {

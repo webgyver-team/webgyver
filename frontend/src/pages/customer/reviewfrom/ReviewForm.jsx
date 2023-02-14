@@ -120,7 +120,7 @@ export default function ReviewForm() {
       const promise = upload.promise();
       promise.catch((err) => {
         // eslint-disable-next-line
-        console.log(err);
+        alert(err);
       });
       const newData = {
         saveName: hashImageName + extensionName,

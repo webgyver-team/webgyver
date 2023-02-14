@@ -34,13 +34,9 @@ export default function Waiting({ waiting, setReload }) {
       // setFormContent('');
       setReload(true);
     } else if (response.statusCode === 204) {
-      // eslint-disable-next-line
-      console.log(response);
       // eslint-disable-next-line no-alert
       alert('결제에 실패하였습니다.');
     } else {
-      // eslint-disable-next-line
-      console.log(response);
       // eslint-disable-next-line no-alert
       alert('예약에 실패했습니다.');
       // eslint-disable-next-line no-alert
@@ -57,8 +53,6 @@ export default function Waiting({ waiting, setReload }) {
       // setFormContent('');
       setReload(true);
     } else {
-      // eslint-disable-next-line
-      console.log(response);
       // eslint-disable-next-line no-alert
       alert(response);
     }
