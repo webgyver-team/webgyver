@@ -22,5 +22,7 @@ public class ReservationAllReq {
     private String title;
     private String content;
     private List<PictureReq> images;
+    private Double lat;
+    private Double lng;
 
 }
