@@ -87,12 +87,6 @@ export default function LoginModal() {
           latitude: locate.data.customerAddress.latitude,
         });
       }
-      console.log({
-        address: locate.data.customerAddress.address,
-        detail: locate.data.customerAddress.detailAddress,
-        longitude: locate.data.customerAddress.lng,
-        latitude: locate.data.customerAddress.lat,
-      });
     }
   };
   // 회원가입 링크

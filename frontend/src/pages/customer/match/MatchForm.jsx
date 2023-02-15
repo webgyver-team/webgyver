@@ -119,7 +119,6 @@ export default function ReservationForm() {
   };
   const registReservation = () => {
     // data에 대한 유효성 검사 필요!!
-    console.log(data);
     if (data.customerIdx === null) {
       // 고객 정보 알 수 없음
       // eslint-disable-next-line
