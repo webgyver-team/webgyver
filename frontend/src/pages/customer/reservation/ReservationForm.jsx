@@ -288,6 +288,6 @@ const FormInput = styled.div`
 `;
 
 const SubmitButton = styled.div`
-  textalign: center;
+  text-align: center;
   margin-top: 16px;
 `;
