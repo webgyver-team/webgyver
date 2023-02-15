@@ -176,7 +176,7 @@ export default function VideoService() {
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
-          video: true,
+          video: { facingMode: { exact: 'environment' } },
         })
         .then((stream) => {
           stream
@@ -205,7 +205,7 @@ export default function VideoService() {
         navigator.mediaDevices
           .getUserMedia({
             audio: true,
-            video: true,
+            video: { facingMode: { exact: 'environment' } },
           })
           .then((stream) => {
             stream
