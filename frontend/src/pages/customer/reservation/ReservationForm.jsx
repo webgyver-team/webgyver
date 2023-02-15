@@ -117,6 +117,8 @@ export default function ReservationForm() {
       )}-${reservation.time.replaceAll(':', '')}`, // 예약 시간(연월일-시분)
       address: location.address, // 주소
       detailAddress: location.detail, // 상세주소
+      lat: location.latitude,
+      lng: location.longitude,
       title: formTitle, // 제목
       content: formContent, // 내용
       images: imageData, // 이미지 파일의 hash 이름, 원래 이름
