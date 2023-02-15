@@ -54,6 +54,9 @@ export default function VideoService() {
     setMainScreenWidth(MainScreenRef.current.offsetWidth);
     setSubScreenWidth(SubScreenRef.current.offsetWidth);
     setVideoBoxWidth(videoBoxRef.current.offsetWidth);
+
+    // 얘는 더이상 있을 필요 없는 matchFormState를 초기화해주기 위함
+    setMatchForm(null);
   }, []);
 
   const routeEndService = () => {
@@ -88,7 +91,10 @@ export default function VideoService() {
     const getOpponentCamera = async () => {
       const remoteStream = await myPeerConnection.current.getReceivers();
       if (remoteStream) {
-        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
+        const stream = await new MediaStream([
+          remoteStream[0].track,
+          remoteStream[1].track,
+        ]);
         const video = screenChange ? subVideo.current : mainVideo.current;
         if (video) {
           setTimeout(() => {
@@ -112,17 +118,19 @@ export default function VideoService() {
   // 페이지 나갈때 카메라 제거
   useEffect(() => {
     return () => {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
-        stream.getTracks().forEach((track) => {
-          myPeerConnection.current.getSenders().forEach((sender) => {
-            if (sender.track === track) {
-              sender.track.stop();
-              sender.replaceTrack(null);
-            }
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          stream.getTracks().forEach((track) => {
+            myPeerConnection.current.getSenders().forEach((sender) => {
+              if (sender.track === track) {
+                sender.track.stop();
+                sender.replaceTrack(null);
+              }
+            });
           });
+          stream.getTracks().forEach((track) => track.stop());
         });
-        stream.getTracks().forEach((track) => track.stop());
-      });
       conn.current.close();
       window.location.reload();
     };
@@ -153,24 +161,36 @@ export default function VideoService() {
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
-    myPeerConnection.current.addEventListener('iceconnectionstatechange', async () => {
-      if (myPeerConnection.iceConnectionState === 'disconnected') {
-        const video = screenChange2.current ? subVideo.current : mainVideo.current;
-        video.srcObject = null;
-      } else {
-        const remoteStream = await myPeerConnection.current.getReceivers();
-        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
-        const video = screenChange2.current ? subVideo.current : mainVideo.current;
-        if (video) {
-          setTimeout(() => {
-            video.srcObject = stream;
-            video.play();
-          }, 100);
+    myPeerConnection.current.addEventListener(
+      'iceconnectionstatechange',
+      async () => {
+        if (myPeerConnection.iceConnectionState === 'disconnected') {
+          const video = screenChange2.current
+            ? subVideo.current
+            : mainVideo.current;
+          video.srcObject = null;
+        } else {
+          const remoteStream = await myPeerConnection.current.getReceivers();
+          const stream = await new MediaStream([
+            remoteStream[0].track,
+            remoteStream[1].track,
+          ]);
+          const video = screenChange2.current
+            ? subVideo.current
+            : mainVideo.current;
+          if (video) {
+            setTimeout(() => {
+              video.srcObject = stream;
+              video.play();
+            }, 100);
+          }
         }
-      }
-    });
+      },
+    );
     myPeerConnection.current.addEventListener('track', (data) => {
-      const video = screenChange2.current ? subVideo.current : mainVideo.current;
+      const video = screenChange2.current
+        ? subVideo.current
+        : mainVideo.current;
       video.srcObject = new MediaStream([data.track]);
       video.play();
     });

@@ -14,7 +14,9 @@ export default function Info(props) {
     <Main>
       {data.props === null ? null : (
         <>
-          <MasterInfoBox Background={data.props.backgroundImage}>
+          <MasterInfoBox
+            backgroundImage={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${data.props.backgroundImage}`}
+          >
             <MasterImgBox>
               <img
                 src={`https://webgyver.s3.ap-northeast-2.amazonaws.com/${data.props.profileImage}`}
