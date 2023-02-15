@@ -109,12 +109,15 @@ export default function ReservationForm() {
       customerIdx, // 고객 idx
       sellerIdx: reservation.idx, // 예약 업체 idx
       categoryIdx, // 선택한 카테고리의 idx
-      time: `${reservation.date.replaceAll('-', '')}-${reservation.time.replace(
-        ':',
+      //
+      time: `${reservation.date.replaceAll(
+        '-',
         '',
-      )}`, // 예약 시간(연월일-시분)
+      )}-${reservation.time.replaceAll(':', '')}`, // 예약 시간(연월일-시분)
       address: location.address, // 주소
       detailAddress: location.detail, // 상세주소
+      lat: location.latitude,
+      lng: location.longitude,
       title: formTitle, // 제목
       content: formContent, // 내용
       images: imageData, // 이미지 파일의 hash 이름, 원래 이름
@@ -285,6 +288,6 @@ const FormInput = styled.div`
 `;
 
 const SubmitButton = styled.div`
-  textalign: center;
+  text-align: center;
   margin-top: 16px;
 `;
