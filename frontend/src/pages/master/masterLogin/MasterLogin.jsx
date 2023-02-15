@@ -72,8 +72,8 @@ export default function MasterLogin() {
         setLocationValue({
           address: locate.data.sellerAddress.address,
           detail: locate.data.sellerAddress.detailAddress,
-          longitude: locate.data.sellerAddress.lng,
-          latitude: locate.data.sellerAddress.lat,
+          longitude: String(locate.data.sellerAddress.lng),
+          latitude: String(locate.data.sellerAddress.lat),
         });
       }
     }
