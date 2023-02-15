@@ -20,6 +20,7 @@ export default function CompleteHistory() {
       const response = await customer.get.completeHistory(customerIdx);
       if (response.statusCode === 200) {
         setHistories(response.data.reservationList);
+        console.log(response.data.reservationList);
       } else {
         // eslint-disable-next-line no-alert
         alert(response.message);
@@ -69,7 +70,7 @@ function CardView({ history }) {
     setIsShowMore(!isShowMore);
   };
 
-  const currentType = ['', '예약상담', '바로상담', '방문예약'];
+  const currentType = ['', '바로상담', '예약상담', '방문예약'];
   const currentState = [
     '',
     '수락 대기중',
