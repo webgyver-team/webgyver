@@ -474,7 +474,7 @@ webgyber-frontend
 - 전문가 상세페이지에 나타납니다.
 
 <p align="left">
-<img width="50%" src="/uploads/03483aa4249122bbf9e08f4945e7ff9e/14-review.gif"/>
+<img width="50%" src="/uploads/142c022cd9624cae8065c87cff39a1b3/14-review.gif"/>
 </p>
 
 <br>
