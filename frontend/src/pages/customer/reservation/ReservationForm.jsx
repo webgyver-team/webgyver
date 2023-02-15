@@ -158,10 +158,7 @@ export default function ReservationForm() {
       alert('내용을 한 글자 이상 입력해야 합니다.');
       return;
     }
-    if (data.time !== '') {
-      console.log(data.time);
-      return;
-    }
+
     // 이미지 전송 후 받은 url을 picture에 넣고 보낸 후에
     // 잘 보내졌으면 data를 POST
     sendImageListToS3().then(async () => {
