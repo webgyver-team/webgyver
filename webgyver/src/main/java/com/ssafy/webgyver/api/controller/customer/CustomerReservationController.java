@@ -29,6 +29,8 @@ public class CustomerReservationController {
     // 일반상담 등록
     @PostMapping("/normal/regist")
     public ResponseEntity<BaseResponseBody> regist(@RequestBody ReservationAllReq req) {
+        System.out.println("NORMAL REGIST");
+        System.out.println(req.toString());
         // 작업 프로세스
         // 1. Reservation에 먼저 등록
         // 2. 등록된 Reservation IDX 를 가지고 Article 등록

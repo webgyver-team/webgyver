@@ -91,6 +91,8 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
         customer.setAddress(req.getAddress());
         customer.setDetailAddress(req.getDetailAddress());
+        customer.setLat(req.getLat());
+        customer.setLng(req.getLng());
         customerRepository.save(customer);
 
         return reservation;
