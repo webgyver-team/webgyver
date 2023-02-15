@@ -142,6 +142,12 @@ export default function Reservation() {
         : `${todayObj.getDate()}`
     }`;
     const loadStoreList = async () => {
+      if (location === null) {
+        return;
+      }
+
+      console.log(location);
+
       const data = {
         categoryIdx: category,
         lat: location.latitude,
