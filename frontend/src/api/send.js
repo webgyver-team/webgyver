@@ -22,7 +22,6 @@ instance.interceptors.request.use(
     } else {
       config.headers.Authorization = `Bearer ${storage.accessToken}`;
     }
-    console.log(config);
     return config;
   },
   (error) => {
