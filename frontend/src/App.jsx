@@ -107,10 +107,7 @@ function App() {
                 <Route
                   path="/match"
                   element={
-                    <PrivateRoute
-                      authenticated={auth}
-                      component={<Match />}
-                    />
+                    <PrivateRoute authenticated={auth} component={<Match />} />
                   }
                 />
                 <Route
@@ -134,10 +131,7 @@ function App() {
                 <Route
                   path="/mypage"
                   element={
-                    <PrivateRoute
-                      authenticated={auth}
-                      component={<MyPage />}
-                    />
+                    <PrivateRoute authenticated={auth} component={<MyPage />} />
                   }
                 />
                 <Route
