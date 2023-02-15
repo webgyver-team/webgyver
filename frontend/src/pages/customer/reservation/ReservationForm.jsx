@@ -110,10 +110,11 @@ export default function ReservationForm() {
       customerIdx, // 고객 idx
       sellerIdx: reservation.idx, // 예약 업체 idx
       categoryIdx, // 선택한 카테고리의 idx
-      time: `${reservation.date.replaceAll('-', '')}-${reservation.time.replace(
-        ':',
+      //
+      time: `${reservation.date.replaceAll(
+        '-',
         '',
-      )}`, // 예약 시간(연월일-시분)
+      )}-${reservation.time.replaceAll(':', '')}`, // 예약 시간(연월일-시분)
       address: location.address, // 주소
       detailAddress: location.detail, // 상세주소
       title: formTitle, // 제목
@@ -157,7 +158,10 @@ export default function ReservationForm() {
       alert('내용을 한 글자 이상 입력해야 합니다.');
       return;
     }
-
+    if (data.time !== '') {
+      console.log(data.time);
+      return;
+    }
     // 이미지 전송 후 받은 url을 picture에 넣고 보낸 후에
     // 잘 보내졌으면 data를 POST
     sendImageListToS3().then(async () => {
