@@ -89,6 +89,8 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
         customer.setAddress(req.getAddress());
         customer.setDetailAddress(req.getDetailAddress());
+        customer.setLat(req.getLat());
+        customer.setLng(req.getLng());
         customerRepository.save(customer);
 
         return reservation;
@@ -170,7 +172,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         if (customer.getAddress() == null) {
             res = CustomerAddressRes.of(201, "null address", null);
         } else {
-            CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
+            CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress(), customer.getLat(), customer.getLng());
             res = CustomerAddressRes.of(200, "have address", response);
         }
 

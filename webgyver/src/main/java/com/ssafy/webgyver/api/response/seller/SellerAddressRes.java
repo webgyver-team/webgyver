@@ -15,6 +15,8 @@ public class SellerAddressRes extends DataResponseBody {
     public static class Response {
         private String address;
         private String detailAddress;
+        private Double lat;
+        private Double lng;
 
     }
     public static SellerAddressRes of(Integer statusCode, String message, Response response) {

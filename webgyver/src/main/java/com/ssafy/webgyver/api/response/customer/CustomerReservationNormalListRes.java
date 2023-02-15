@@ -42,7 +42,7 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
             this.star = CommonUtil.getStar(seller.getStarTotal(), seller.getReviewCount());
             this.allTime = TimeUtil.getAllTime(seller.getBookTime(), TimeUtil.string2Time(req.getDate(), "yyyyMMdd"));
             this.noTime = existReservationTime;
-            this.image = seller.getCompanyImage();
+            this.image = seller.getProfileImage();
             this.price = price;
         }
 
