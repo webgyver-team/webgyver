@@ -34,6 +34,10 @@ export const master = {
       const response = await Send.get(`${masterURL}/reservation/end/${id}`);
       return response;
     },
+    locate: async (id) => {
+      const response = await Send.get(`${masterURL}/reservation/address/${id}`);
+      return response;
+    },
   },
   post: {
     reservation: async (data) => {
@@ -51,6 +55,10 @@ export const master = {
       const response = await Send.post(`${masterURL}/mypage/comment`, data);
       return response;
     },
+  },
+  locate: async (id) => {
+    const response = await Send.get(`${masterURL}/reservation/address/${id}`);
+    return response;
   },
   put: {
     schedule: async (reservationIdx, acceptFlag) => {
