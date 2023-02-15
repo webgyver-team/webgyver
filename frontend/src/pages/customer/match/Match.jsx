@@ -35,8 +35,8 @@ export default function Matching() {
   const matchForm = useRecoilValue(matchFormState);
   const webSocketAddress = `ws://i8b101.p.ssafy.io:9000/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
-  const initialTime = useRef(100);
-  const [counter, setCounter] = useState(100);
+  const initialTime = useRef(180);
+  const [counter, setCounter] = useState(180);
 
   useEffect(() => {
     return () => {
