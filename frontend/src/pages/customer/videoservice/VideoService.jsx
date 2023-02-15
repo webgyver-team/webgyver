@@ -195,9 +195,12 @@ export default function VideoService() {
           video: { facingMode: { exact: 'environment' } },
         })
         .then((stream) => {
-          stream
-            .getTracks()
-            .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+          stream.getTracks().forEach(
+            (track) =>
+              // eslint-disable-next-line
+              myPeerConnection.current.addTrack(track, stream),
+            // eslint-disable-next-line
+          );
         })
         .then(async () => {
           const offer = await myPeerConnection.current.createOffer();
@@ -224,9 +227,12 @@ export default function VideoService() {
             video: { facingMode: { exact: 'environment' } },
           })
           .then((stream) => {
-            stream
-              .getTracks()
-              .forEach((track) => myPeerConnection.current.addTrack(track, stream));
+            stream.getTracks().forEach(
+              (track) =>
+                // eslint-disable-next-line
+                myPeerConnection.current.addTrack(track, stream),
+              // eslint-disable-next-line
+            );
           })
           .then(async () => {
             const answer = await myPeerConnection.current.createAnswer();
