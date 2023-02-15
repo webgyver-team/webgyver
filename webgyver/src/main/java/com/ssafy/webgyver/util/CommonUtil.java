@@ -9,6 +9,7 @@ import java.io.DataOutputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
 public class CommonUtil {
@@ -57,20 +58,19 @@ public class CommonUtil {
             jsonObject.put("orderName", orderName); //주문 명
 
             DataOutputStream outputStream = new DataOutputStream(connection.getOutputStream());
-            outputStream.write(jsonObject.toString().getBytes("UTF-8"));
+            outputStream.write(jsonObject.toString().getBytes(StandardCharsets.UTF_8));
             outputStream.flush();
             outputStream.close();
 
             int respCode = connection.getResponseCode(); // New items get NOT_FOUND on PUT
             if (respCode == HttpURLConnection.HTTP_OK) {
                 return BaseResponseBody.of(200, "Success");
+
             } else {
-                System.out.println(connection.getResponseCode());
-                System.out.println(connection.getResponseMessage());
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getErrorStream()));
                 JSONParser parser = new JSONParser();
                 JSONObject resObject = (JSONObject) parser.parse(reader.readLine());
-                System.out.println(resObject);
+
                 return BaseResponseBody.of(204, resObject.get("message").toString());
             }
 

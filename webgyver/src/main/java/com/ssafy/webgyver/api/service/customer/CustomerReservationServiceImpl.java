@@ -5,8 +5,10 @@ import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
 import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
 import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
+import com.ssafy.webgyver.api.response.customer.CustomerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
+import com.ssafy.webgyver.api.service.common.SmsService;
 import com.ssafy.webgyver.db.entity.*;
 import com.ssafy.webgyver.db.repository.Seller.ArticleRepository;
 import com.ssafy.webgyver.db.repository.Seller.SellerCategoryRepository;
@@ -14,17 +16,18 @@ import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import com.ssafy.webgyver.db.repository.customer.CustomerRepository;
+import com.ssafy.webgyver.util.CheckUserUtil;
 import com.ssafy.webgyver.util.PictureParsingUtil;
 import com.ssafy.webgyver.util.ReservationParsingUtil;
 import com.ssafy.webgyver.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -38,6 +41,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     final SellerCategoryRepository sellerCategoryRepository;
     final SellerRepository sellerRepository;
     final CustomerRepository customerRepository;
+    final SmsService smsService;
 
     @Override
     @Transactional
@@ -47,11 +51,13 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         // 1-1. 등록할때 category + seller + sellerCategory랑 조인해서 가격이랑 카테고리 정보 가져와야함!
         // 2. 등록된 Reservation를 가지고 Article 등록
         // 3. 등록된 Article를 가지고 Picture들 등록.
+        // 4. 주소를 소비자 DB에 저장.
 
         Reservation reservation = ReservationParsingUtil.parseReservationReq2Reservation(req);
 
-        Seller seller = Seller.builder().build();
-        seller.setIdx(req.getSellerIdx());
+
+        Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
+
         Category category = Category.builder().idx(req.getCategoryIdx()).build();
         SellerCategory sellerCategory = sellerCategoryRepository.findSellerCategoryBySellerAndCategory(
                 seller, category);
@@ -72,6 +78,21 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
             pictureRepository.save(
                     PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article));
         }
+
+        StringBuilder sb = new StringBuilder();
+        String[] smsDate = reservation.getReservationTime().toString().split("T");
+        sb.append("[Webgyver]").append('\n')
+                .append(smsDate[0]).append(' ').append(smsDate[1]).append("에").append('\n')
+                .append("예약 상담 [").append(article.getTitle()).append("]이(가) 접수되었습니다.").append('\n')
+                .append("예약 내용을 확인 후 수락해 주세요.");
+
+        smsService.onSendMessage(reservation.getSeller().getPhoneNumber(), sb.toString());
+
+        Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
+        customer.setAddress(req.getAddress());
+        customer.setDetailAddress(req.getDetailAddress());
+        customerRepository.save(customer);
+
         return reservation;
 //        req.getImages().stream().map(image -> pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article)));
 
@@ -91,7 +112,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         List<List<String>> existReservationTimeList = new ArrayList<>();
         for (Seller seller : sellerList) {
             List<Reservation> reservationList = reservationRepository.findReservationsBySellerAndReservationTimeBetween(
-                    seller, start, end).stream().filter(reservation -> !(reservation.getReservationType().equals("1") || reservation.getReservationType().equals("3"))).collect(Collectors.toList());
+                    seller, start, end).stream().filter(reservation -> (Arrays.asList(new String[]{"2", "4", "5", "6"}).contains(reservation.getReservationState()))).collect(Collectors.toList());
             List<String> existReservationTime = new ArrayList<>();
             for (Reservation reservation : reservationList) {
                 existReservationTime.add(
@@ -112,6 +133,11 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     @Transactional
     public CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req) {
         reservationDTOList = new ArrayList<>();
+        Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
+        System.out.println();
+        if(!CheckUserUtil.check(customer.getId())){
+            return CustomerReservationListRes.of(403, "Forbidden", null);
+        }
         // 1. 예약 상태 4 => 최상단 띄우기
         List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(
                 req.getCustomerIdx(), "4");
@@ -148,10 +174,10 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public CustomerAddressRes getCustomerAddress(CustomerIdxReq req) {
         Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
         CustomerAddressRes res;
-        if (customer.getAddress() == null){
-            res = CustomerAddressRes.of(200, "null address", null);
+        if (customer.getAddress() == null) {
+            res = CustomerAddressRes.of(201, "null address", null);
         } else {
-            CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress());
+            CustomerAddressRes.Response response = new CustomerAddressRes.Response(customer.getAddress(), customer.getDetailAddress(), customer.getLat(), customer.getLng());
             res = CustomerAddressRes.of(200, "have address", response);
         }
 
@@ -160,6 +186,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     public void reservationListMethod(List<Reservation> reservationList) {
         for (Reservation reservation : reservationList) {
+            System.out.println("!!!!!!!!!!!!" + reservation.getReservationTime());
             String title = null;    // 예약 제목
             String content = null; // 문의 내용
             List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
@@ -196,6 +223,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     }
 
     public void reservationState4ListMethod(List<Reservation> reservationList) {
+        System.out.println(reservationList);
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
             if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
@@ -290,13 +318,13 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         for (Reservation reservation : reservationList) {
             boolean addFirst = false;
             // 둘 다 안들어갔는데 에약 시간 만료 시 (15분 지남) 예약 취소
-            if (reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
+            if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
                 reservation.updateReservationState("3");
                 reservationRepository.save(reservation);
                 continue;
             }
             // 시간 지났음 => 추가 상태 변경하고 똑같은 로직으로 처리
-            else if (reservation.getReservationTime().isAfter(currentTime)) {
+            else if (!reservation.getReservationTime().isAfter(currentTime)) {
                 reservation.updateReservationState("4");
                 reservationRepository.save(reservation);
                 addFirst = true;
@@ -337,5 +365,24 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
                 reservationDTOList.add(reservationDTO);
             }
         }
+    }
+
+    public CustomerReservationEndInfoRes getReservationEndInfo(long reservationIdx) {
+        Reservation reservation = reservationRepository.findById(reservationIdx).get();
+        if (reservation == null) {
+            return CustomerReservationEndInfoRes.of(403, "NoReservation");
+        }
+//        if(  !reservation.getReservationState().equals("5")){
+//            return CustomerReservationEndInfoRes.of(403, "NoEnd");
+//        }
+        Article article = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -1);
+
+        Map<String, Object> response = new HashMap<>();
+        response.put("sellerName", reservation.getSeller().getName());
+        response.put("companyName", reservation.getSeller().getCompanyName());
+        response.put("title", article.getTitle());
+        response.put("price", reservation.getReservationPrice());
+
+        return CustomerReservationEndInfoRes.of(200, "Success", response);
     }
 }

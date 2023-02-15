@@ -62,13 +62,15 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
         List<Store> storeList = new ArrayList<>();
         for (int i = 0; i < sellerList.size(); i++) {
             Store store = new Store(sellerList.get(i), existReservationTimeList.get(i), req, sellerCategoryPrice.get(i));
+            System.out.println("store : " + store);
+            if (store.allTime == null) continue;
             storeList.add(store);
         }
         Comparator<Store> comparator = null;
         // 1-> 거리순, 2 -> 평점순, 3 -> 가격순
-        if (order.equals("1")) {
+        if (order.equals("2")) {
             comparator = (a, b) -> (Double.compare(Double.parseDouble(a.getDistance()), Double.parseDouble(b.getDistance())));
-        } else if (order.equals("2")) {
+        } else if (order.equals("1")) {
             comparator = (a, b) -> (Double.compare(b.getStar(), a.getStar()));
         } else {
             comparator = Comparator.comparingInt(Store::getPrice);

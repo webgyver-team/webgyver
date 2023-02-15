@@ -1,7 +1,6 @@
-package com.ssafy.webgyver.api.response.customer;
+package com.ssafy.webgyver.api.response.seller;
 
 import com.ssafy.webgyver.common.model.response.DataResponseBody;
-import com.ssafy.webgyver.db.entity.Customer;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,7 +8,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CustomerAddressRes extends DataResponseBody {
+public class SellerAddressRes extends DataResponseBody {
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor
@@ -20,11 +19,11 @@ public class CustomerAddressRes extends DataResponseBody {
         private Double lng;
 
     }
-    public static CustomerAddressRes of(Integer statusCode, String message, Response response) {
-        CustomerAddressRes res = new CustomerAddressRes();
+    public static SellerAddressRes of(Integer statusCode, String message, Response response) {
+        SellerAddressRes res = new SellerAddressRes();
         res.setStatusCode(statusCode);
         res.setMessage(message);
-        res.getData().put("customerAddress", response);
+        res.getData().put("sellerAddress", response);
         return res;
     }
 }

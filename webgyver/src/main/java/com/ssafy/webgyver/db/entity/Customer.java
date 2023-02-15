@@ -9,7 +9,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -33,7 +33,7 @@ public class Customer extends BaseEntity implements UserDetails {
 
     @Column(name = "birth_day")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime birthDay;
+    private LocalDate birthDay;
 
     private String gender;
 
@@ -61,27 +61,14 @@ public class Customer extends BaseEntity implements UserDetails {
 
     @Column(name = "billing_key")
     private String billingKey;
+    private Double lat;
+    private Double lng;
     @JsonIgnore
     @Column
     @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
-    //    @JsonIgnore
-//    @Column
-//    @ElementCollection(fetch = FetchType.EAGER)
-//    @Builder.Default
-//    private List<String> roles = new ArrayList<>();
-//    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        Collection<GrantedAuthority> collect = new ArrayList<>();
-//        collect.add(new GrantedAuthority() {
-//            @Override
-//            public String getAuthority() {
-//                return getRole();
-//            }
-//        });
-//        return null;
-//    }
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         System.out.println(roles);

@@ -26,4 +26,11 @@ public class ReservationServiceImpl implements ReservationService {
         reservation.setReservationState("2");
         reservationRepository.save(reservation);
     }
+
+    @Override
+    public void updateReservationFinished(long reservationIdx) {
+        Reservation reservation = reservationRepository.findById(reservationIdx).get();
+        reservation.setReservationState("5");
+        reservationRepository.save(reservation);
+    }
 }

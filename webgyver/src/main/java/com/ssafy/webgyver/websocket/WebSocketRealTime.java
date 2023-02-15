@@ -4,10 +4,12 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
 import com.ssafy.webgyver.api.request.common.picture.PictureReq;
 import com.ssafy.webgyver.api.service.common.CommonService;
+import com.ssafy.webgyver.api.service.common.SmsService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.config.WebSocketConfig;
 import com.ssafy.webgyver.db.entity.Customer;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.db.entity.Seller;
 import com.ssafy.webgyver.util.CommonUtil;
 import com.ssafy.webgyver.websocket.dto.Message;
 import com.ssafy.webgyver.websocket.dto.MethodType;
@@ -30,6 +32,8 @@ import java.util.*;
 @RequiredArgsConstructor
 public class WebSocketRealTime {
     private final CommonService commonService;
+
+    private final SmsService smsService;
 
     @Value("${properties.file.toss.secret}")
     String tossKey;
@@ -97,7 +101,6 @@ public class WebSocketRealTime {
         long sellerIdx = (long) seller.getUserProperties().get("idx");
         long customerIdx = Math.round((double) info.get("customerIdx"));
 
-
         Session customer = null;
         for (Session session : customerSession) {
             if (customerIdx == (long) session.getUserProperties().get("idx")) {
@@ -105,6 +108,8 @@ public class WebSocketRealTime {
                 break;
             }
         }
+
+
         // 결제부터 하고, 예약, 아티클, 이미지 넣기, MAP으로 다시 고쳐야함.
         RefreshSellerMessage reservationInfo = null;
         for (RefreshSellerMessage cur : refreshSellerMessageList) {
@@ -115,10 +120,16 @@ public class WebSocketRealTime {
         }
 
         Customer customerForPay = commonService.getCustomer(customerIdx);
+
+        // 소비자 주소 저장
+        customerForPay.setAddress(reservationInfo.getAddress());
+        customerForPay.setDetailAddress(reservationInfo.getDetailAddress());
+        commonService.saveCustomer(customerForPay);
+
+
         BaseResponseBody responseBody = CommonUtil.requestPay(tossKey, customerForPay.getCustomerKey(), customerForPay.getBillingKey(), reservationInfo.getTitle(), reservationInfo.getPrice());
         System.out.println(responseBody.getStatusCode());
         System.out.println(responseBody.getMessage());
-
 
         // 실시간 상담 reservation 테이블에 등록!!!!!!!
         Reservation insertedRes = commonService.insertReservationArticlePictureList(customerIdx, sellerIdx, reservationInfo);
@@ -134,6 +145,26 @@ public class WebSocketRealTime {
 
         customer.getBasicRemote().sendText(messageString);
         seller.getBasicRemote().sendText(messageString);
+
+        StringBuilder customerStringBuiler = new StringBuilder();
+        StringBuilder sellerStringBuiler = new StringBuilder();
+
+        customerStringBuiler.append("[Webgyver]").append('\n')
+                .append("문의하신 실시간 상담 [").append(reservationInfo.getTitle()).append("]의 상담이 성사되어")
+                .append("등록하신 카드로 ").append(reservationInfo.getPrice()).append("원이 결제완료 되었습니다.");
+
+        sellerStringBuiler.append("[Webgyver]").append('\n')
+                .append("실시간 상담 [").append(reservationInfo.getTitle()).append("]의 상담이 성사되어")
+                .append("결제금액 ").append(reservationInfo.getPrice()).append("원이 적립되었습니다.");
+
+        Seller sellerInfo = commonService.getSeller(sellerIdx);
+
+        smsService.onSendMessage(customerForPay.getPhoneNumber(), customerStringBuiler.toString());
+        smsService.onSendMessage(sellerInfo.getPhoneNumber(), sellerStringBuiler.toString());
+
+        sellerInfo.updatePoint(reservationInfo.getPrice());
+        commonService.setSeller(sellerInfo);
+
 //        System.out.println(messageString);
 
 //
@@ -144,6 +175,7 @@ public class WebSocketRealTime {
 
     @OnError
     public void onError(Session session, Throwable throwable) {
+        throwable.printStackTrace();
         log.warning("onError:" + throwable.getMessage());
     }
 
@@ -165,19 +197,19 @@ public class WebSocketRealTime {
             return;
         Gson gson = new Gson();
         Map<String, Object> customerProperties = customer.getUserProperties();
-        int viewDistance = (int) Math.round((double) customerProperties.get("viewDistance"));
+        int viewDistance = (int) Math.round(Double.valueOf((String) customerProperties.get("viewDistance")));
         int sellerCnt = 0;
 
         if (viewDistance == -1) {
             // 거리 무관으로 설정한 경우.
             sellerCnt = (int) sellerSession.stream().filter(Session::isOpen).count();
         } else {
-            double lat1 = (double) customerProperties.get("lat");
-            double lng1 = (double) customerProperties.get("lng");
+            double lat1 = Double.valueOf((String) customerProperties.get("lat"));
+            double lng1 = Double.valueOf((String) customerProperties.get("lng"));
             for (Session seller : sellerSession) {
                 Map<String, Object> sellerProperties = seller.getUserProperties();
-                double lat2 = (double) sellerProperties.get("lat");
-                double lng2 = (double) sellerProperties.get("lng");
+                double lat2 = Double.valueOf((String) sellerProperties.get("lat"));
+                double lng2 = Double.valueOf((String) sellerProperties.get("lng"));
                 double distance = CommonUtil.getDistanceWithKM(lat1, lng1, lat2, lng2);
                 if (distance <= viewDistance) {
                     sellerCnt += 1;
@@ -198,8 +230,8 @@ public class WebSocketRealTime {
             }
             Map<String, Object> customerProperties = customer.getUserProperties();
             RefreshSellerMessage refreshSellerMessage = RefreshSellerMessage.builder()
-                    .lat((double) customerProperties.get("lat"))
-                    .lng((double) customerProperties.get("lng"))
+                    .lat((String) customerProperties.get("lat"))
+                    .lng((String) customerProperties.get("lng"))
                     .title((String) customerProperties.get("title"))
                     .content((String) customerProperties.get("content"))
                     .address((String) customerProperties.get("address"))
@@ -246,7 +278,7 @@ public class WebSocketRealTime {
     }
 
     public void METHOD_CHANGE_DISTANCE(Session session, Map<String, Object> info) throws IOException {
-        session.getUserProperties().put("viewDistance", Double.valueOf(String.valueOf(info.get("viewDistance"))));
+        session.getUserProperties().put("viewDistance", String.valueOf(info.get("viewDistance")));
         refreshCustomerAllCustomer();
     }
 }

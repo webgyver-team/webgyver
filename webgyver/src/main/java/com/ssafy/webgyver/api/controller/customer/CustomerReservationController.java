@@ -4,11 +4,13 @@ import com.ssafy.webgyver.api.request.common.reservation.ReservationAllReq;
 import com.ssafy.webgyver.api.request.customer.CustomerIdxReq;
 import com.ssafy.webgyver.api.request.customer.CustomerReservationNormalListReq;
 import com.ssafy.webgyver.api.response.customer.CustomerAddressRes;
+import com.ssafy.webgyver.api.response.customer.CustomerReservationEndInfoRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationListRes;
 import com.ssafy.webgyver.api.response.customer.CustomerReservationNormalListRes;
 import com.ssafy.webgyver.api.service.customer.CustomerReservationService;
 import com.ssafy.webgyver.common.model.response.BaseResponseBody;
 import com.ssafy.webgyver.db.entity.Reservation;
+import com.ssafy.webgyver.util.CheckUserUtil;
 import com.ssafy.webgyver.websocket.WebSocketFaceTime;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +34,7 @@ public class CustomerReservationController {
         // 2. 등록된 Reservation IDX 를 가지고 Article 등록
         // 3. 등록된 Article IDX 를 가지고 Picture들 등록.
         Reservation reservation = customerReservationService.save(req);
-        webSocket.addRoom(reservation);
+//        webSocket.addRoom(reservation);
         return ResponseEntity.ok(BaseResponseBody.of(200, "success"));
     }
 
@@ -60,9 +62,16 @@ public class CustomerReservationController {
         CustomerReservationListRes res = customerReservationService.getCustomerCompletedReservationList(idxReq);
         return ResponseEntity.ok(res);
     }
+
     @GetMapping("address/{customerIdx}")
-    public ResponseEntity<?> getCustomerAddress(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq){
+    public ResponseEntity<?> getCustomerAddress(@PathVariable("customerIdx") Long customerIdx, CustomerIdxReq idxReq) {
         CustomerAddressRes res = customerReservationService.getCustomerAddress(idxReq);
+        return ResponseEntity.ok().body(res);
+    }
+
+    @GetMapping("/end/{reservationIdx}")
+    public ResponseEntity<CustomerReservationEndInfoRes> getReservationEndInfo(@PathVariable("reservationIdx") Long reservationIdx) {
+        CustomerReservationEndInfoRes res = customerReservationService.getReservationEndInfo(reservationIdx);
         return ResponseEntity.ok().body(res);
     }
 }

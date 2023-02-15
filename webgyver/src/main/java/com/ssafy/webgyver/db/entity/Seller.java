@@ -11,7 +11,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +39,7 @@ public class Seller extends BaseEntity implements UserDetails {
 
     @Column(name = "birth_day")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    private LocalDateTime birthDay;
+    private LocalDate birthDay;
 
     private String gender;
 
@@ -117,17 +117,6 @@ public class Seller extends BaseEntity implements UserDetails {
         this.detailAddress = detailAddress;
     }
 
-    //    @Override
-//    public Collection<? extends GrantedAuthority> getAuthorities() {
-//        Collection<GrantedAuthority> collect = new ArrayList<>();
-//        collect.add(new GrantedAuthority() {
-//            @Override
-//            public String getAuthority() {
-//                return getRole();
-//            }
-//        });
-//        return null;
-//    }
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         System.out.println(roles);
@@ -159,5 +148,24 @@ public class Seller extends BaseEntity implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public void addReview(long star) {
+        this.reviewCount++;
+        this.starTotal += star;
+    }
+
+    public void deleteReview(long star) {
+        this.reviewCount--;
+        this.starTotal -= star;
+    }
+
+    public void updateReview(long beforeStar, long afterStar) {
+        this.starTotal -= beforeStar;
+        this.starTotal += afterStar;
+    }
+
+    public void updatePoint(int point) {
+        this.point += point;
     }
 }
