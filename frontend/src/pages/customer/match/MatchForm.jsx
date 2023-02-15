@@ -188,6 +188,7 @@ export default function ReservationForm() {
       setMsgForCost('상담가격은 10만원 미만으로 설정할 수 있습니다.');
       return;
     }
+    console.log(value);
     setData((original) => ({
       ...original,
       ...{ cost: value },

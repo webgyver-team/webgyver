@@ -4,17 +4,16 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
-import { useRecoilValue, useSetRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { userIdx, reservationIdxState, matchFormState } from '../../../atom';
+import { userIdx, reservationIdxState } from '../../../atom';
 // import Button from '@mui/material/Button';
 
 export default function VideoService() {
   const navigate = useNavigate();
   const customerIdx = useRecoilValue(userIdx);
   const reservationIdx = useRecoilValue(reservationIdxState);
-  const setMatchForm = useSetRecoilState(matchFormState);
   const mainVideo = useRef(null);
   const subVideo = useRef(null);
   const conn = useRef(null);

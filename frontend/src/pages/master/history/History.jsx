@@ -25,8 +25,6 @@ export default function History() {
     const loadhistory = async () => {
       const response = await master.get.history(userId, selected);
       setHistoryList(response.data.reservationList);
-      // eslint-disable-next-line no-console
-      console.log('hi', response.data);
     };
     loadhistory();
   }, [day, userId]);
