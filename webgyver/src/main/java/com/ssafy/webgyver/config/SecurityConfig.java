@@ -75,7 +75,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customSellerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
                 .antMatchers("/api/v1/**/member/**", "/api/v1/common/**", "/realtime/**", "/facetime/**").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/v1/seller/mypage/**", "/api/v1/seller/reservation/address/**", "/api/v1/customer/reservation/address/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/seller/mypage/**", "/api/v1/customer/reservation/normal/store/list/**", "/api/v1/seller/reservation/address/**", "/api/v1/customer/reservation/address/**").permitAll()
 //                .antMatchers().permitAll()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
                 .anyRequest().hasAnyAuthority("CUSTOMER", "PARTNER")
 //                .anyRequest().authenticated()
