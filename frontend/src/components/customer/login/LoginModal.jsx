@@ -83,8 +83,8 @@ export default function LoginModal() {
         setLocationValue({
           address: locate.data.customerAddress.address,
           detail: locate.data.customerAddress.detailAddress,
-          longitude: locate.data.customerAddress.longitude,
-          latitude: locate.data.customerAddress.latitude,
+          longitude: locate.data.customerAddress.lng,
+          latitude: locate.data.customerAddress.lat,
         });
       }
     }
