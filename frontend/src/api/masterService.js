@@ -52,10 +52,6 @@ export const master = {
       return response;
     },
   },
-  locate: async (id) => {
-    const response = await Send.get(`${masterURL}/reservation/address/${id}`);
-    return response;
-  },
   put: {
     schedule: async (reservationIdx, acceptFlag) => {
       const response = await Send.put(
