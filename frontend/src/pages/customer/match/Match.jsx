@@ -35,8 +35,8 @@ export default function Matching() {
   const matchForm = useRecoilValue(matchFormState);
   const webSocketAddress = `wss://webgyver.site:9001/realtime/customer/${idx}`;
   const gWebSocket = useRef(null);
-  const initialTime = useRef(100);
-  const [counter, setCounter] = useState(100);
+  const initialTime = useRef(180);
+  const [counter, setCounter] = useState('3분');
 
   useEffect(() => {
     return () => {
@@ -46,10 +46,12 @@ export default function Matching() {
 
   useEffect(() => {
     clearInterval();
-    initialTime.current = 100;
+    initialTime.current = 180;
     const timer = setInterval(() => {
       initialTime.current -= 1;
-      setCounter(initialTime.current);
+      if (initialTime.current <= 10) {
+        setCounter(`${initialTime.current}초`);
+      }
       if (initialTime.current <= 0) {
         navigate('/match/form');
       }
@@ -133,7 +135,7 @@ export default function Matching() {
   };
 
   // eslint-disable-next-line react/jsx-one-expression-per-line
-  const alertText = <p>{counter}초 뒤, 이전 페이지로 돌아갑니다.</p>;
+  const alertText = <p>{counter} 뒤, 이전 페이지로 돌아갑니다.</p>;
 
   const marker = (
     <div className="dot">
