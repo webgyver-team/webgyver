@@ -14,7 +14,7 @@ public class TimeUtil {
     // 패턴 인자로 안받고 LocalDateTime으로 바꿔줌. stringTime의 길이로 분기함.
     public static LocalDateTime string2Time(String stringTime) {
         if (stringTime.length() >= 9) {
-            return LocalDateTime.parse(stringTime, DateTimeFormatter.ofPattern("yyyyMMdd-HHmm"));
+            return LocalDateTime.parse(stringTime.substring(0,13), DateTimeFormatter.ofPattern("yyyyMMdd-HHmm"));
         }
         return LocalDate.parse(stringTime, DateTimeFormatter.ofPattern("yyyyMMdd")).atStartOfDay();
     }

@@ -25,5 +25,6 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
 
     Reservation findByIdx(Long idx);
 
-    List<Reservation> findReservationsBySellerIdxAndReservationTimeBetween(Long idx, LocalDateTime start, LocalDateTime end);
+    List<Reservation> findReservationsBySellerIdxAndReservationTimeBetweenAndReservationStateOrderByReservationTimeDesc(Long idx, LocalDateTime start, LocalDateTime end, String state);
+    List<Reservation> findReservationsBySellerIdxAndReservationTimeBetweenOrderByReservationTimeDesc(Long idx, LocalDateTime start, LocalDateTime end);
 }
