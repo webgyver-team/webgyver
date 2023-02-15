@@ -83,12 +83,18 @@ export default function BasicModal() {
 
   // 확인 클릭 시, recoil Location 업데이트
   const updateLocationValueState = () => {
-    setLocationValue({
-      address: addressValue.address,
-      detail: addressValue.detail,
-      longitude: coordinateValue.x,
-      latitude: coordinateValue.y,
-    });
+    if (
+      // eslint-disable-next-line
+      locationValue.address !== addressValue.address ||
+      locationValue.detail !== addressValue.detail
+    ) {
+      setLocationValue({
+        address: addressValue.address,
+        detail: addressValue.detail,
+        longitude: coordinateValue.x,
+        latitude: coordinateValue.y,
+      });
+    }
     handleClose();
   };
   // 주소 값 변동 시, 좌표 가져오기

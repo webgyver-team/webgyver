@@ -1,6 +1,6 @@
 # 🛠 WEBGYVER - 화상상담 수리 서비스
 
-![Webgyver_font](C:\Users\SSAFY\Downloads\Webgyver_font.png)
+![Webgyver_font](/uploads/6505b030fa64300367f7602dce80312b/Webgyver_font.png)
 
 ### WEBGYVER 고객(모바일 화면) : [Webgyver 고객 바로가기](https://webgyver.site/)
 
@@ -25,7 +25,7 @@ SSAFY 8기 2학기 공통프로젝트 - WEBGYVER
 
 </br>
 
-## 🐱‍🏍 WEBGYVER - 개요
+## 💡 WEBGYVER - 개요
 
 *- 출장 부르기 전에 잠깐! 전문가와 먼저 상담하세요. -*  
 
@@ -64,7 +64,7 @@ WEBGYVER는 생활 고장을 원하는 시간에 전문가와 함께 진단하�
   
   - 전문가가 해당 상담을 수락하면 바로 화상상담으로 연결됩니다.
   
-  - <br/>
+    <br/>
 
 - ### 화상상담
   
@@ -96,7 +96,7 @@ WEBGYVER는 생활 고장을 원하는 시간에 전문가와 함께 진단하�
   
   - 내 정보에서 삭제하거나 수정할 수 있습니다.
     
-    </br>
+    <br/>
 
 - ### 수리 사례 등록
   
@@ -104,7 +104,7 @@ WEBGYVER는 생활 고장을 원하는 시간에 전문가와 함께 진단하�
   
   - 수리 실력을 뽐내고 고객이 확인 할 수 있게 해주세요!
     
-    </br>
+    <br/>
 
 ## ✔ 주요 기술
 
@@ -275,9 +275,8 @@ webgyber-frontend
   - 매주 목표량을 설정하여 Sprint 진행
   - 업무의 할당량을 정하여 Story Point를 설정하고, In-Progress -> Done 순으로 작업  
 - 회의
-  - Gether Town 아침회의 진행, 전날 목표 달성량과 당일 할 업무 브리핑
-  - 각자 위치에서 건네야 할 말이 생기면 팀원의 위치로 이동하여 전달
-  - 빠른 소통과 신속한 대응이 가능하다.
+  - 아침회의 진행, 전날 목표 달성량과 당일 할 업무 브리핑
+  - 오류나 협업이 필요한 일이라면 빠른 mattermost를 통해 관련 내용을 전달하고 상의
 - Notion
   - 회의가 있을 때마다 회의록을 기록하여 보관
   - 에러 사항에 대해 기록하고 해결법 공유
@@ -292,27 +291,27 @@ webgyber-frontend
 
 ---
 
-![역할 분배.png](C:\Users\SSAFY\Downloads\역할%20분배.png)
+![역할_분배](/uploads/c589c26881669c3be7a295e81d869c81/역할_분배.png)
 
 ## ✔ 프로젝트 산출물
 
 ---
 
-- [기능명세서]
+- [기능명세서](https://docs.google.com/spreadsheets/d/1zI34pZ_-wAeF70guNyufq_SR68z3fYfClEmOwoYl0to/edit#gid=1227399344)
 
-- [유저플로우]
+- [유저플로우](https://www.figma.com/file/yA2TVRgjIILU6moRSZI0nq/%EC%9B%B9%EA%B0%80%EC%9D%B4%EB%B2%84-%ED%94%8C%EB%A1%9C%EC%9A%B0?node-id=0%3A1&t=mRPl4bFlr92aLI8T-1)
 
-- [와이어프레임]
+- [와이어프레임](https://www.figma.com/file/6XQbxEwWE5AHEwhkqe0U7B/%EC%9B%B9%EA%B0%80%EC%9D%B4%EB%B2%84-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?node-id=0%3A1&t=9kyOUrhCGhbos8HA-1)
 
-- [ERD]
+- [ERD](https://www.notion.so/ERD-3c03afd36620423b9972b25e351d8faa?pvs=4)
 
 - [API](https://ethereal-cherry-328.notion.site/API-fb29c5d201474a659d758f7c584ea648)
   
   ## ✔ 프로젝트 결과물
 
-- [포팅메뉴얼]
+- [포팅메뉴얼](https://www.notion.so/f889c988bc3c498b845f862d84312278?pvs=4)
 
-- [중간발표자료]
+- [중간발표자료](https://www.figma.com/file/6XQbxEwWE5AHEwhkqe0U7B/%EC%9B%B9%EA%B0%80%EC%9D%B4%EB%B2%84-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?node-id=357%3A2022&t=9kyOUrhCGhbos8HA-1)
 
 - [최종발표자료]
 
@@ -320,176 +319,199 @@ webgyber-frontend
 
 ---
 
-### 회원가입 절차
+## 고객 화면
+
+<br/>
+
+### 회원가입
 
 - 이용약관에 동의하지 않으면 진행할 수 없습니다.
-- 아이디(이메일)은 타 사용자의 아이디와 중복될 수 없습니다.
+- 아이디는 타 사용자의 아이디와 중복될 수 없습니다.
+- 올바른 카드 정보여야 합니다.
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587535-8e1656c9-53fa-433e-ac22-efc1963b21a7.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587545-22a4a70f-8cac-4772-a6e5-29c55ff0409b.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587551-b31f46b9-8f39-42ed-8c38-282734224762.gif"/>
+<p align="left">
+<img width="30%" src="/uploads/aac89b8717172a0d545a2b23304727e4/1-signup.gif"/>
+<img width="30%" src="/uploads/d8c8b4a067c4da27d0f45525d56caa1d/1-signup2.gif"/>
+</p>
+
+<br>
+
+### 로그인
+
+- 고객용 아이디로 로그인 해야합니다.
+- 아이디는 전문가 아이디와 중복될 수 있습니다.
+
+<p align="left">
+<img width="30%" src="/uploads/d5b2faef6dc43ccc4462dae6cd8e56db/2-login.gif"/>
+</p>
 
 <br>
 
 ### 메인화면
 
-- 최신순으로 업로드된 플레이리스트 or 플레이룸 or 게시글 정보를 로드합니다.
-- 무한스크롤이 적용됩니다.
+- 상담받을 항목을 정할 수 있습니다.
+- 최하단부에 전문가용 페이지로 이동할 수 있는 버튼이 있습니다. (PC에서 이용해주세요.)
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587375-cfef4162-d404-41fd-9d28-39712f2cf5b1.gif"/>
-
-<br>
-
-### 플레이리스트 생성
-
-- 제목, 소개글, 태그를 작성합니다.
-- 플레이리스트에 담을 영상을 검색해서 추가할 수 있습니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587487-fc0e71b1-507c-4c66-b906-d583f530f139.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587499-da47e90b-c9ae-478f-8942-c4afde9aa4b2.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587504-8e596650-49dd-4ffc-81ae-a2e384527fdc.gif"/>
+<p align="left">
+<img width="30%" src="/uploads/97c738e19f07b1c40342141f2e79162d/3-mainpage.gif"/>
+</p>
 
 <br>
 
-### 플레이리스트 이용하기
+### 예약상담
 
-- 업로드된 플레이리스트로 이동하여 영상을 시청합니다.
-- 플레이리스트에 좋아요와 댓글을 남길 수 있습니다.
-- 해당 플레이리스트의 정보로 플레이룸을 만들 수 있습니다.
-- 업로드한 당사자는 플레이리스트를 삭제하거나 수정할 수 있습니다.
+- 아래 해당 예약에 대한 정보가 나와 있습니다.
+- 위치정보를 입력해야 합니다.
+- 버튼을 누르면 업체 리스트로 이동합니다.
+- 업체 리스트에서는 원하는 날짜와 시간을 선택할 수 있습니다.
+- 해당 업체에 대한 상세 정보, 리뷰, 별점, 수리 사례를 확인할 수 있습니다.
+- 예약 상담 폼에서 예약 정보를 입력할 수 있습니다.
+- 5분 이내에 예약 확정, 취소 문자를 받을 수 있습니다.
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587515-0ebaf6f4-a87f-474c-946c-dee20bed0476.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587529-b2be3b77-4b18-48d8-910e-89235409fc82.gif"/>
+<p align="left">
+<img width="30%" src="/uploads/7d65b78a7e2efa796b3e8cad2f6eacd8/4-reservation.gif"/>
+<img width="30%" src="/uploads/1133277713c65a94da1a7972eb605212/4-reservation2.gif"/>
+<img width="30%" src="/uploads/50da0272f927f316fb23f483eda177f9/4-reservation3.gif"/>
+</p>
 
-<br>
+### 바로상담
 
-### 프로필 탐색
+- 아래 해당 예약에 대한 정보가 나와 있습니다.
+- 위치정보를 입력해야 합니다.
+- 버튼을 누르면 바로 상담 입력 폼으로 이동합니다.
+- 정보를 입력하면 실시간 매칭 페이지로 이동합니다.
+- 해당 페이지에서 대기 중인 전문가의 수를 확인할 수 있습니다.
+- 전문가가 수락하면 화상통화 페이지로 이동합니다.
+- 화상 상담이 끝나면 리뷰를 입력할 수 있습니다.
 
-- 자신의 프로필 정보 페이지에서 팔로워와 팔로잉한 사용자 목록을 볼 수 있습니다.
-- 타인의 프로필으로 이동하여 좋아요 할 수 있습니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587432-39f947e4-988d-47e7-adb4-dedcfbb95c1a.gif"/>
-
-<br>
-
-### 실시간 알림
-
-- 타인이 자신에게 팔로우를 걸었을 때 튜플리를 이용중이라면 실시간 알림을 받을 수 있습니다.
-- 플레이룸에 초대되었을 때에도 실시간 알림을 받습니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587392-41092786-b6c9-4fcd-a3e8-bf476519d5f5.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587394-02371e17-420f-42cf-9d99-e57e3280465e.gif"/>
-
-<br>
-
-### 플레이룸 생성
-
-- 플레이룸을 생성하기 위해 기존에 업로드된 플레이리스트 정보를 이용할 수 있습니다.
-- 팔로우 한 친구를 초대하고, 플레이룸을 운영할 시간, 공개 여부, 영상 목록 셔플 여부, 최대 참여자 수를 설정합니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587441-5bf6a5bf-1bf0-4910-95c8-089e75ed4817.gif"/>
+<p align="left">
+<img width="30%" src="/uploads/8bbee37a102b25c2f5fbe318f9f2fd0f/5-direct.gif"/>
+</p>
 
 <br>
 
-### 플레이룸 이용하기
+### 리뷰등록
 
-- 현재 운영중인 플레이룸은 좌측상단에 ONPLAY라고 써있습니다.
-- 참여한 이용자들은 방장이 보는 영상 싱크에 맞춰집니다.
-- 플레이룸에 접속하여 좋아요 표시를 할 수 있고, 이용자들과 채팅을 할 수 있습니다.
-- 플레이룸을 카카오톡 톡방에 공유할 수 있습니다.
+- 상담이 종료된 고객은 리뷰를 작성할 수 있습니다.
+- 별점을 매길 수 있습니다.
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587451-cd504c78-5147-45df-881d-b8d45e766b26.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587467-401548d1-4ef2-4d16-adc6-abb7e97a47de.gif"/>
-
-<br>
-
-### 알림 목록 이용하기
-
-- 팔로워에 대한 소식, 팔로우 소식 등이 알림 목록에 실시간으로 저장됩니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587397-120e0308-8a4b-4c65-977e-e0991ed5d820.gif"/>
+<p align="left">
+<img width="30%" src="/uploads/dd4856711b88024bd43696a3877f42b0/6-review.gif"/>
+</p>
 
 <br>
 
-### 게시글 작성
+### 내 정보
 
-- 게시글을 작성할 때 플레이리스트와 플레이룸을 엮어서 업로드할 수 있습니다.
-- 아무것도 엮지 않으면 입력한 내용만 업로드됩니다.
+- 내 개인 정보를 확인하고 수정할 수 있습니다.
+- 작성한 리뷰를 확인하고 수정하거나 삭제할 수 있습니다.
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587371-0aff4235-5232-48d5-9b67-2354dcabd4d0.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587373-100a85f0-bbcd-47e6-b2ce-4f23d6817c42.gif"/>
-
-<br>
-
-### 메인화면 이용하기
-
-- 메인화면에서 자유롭게 타인이 업로드한 컨텐츠를 탐색할 수 있습니다.
-- 그러다가, 맘에 드는 컨텐츠를 업로드하는 사용자를 발견하면 접속하여 활동 내역을 살펴볼 수 있습니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587377-2da34425-f76d-4c34-90de-f11606d0b60b.gif"/>
+<p align="left">
+<img width="30%" src="/uploads/8866aefb47c553f4a5ff4f377246e8de/7-mypage.gif"/>
+</p>
 
 <br>
 
-### 탐색하기
+### 이용 내역
 
-- 플레이리스트, 플레이룸, 영상 각각에 대하여 전체 목록을 살펴볼 수 있습니다.
-- 현재 유저의 취향에 따라 키워드 버튼이 변화합니다.
+- 예정된 에약 일정을 확인할 수 있습니다.
+- 완료된 일정을 확인할 수 있습니다.
+- 진행중인 화상상담에 입장할 수 있습니다.
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587399-6ca3be70-4f6f-4107-b879-de3bddeb2f56.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587407-4e64cd20-2ed4-4f8c-9ca9-d51d7d7162b2.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587417-01f10449-b4e7-42aa-bd8b-acd5444d4092.gif"/>
-
-<br>
-
-### 검색
-
-- 현재 실시간 검색어 트렌드가 Top 10위까지 노출됩니다. 클릭하면 검색결과로 이동합니다.
-- 플레이리스트, 플레이룸, 유저닉네임, 영상제목을 검색할 수 있습니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587561-55048bc1-4649-4bb4-a6b3-468d01f3e9e7.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587364-f62396c2-a221-4424-a6ce-f2ef6b9362b9.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587565-4bfb22ef-621b-4df8-b7b7-bd73d324f50d.gif"/>
+<p align="left">
+<img width="30%" src="/uploads/37496feb0f665272406397230018a827/8-usagehistory.gif"/>
+<img width="30%" src="/uploads/59668f306f09c71474e7311947b6489f/8-usagehistory2.gif"/>
+</p>
 
 <br>
 
-### 자신의 프로필 정보
+## 전문가 화면
 
-- 자신의 프로필 화면에서 활동 내역과, 취향 분석 결과 그리고 획득한 뱃지를 확인할 수 있습니다.
+<br/>
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587436-8d94a81a-b287-4d59-99a6-dca905eaf5b5.gif"/>
+### 로그인 & 회원가입
 
-<br>
+- 전문가의 홈페이지입니다.
+- 아이디는 고객과 중복될 수 있습니다.
+- 올바른 사업자 등록 번호를 등록해야 합니다.
+- 처음 가입 시, 상담가능시간을 설정해야 합니다.
 
-### 프로필 정보 변경
-
-- 설정 탭에서 비밀번호를 변경할 수 있습니다.
-- 프로필 정보 페이지에서 프로필이미지, 닉네임, 자기소개 글을 변경할 수 있습니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587378-146a0843-c95e-4323-a53e-ea3157a846ee.gif"/>
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154591542-7efa6cf5-ff54-40d1-8ed8-1d2682c30ee4.gif"/>
-
-<br>
-
-### 좋아요 표시한 글 보기
-
-- 설정 페이지에서 좋아요한 플레이리스트, 플레이룸, 게시글 목록을 확인할 수 있습니다.
-
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587382-e9dcdaf1-e5db-4414-95e1-1230f8f08486.gif"/>
+<p align="left">
+<img width="50%" src="/uploads/7831c41ca63d09440cbccb25bbea6309/10-login.gif"/>
+<img width="50%" src="/uploads/7ccefac14b476f6cb083d49eb2e45fe3/11-signup.gif"/>
+</p>
 
 <br>
 
-### 알림관련 설정, 이용약관
+### 일정
 
-- 실시간 알림이 오는 것이 싫다면 수신 거부를 할 수 있습니다.
-- TUPLI 서비스 개인정보 이용약관, 그리고 서비스 이용약관을 확인할 수 있습니다.
+- 전문가의 홈페이지입니다.
+- 진행중인 화상상담에 입장할 수 있습니다.
+- 예약을 확정, 취소하실 수 있습니다.
+- 오늘의 일정을 확인할 수 있습니다.
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587385-b06c3afe-c06e-4d9c-8412-60c59e94540d.gif"/>
+<p align="left">
+<img width="50%" src=""/>
+</p>
 
 <br>
 
-### 로그아웃
+### 내역
 
-- 로그아웃하면 비회원(게스트)로 접속하게됩니다.
-- 비회원 사용자는 좋아요, 댓글, 채팅 등 여러 기능이 제한됩니다.
+- 일정을 일별로 확인할 수 있습니다.
 
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587391-bb7fe4c1-bb9b-4c9f-a6bd-6dba13daadde.gif"/>
+<p align="left">
+<img width="50%" src="/uploads/18126314b69f7656d6af680d6d262544/13-history.gif"/>
+</p>
+
+<br>
+
+### 리뷰 관리
+
+- 리뷰 목록을 확인할 수 있습니다.
+- 댓글을 등록, 수정, 삭제할 수 있습니다.
+- 전문가 상세페이지에 나타납니다.
+
+<p align="left">
+<img width="50%" src="/uploads/142c022cd9624cae8065c87cff39a1b3/14-review.gif"/>
+</p>
+
+<br>
+
+### 수리 사례
+
+- 수리 사례를 등록, 삭제, 수정할 수 있습니다.
+- 전문가 상세페이지에 나타납니다.
+
+<p align="left">
+<img width="50%" src="/uploads/9d18965bc4611a97d35718c986ffc126/15-example.gif"/>
+</p>
+
+<br>
+
+
+### 내 정보
+
+- 개인정보수정으로 이동할 수 있습니다.
+- 영업시간을 설정할 수 있습니다.
+- 소개글을 설정할 수 있습니다.
+- 전문가 상세페이지에 나타납니다.
+
+<p align="left">
+<img width="50%" src="/uploads/5d932d78259ae5266524125c826c6103/16-mypage.gif"/>
+<img width="50%" src="/uploads/e5745f36298395584a87bb5670c1a946/16-mypage2.gif"/>
+</p>
+
+<br>
+
+### 실시간 상담
+
+- 실시간으로 등록된 바로상담이 표시됩니다.
+- 상담내역을 확인하고 수락할 수 있습니다.
+- 수락 시, 화상통화 화면으로 이동합니다.
+
+<p align="left">
+<img width="50%" src=""/>
+</p>
+
+<br>

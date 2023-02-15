@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 // import { useSetRecoilState } from 'recoil';
-import { useSetRecoilState, useRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -21,7 +21,7 @@ export default function Proceeding({ proceeding }) {
     slidesToScroll: 1,
   };
   const setReservationIdxState = useSetRecoilState(reservationIdxState);
-  const [ReservationData, setReservationData] = useRecoilState(matchFormState);
+  const setReservationData = useSetRecoilState(matchFormState);
 
   const noMore = proceeding.content.length > 60;
   console.log(noMore);
@@ -37,9 +37,9 @@ export default function Proceeding({ proceeding }) {
     setReservationIdxState(proceeding.reservationIdx);
     setReservationData((original) => ({
       ...original,
-      title: ReservationData.title,
-      content: ReservationData.content,
-      images: ReservationData.images,
+      title: proceeding.title,
+      content: proceeding.content,
+      images: proceeding.images,
     }));
     navigate('/master/videoservice');
   };

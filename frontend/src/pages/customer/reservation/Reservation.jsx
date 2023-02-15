@@ -84,6 +84,7 @@ export default function Reservation() {
       }
       setClickedTimeButton(event.target); // 클릭한 시간 버튼을 저장
       setClickedReservation(data); // data를 reservation으로 저장
+      console.log(data);
       return;
     }
     // data와 reservation이 같으면 같은 버튼 클릭한 것이므로 클릭 해제 해야 함
@@ -141,6 +142,12 @@ export default function Reservation() {
         : `${todayObj.getDate()}`
     }`;
     const loadStoreList = async () => {
+      if (location === null) {
+        return;
+      }
+
+      console.log(location);
+
       const data = {
         categoryIdx: category,
         lat: location.latitude,

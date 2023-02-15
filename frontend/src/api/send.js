@@ -20,8 +20,9 @@ instance.interceptors.request.use(
     ) {
       config.headers.Authorization = null;
     } else {
-      config.headers.Authorization = storage.accessToken;
+      config.headers.Authorization = `Bearer ${storage.accessToken}`;
     }
+    console.log(config);
     return config;
   },
   (error) => {
