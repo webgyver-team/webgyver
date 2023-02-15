@@ -4,16 +4,17 @@
 /* eslint-disable jsx-a11y/media-has-caption */
 // eslint-disable-next-line object-curly-newline
 import React, { useRef, useEffect, useState, useLayoutEffect } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import styled from 'styled-components';
 import { useNavigate } from 'react-router-dom';
-import { userIdx, reservationIdxState } from '../../../atom';
+import { userIdx, reservationIdxState, matchFormState } from '../../../atom';
 // import Button from '@mui/material/Button';
 
 export default function VideoService() {
   const navigate = useNavigate();
   const customerIdx = useRecoilValue(userIdx);
   const reservationIdx = useRecoilValue(reservationIdxState);
+  const setMatchForm = useSetRecoilState(matchFormState);
   const mainVideo = useRef(null);
   const subVideo = useRef(null);
   const conn = useRef(null);
@@ -87,7 +88,10 @@ export default function VideoService() {
     const getOpponentCamera = async () => {
       const remoteStream = await myPeerConnection.current.getReceivers();
       if (remoteStream) {
-        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
+        const stream = await new MediaStream([
+          remoteStream[0].track,
+          remoteStream[1].track,
+        ]);
         const video = screenChange ? subVideo.current : mainVideo.current;
         if (video) {
           setTimeout(() => {
@@ -150,24 +154,36 @@ export default function VideoService() {
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
-    myPeerConnection.current.addEventListener('iceconnectionstatechange', async () => {
-      if (myPeerConnection.iceConnectionState === 'disconnected') {
-        const video = screenChange2.current ? subVideo.current : mainVideo.current;
-        video.srcObject = null;
-      } else {
-        const remoteStream = await myPeerConnection.current.getReceivers();
-        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
-        const video = screenChange2.current ? subVideo.current : mainVideo.current;
-        if (video) {
-          setTimeout(() => {
-            video.srcObject = stream;
-            video.play();
-          }, 100);
+    myPeerConnection.current.addEventListener(
+      'iceconnectionstatechange',
+      async () => {
+        if (myPeerConnection.iceConnectionState === 'disconnected') {
+          const video = screenChange2.current
+            ? subVideo.current
+            : mainVideo.current;
+          video.srcObject = null;
+        } else {
+          const remoteStream = await myPeerConnection.current.getReceivers();
+          const stream = await new MediaStream([
+            remoteStream[0].track,
+            remoteStream[1].track,
+          ]);
+          const video = screenChange2.current
+            ? subVideo.current
+            : mainVideo.current;
+          if (video) {
+            setTimeout(() => {
+              video.srcObject = stream;
+              video.play();
+            }, 100);
+          }
         }
-      }
-    });
+      },
+    );
     myPeerConnection.current.addEventListener('track', (data) => {
-      const video = screenChange2.current ? subVideo.current : mainVideo.current;
+      const video = screenChange2.current
+        ? subVideo.current
+        : mainVideo.current;
       video.srcObject = new MediaStream([data.track]);
       video.play();
     });
@@ -176,7 +192,7 @@ export default function VideoService() {
       navigator.mediaDevices
         .getUserMedia({
           audio: true,
-          video: true,
+          video: { facingMode: { exact: 'environment' } },
         })
         .then((stream) => {
           stream
@@ -205,7 +221,7 @@ export default function VideoService() {
         navigator.mediaDevices
           .getUserMedia({
             audio: true,
-            video: true,
+            video: { facingMode: { exact: 'environment' } },
           })
           .then((stream) => {
             stream
