@@ -16,11 +16,13 @@ import com.ssafy.webgyver.db.repository.Seller.SellerRepository;
 import com.ssafy.webgyver.db.repository.common.PictureRepository;
 import com.ssafy.webgyver.db.repository.common.ReservationRepository;
 import com.ssafy.webgyver.db.repository.customer.CustomerRepository;
+import com.ssafy.webgyver.util.CheckUserUtil;
 import com.ssafy.webgyver.util.PictureParsingUtil;
 import com.ssafy.webgyver.util.ReservationParsingUtil;
 import com.ssafy.webgyver.util.TimeUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -133,6 +135,11 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     @Transactional
     public CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req) {
         reservationDTOList = new ArrayList<>();
+        Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
+        System.out.println();
+        if(!CheckUserUtil.check(customer.getId())){
+            return CustomerReservationListRes.of(403, "Forbidden", null);
+        }
         // 1. 예약 상태 4 => 최상단 띄우기
         List<Reservation> reservationList = reservationRepository.findReservationsByCustomerIdxAndReservationStateOrderByReservationTimeDesc(
                 req.getCustomerIdx(), "4");

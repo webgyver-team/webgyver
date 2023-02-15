@@ -23,7 +23,7 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends GenericFilterBean {
     private final JwtTokenProvider jwtTokenProvider;
-    private static final String AUTHORITIES_KEY = "access-token";
+    private static final String AUTHORITIES_KEY = "authorization";
     private static final String BEARER_TYPE = "Bearer";
 
     @Override

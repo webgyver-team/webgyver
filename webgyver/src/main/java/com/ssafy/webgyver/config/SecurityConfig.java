@@ -6,6 +6,7 @@ import com.ssafy.webgyver.common.util.JwtTokenProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -73,13 +74,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customCustomerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager(), customSellerDetailService)) //HTTP 요청에 JWT 토큰 인증 필터를 거치도록 필터를 추가
                 .authorizeRequests()
-                .antMatchers("/api/v1/**/member/**", "/api/v1/common/**").permitAll();
+                .antMatchers("/api/v1/**/member/**", "/api/v1/common/**", "realtime/**", "facetime/**").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/v1/seller/mypage/**").permitAll()
 //                .antMatchers().permitAll()       //인증이 필요한 URL과 필요하지 않은 URL에 대하여 설정
-//                .anyRequest().hasAnyAuthority("CUSTOMER", "PARTNER")
+                .anyRequest().hasAnyAuthority("CUSTOMER", "PARTNER")
 //                .anyRequest().authenticated()
-//                .and().cors()
-//                .and()
-//                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
+                .and().cors()
+                .and()
+                .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider), UsernamePasswordAuthenticationFilter.class);
     }
     @Bean
     @Override
