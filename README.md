@@ -25,7 +25,7 @@ SSAFY 8기 2학기 공통프로젝트 - WEBGYVER
 
 </br>
 
-## 🐱‍🏍 WEBGYVER - 개요
+## 💡 WEBGYVER - 개요
 
 *- 출장 부르기 전에 잠깐! 전문가와 먼저 상담하세요. -*  
 
@@ -298,13 +298,13 @@ webgyber-frontend
 
 ---
 
-- [기능명세서]
+- [기능명세서](https://docs.google.com/spreadsheets/d/1zI34pZ_-wAeF70guNyufq_SR68z3fYfClEmOwoYl0to/edit#gid=1227399344)
 
-- [유저플로우]
+- [유저플로우](https://www.figma.com/file/yA2TVRgjIILU6moRSZI0nq/%EC%9B%B9%EA%B0%80%EC%9D%B4%EB%B2%84-%ED%94%8C%EB%A1%9C%EC%9A%B0?node-id=0%3A1&t=mRPl4bFlr92aLI8T-1)
 
-- [와이어프레임]
+- [와이어프레임](https://www.figma.com/file/6XQbxEwWE5AHEwhkqe0U7B/%EC%9B%B9%EA%B0%80%EC%9D%B4%EB%B2%84-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?node-id=0%3A1&t=9kyOUrhCGhbos8HA-1)
 
-- [ERD]
+- [ERD](https://www.notion.so/ERD-3c03afd36620423b9972b25e351d8faa?pvs=4)
 
 - [API](https://ethereal-cherry-328.notion.site/API-fb29c5d201474a659d758f7c584ea648)
   
@@ -312,13 +312,17 @@ webgyber-frontend
 
 - [포팅메뉴얼]
 
-- [중간발표자료]
+- [중간발표자료](https://www.figma.com/file/6XQbxEwWE5AHEwhkqe0U7B/%EC%9B%B9%EA%B0%80%EC%9D%B4%EB%B2%84-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?node-id=357%3A2022&t=9kyOUrhCGhbos8HA-1)
 
 - [최종발표자료]
 
 ## 📱 WEBGYVER 서비스 화면
 
 ---
+
+## 고객 화면
+
+<br/>
 
 ### 회원가입
 
@@ -418,6 +422,97 @@ webgyber-frontend
 <p align="left">
 <img width="30%" src="/uploads/37496feb0f665272406397230018a827/8-usagehistory.gif"/>
 <img width="30%" src="/uploads/59668f306f09c71474e7311947b6489f/8-usagehistory2.gif"/>
+</p>
+
+<br>
+
+## 전문가 화면
+
+<br/>
+
+### 로그인 & 회원가입
+
+- 전문가의 홈페이지입니다.
+- 아이디는 고객과 중복될 수 있습니다.
+- 올바른 사업자 등록 번호를 등록해야 합니다.
+- 처음 가입 시, 상담가능시간을 설정해야 합니다.
+
+<p align="left">
+<img width="50%" src="/uploads/7831c41ca63d09440cbccb25bbea6309/10-login.gif"/>
+<img width="50%" src="/uploads/7ccefac14b476f6cb083d49eb2e45fe3/11-signup.gif"/>
+</p>
+
+<br>
+
+### 일정
+
+- 전문가의 홈페이지입니다.
+- 진행중인 화상상담에 입장할 수 있습니다.
+- 예약을 확정, 취소하실 수 있습니다.
+- 오늘의 일정을 확인할 수 있습니다.
+
+<p align="left">
+<img width="50%" src=""/>
+</p>
+
+<br>
+
+### 내역
+
+- 일정을 일별로 확인할 수 있습니다.
+
+<p align="left">
+<img width="50%" src="/uploads/18126314b69f7656d6af680d6d262544/13-history.gif"/>
+</p>
+
+<br>
+
+### 리뷰 관리
+
+- 리뷰 목록을 확인할 수 있습니다.
+- 댓글을 등록, 수정, 삭제할 수 있습니다.
+- 전문가 상세페이지에 나타납니다.
+
+<p align="left">
+<img width="50%" src="/uploads/03483aa4249122bbf9e08f4945e7ff9e/14-review.gif"/>
+</p>
+
+<br>
+
+### 수리 사례
+
+- 수리 사례를 등록, 삭제, 수정할 수 있습니다.
+- 전문가 상세페이지에 나타납니다.
+
+<p align="left">
+<img width="50%" src="/uploads/9d18965bc4611a97d35718c986ffc126/15-example.gif"/>
+</p>
+
+<br>
+
+
+### 내 정보
+
+- 개인정보수정으로 이동할 수 있습니다.
+- 영업시간을 설정할 수 있습니다.
+- 소개글을 설정할 수 있습니다.
+- 전문가 상세페이지에 나타납니다.
+
+<p align="left">
+<img width="50%" src="/uploads/5d932d78259ae5266524125c826c6103/16-mypage.gif"/>
+<img width="50%" src="/uploads/e5745f36298395584a87bb5670c1a946/16-mypage2.gif"/>
+</p>
+
+<br>
+
+### 실시간 상담
+
+- 실시간으로 등록된 바로상담이 표시됩니다.
+- 상담내역을 확인하고 수락할 수 있습니다.
+- 수락 시, 화상통화 화면으로 이동합니다.
+
+<p align="left">
+<img width="50%" src=""/>
 </p>
 
 <br>
