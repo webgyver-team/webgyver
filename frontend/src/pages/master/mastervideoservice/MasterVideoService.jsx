@@ -85,6 +85,7 @@ export default function MasterVideoService() {
     // 상대방 미디어 가져오기
     const getOpponentCamera = async () => {
       const remoteStream = await myPeerConnection.current.getReceivers();
+      console.log(remoteStream);
       if (remoteStream) {
         const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
         const video = screenChange ? mainVideo.current : subVideo.current;
@@ -138,6 +139,7 @@ export default function MasterVideoService() {
       ],
     };
     const send = async (message) => {
+      console.log(message);
       conn.current.send(JSON.stringify(message));
     };
     const sendCandidate = (event) => {
@@ -195,6 +197,7 @@ export default function MasterVideoService() {
 
     conn.current.onmessage = async (message) => {
       const content = JSON.parse(message.data);
+      console.log(message);
       if (content.method === 'OFFER') {
         // offer가 오면 가장먼저 그 오퍼를 리모트 디스크립션으로 등록
         const offer = content.data;
