@@ -325,9 +325,11 @@ webgyber-frontend
 - 이용약관에 동의하지 않으면 진행할 수 없습니다.
 - 아이디는 타 사용자의 아이디와 중복될 수 없습니다.
 - 올바른 카드 정보여야 합니다.
-![1-signup](/uploads/aac89b8717172a0d545a2b23304727e4/1-signup.gif)
-![1-signup2](/uploads/d8c8b4a067c4da27d0f45525d56caa1d/1-signup2.gif)
-<img width="30%" src="https://user-images.githubusercontent.com/55949647/154587551-b31f46b9-8f39-42ed-8c38-282734224762.gif"/>
+
+<p align="left">
+<img width="50%" src="/uploads/aac89b8717172a0d545a2b23304727e4/1-signup.gif"/>
+<img width="50%" src="/uploads/d8c8b4a067c4da27d0f45525d56caa1d/1-signup2.gif/>
+</p>
 
 <br>
 
