@@ -328,7 +328,7 @@ webgyber-frontend
 
 <p align="left">
 <img width="50%" src="/uploads/aac89b8717172a0d545a2b23304727e4/1-signup.gif"/>
-<img width="50%" src="/uploads/d8c8b4a067c4da27d0f45525d56caa1d/1-signup2.gif/>
+<img width="50%" src="/uploads/d8c8b4a067c4da27d0f45525d56caa1d/1-signup2.gif"/>
 </p>
 
 <br>
