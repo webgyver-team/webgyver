@@ -61,7 +61,7 @@ public class SellerReservationServiceImpl implements SellerReservationService {
         // 오늘 잡혀 있는 상담
         todayList = new ArrayList<>();
         LocalDate date = LocalDate.now();
-        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationTimeBetween(req.getSellerIdx(), date.atStartOfDay(), date.plusDays(1).atStartOfDay());
+        reservationList = reservationRepository.findReservationsBySellerIdxAndReservationTypeAndReservationTimeBetween(req.getSellerIdx(), "2", date.atStartOfDay(), date.plusDays(1).atStartOfDay());
         reservationState2ListMethod(reservationList);
         // 현재 진행중인 상담
         proceedingList = new ArrayList<>();
