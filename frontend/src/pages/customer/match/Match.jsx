@@ -71,8 +71,8 @@ export default function Matching() {
       const socketData = JSON.stringify({
         method: 'INIT',
         categoryIdx,
-        lng: locateValue.longitude,
-        lat: locateValue.latitude,
+        lng: locateValue.longitude.toString(),
+        lat: locateValue.latitude.toString(),
         address: matchForm.address,
         detailAddress: matchForm.detailAddress,
         title: matchForm.title,
