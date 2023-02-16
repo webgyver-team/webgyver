@@ -13,7 +13,7 @@
 <img width="30%" src="/uploads/91f7bb3b71999aaeca5bc426f8bb376c/qrcode_webgyver_1.png"/>
 </p>
 
-## 소개 영상 보기 :
+## 소개 영상 보기 : https://youtu.be/quGYpNUBP34
 
 </br>
 
@@ -143,6 +143,7 @@ WEBGYVER는 생활 고장을 원하는 시간에 전문가와 함께 진단하�
 **CI/CD**
 
 - AWS EC2
+- Docker
 - Jenkins
 - NGINX
 - SSL
