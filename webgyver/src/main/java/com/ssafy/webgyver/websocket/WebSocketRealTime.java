@@ -206,8 +206,15 @@ public class WebSocketRealTime {
             double lng1 = Double.valueOf((String) customerProperties.get("lng"));
             for (Session seller : sellerSession) {
                 Map<String, Object> sellerProperties = seller.getUserProperties();
-                double lat2 = Double.valueOf((String) sellerProperties.get("lat"));
-                double lng2 = Double.valueOf((String) sellerProperties.get("lng"));
+                double lat2 = 0;
+                double lng2 = 0;
+                try {
+                    lat2 = Double.valueOf((String) sellerProperties.get("lat"));
+                    lng2 = Double.valueOf((String) sellerProperties.get("lng"));
+                } catch (Exception e) {
+                    lat2 = (double) sellerProperties.get("lat");
+                    lng2 = (double) sellerProperties.get("lng");
+                }
                 double distance = CommonUtil.getDistanceWithKM(lat1, lng1, lat2, lng2);
                 if (distance <= viewDistance) {
                     sellerCnt += 1;
@@ -227,9 +234,18 @@ public class WebSocketRealTime {
                 continue;
             }
             Map<String, Object> customerProperties = customer.getUserProperties();
+            String lat = null;
+            String lng = null;
+            try {
+                lat = (String) customerProperties.get("lat");
+                lng = (String) customerProperties.get("lng");
+            } catch (Exception e) {
+                lat = String.valueOf((double) customerProperties.get("lat"));
+                lng = String.valueOf((double) customerProperties.get("lng"));
+            }
             RefreshSellerMessage refreshSellerMessage = RefreshSellerMessage.builder()
-                    .lat((String) customerProperties.get("lat"))
-                    .lng((String) customerProperties.get("lng"))
+                    .lat(lat)
+                    .lng(lng)
                     .title((String) customerProperties.get("title"))
                     .content((String) customerProperties.get("content"))
                     .address((String) customerProperties.get("address"))
@@ -264,8 +280,10 @@ public class WebSocketRealTime {
     }
 
     public void METHOD_INIT(Session session, Map<String, Object> info) throws IOException {
+
         setStatus(session, info);
         updateRefreshSellerMessageList();
+
         if ("seller".equals(session.getUserProperties().get("type"))) {
             refreshSellerOneSeller(session);
             refreshCustomerAllCustomer();
