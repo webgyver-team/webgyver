@@ -20,7 +20,6 @@ export default function CompleteHistory() {
       const response = await customer.get.completeHistory(customerIdx);
       if (response.statusCode === 200) {
         setHistories(response.data.reservationList);
-        console.log(response.data.reservationList);
       } else {
         // eslint-disable-next-line no-alert
         alert(response.message);
