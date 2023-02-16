@@ -60,7 +60,7 @@ export default function MyPageUpdate() {
       return;
     }
     if (data.birthDay.length < 8) {
-      if (data.birthDay.slice(-1) === 1 || data.birthDay.slice(-1) === 2) {
+      if (data.birthDay.slice(-1) === '1' || data.birthDay.slice(-1) === '2') {
         data.birthDay = `19${data.birthDay}`;
       } else {
         data.birthDay = `20${data.birthDay}`;
