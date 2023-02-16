@@ -458,7 +458,7 @@ webgyber-frontend
 - 오늘의 일정을 확인할 수 있습니다.
 
 <p align="left">
-<img width="80%" src=""/>
+<img width="80%" src="/uploads/cd1e0b5afe5f93e50b9914b24adbe1bc/12-schedule.gif"/>
 </p>
 
 <br>
