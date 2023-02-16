@@ -77,6 +77,7 @@ export default function LoginModal() {
       } else {
         // eslint-disable-next-line
         alert('아이디 또는 비밀번호가 일치하지 않습니다.');
+        return;
       }
       const locate = await api.get.locate(response.data.customerIdx);
       if (locate.statusCode === 200 && locate.data.customerAddress !== null) {
