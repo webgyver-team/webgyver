@@ -57,17 +57,6 @@ export default function DatePicker({ handleDate }) {
           : date.getDate()
       }`,
     );
-    console.log(
-      `${date.getFullYear()}-${
-        (date.getMonth() + 1).toString().length < 2
-          ? `0${date.getMonth() + 1}`
-          : date.getMonth() + 1
-      }-${
-        date.getDate().toString().length < 2
-          ? `0${date.getDate()}`
-          : date.getDate()
-      }`,
-    );
   };
   return (
     <FlexContainer className="flex-container">
