@@ -63,6 +63,7 @@ const Card = styled.div`
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 5px;
   margin: 8px;
+  width: 70vw;
 
   .title {
     font-size: 14px;

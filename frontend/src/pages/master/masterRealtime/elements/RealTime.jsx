@@ -76,8 +76,7 @@ const Card = styled.div`
   border: 1px solid ${(props) => props.theme.color.dafaultBorder};
   border-radius: 5px;
   margin: 8px;
-  // width: 912px;
-  width: 80vw;
+  width: 70vw;
   min-width: 600px;
 
   .header {
