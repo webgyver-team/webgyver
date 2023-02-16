@@ -227,9 +227,6 @@ public class SellerReservationServiceImpl implements SellerReservationService {
         if (reservation == null) {
             return SellerReservationEndInfoRes.of(403, "NoReservation");
         }
-//         if(!reservation.getReservationState().equals("5")){
-//             return SellerReservationEndInfoRes.of(403, "NoEnd");
-//         }
 
         Article article = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -1);
 

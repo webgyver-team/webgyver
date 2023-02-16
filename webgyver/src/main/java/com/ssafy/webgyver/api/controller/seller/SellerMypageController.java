@@ -44,7 +44,6 @@ public class SellerMypageController {
     @PostMapping("/history")
     public ResponseEntity<BaseResponseBody> insertHistory(
             @RequestBody Map<String, Object> request
-//            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
     ) {
         ArticleAllReq articleAllReq = new ArticleAllReq();
         articleAllReq.setType(new Long((int) request.get("type")));
@@ -65,10 +64,7 @@ public class SellerMypageController {
     public ResponseEntity<BaseResponseBody> updateHistory(
             @PathVariable Long articleIdx,
             @RequestBody Map<String, Object> request
-//            @RequestBody ArticleAllReq articleAllReq, @RequestBody PictureListReq pictureListReq
     ) {
-        System.out.println("~~~~~~~~~~~~~~~~");
-        System.out.println("PUTMAPPING!!!!!!!!!!");
         // 1. 아티클과 연관단 사진 모두 삭제
         sellerMypageService.deleteAllPicture(articleIdx);
         // 2. 아티클 업데이트
@@ -83,11 +79,6 @@ public class SellerMypageController {
         Gson gson = new Gson();
         pictureListReq.setImages(gson.fromJson(gson.toJson(request.get("images")), new TypeToken<List<PictureReq>>() {
         }.getType()));
-        System.out.println("------------------------------------");
-        System.out.println(articleIdx);
-        System.out.println(articleAllReq);
-        System.out.println(pictureListReq);
-        System.out.println("------------------------------------");
 
         Article result = sellerMypageService.updateHistory(articleAllReq);
         sellerMypageService.insertPictures(result, pictureListReq);
@@ -98,7 +89,6 @@ public class SellerMypageController {
     public ResponseEntity<BaseResponseBody> deleteHistory(@PathVariable("articleIdx") long articleIdx) {
         ArticleIdxReq req = new ArticleIdxReq();
         req.setArticleIdx(articleIdx);
-        log.info("!!!!!!!!!!!!!!!!!!!!!{}", req);
         sellerMypageService.deleteHistory(req);
         return ResponseEntity.status(200).body(BaseResponseBody.of(200, "Success"));
     }

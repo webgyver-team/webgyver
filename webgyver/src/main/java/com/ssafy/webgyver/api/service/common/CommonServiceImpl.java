@@ -52,7 +52,6 @@ public class CommonServiceImpl implements CommonService {
         reservation.setSeller(seller);
         reservation.setCategory(category);
         reservation.setReservationPrice(reservationInfo.getPrice());
-//        reservation.setReservationTime(TimeUtil.getNeareastHourIn15Inc(LocalDateTime.now()));
         reservation.setReservationTime(LocalDateTime.now());
         reservation.setReservationType("1");
         reservation.setReservationState("4");
@@ -70,7 +69,6 @@ public class CommonServiceImpl implements CommonService {
         for (PictureReq image : reservationInfo.getImages()) {
             Picture picture = Picture.builder().originName(image.getOriginName()).saveName(image.getSaveName()).article(article).build();
             pictureRepository.save(picture);
-            System.out.println(picture.getIdx());
         }
         return reservation;
     }

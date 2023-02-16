@@ -141,7 +141,6 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
         String password = req.getPassword();
 
         Optional<Customer> customer = customerMemberRepository.findCustomerById(userId);
-        System.out.println("customer : " + customer);
         if (!customer.isPresent()) {
             return CustomerLoginRes.of(201, "해당하는 유저가 존재하지 않습니다.", null, null);
         }
@@ -150,12 +149,9 @@ public class CustomerMemberServiceImpl implements CustomerMemberService{
         if (passwordEncoder.matches(password, customer.get().getPassword())) {
             // 유효한 패스워드가 맞는 경우, 로그인 성공으로 응답.(액세스 토큰을 포함하여 응답값 전달)
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(userId, password);
-            System.out.println("Token : " + authenticationToken);
 
             Authentication authentication = authenticationManager.authenticate(authenticationToken);
-//            Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
 
-            System.out.println("authentication : " + authentication );
             SecurityContextHolder.getContext().setAuthentication(authentication);
             return CustomerLoginRes.of(200, "Success", jwtTokenProvider.generateToken(
                    authentication),customer.get().getIdx());

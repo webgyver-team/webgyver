@@ -31,7 +31,6 @@ public class Room {
     public Room(Long customerIdx, Long sellerIdx) {
         this.customerIdx = customerIdx;
         this.sellerIdx = sellerIdx;
-//        this.enterCode = makeEnterCode(String.valueOf(customerIdx), String.valueOf(sellerIdx));
         sessions = Collections.synchronizedSet(new HashSet<>());
     }
 
@@ -42,22 +41,16 @@ public class Room {
             String key2 = String.valueOf((long) session.getUserProperties().get("idx"));
             res.put(key1 + "-" + key2, "");
         }
-//        res.put("sellerName", reservation.getSeller().getName());
-//        res.put("customerName", reservation.getCustomer().getName());
-//        res.put("예약시간", reservation.getReservationTime());
-//        res.put("예약가격", reservation.getReservationPrice());
         return res;
     }
 
     public synchronized void join(Session session) throws IOException {
         // 이미 접속한 다른 세션이 있으면 강제 종료함.
         Set<Session> willDie = new HashSet<>();
-        System.out.println("나의 세션 : " + session.getUserProperties().get("type") + " " + session.getUserProperties().get("idx"));
         for (Session other : sessions) {
             if (other.getUserProperties().get("type").equals(session.getUserProperties().get("type"))) {
                 if (other.getUserProperties().get("idx").equals(session.getUserProperties().get("idx"))) {
                     willDie.add(other);
-                    System.out.println("원래 접속한 세션 죽임 : " + other.getUserProperties().get("type") + " " + other.getUserProperties().get("idx"));
                 }
             }
         }
@@ -84,7 +77,6 @@ public class Room {
         for (Session session : sessions) {
             if (session.getId().equals(me.getId()) || !session.isOpen())
                 continue;
-            System.out.println("나 메세지 보낸다!!~!");
             sendMessage(msg, session);
         }
 
@@ -106,11 +98,5 @@ public class Room {
         }
 
     }
-
-//    static String makeEnterCode(String cIdx, String sIdx) {
-//        return cIdx + sep + sIdx;
-//    }
-
-
 }
 

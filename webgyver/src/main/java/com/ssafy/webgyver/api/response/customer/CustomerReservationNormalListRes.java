@@ -62,7 +62,6 @@ public class CustomerReservationNormalListRes extends DataResponseBody {
         List<Store> storeList = new ArrayList<>();
         for (int i = 0; i < sellerList.size(); i++) {
             Store store = new Store(sellerList.get(i), existReservationTimeList.get(i), req, sellerCategoryPrice.get(i));
-            System.out.println("store : " + store);
             if (store.allTime == null) continue;
             storeList.add(store);
         }

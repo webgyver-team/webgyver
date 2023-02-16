@@ -14,8 +14,6 @@ public class MessageParsingUtil {
         Message message = new Message();
         message.setMethod(MethodType.valueOf((String) map.remove("method")));
         message.setData(map);
-        System.out.println("@@@@@@@@@@@" + map);
-        System.out.println(message);
         return message;
     }
 }

@@ -14,8 +14,6 @@ public class ReservationParsingUtil {
         result.setCustomerDetailAddress(req.getDetailAddress());
         result.setCustomer(customer);
         result.setReservationTime(TimeUtil.string2Time(req.getTime()));
-        System.out.println("#####################"+req.getTime());
-        System.out.println(result.getReservationTime());
         return result;
     }
 }

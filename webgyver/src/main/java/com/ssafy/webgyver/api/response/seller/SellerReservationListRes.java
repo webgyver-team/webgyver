@@ -63,7 +63,6 @@ public class SellerReservationListRes extends DataResponseBody {
         res.setStatusCode(statusCode);
         res.setMessage(message);
         // 예약 정보 넣기
-//        Response response = new Response(reservationList);
         res.getData().put("proceedList", proceedingList);
         res.getData().put("waitingList", waitingList);
         res.getData().put("todayList", todayList);
@@ -74,7 +73,6 @@ public class SellerReservationListRes extends DataResponseBody {
         res.setStatusCode(statusCode);
         res.setMessage(message);
         // 예약 정보 넣기
-//        Response response = new Response(reservationList);
         res.getData().put("reservationList", reservationDTOList);
         return res;
     }
