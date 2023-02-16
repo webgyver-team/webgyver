@@ -85,8 +85,15 @@ export default function MasterVideoService() {
     // 상대방 미디어 가져오기
     const getOpponentCamera = async () => {
       const remoteStream = await myPeerConnection.current.getReceivers();
+
       if (remoteStream) {
-        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
+        if (remoteStream[0] === undefined || remoteStream[1] === undefined) {
+          return;
+        }
+        const stream = await new MediaStream([
+          remoteStream[0].track,
+          remoteStream[1].track,
+        ]);
         const video = screenChange ? mainVideo.current : subVideo.current;
         if (video) {
           setTimeout(() => {
@@ -110,17 +117,19 @@ export default function MasterVideoService() {
   // 페이지 나갈때 카메라 제거
   useEffect(() => {
     return () => {
-      navigator.mediaDevices.getUserMedia({ video: true, audio: false }).then((stream) => {
-        stream.getTracks().forEach((track) => {
-          myPeerConnection.current.getSenders().forEach((sender) => {
-            if (sender.track === track) {
-              sender.track.stop();
-              sender.replaceTrack(null);
-            }
+      navigator.mediaDevices
+        .getUserMedia({ video: true, audio: false })
+        .then((stream) => {
+          stream.getTracks().forEach((track) => {
+            myPeerConnection.current.getSenders().forEach((sender) => {
+              if (sender.track === track) {
+                sender.track.stop();
+                sender.replaceTrack(null);
+              }
+            });
           });
+          stream.getTracks().forEach((track) => track.stop());
         });
-        stream.getTracks().forEach((track) => track.stop());
-      });
       conn.current.close();
       window.location.reload();
     };
@@ -148,26 +157,46 @@ export default function MasterVideoService() {
     };
     myPeerConnection.current = new RTCPeerConnection(configuration);
     myPeerConnection.current.onicecandidate = (event) => sendCandidate(event);
-    myPeerConnection.current.addEventListener('iceconnectionstatechange', async () => {
-      if (myPeerConnection.iceConnectionState === 'disconnected') {
-        const video = screenChange2.current ? mainVideo.current : subVideo.current;
-        video.srcObject = null;
-      } else {
-        const remoteStream = await myPeerConnection.current.getReceivers();
-        const stream = await new MediaStream([remoteStream[0].track, remoteStream[1].track]);
-        const video = screenChange2.current ? mainVideo.current : subVideo.current;
-        if (video) {
-          setTimeout(() => {
-            video.srcObject = stream;
-            video.play();
-          }, 100);
+    myPeerConnection.current.addEventListener(
+      'iceconnectionstatechange',
+      async () => {
+        if (myPeerConnection.iceConnectionState === 'disconnected') {
+          const video = screenChange2.current
+            ? mainVideo.current
+            : subVideo.current;
+          video.srcObject = null;
+        } else {
+          const remoteStream = await myPeerConnection.current.getReceivers();
+          const stream = await new MediaStream([
+            remoteStream[0].track,
+            remoteStream[1].track,
+          ]);
+          const video = screenChange2.current
+            ? mainVideo.current
+            : subVideo.current;
+          if (video) {
+            setTimeout(() => {
+              video.srcObject = stream;
+              // video.play();
+              const videoPlay = video.play();
+              if (videoPlay !== undefined) {
+                videoPlay.catch(() => {});
+              }
+            }, 100);
+          }
         }
-      }
-    });
+      },
+    );
     myPeerConnection.current.addEventListener('track', (data) => {
-      const video = screenChange2.current ? mainVideo.current : subVideo.current;
+      const video = screenChange2.current
+        ? mainVideo.current
+        : subVideo.current;
       video.srcObject = new MediaStream([data.track]);
-      video.play();
+      // video.play();
+      const videoPlay = video.play();
+      if (videoPlay !== undefined) {
+        videoPlay.catch(() => {});
+      }
     });
     const createOffer = async () => {
       navigator.mediaDevices
@@ -236,7 +265,11 @@ export default function MasterVideoService() {
 
   return (
     <Main>
-      <Order open={visitOrderOpen} setOpen={setVisitOrderOpen} registVisit={registVisit} />
+      <Order
+        open={visitOrderOpen}
+        setOpen={setVisitOrderOpen}
+        registVisit={registVisit}
+      />
       <Side>
         {reservationData && <SideBar reservationData={reservationData} />}
       </Side>
