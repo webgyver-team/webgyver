@@ -313,7 +313,7 @@ webgyber-frontend
 
 - [중간발표자료](https://www.figma.com/file/6XQbxEwWE5AHEwhkqe0U7B/%EC%9B%B9%EA%B0%80%EC%9D%B4%EB%B2%84-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?node-id=357%3A2022&t=9kyOUrhCGhbos8HA-1)
 
-- [최종발표자료]
+- [최종발표자료](https://www.figma.com/file/6XQbxEwWE5AHEwhkqe0U7B/%EC%9B%B9%EA%B0%80%EC%9D%B4%EB%B2%84-%EC%99%80%EC%9D%B4%EC%96%B4%ED%94%84%EB%A0%88%EC%9E%84?node-id=487%3A3146&t=aEYKgSFyaCXlPh9s-1)
 
 ## 📱 WEBGYVER 서비스 화면
 
