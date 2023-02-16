@@ -123,6 +123,4 @@ public class CheckHoliday {
         return Lunar2Solar(yyyy + date).substring(4);
     }
 
-//    public static boolean isHoliday(LocalDateTime today){
-//    }
 }

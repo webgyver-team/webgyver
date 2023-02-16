@@ -92,7 +92,6 @@ public class Seller extends BaseEntity implements UserDetails {
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private List<String> roles = new ArrayList<>();
-//    private String role;
 
 
     public void updateSellerDescription(String companyDescription) {
@@ -119,7 +118,6 @@ public class Seller extends BaseEntity implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        System.out.println(roles);
         return this.roles.stream()
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());

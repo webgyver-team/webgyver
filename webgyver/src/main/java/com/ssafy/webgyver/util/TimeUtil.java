@@ -39,7 +39,6 @@ public class TimeUtil {
         List<String> splitedBookTime = Arrays.stream(bookTime.split("%")).collect(Collectors.toList());
         String temp1 = splitedBookTime.get(getDayName(today) - 1).substring(4);
         List<String> temp2 = Arrays.stream(temp1.split("~")).collect(Collectors.toList());
-        System.out.println("temp 2 : " + temp2);
         if (temp2.get(0).equals("휴일")) return null;
         List<String> result = getBetweenTime(temp2.get(0), temp2.get(1));
         return result;
@@ -76,17 +75,5 @@ public class TimeUtil {
         String stringToday = time2String(today, "yyyyMMdd");
         return holidayList.contains(stringToday);
     }
-//
-////    public static LocalDateTime getNeareastHourIn15Inc(LocalDateTimetime) {
-//
-//        int[] dMinute = {0, 1, -1, 2, -2, 3, -3, 4, -4, 5, -5, 6, -6, 7, -7};
-//        for (int dm : dMinute) {
-//            int temp = time.plusMinutes(dm).getMinute();
-//            if (temp == 0 || temp == 15 || temp == 30 || temp == 45) {
-//                return time.plusMinutes(dm);
-//            }
-//        }
-//        return null;
-//    }
 
 }

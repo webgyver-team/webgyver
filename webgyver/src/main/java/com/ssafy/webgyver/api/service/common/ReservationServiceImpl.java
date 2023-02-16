@@ -15,7 +15,6 @@ public class ReservationServiceImpl implements ReservationService {
 
     @Override
     public Optional<Reservation> getReservation(long reservationIdx) {
-        System.out.println("서비스까지 들어옴");
         return reservationRepository.findById(reservationIdx);
     }
 

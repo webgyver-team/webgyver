@@ -75,9 +75,7 @@ public class WebSocketRealTime {
         Gson gson = new Gson();
         Map<String, Object> info = gson.fromJson(jsonMessage, new TypeToken<Map<String, Object>>() {
         }.getType());
-        System.out.println(info);
         // 리플렉션도 추가해보자.
-        // Class<?> cls = Class.forName(obj.getClass().getName());
         MethodType method = MethodType.valueOf((String) info.remove("method"));
         if (method == null) {
             session.getBasicRemote().sendText("메세지 형식을 지켜주세요.");
@@ -126,8 +124,6 @@ public class WebSocketRealTime {
 
 
         BaseResponseBody responseBody = CommonUtil.requestPay(tossKey, customerForPay.getCustomerKey(), customerForPay.getBillingKey(), reservationInfo.getTitle(), reservationInfo.getPrice());
-        System.out.println(responseBody.getStatusCode());
-        System.out.println(responseBody.getMessage());
 
         // 실시간 상담 reservation 테이블에 등록!!!!!!!
         Reservation insertedRes = commonService.insertReservationArticlePictureList(customerIdx, sellerIdx, reservationInfo);
@@ -162,13 +158,6 @@ public class WebSocketRealTime {
 
         sellerInfo.updatePoint(reservationInfo.getPrice());
         commonService.setSeller(sellerInfo);
-
-//        System.out.println(messageString);
-
-//
-//        System.out.println(reservation);
-//        System.out.println(article);
-//        System.out.println(pictureList);
     }
 
     @OnError

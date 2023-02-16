@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class CustomCustomerDetailService implements UserDetailsService {
     private final CustomerMemberRepository customerRepository;
-//    private final PasswordEncoder passwordEncoder;
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         return customerRepository.findCustomerById(id)
@@ -24,10 +23,5 @@ public class CustomCustomerDetailService implements UserDetailsService {
 
     private UserDetails createUserDetail(Customer customer){
         return new User(customer.getId(), customer.getPassword(), customer.getAuthorities());
-//        return User.builder()
-//                .username(customer.getId())
-//                .password(customer.getPassword())
-//                .roles(customer.getAuthorities().)
-//                .build();
     }
 }

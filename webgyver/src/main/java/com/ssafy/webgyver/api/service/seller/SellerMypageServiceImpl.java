@@ -68,8 +68,6 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     @org.springframework.transaction.annotation.Transactional
     public Article updateHistory(ArticleAllReq req) {
         Article article = articleRepository.findByIdx(req.getIdx());
-        System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!");
-        System.out.println(article.getIdx());
         article.setContent(req.getContent());
         article.setType(req.getType());
         article.setTitle(req.getTitle());
@@ -163,7 +161,6 @@ public class SellerMypageServiceImpl implements SellerMypageService {
     @Override
     @Transactional
     public BaseResponseBody updateSellerProfile(SellerIdxReq req, SellerProfileUpdateReq profileReq) {
-        System.out.println(profileReq);
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         seller.updateSellerProfile(profileReq.getProfileImage(), profileReq.getBackgroundImage(),
                 passwordEncoder.encode(profileReq.getPassword()), profileReq.getPhoneNumber(), profileReq.getCompanyName(),
@@ -260,10 +257,8 @@ public class SellerMypageServiceImpl implements SellerMypageService {
 
     @Override
     public SellerGetBookTimeRes getSellerBookTime(SellerIdxReq req) {
-        System.out.println("셀러 아이디 : " + req.getSellerIdx());
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         List<SellerGetBookTimeRes.BookTimeDTO> bookTimeDTOList = new ArrayList<>();
-        System.out.println("셀러 예약 시간" + seller.getBookTime());
         String companyTime = seller.getBookTime();
         SellerGetBookTimeRes res;
         if (companyTime != null) {
@@ -298,7 +293,6 @@ public class SellerMypageServiceImpl implements SellerMypageService {
         Seller seller = sellerRepository.findSellerByIdx(req.getSellerIdx());
         String timeString = "";
         for (int i = 0; i < 8; i++) {
-            System.out.println(timeReq.getBookTimeList().get(i).getHoliday());
             if (timeReq.getBookTimeList().get(i).getHoliday()) {
                 timeString += timeReq.getBookTimeList().get(i).getDay() + "$휴일%";
             } else {

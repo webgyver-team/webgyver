@@ -96,7 +96,6 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         customerRepository.save(customer);
 
         return reservation;
-//        req.getImages().stream().map(image -> pictureRepository.save(PictureParsingUtil.parsePictureReqAndArticle2Picture(image, article)));
 
     }
 
@@ -136,7 +135,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     public CustomerReservationListRes getCustomerReservationList(CustomerIdxReq req) {
         reservationDTOList = new ArrayList<>();
         Customer customer = customerRepository.findByIdx(req.getCustomerIdx()).get();
-        System.out.println();
+        // 입력한 IDX 값과 토큰 정보 확인
         if(!CheckUserUtil.check(customer.getId())){
             return CustomerReservationListRes.of(403, "Forbidden", null);
         }
@@ -188,7 +187,6 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
 
     public void reservationListMethod(List<Reservation> reservationList) {
         for (Reservation reservation : reservationList) {
-            System.out.println("!!!!!!!!!!!!" + reservation.getReservationTime());
             String title = null;    // 예약 제목
             String content = null; // 문의 내용
             List<CustomerReservationListRes.PictureDTO> pictureDTOS = new ArrayList<>();
@@ -225,7 +223,6 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
     }
 
     public void reservationState4ListMethod(List<Reservation> reservationList) {
-        System.out.println(reservationList);
         LocalDateTime currentTime = LocalDateTime.now();
         for (Reservation reservation : reservationList) {
             if (!reservation.getReservationTime().plusMinutes(15).isAfter(currentTime)) {
@@ -374,9 +371,7 @@ public class CustomerReservationServiceImpl implements CustomerReservationServic
         if (reservation == null) {
             return CustomerReservationEndInfoRes.of(403, "NoReservation");
         }
-//        if(  !reservation.getReservationState().equals("5")){
-//            return CustomerReservationEndInfoRes.of(403, "NoEnd");
-//        }
+
         Article article = articleRepository.findArticleByReservationIdxAndType(reservation.getIdx(), -1);
 
         Map<String, Object> response = new HashMap<>();

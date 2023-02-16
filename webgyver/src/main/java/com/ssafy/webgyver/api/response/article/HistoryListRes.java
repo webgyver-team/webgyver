@@ -27,7 +27,6 @@ public class HistoryListRes extends DataResponseBody {
         private Long articleIdx;
         private LocalDateTime createdAt;
         private LocalDateTime updatedAt;
-        //        private String title;
         private String content;
         private Long sellerIdx;
         private List<PictureRes> images;
@@ -36,10 +35,8 @@ public class HistoryListRes extends DataResponseBody {
             this.articleIdx = article.getIdx();
             this.createdAt = article.getCreatedAt();
             this.updatedAt = article.getUpdatedAt();
-//            this.title = article.getTitle();
             this.content = article.getContent();
             this.sellerIdx = article.getType();
-//            this.images =
         }
     }
 

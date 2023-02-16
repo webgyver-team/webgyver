@@ -24,9 +24,6 @@ public class JwtTokenProvider {
     private static String secretKey;
     private static Integer expirationTime;
     private static final String AUTHORITIES_KEY = "authorization";
-    private static final String BEARER_TYPE = "Bearer";
-    private static final long ACCESS_TOKEN_EXPIRE_TIME = 6 * 60 * 60 * 1000L;             // 30분 30 * 60 * 1000L test 1분
-    private static final long REFRESH_TOKEN_EXPIRE_TIME = 7 * 24 * 60 * 60 * 1000L;    // 7일 7 * 24 * 60 * 60 * 1000L test 3분
 
 
     @Autowired
@@ -52,26 +49,13 @@ public class JwtTokenProvider {
                 .signWith(SignatureAlgorithm.HS256, secretKey)
                 .compact();
 
-//        // Refresh Token 생성
-//        String refreshToken = Jwts.builder()
-//                .setExpiration(new Date(now + REFRESH_TOKEN_EXPIRE_TIME))
-//                .signWith(SignatureAlgorithm.HS256, secretKey)
-//                .compact();
-
         return accessToken;
-//                builder()
-//                .grantType(BEARER_TYPE)
-//                .accessToken(accessToken)
-//                .refreshToken(refreshToken)
-//                .refreshTokenExpirationTime(REFRESH_TOKEN_EXPIRE_TIME)
-//                .build();
     }
 
     // JWT 토큰을 복호화하여 토큰에 들어있는 정보를 꺼내는 메서드
     public Authentication getAuthentication(String accessToken) {
         // 토큰 복호화
         Claims claims = parseClaims(accessToken);
-        System.out.println(claims.get(AUTHORITIES_KEY));
         if (claims.get(AUTHORITIES_KEY) == null) {
             throw new RuntimeException("권한 정보가 없는 토큰입니다.");
         }
@@ -84,7 +68,6 @@ public class JwtTokenProvider {
 
         // UserDetails 객체를 만들어서 Authentication 리턴
         UserDetails principal = new User(claims.getSubject(), "", authorities);
-        System.out.println(principal);
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
     }
 

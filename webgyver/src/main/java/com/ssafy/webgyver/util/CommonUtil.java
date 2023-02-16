@@ -49,7 +49,6 @@ public class CommonUtil {
             connection.setRequestProperty("Content-Type", "application/json");
             connection.setRequestProperty("Authorization", tossKey);
             connection.setDoOutput(true);
-            System.out.println(tossKey);
 
             JSONObject jsonObject = new JSONObject();
             jsonObject.put("customerKey", customerKey);
