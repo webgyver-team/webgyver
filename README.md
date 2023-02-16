@@ -511,14 +511,14 @@ webgyber-frontend
 
 <br>
 
-### 실시간 상담
+### 실시간 매칭
 
 - 실시간으로 등록된 바로상담이 표시됩니다.
 - 상담내역을 확인하고 수락할 수 있습니다.
 - 수락 시, 화상통화 화면으로 이동합니다.
 
 <p align="left">
-<img width="80%" src=""/>
+<img width="80%" src="/uploads/d15ee6d4308e3c1137ef9f27937dc942/17-realtime.gif"/>
 </p>
 
 <br>
