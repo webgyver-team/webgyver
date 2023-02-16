@@ -444,8 +444,8 @@ webgyber-frontend
 - 처음 가입 시, 상담가능시간을 설정해야 합니다.
 
 <p align="left">
-<img width="50%" src="/uploads/7831c41ca63d09440cbccb25bbea6309/10-login.gif"/>
-<img width="50%" src="/uploads/7ccefac14b476f6cb083d49eb2e45fe3/11-signup.gif"/>
+<img width="80%" src="/uploads/7831c41ca63d09440cbccb25bbea6309/10-login.gif"/>
+<img width="80%" src="/uploads/7ccefac14b476f6cb083d49eb2e45fe3/11-signup.gif"/>
 </p>
 
 <br>
@@ -458,7 +458,7 @@ webgyber-frontend
 - 오늘의 일정을 확인할 수 있습니다.
 
 <p align="left">
-<img width="50%" src=""/>
+<img width="80%" src=""/>
 </p>
 
 <br>
@@ -468,7 +468,7 @@ webgyber-frontend
 - 일정을 일별로 확인할 수 있습니다.
 
 <p align="left">
-<img width="50%" src="/uploads/18126314b69f7656d6af680d6d262544/13-history.gif"/>
+<img width="80%" src="/uploads/18126314b69f7656d6af680d6d262544/13-history.gif"/>
 </p>
 
 <br>
@@ -480,7 +480,7 @@ webgyber-frontend
 - 전문가 상세페이지에 나타납니다.
 
 <p align="left">
-<img width="50%" src="/uploads/142c022cd9624cae8065c87cff39a1b3/14-review.gif"/>
+<img width="80%" src="/uploads/142c022cd9624cae8065c87cff39a1b3/14-review.gif"/>
 </p>
 
 <br>
@@ -491,7 +491,7 @@ webgyber-frontend
 - 전문가 상세페이지에 나타납니다.
 
 <p align="left">
-<img width="50%" src="/uploads/9d18965bc4611a97d35718c986ffc126/15-example.gif"/>
+<img width="80%" src="/uploads/9d18965bc4611a97d35718c986ffc126/15-example.gif"/>
 </p>
 
 <br>
@@ -505,8 +505,8 @@ webgyber-frontend
 - 전문가 상세페이지에 나타납니다.
 
 <p align="left">
-<img width="50%" src="/uploads/5d932d78259ae5266524125c826c6103/16-mypage.gif"/>
-<img width="50%" src="/uploads/e5745f36298395584a87bb5670c1a946/16-mypage2.gif"/>
+<img width="80%" src="/uploads/5d932d78259ae5266524125c826c6103/16-mypage.gif"/>
+<img width="80%" src="/uploads/e5745f36298395584a87bb5670c1a946/16-mypage2.gif"/>
 </p>
 
 <br>
@@ -518,7 +518,7 @@ webgyber-frontend
 - 수락 시, 화상통화 화면으로 이동합니다.
 
 <p align="left">
-<img width="50%" src=""/>
+<img width="80%" src=""/>
 </p>
 
 <br>
