@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 
 export default function DatePicker({ handleDate }) {
-  const today = new Date('2023-02-16 00:23:00'); // dateList 시작 기준 = 오늘
-  // const today = new Date();
+  const today = new Date();
   const dayList = ['일', '월', '화', '수', '목', '금', '토']; // Date.getDate() 값을 한글 요일로 반환하기 위함
   const [clickedDate, setClickedDate] = useState(null); // clickedDate: 선택한 날짜의 HTML Element
   useEffect(() => {
