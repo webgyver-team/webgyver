@@ -90,6 +90,7 @@ const Card = styled.div`
   margin: 8px;
   display: flex;
   justify-content: space-between;
+  width: 70vw;
 
   .title {
     font-size: 14px;
