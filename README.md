@@ -518,7 +518,7 @@ webgyber-frontend
 - 수락 시, 화상통화 화면으로 이동합니다.
 
 <p align="left">
-<img width="80%" src=""/>
+<img width="80%" src="/uploads/d15ee6d4308e3c1137ef9f27937dc942/17-realtime.gif"/>
 </p>
 
 <br>
