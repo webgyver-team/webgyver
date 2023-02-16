@@ -6,6 +6,13 @@
 
 ### WEBGYVER 파트너(컴퓨터 화면) : [Webgyver 파트너 바로가기](https://webgyver.site/master/login)
 
+</br>
+
+### WEBGYVER QR
+<p align="center">
+<img width="30%" src="/uploads/91f7bb3b71999aaeca5bc426f8bb376c/qrcode_webgyver_1.png"/>
+</p>
+
 ## 소개 영상 보기 :
 
 </br>
