@@ -20,6 +20,7 @@ export default function MyPageUpdate() {
   const [loading, setLoading] = useState(true);
   const [initialResidentNumber1, setInitialResidentNumber1] = useState(null);
   const [initialResidentNumber2, setInitialResidentNumber2] = useState(null);
+  // const [birthDayChanegd, setBirthDayChanged] = useState(false);
   useLayoutEffect(() => {
     const getMyProfile = async () => {
       const response = await customer.get.myInfo(customerIdx);
@@ -56,6 +57,13 @@ export default function MyPageUpdate() {
       // eslint-disable-next-line
       alert('주민등록번호 앞 7자리를 입력하세요.');
       return;
+    }
+    if (data.birthDay.length < 8) {
+      if (data.birthDay.slice(-1) === '1' || data.birthDay.slice(-1) === '2') {
+        data.birthDay = `19${data.birthDay}`;
+      } else {
+        data.birthDay = `20${data.birthDay}`;
+      }
     }
     // 전화번호 11자리 -> 제대로 입력되어야 반영됨, 아니면 null
     if (data.phoneNumber === null) {
