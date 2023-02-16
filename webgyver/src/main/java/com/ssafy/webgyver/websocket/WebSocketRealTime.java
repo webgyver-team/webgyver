@@ -234,9 +234,18 @@ public class WebSocketRealTime {
                 continue;
             }
             Map<String, Object> customerProperties = customer.getUserProperties();
+            String lat = null;
+            String lng = null;
+            try {
+                lat = (String) customerProperties.get("lat");
+                lng = (String) customerProperties.get("lng");
+            } catch (Exception e) {
+                lat = String.valueOf((double) customerProperties.get("lat"));
+                lng = String.valueOf((double) customerProperties.get("lng"));
+            }
             RefreshSellerMessage refreshSellerMessage = RefreshSellerMessage.builder()
-                    .lat((String) customerProperties.get("lat"))
-                    .lng((String) customerProperties.get("lng"))
+                    .lat(lat)
+                    .lng(lng)
                     .title((String) customerProperties.get("title"))
                     .content((String) customerProperties.get("content"))
                     .address((String) customerProperties.get("address"))
